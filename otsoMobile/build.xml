@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tscMobile" default="javac">
+<project name="otsoMobile" default="javac">
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-	<property name="microjena" value="../microjena/microjena.jar" />
+	<property name="microjena" value="lib/microjena.jar" />
 	
     <path id="project.class.path">
-		<pathelement location="../microjena/microjena.jar"/>
-    	
+		<pathelement location="lib/microjena.jar"/>
     	<pathelement location="lib/junit.jar"/>
         <pathelement location="lib/easymock/easymock.jar"/>
     </path>
@@ -23,13 +22,13 @@
 	<target name="droid-jar" depends="clean">
 		<copy todir="bin">
 			<fileset dir="src"/>
-			<fileset dir="../microjena/src"/>
 		</copy>
 		<javac srcdir="bin" destdir="bin" 
 				includes="**" debug="on" debuglevel="lines,vars,source" 
             	encoding="utf-8">
+			<classpath refid="project.class.path"/>
 		</javac>
-		<jar destfile="tscMobile-sources.jar" basedir="bin"/>
+		<jar destfile="otsoMobile-sources.jar" basedir="bin"/>
 	</target>
 	
 	<target name="test" depends="javac">
@@ -51,6 +50,6 @@
 	</target>
 	
 	<target name="clean">
-		<delete dir="bin/es" failonerror="false" />
+		<delete dir="bin/otsopack" failonerror="false" />
 	</target>
 </project>

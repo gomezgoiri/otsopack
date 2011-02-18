@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/easymock/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="lib" path="lib/microjena.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/microjena.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
