@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="otsoME">
+
+	<property environment="env" />
+	<property name="wtk.home" value="${env.WTK_HOME}"/>
+	
+	<property name="jar_name" value="otsoME" />
+	
+	<property name="cldc_lib" value="${wtk.home}/lib/cldcapi11.jar" />
+	<property name="midp_lib" value="${wtk.home}/lib/midpapi20.jar" />
+	<property name="preverifier" value="${wtk.home}/bin/preverify1.1" />
+	<property name="test.results.dir" location="test_jmunit_results"/>
+	
+	<property name="microjena" value="../microjena/microjena.jar" />
+	<property name="jxme" value="lib/jxta-cldc/ismed-jxme2.5-cldc-1.0.jar" />
+	
+	<property name="microlog-core" value="lib/microlog/microlog-logger-core-2.3.5.jar" />
+	<property name="microlog-midp" value="lib/microlog/microlog-logger-midp-2.3.5_mod.jar" />
+	
+	<property name="classes_cldc_unverified" value="classes_cldc_unverified" />
+	<property name="classes_cldc_verified" value="classes_cldc" />
+	
+	<property name="otsoMobile_src" value="../otsoMobile/src/" />
+	<property name="otsoMobile_test" value="../otsoMobile/test/" />
+	<property name="source" value="src:${otsoMobile_src}" />
+
+	<path id="project.class.path">
+		<pathelement location="${env.WTK_HOME}/lib/jsr75.jar" />
+		<pathelement location="${env.WTK_HOME}/lib/satsa-crypto.jar" />
+		<pathelement location="${cldc_lib}" />
+		<pathelement location="${midp_lib}" />
+	  	<pathelement location="${microjena}" />
+	    <pathelement location="${jxme}" />
+		<pathelement location="${microlog-core}" />
+	    <pathelement location="${microlog-midp}" />
+	    <pathelement location="${classes_cldc_unverified}" />
+		<pathelement location="${jxme2_1_3}" />
+	</path>
+	
+	<taskdef name="jmunit" classname="jmunit.anttask.cldc11.Jmunit" classpath="lib/jmunit/microemulator.jar:lib/jmunit/jmunit_anttasks-1.2.1.jar:lib/jmunit/jmunit4cldc11-1.2.1.jar:lib/jmunit/jdom.jar" />
+	
+	<target name="clean">
+		<delete dir="${classes_cldc_unverified}" />
+		<delete dir="${classes_cldc_verified}" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes_cldc_unverified}" />
+		<mkdir dir="${classes_cldc_verified}" />
+		<mkdir dir="dist" />
+		
+		<javac destdir="${classes_cldc_unverified}" srcdir="${source}" 
+			bootclasspath="${cldc_lib}" 
+			includeAntRuntime="false" source="1.2" target="1.2">
+			
+			<classpath refid="project.class.path"/>
+		</javac>
+		
+		<exec dir="." executable="${preverifier}" failonerror="true">
+			<arg line="-classpath ${cldc_lib}:${midp_lib}:${jxme}:${microjena}:${microlog-core}:{microlog-midp}" />
+			<arg line="-d ${classes_cldc_verified}" />
+			<arg line="${classes_cldc_unverified}" />
+		</exec>
+	</target>
+
+	<target name="all" depends="compile">
+		<jar jarfile="dist/${jar_name}.jar">
+			<fileset dir="${classes_cldc_verified}" />
+		</jar>
+		<delete dir="${classes_cldc_unverified}" />
+		<delete dir="${classes_cldc_verified}" />
+	</target>
+	
+	<target name="test" depends="compile">
+		<javac destdir="${classes_cldc_unverified}" srcdir="test" 
+			bootclasspath="${cldc_lib}" 
+			includeAntRuntime="false" source="1.2" target="1.2">
+			
+			<classpath>
+				<path refid="project.class.path"/>
+				<path location="${classes_cldc_unverified}"/>
+				<path location="lib/jmunit/jmunit4cldc11-1.2.1.jar"/>
+			</classpath>
+		</javac>
+		
+		<mkdir dir="${test.results.dir}"/>
+		<jmunit haltonerror="false" haltonfailure="false" failureproperty="test.failure">
+			<formatter type="xml" />
+			<classpath refid="project.class.path"/>
+			<test name="otsopack.otsoME.MicroemuTscMeSuite" todir="${test.results.dir}" />
+		</jmunit>
+        <fail if="test.failure" message="Tests failed..."/>
+	</target>
+
+</project>

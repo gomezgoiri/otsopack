@@ -1,0 +1,10 @@
+MIDlet-4: MemoriaDataAccess,,es.deusto.tecnologico.tscME.dataaccess.memory.MemoryDataAccessTest
+MIDlet-3: RecordStoreDataAccess,,es.deusto.tecnologico.tscME.dataaccess.recordstore.RecordStoreDataAccessTest
+MIDlet-2: KernelTestAux,,es.deusto.tecnologico.tscME.kernel.AbstractKernelctKernelctKernelctKernelTestAux
+MIDlet-1: KernelTest,,es.deusto.tecnologico.tscME.kernel.KernelTest
+MIDlet-Jar-URL: tscME.jar
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: 1.0.0
+MIDlet-Vendor: DeustoTech
+MIDlet-Name: tscME MIDlet Suite
+MicroEdition-Profile: MIDP-2.0
