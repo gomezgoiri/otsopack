@@ -28,7 +28,8 @@
             	encoding="utf-8">
 			<classpath refid="project.class.path"/>
 		</javac>
-		<jar destfile="otsoMobile-sources.jar" basedir="bin"/>
+		<mkdir dir="dist" />
+		<jar destfile="dist/otsoMobile-sources.jar" basedir="bin"/>
 	</target>
 	
 	<target name="test" depends="javac">
