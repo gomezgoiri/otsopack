@@ -17,10 +17,10 @@ import junit.framework.TestCase;
 import otsopack.otsoDroid.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoDroid.network.communication.incoming.response.Response;
 import otsopack.otsoDroid.network.communication.incoming.response.URIResponse;
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
 
 public class IncomingListTest extends TestCase {
 	

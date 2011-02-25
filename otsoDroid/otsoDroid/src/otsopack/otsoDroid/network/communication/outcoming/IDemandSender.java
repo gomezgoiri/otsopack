@@ -13,7 +13,7 @@
  */
 package otsopack.otsoDroid.network.communication.outcoming;
 
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface IDemandSender {
 

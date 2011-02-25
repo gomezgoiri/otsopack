@@ -16,7 +16,7 @@ package otsopack.otsoDroid.util;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
 
-import otsopack.otsoMobile.util.Util;
+import otsopack.otsoCommons.util.Util;
 
 import junit.framework.TestCase;
 import net.jxta.id.IDFactory;

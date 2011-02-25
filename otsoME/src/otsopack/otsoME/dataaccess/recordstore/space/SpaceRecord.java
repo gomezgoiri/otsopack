@@ -26,14 +26,14 @@ import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 import org.apache.log4j.Logger;
-import otsopack.otsoMobile.ILayer;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.ITriple;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.exceptions.TSException;
-import otsopack.otsoMobile.util.uuid.UUIDFactory;
+import otsopack.otsoCommons.ILayer;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.ITriple;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.exceptions.TSException;
+import otsopack.otsoCommons.util.uuid.UUIDFactory;
 
 public class SpaceRecord implements ILayer {
 	private final static Logger logger = Logger.getInstance(SpaceRecord.class.getName());

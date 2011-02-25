@@ -25,14 +25,14 @@ import otsopack.otsoDroid.configuration.JxmeConfiguration;
 import otsopack.otsoDroid.network.communication.ISpaceInformationHolder;
 import otsopack.otsoDroid.network.communication.SpaceManager;
 import otsopack.otsoDroid.network.jxme.JxmePeerBase;
-import otsopack.otsoMobile.IController;
-import otsopack.otsoMobile.exceptions.SpaceNotExistsException;
-import otsopack.otsoMobile.exceptions.TSException;
-import otsopack.otsoMobile.network.ICoordination;
-import otsopack.otsoMobile.util.Util;
-import otsopack.otsoMobile.util.collections.HashMap;
-import otsopack.otsoMobile.util.collections.Map;
-import otsopack.otsoMobile.util.collections.Set;
+import otsopack.otsoCommons.IController;
+import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
+import otsopack.otsoCommons.exceptions.TSException;
+import otsopack.otsoCommons.network.ICoordination;
+import otsopack.otsoCommons.util.Util;
+import otsopack.otsoCommons.util.collections.HashMap;
+import otsopack.otsoCommons.util.collections.Map;
+import otsopack.otsoCommons.util.collections.Set;
 
 public class JxmeCoordination implements ICoordination {
 	private final static Logger LOG = Logger.getLogger(JxmeCoordination.class.getName());

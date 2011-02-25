@@ -9,6 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/microlog/microlog-logger-midp-2.3.5_mod.jar"/>
 	<classpathentry kind="lib" path="lib/jmunit/jmunit_anttasks-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jxta-cldc/jxme25.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoMobile"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

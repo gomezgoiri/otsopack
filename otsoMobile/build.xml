@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="otsoMobile" default="javac">
+<project name="otsoCommons" default="javac">
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
@@ -29,7 +29,7 @@
 			<classpath refid="project.class.path"/>
 		</javac>
 		<mkdir dir="dist" />
-		<jar destfile="dist/otsoMobile-sources.jar" basedir="bin"/>
+		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin"/>
 	</target>
 	
 	<target name="test" depends="javac">

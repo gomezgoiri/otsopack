@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.util.collections.HashSet;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.util.collections.HashSet;
 
 public interface INotificationChooser {
 	HashSet getThoseWhichMatch(ITemplate selector);

@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 //for responses to Subscribe and Advertise
 public class URIResponse extends Response {

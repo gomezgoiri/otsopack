@@ -13,8 +13,8 @@
  */
 package otsopack.otsoDroid.network.communication.incoming.response;
 
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.IModel;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.IModel;
 
 public class ModelResponse extends Response {
 	private IModel model = null;

@@ -13,9 +13,9 @@
  */
 package otsopack.otsoDroid.network.communication.notifications;
 
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
 
 public class Advertisement implements IAdvertisement {
 	String uri;

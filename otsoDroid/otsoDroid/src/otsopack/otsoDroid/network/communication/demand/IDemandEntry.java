@@ -13,8 +13,8 @@
  */
 package otsopack.otsoDroid.network.communication.demand;
 
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.util.collections.Comparable;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.util.collections.Comparable;
 
 public interface IDemandEntry extends Comparable {
 	/**

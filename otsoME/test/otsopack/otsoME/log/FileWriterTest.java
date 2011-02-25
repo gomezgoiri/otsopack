@@ -15,7 +15,7 @@ package otsopack.otsoME.log;
 
 import java.io.IOException;
 
-import otsopack.otsoMobile.exceptions.SpaceNotExistsException;
+import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
 import otsopack.otsoME.log.FileWriter;
 import jmunit.framework.cldc11.TestCase;
 

@@ -13,7 +13,7 @@
  */
 package otsopack.otsoDroid.network.communication.demand.local;
 
-import otsopack.otsoMobile.data.IGraph;
+import otsopack.otsoCommons.data.IGraph;
 
 public interface ISuggestionCallbackManager {
 	/**

@@ -16,12 +16,12 @@ package otsopack.otsoDroid.network.communication.notifications;
 import java.util.Enumeration;
 
 import junit.framework.TestCase;
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
-import otsopack.otsoMobile.util.collections.HashSet;
-import otsopack.otsoMobile.util.collections.Vector;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.util.collections.HashSet;
+import otsopack.otsoCommons.util.collections.Vector;
 
 public class NotificationContainerTest extends TestCase {
 	NotificationContainer container;

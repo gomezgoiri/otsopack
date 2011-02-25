@@ -13,8 +13,8 @@
  */
 package otsopack.otsoDroid.network.communication.outcoming;
 
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface IResponseSender {
 	void response(ITemplate responseTo, IGraph triples);

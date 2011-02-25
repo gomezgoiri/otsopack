@@ -13,7 +13,7 @@
  */
 package otsopack.otsoDroid.network.communication.notifications;
 
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface INotificationElement extends Cloneable {
 	String getURI();

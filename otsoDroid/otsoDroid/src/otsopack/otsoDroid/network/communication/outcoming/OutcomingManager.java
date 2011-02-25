@@ -23,13 +23,13 @@ import otsopack.otsoDroid.network.communication.incoming.response.LockModelRespo
 import otsopack.otsoDroid.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoDroid.network.communication.incoming.response.URIResponse;
 import otsopack.otsoDroid.network.communication.util.MessageParser;
-import otsopack.otsoMobile.configuration.TscMEConfiguration;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.network.communication.event.listener.INotificationListener;
-import otsopack.otsoMobile.network.coordination.IPeerInformationHolder;
-import otsopack.otsoMobile.stats.Statistics;
+import otsopack.otsoCommons.configuration.TscMEConfiguration;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.otsoCommons.network.coordination.IPeerInformationHolder;
+import otsopack.otsoCommons.stats.Statistics;
 
 public class OutcomingManager implements IDemandSender {
 	private final static Logger log = Logger.getLogger(OutcomingManager.class.getName());

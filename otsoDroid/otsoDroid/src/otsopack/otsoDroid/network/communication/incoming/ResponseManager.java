@@ -30,14 +30,14 @@ import otsopack.otsoDroid.network.communication.notifications.INotificationChoos
 import otsopack.otsoDroid.network.communication.notifications.ISubscription;
 import otsopack.otsoDroid.network.communication.outcoming.IResponseSender;
 import otsopack.otsoDroid.network.communication.util.MessageParser;
-import otsopack.otsoMobile.IController;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.exceptions.ResponseNotExpected;
-import otsopack.otsoMobile.exceptions.SpaceNotExistsException;
-import otsopack.otsoMobile.network.coordination.IPeerInformationHolder;
+import otsopack.otsoCommons.IController;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.exceptions.ResponseNotExpected;
+import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
+import otsopack.otsoCommons.network.coordination.IPeerInformationHolder;
 
 public class ResponseManager implements ITSCallback {
 	private final static Logger log = Logger.getLogger(ResponseManager.class.getName());

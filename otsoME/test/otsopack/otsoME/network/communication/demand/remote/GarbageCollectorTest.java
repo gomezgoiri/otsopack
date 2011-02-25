@@ -13,11 +13,11 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
 import otsopack.otsoME.network.communication.demand.DemandRecord;
 import otsopack.otsoME.network.communication.demand.remote.GarbageCollector;
 import otsopack.otsoME.network.communication.demand.remote.RemoteDemandEntry;

@@ -15,10 +15,10 @@ package otsopack.otsoDroid.network.communication.incoming.response;
 
 import junit.framework.TestCase;
 import otsopack.otsoDroid.sampledata.ExampleME;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
 
 public class LockModelResponseTest extends TestCase {
 	private static final int MAX_WAITING_TIME = 1000;

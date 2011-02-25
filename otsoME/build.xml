@@ -20,9 +20,9 @@
 	<property name="classes_cldc_unverified" value="classes_cldc_unverified" />
 	<property name="classes_cldc_verified" value="classes_cldc" />
 	
-	<property name="otsoMobile_src" value="../otsoMobile/src/" />
-	<property name="otsoMobile_test" value="../otsoMobile/test/" />
-	<property name="source" value="src:${otsoMobile_src}" />
+	<property name="otsoCommons_src" value="../otsoCommons/src/" />
+	<property name="otsoCommons_test" value="../otsoCommons/test/" />
+	<property name="source" value="src:${otsoCommons_src}" />
 
 	<path id="project.class.path">
 		<pathelement location="${env.WTK_HOME}/lib/jsr75.jar" />

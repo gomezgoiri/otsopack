@@ -27,13 +27,13 @@ import net.jxta.endpoint.StringMessageElement;
 import net.jxta.util.java.io.BufferedReader;
 import net.jxta.util.java.io.StringReader;
 import otsopack.otsoME.network.communication.incoming.ITSCallback;
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.exceptions.MalformedMessageException;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
-import otsopack.otsoMobile.exceptions.UnrecognizedFormatException;
-import otsopack.otsoMobile.util.collections.HashSet;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.exceptions.MalformedMessageException;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.exceptions.UnrecognizedFormatException;
+import otsopack.otsoCommons.util.collections.HashSet;
 
 public class MessageParser {
 	public class TypeRequest {

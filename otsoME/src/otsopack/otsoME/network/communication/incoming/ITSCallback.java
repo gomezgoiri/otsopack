@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.incoming;
 
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface ITSCallback {
 	/**

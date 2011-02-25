@@ -13,7 +13,7 @@
  */
 package otsopack.otsoDroid.network.communication.incoming.response;
 
-import otsopack.otsoMobile.data.IModel;
+import otsopack.otsoCommons.data.IModel;
 
 public class LockModelResponse extends ModelResponse {
 	final Object lock;

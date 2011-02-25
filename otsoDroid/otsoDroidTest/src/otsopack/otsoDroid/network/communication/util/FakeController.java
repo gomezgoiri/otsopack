@@ -13,10 +13,10 @@
  */
 package otsopack.otsoDroid.network.communication.util;
 
-import otsopack.otsoMobile.IController;
-import otsopack.otsoMobile.ITripleSpace;
-import otsopack.otsoMobile.dataaccess.IDataAccess;
-import otsopack.otsoMobile.network.INetwork;
+import otsopack.otsoCommons.IController;
+import otsopack.otsoCommons.ITripleSpace;
+import otsopack.otsoCommons.dataaccess.IDataAccess;
+import otsopack.otsoCommons.network.INetwork;
 
 public class FakeController implements IController {
 	INetwork net = null;

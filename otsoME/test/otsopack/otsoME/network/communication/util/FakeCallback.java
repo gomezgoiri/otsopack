@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.util;
 
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
 import otsopack.otsoME.network.communication.incoming.ITSCallback;
 
 public class FakeCallback implements ITSCallback {

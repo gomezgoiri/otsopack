@@ -19,12 +19,12 @@ import java.util.Enumeration;
 
 import otsopack.otsoDroid.configuration.JxmeConfiguration;
 import otsopack.otsoDroid.kernel.Kernel;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoMobile.exceptions.SpaceAlreadyExistsException;
-import otsopack.otsoMobile.exceptions.TSException;
-import otsopack.otsoMobile.exceptions.TripleParseException;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.exceptions.SpaceAlreadyExistsException;
+import otsopack.otsoCommons.exceptions.TSException;
+import otsopack.otsoCommons.exceptions.TripleParseException;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;

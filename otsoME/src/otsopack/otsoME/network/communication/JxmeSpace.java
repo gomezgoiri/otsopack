@@ -37,9 +37,9 @@ import org.apache.log4j.Priority;
 import otsopack.otsoME.network.communication.incoming.ITSCallback;
 import otsopack.otsoME.network.communication.util.MessageParser;
 import otsopack.otsoME.network.communication.util.MessageParser.Properties;
-import otsopack.otsoMobile.exceptions.MalformedMessageException;
-import otsopack.otsoMobile.log.Printer;
-import otsopack.otsoMobile.util.Util;
+import otsopack.otsoCommons.exceptions.MalformedMessageException;
+import otsopack.otsoCommons.log.Printer;
+import otsopack.otsoCommons.util.Util;
 
 public class JxmeSpace implements PipeMsgListener, IMessageSender {	
 	private final static Logger log = Logger.getInstance(JxmeSpace.class.getName());

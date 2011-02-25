@@ -14,7 +14,7 @@
 package otsopack.otsoME.network.communication.notifications;
 
 import net.jxta.util.java.lang.Cloneable;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface INotificationElement extends Cloneable {
 	String getURI();

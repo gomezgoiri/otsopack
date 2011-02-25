@@ -15,7 +15,7 @@ package otsopack.otsoME.network.communication.demand;
 
 import java.util.Vector;
 
-import otsopack.otsoMobile.util.collections.Collections;
+import otsopack.otsoCommons.util.collections.Collections;
 
 public class DemandRecord {
 	Vector records;

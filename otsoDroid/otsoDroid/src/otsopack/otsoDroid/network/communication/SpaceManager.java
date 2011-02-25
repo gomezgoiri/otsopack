@@ -32,11 +32,11 @@ import otsopack.otsoDroid.network.communication.notifications.NotificationContai
 import otsopack.otsoDroid.network.communication.notifications.NotificationsFactory;
 import otsopack.otsoDroid.network.communication.notifications.Subscription;
 import otsopack.otsoDroid.network.communication.outcoming.OutcomingManager;
-import otsopack.otsoMobile.IController;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.network.communication.demand.local.ISuggestionCallback;
-import otsopack.otsoMobile.network.communication.event.listener.INotificationListener;
+import otsopack.otsoCommons.IController;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
 
 public class SpaceManager implements ISpaceInformationHolder {
 	private final static Logger log = Logger.getLogger(SpaceManager.class.getName());

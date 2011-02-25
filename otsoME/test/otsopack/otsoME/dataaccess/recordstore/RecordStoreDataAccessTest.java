@@ -13,17 +13,17 @@
  */
 package otsopack.otsoME.dataaccess.recordstore;
 
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.ITriple;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.ITriple;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
 import otsopack.otsoME.dataaccess.recordstore.RecordStoreDataAccess;
 import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
-import otsopack.otsoMobile.exceptions.SpaceAlreadyExistsException;
-import otsopack.otsoMobile.exceptions.SpaceNotExistsException;
-import otsopack.otsoMobile.exceptions.TSException;
+import otsopack.otsoCommons.exceptions.SpaceAlreadyExistsException;
+import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
+import otsopack.otsoCommons.exceptions.TSException;
 import otsopack.otsoME.sampledata.ExampleME;
 import jmunit.framework.cldc11.TestCase;
 

@@ -14,8 +14,8 @@
 package otsopack.otsoDroid.network.communication.util;
 
 import otsopack.otsoDroid.network.communication.incoming.ITSCallback;
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
 
 public class FakeCallback implements ITSCallback {
 	private boolean queryReceived = false;

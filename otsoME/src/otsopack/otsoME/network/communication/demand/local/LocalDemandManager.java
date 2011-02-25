@@ -16,11 +16,11 @@ package otsopack.otsoME.network.communication.demand.local;
 import otsopack.otsoME.network.communication.demand.DemandRecord;
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
 import otsopack.otsoME.network.communication.outcoming.IDemandSender;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.IModel;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.network.communication.demand.local.ISuggestionCallback;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.IModel;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
 
 public class LocalDemandManager implements ISuggestionCallbackManager {
 	final private DemandRecord record;

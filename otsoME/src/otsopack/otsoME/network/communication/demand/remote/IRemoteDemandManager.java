@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface IRemoteDemandManager extends IRemoteDemandIOManager {
 

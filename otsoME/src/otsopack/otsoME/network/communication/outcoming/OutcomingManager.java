@@ -23,13 +23,13 @@ import otsopack.otsoME.network.communication.incoming.response.LockModelResponse
 import otsopack.otsoME.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoME.network.communication.incoming.response.URIResponse;
 import otsopack.otsoME.network.communication.util.MessageParser;
-import otsopack.otsoMobile.configuration.TscMEConfiguration;
-import otsopack.otsoMobile.data.IGraph;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.network.communication.event.listener.INotificationListener;
-import otsopack.otsoMobile.network.coordination.IPeerInformationHolder;
-import otsopack.otsoMobile.stats.Statistics;
+import otsopack.otsoCommons.configuration.TscMEConfiguration;
+import otsopack.otsoCommons.data.IGraph;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.otsoCommons.network.coordination.IPeerInformationHolder;
+import otsopack.otsoCommons.stats.Statistics;
 
 
 public class OutcomingManager implements IDemandSender, IResponseSender {

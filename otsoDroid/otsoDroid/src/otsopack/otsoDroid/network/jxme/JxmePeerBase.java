@@ -34,7 +34,7 @@ import net.jxta.rendezvous.RendezvousListener;
 import org.apache.log4j.Logger;
 
 import otsopack.otsoDroid.configuration.JxmeConfiguration;
-import otsopack.otsoMobile.exceptions.TSException;
+import otsopack.otsoCommons.exceptions.TSException;
 
 public class JxmePeerBase {
 	private final static Logger LOG = Logger.getLogger(JxmePeerBase.class.getName());

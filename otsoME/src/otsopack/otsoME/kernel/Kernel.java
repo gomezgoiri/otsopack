@@ -14,7 +14,7 @@
 package otsopack.otsoME.kernel;
 
 import otsopack.otsoME.network.jxme.JxmeNetwork;
-import otsopack.otsoMobile.kernel.AbstractKernel;
+import otsopack.otsoCommons.kernel.AbstractKernel;
 
 public class Kernel extends AbstractKernel {
 

@@ -13,8 +13,8 @@
  */
 package otsopack.otsoDroid.network.communication.notifications;
 
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.network.communication.event.listener.INotificationListener;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
 
 public interface ISubscription extends INotificationElement {
 	INotificationListener getListener();

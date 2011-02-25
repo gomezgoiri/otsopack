@@ -14,7 +14,7 @@
 package otsopack.otsoME.network.communication.demand.remote;
 
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 public class RemoteDemandEntry implements IDemandEntry { //java.util.Comparable ???
 	ITemplate template;

@@ -15,11 +15,11 @@ package otsopack.otsoDroid.network.communication.demand.remote;
 
 import junit.framework.TestCase;
 import otsopack.otsoDroid.network.communication.demand.DemandRecord;
-import otsopack.otsoMobile.data.ISemanticFactory;
-import otsopack.otsoMobile.data.ITemplate;
-import otsopack.otsoMobile.data.impl.SemanticFactory;
-import otsopack.otsoMobile.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoMobile.exceptions.MalformedTemplateException;
+import otsopack.otsoCommons.data.ISemanticFactory;
+import otsopack.otsoCommons.data.ITemplate;
+import otsopack.otsoCommons.data.impl.SemanticFactory;
+import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
+import otsopack.otsoCommons.exceptions.MalformedTemplateException;
 
 public class GarbageCollectorTest extends TestCase {
 	

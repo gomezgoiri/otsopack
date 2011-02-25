@@ -13,7 +13,7 @@
  */
 package otsopack.otsoDroid.network.communication.demand.remote;
 
-import otsopack.otsoMobile.data.ITemplate;
+import otsopack.otsoCommons.data.ITemplate;
 
 public interface IRemoteDemandIOManager {
 	public abstract void demandReceived(ITemplate template, long leaseTime);
