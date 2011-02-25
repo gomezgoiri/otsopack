@@ -1,0 +1,21 @@
+
+syntax: regexp
+^otsoCommons/dist/otsoCommons-sources\.jar$
+
+syntax: regexp
+^otsoME/\.processed/
+
+syntax: regexp
+^otsoDroid/otsoDroidTest/bin
+
+syntax: regexp
+^otsoDroid/otsoDroid/bin
+
+syntax: regexp
+^otsoCommons/bin
+
+syntax: regexp
+^otsoDroid/otsoDroid/gen
+^otsoDroid/otsoDroidTest/gen
+^otsoME/.mtj.tmp/
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="otsoFullJavaCommons" default="javac">
+	
+	<property name="junit.formatter.type" value="xml" />
+	<property name="testreportdir" value="build" />
+	<property name="microjena" value="lib/microjena.jar" />
+	
+    <path id="project.class.path">
+		<pathelement location="../otsoCommons/dist/otsoCommons.jar"/>
+    </path>
+	
+	<target name="javac">
+		<javac srcdir="src:test" destdir="bin" 
+				includes="**" debug="on" debuglevel="lines,vars,source" 
+            	encoding="utf-8">
+			<classpath refid="project.class.path"/>
+		</javac>            
+	</target>
+	
+	<target name="droid-jar" depends="clean">
+		<copy todir="bin">
+			<fileset dir="src"/>
+		</copy>
+		<javac srcdir="bin" destdir="bin" 
+				includes="**" debug="on" debuglevel="lines,vars,source" 
+            	encoding="utf-8">
+			<classpath refid="project.class.path"/>
+		</javac>
+		<mkdir dir="dist" />
+		<jar destfile="dist/otsoFullJavaCommons-sources.jar" basedir="bin"/>
+	</target>
+	
+	<target name="test" depends="javac">
+		<mkdir dir="${testreportdir}"/>
+		<junit failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true" showoutput="true">
+			<classpath>
+			        <pathelement path="bin"/>
+			        <path refid="project.class.path"/>
+			</classpath>
+			<batchtest todir="${testreportdir}">
+			        <fileset dir="test">
+			                <include name="**/**Test.java"/>
+			        </fileset>
+			</batchtest>
+			<formatter type="${junit.formatter.type}"/>
+			<formatter usefile="false" type="plain" />
+		</junit>
+        <fail if="test.failure" message="Tests failed..."/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="bin/otsopack" failonerror="false" />
+	</target>
+</project>
