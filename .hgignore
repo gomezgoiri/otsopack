@@ -3,6 +3,9 @@ syntax: regexp
 ^otsoCommons/dist/otsoCommons-sources\.jar$
 
 syntax: regexp
+^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
+
+syntax: regexp
 ^otsoME/\.processed/
 
 syntax: regexp
@@ -10,6 +13,9 @@ syntax: regexp
 
 syntax: regexp
 ^otsoDroid/otsoDroid/bin
+
+syntax: regexp
+^otsoFullJavaCommons/bin
 
 syntax: regexp
 ^otsoCommons/bin
