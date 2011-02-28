@@ -25,14 +25,14 @@ import otsopack.otsoME.configuration.JxmeConfiguration;
 import otsopack.otsoME.network.communication.ISpaceInformationHolder;
 import otsopack.otsoME.network.communication.SpaceManager;
 import otsopack.otsoME.network.jxme.JxmePeerBase;
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
-import otsopack.otsoCommons.exceptions.TSException;
-import otsopack.otsoCommons.network.ICoordination;
-import otsopack.otsoCommons.util.Util;
-import otsopack.otsoCommons.util.collections.HashMap;
-import otsopack.otsoCommons.util.collections.Map;
-import otsopack.otsoCommons.util.collections.Set;
+import otsopack.commons.IController;
+import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICoordination;
+import otsopack.commons.util.Util;
+import otsopack.commons.util.collections.HashMap;
+import otsopack.commons.util.collections.Map;
+import otsopack.commons.util.collections.Set;
 
 
 public class JxmeCoordination implements ICoordination {

@@ -15,17 +15,17 @@ package otsopack.otsoME.network.jxme;
 
 import otsopack.otsoME.network.communication.JxmeCommunication;
 import otsopack.otsoME.network.coordination.JxmeCoordination;
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
-import otsopack.otsoCommons.exceptions.TSException;
-import otsopack.otsoCommons.network.ICommunication;
-import otsopack.otsoCommons.network.ICoordination;
-import otsopack.otsoCommons.network.INetwork;
-import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
-import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
-import otsopack.otsoCommons.util.collections.Set;
+import otsopack.commons.IController;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICommunication;
+import otsopack.commons.network.ICoordination;
+import otsopack.commons.network.INetwork;
+import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.util.collections.Set;
 
 public class JxmeNetwork implements INetwork {		
     private ICoordination coordination = null;

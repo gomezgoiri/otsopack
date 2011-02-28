@@ -16,9 +16,9 @@ package otsopack.otsoME.network.communication.notifications;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.util.collections.Collection;
-import otsopack.otsoCommons.util.collections.HashSet;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.util.collections.Collection;
+import otsopack.commons.util.collections.HashSet;
 
 public class NotificationContainer implements Collection, INotificationChooser {
 	Hashtable notificationsBySelector;

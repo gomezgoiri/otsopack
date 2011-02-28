@@ -24,14 +24,14 @@ import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import org.apache.log4j.Logger;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.dataaccess.IDataAccess;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
 import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
-import otsopack.otsoCommons.exceptions.SpaceAlreadyExistsException;
-import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
-import otsopack.otsoCommons.exceptions.TSException;
+import otsopack.commons.exceptions.SpaceAlreadyExistsException;
+import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.TSException;
 
 public class RecordStoreDataAccess implements IDataAccess {
 	private final static Logger log = Logger.getInstance(RecordStoreDataAccess.class.getName());

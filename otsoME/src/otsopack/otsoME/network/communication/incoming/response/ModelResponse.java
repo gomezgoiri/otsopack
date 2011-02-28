@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.IModel;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.IModel;
 
 public class ModelResponse extends Response {
 	private IModel model = null;

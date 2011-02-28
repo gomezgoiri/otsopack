@@ -18,11 +18,11 @@ import java.util.Vector;
 
 import otsopack.otsoME.network.communication.demand.DemandRecord;
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.IModel;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.IModel;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
 
 public class RemoteDemandManager implements IRemoteDemandManager {
 	final protected DemandRecord record;

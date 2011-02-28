@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
-import otsopack.otsoCommons.data.IGraph;
+import otsopack.commons.data.IGraph;
 
 public interface IRemoteResponsabilityChecker {
 	public abstract boolean hasAnyPeerResponsabilityOverThisKnowledge(

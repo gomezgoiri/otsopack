@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
-import otsopack.otsoCommons.data.ITemplate;
+import otsopack.commons.data.ITemplate;
 
 public interface IRemoteDemandIOManager {
 	public abstract void demandReceived(ITemplate template, long leaseTime);

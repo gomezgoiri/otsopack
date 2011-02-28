@@ -15,8 +15,8 @@ package otsopack.otsoME.dataaccess.recordstore.space;
 
 import javax.microedition.rms.RecordStoreException;
 
-import otsopack.otsoCommons.data.IModel;
-import otsopack.otsoCommons.data.ITemplate;
+import otsopack.commons.data.IModel;
+import otsopack.commons.data.ITemplate;
 
 public class GraphRecord {		
 	int recordId;

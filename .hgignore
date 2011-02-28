@@ -21,7 +21,17 @@ syntax: regexp
 ^otsoCommons/bin
 
 syntax: regexp
+^otsoSE/bin
+
+syntax: regexp
 ^otsoDroid/otsoDroid/gen
 ^otsoDroid/otsoDroidTest/gen
 ^otsoME/.mtj.tmp/
 
+syntax: regexp
+^otsoDroid/otsoDroid/local\.properties$
+
+syntax: regexp
+^otsoDroid/otsoDroid/debug\.keystore$
+syntax: regexp
+^otsoDroid/otsoDroid/build\.properties$

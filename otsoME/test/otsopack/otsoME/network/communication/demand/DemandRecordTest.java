@@ -13,11 +13,11 @@
  */
 package otsopack.otsoME.network.communication.demand;
 
-import otsopack.otsoCommons.data.ISemanticFactory;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.otsoME.network.communication.demand.DemandRecord;
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
 import jmunit.framework.cldc11.TestCase;

@@ -20,7 +20,7 @@ import jmunit.framework.cldc11.TestCase;
 import net.jxta.id.IDFactory;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeID;
-import otsopack.otsoCommons.util.Util;
+import otsopack.commons.util.Util;
 
 //TODO a lot of untested utility methods in Util class
 public class UtilTest extends TestCase {

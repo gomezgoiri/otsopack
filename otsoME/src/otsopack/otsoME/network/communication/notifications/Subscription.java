@@ -13,10 +13,10 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
-import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class Subscription implements ISubscription {
 	String uri;

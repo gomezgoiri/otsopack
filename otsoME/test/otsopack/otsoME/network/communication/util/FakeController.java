@@ -13,10 +13,10 @@
  */
 package otsopack.otsoME.network.communication.util;
 
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.ITripleSpace;
-import otsopack.otsoCommons.dataaccess.IDataAccess;
-import otsopack.otsoCommons.network.INetwork;
+import otsopack.commons.IController;
+import otsopack.commons.ITripleSpace;
+import otsopack.commons.dataaccess.IDataAccess;
+import otsopack.commons.network.INetwork;
 
 public class FakeController implements IController {
 	INetwork net = null;

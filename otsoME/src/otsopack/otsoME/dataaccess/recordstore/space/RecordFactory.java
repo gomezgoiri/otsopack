@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.dataaccess.recordstore.space;
 
-import otsopack.otsoCommons.data.IModel;
+import otsopack.commons.data.IModel;
 
 public final class RecordFactory {
 	private RecordFactory() {

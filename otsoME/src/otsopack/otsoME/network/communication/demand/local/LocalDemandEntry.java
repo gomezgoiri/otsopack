@@ -14,8 +14,8 @@
 package otsopack.otsoME.network.communication.demand.local;
 
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 
 public class LocalDemandEntry implements IDemandEntry { //java.util.Comparable ???
 	final ITemplate template;

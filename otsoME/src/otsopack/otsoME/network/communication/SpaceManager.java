@@ -32,11 +32,11 @@ import otsopack.otsoME.network.communication.notifications.NotificationContainer
 import otsopack.otsoME.network.communication.notifications.NotificationsFactory;
 import otsopack.otsoME.network.communication.notifications.Subscription;
 import otsopack.otsoME.network.communication.outcoming.OutcomingManager;
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
-import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.IController;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class SpaceManager implements ISpaceInformationHolder {
 	private final static Logger log = Logger.getInstance(SpaceManager.class.getName());

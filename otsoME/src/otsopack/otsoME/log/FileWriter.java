@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
-import otsopack.otsoCommons.log.IPrintOut;
+import otsopack.commons.log.IPrintOut;
 
 public class FileWriter implements IPrintOut {
 	static final private String SEPARATOR = System.getProperty("file.separator");

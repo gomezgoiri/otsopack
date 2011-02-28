@@ -14,14 +14,14 @@
 package otsopack.otsoME.network.communication;
 
 import otsopack.otsoME.network.coordination.JxmeCoordination;
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
-import otsopack.otsoCommons.exceptions.TSException;
-import otsopack.otsoCommons.network.ICommunication;
-import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
-import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.IController;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICommunication;
+import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class JxmeCommunication implements ICommunication {
 	IController controller;

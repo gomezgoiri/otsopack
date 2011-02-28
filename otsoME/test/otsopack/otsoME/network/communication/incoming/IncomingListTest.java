@@ -13,10 +13,10 @@
  */
 package otsopack.otsoME.network.communication.incoming;
 
-import otsopack.otsoCommons.data.ISemanticFactory;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.otsoME.network.communication.incoming.IncomingList;
 import otsopack.otsoME.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoME.network.communication.incoming.response.Response;

@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.demand;
 
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.util.collections.Comparable;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.util.collections.Comparable;
 
 public interface IDemandEntry extends Comparable {
 	/**

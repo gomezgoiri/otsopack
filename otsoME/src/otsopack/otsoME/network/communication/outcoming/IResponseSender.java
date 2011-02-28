@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.outcoming;
 
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ITemplate;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ITemplate;
 
 public interface IResponseSender {
 	void response(ITemplate responseTo, IGraph triples);

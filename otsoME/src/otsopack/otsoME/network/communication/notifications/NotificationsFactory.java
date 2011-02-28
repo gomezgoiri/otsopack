@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class NotificationsFactory {
 	private NotificationsFactory() {

@@ -16,13 +16,13 @@ package otsopack.otsoME.network.communication.demand.local;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.otsoME.network.communication.outcoming.IDemandSender;
 import otsopack.otsoME.sampledata.ExampleME;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.ISemanticFactory;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
-import otsopack.otsoCommons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 
 public class LocalDemandManagerTest extends TestCase {
 	

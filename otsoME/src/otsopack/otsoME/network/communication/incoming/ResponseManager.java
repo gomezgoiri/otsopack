@@ -30,12 +30,12 @@ import otsopack.otsoME.network.communication.incoming.response.URIResponse;
 import otsopack.otsoME.network.communication.notifications.INotificationChooser;
 import otsopack.otsoME.network.communication.notifications.ISubscription;
 import otsopack.otsoME.network.communication.outcoming.IResponseSender;
-import otsopack.otsoCommons.IController;
-import otsopack.otsoCommons.data.IGraph;
-import otsopack.otsoCommons.data.IModel;
-import otsopack.otsoCommons.data.ITemplate;
-import otsopack.otsoCommons.exceptions.ResponseNotExpected;
-import otsopack.otsoCommons.exceptions.SpaceNotExistsException;
+import otsopack.commons.IController;
+import otsopack.commons.data.IGraph;
+import otsopack.commons.data.IModel;
+import otsopack.commons.data.ITemplate;
+import otsopack.commons.exceptions.ResponseNotExpected;
+import otsopack.commons.exceptions.SpaceNotExistsException;
 
 
 public class ResponseManager implements ITSCallback {

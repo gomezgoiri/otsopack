@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.outcoming;
 
-import otsopack.otsoCommons.data.ITemplate;
+import otsopack.commons.data.ITemplate;
 
 public interface IDemandSender {
 

@@ -15,15 +15,15 @@ package otsopack.otsoME.network.communication.notifications;
 
 import java.util.Enumeration;
 
-import otsopack.otsoCommons.data.ISemanticFactory;
-import otsopack.otsoCommons.data.impl.SemanticFactory;
-import otsopack.otsoCommons.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoCommons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.otsoME.network.communication.notifications.INotificationElement;
 import otsopack.otsoME.network.communication.notifications.NotificationContainer;
 import otsopack.otsoME.network.communication.notifications.NotificationsFactory;
-import otsopack.otsoCommons.util.collections.HashSet;
-import otsopack.otsoCommons.util.collections.Vector;
+import otsopack.commons.util.collections.HashSet;
+import otsopack.commons.util.collections.Vector;
 import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
 
