@@ -7,7 +7,7 @@ import org.restlet.resource.Post;
 
 public interface IPrefixesResource {
 	@Get
-	public abstract Collection<Prefix> retrieve();
+	public abstract Prefix[] retrieve();
 
 	@Post
 	public abstract void create(Prefix prefix);

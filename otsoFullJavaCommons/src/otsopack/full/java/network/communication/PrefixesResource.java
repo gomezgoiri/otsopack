@@ -1,7 +1,6 @@
 package otsopack.full.java.network.communication;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +29,9 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	}
 	
 	@Override
-	synchronized public Collection<Prefix> retrieve() {
-		return prefixesByURI.values();
+	synchronized public Prefix[] retrieve() {
+		Prefix[] ret = new Prefix[prefixesByURI.size()];
+		return (Prefix[]) prefixesByURI.values().toArray(ret);
 	}
 
 	@Override
