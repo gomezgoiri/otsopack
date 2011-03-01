@@ -1,28 +1,50 @@
 package otsopack.full.java.network.communication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
 public class RestServer {
-	Component component;
+	public static final int DEFAULT_PORT = 8182;
+	private final int port;
+	private final Component component;
 	
-	public RestServer() {
+	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	
+	static{
+		PATHS.put("/user/{user}", PrefixManager.class);
+		PATHS.put("/prefixes",    PrefixManager.class);
+		
+		PATHS.put("/graphs",           GraphsManager.class);
+		PATHS.put("/graphs/wildcard",  WildcardGraphManager.class);
 		
 	}
 	
-	public void startup() throws Exception {        
-	    component = new Component();  
-	    component.getServers().add(Protocol.HTTP, 8182);
+	public RestServer(int port) {
+		this.port = port;
+		
+	    this.component = new Component();  
+	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    // Now, let's start the component!  
-	    // Note that the HTTP server connector is also automatically started.  
-	    component.start();
-	    
-	    component.getDefaultHost().attach("/user/{user}", PrefixManager.class);
-	    component.getDefaultHost().attach("/prefixes", PrefixManager.class);  
+	    for(String pattern : RestServer.PATHS.keySet())
+	    	this.component.getDefaultHost().attach(pattern, RestServer.PATHS.get(pattern));
+	}
+	
+	public RestServer(){
+		this(DEFAULT_PORT);
+	}
+	
+	public void startup() throws Exception {
+		this.component.start();
+	}
+	
+	public void attach(String pattern, Class<?> targetClass){
+		this.component.getDefaultHost().attach(pattern, targetClass);
 	}
 	
 	public void shutdown() throws Exception {
-		component.stop();
+		this.component.stop();
 	}
 }

@@ -11,19 +11,16 @@ import otsopack.commons.network.communication.event.listener.INotificationListen
 public class RestCommunication implements ICommunication {
 
 	public RestCommunication() {
-		// TODO Auto-generated constructor stub
+		/*Router router = new Router(svr.getContext());
+		router.attach("/user", UserResource.class);*/
 	}
 
 	@Override
 	public void startup() throws TSException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void shutdown() throws TSException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
