@@ -7,11 +7,11 @@ import java.util.Map;
 import org.restlet.resource.ServerResource;
 
 public class PrefixesResource extends ServerResource implements IPrefixesResource {
-	static public Map<URI,Prefix> prefixesByURI;
+	static public Map<String,Prefix> prefixesByURI;
 	static public Map<String,Prefix> prefixesByName;
 	
 	static {
-		prefixesByURI = new HashMap<URI,Prefix>();
+		prefixesByURI = new HashMap<String,Prefix>();
 		prefixesByName = new HashMap<String,Prefix>();
 	}
 	
@@ -31,7 +31,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	@Override
 	synchronized public Prefix[] retrieve() {
 		Prefix[] ret = new Prefix[prefixesByURI.size()];
-		return (Prefix[]) prefixesByURI.values().toArray(ret);
+		return prefixesByURI.values().toArray(ret);
 	}
 
 	@Override

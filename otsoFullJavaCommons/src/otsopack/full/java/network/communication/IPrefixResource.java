@@ -7,6 +7,8 @@ import org.restlet.resource.Put;
 public interface IPrefixResource {
 	@Get
 	public abstract Prefix retrieve();
+	@Get("json")
+	public abstract String retrieveJson();	
 	@Put
 	public abstract void store(Prefix prefix);
 	@Delete

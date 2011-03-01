@@ -1,17 +1,16 @@
 package otsopack.full.java.network.communication;
 
 import java.io.Serializable;
-import java.net.URI;
 
 public class Prefix implements Serializable {
 	private static final long serialVersionUID = -1460421204139612085L;
 	
 	String name;
-	URI uri;
+	String uri;
 	
 	public Prefix() {}
 	
-	public Prefix(String name, URI uri) {
+	public Prefix(String name, String uri) {
 		this.name = name;
 		this.uri = uri;
 	}
@@ -22,10 +21,10 @@ public class Prefix implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public URI getUri() {
+	public String getUri() {
 		return this.uri;
 	}
-	public void setUri(URI uri) {
+	public void setUri(String uri) {
 		this.uri = uri;
-	}	
+	}
 }
