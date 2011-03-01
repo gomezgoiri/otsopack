@@ -9,6 +9,10 @@ public class GraphsManager extends ServerResource implements GraphsResource {
 
 	public static final String ROOT = "/graphs";
 	
+	private static final String [] roots = new String[]{
+		WildcardsGraphManager.ROOT
+	};
+	
 	private static final String html;
 	
 	static{
@@ -17,7 +21,8 @@ public class GraphsManager extends ServerResource implements GraphsResource {
 		builder.append("\t<ul>\n");
 		
 		// Add other systems
-		addChild(builder, WildcardsGraphManager.ROOT);
+		for(String root : roots)
+			addChild(builder, root);
 		
 		builder.append("\t</ul>\n");
 		builder.append("</body>\n");
@@ -35,8 +40,8 @@ public class GraphsManager extends ServerResource implements GraphsResource {
 	}
 	
 	@Override
-	public Representation retrieve() {
-		return new StringRepresentation(GraphsManager.html, MediaType.TEXT_HTML);
+	public String [] retrieve() {
+		return GraphsManager.roots;
 	}
 	
 }
