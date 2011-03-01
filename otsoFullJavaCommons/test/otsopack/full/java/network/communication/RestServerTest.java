@@ -41,7 +41,7 @@ public class RestServerTest {
 		prefrsc.create( new Prefix("xsd", new URI("http://www.w3.org/2001/XMLSchema#")) );
 		prefrsc.create( new Prefix("rdf", new URI("http://www.w3.org/2002/07/owl#")) );
 		
-		Collection<Prefix> prefixes = prefrsc.retrieve();
-		assertEquals(prefixes.size(), 4);
+		Prefix[] prefixes = prefrsc.retrieve();
+		assertEquals(prefixes.length, 4);
 	}
 }
