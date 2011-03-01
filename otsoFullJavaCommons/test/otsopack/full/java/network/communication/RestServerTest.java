@@ -17,27 +17,23 @@ public class RestServerTest {
 	@Before
 	public void setUp() throws Exception {
 		this.rs = new RestServer();
+		this.rs.startup();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void testStartup() throws Exception {
-		this.rs.startup();
-		
-		ClientResource cr = new ClientResource("http://localhost:8182/prefixes/rdf");
-		IPrefixResource prefmng = cr.wrap(IPrefixResource.class);
-		assertNull( prefmng );
-		
 		this.rs.shutdown();
 	}
 
 	@Test
+	public void testStartup() throws Exception {
+		ClientResource cr = new ClientResource("http://localhost:8182/prefixes/rdf");
+		IPrefixResource prefmng = cr.wrap(IPrefixResource.class);
+		assertNull( prefmng );
+	}
+
+	@Test
 	public void testCreatePrefix() throws Exception {
-		this.rs.startup();
-		
 		ClientResource cr = new ClientResource("http://localhost:8182/prefixes");
 		IPrefixesResource prefrsc = cr.wrap(IPrefixesResource.class);
 		prefrsc.create( new Prefix("rdf", new URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#")) );
@@ -47,7 +43,5 @@ public class RestServerTest {
 		
 		Collection<Prefix> prefixes = prefrsc.retrieve();
 		assertEquals(prefixes.size(), 4);
-		
-		this.rs.shutdown();
 	}
 }
