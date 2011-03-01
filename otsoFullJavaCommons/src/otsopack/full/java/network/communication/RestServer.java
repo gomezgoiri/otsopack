@@ -14,8 +14,8 @@ public class RestServer {
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
-		PATHS.put("/user/{user}", PrefixManager.class);
-		PATHS.put("/prefixes",    PrefixManager.class);
+		PATHS.put("/prefixes/{prefixname}", PrefixResource.class);
+		PATHS.put("/prefixes",				PrefixesResource.class);
 		
 		PATHS.put("/graphs",           GraphsManager.class);
 		PATHS.put("/graphs/wildcard",  WildcardGraphManager.class);
@@ -46,5 +46,6 @@ public class RestServer {
 	
 	public void shutdown() throws Exception {
 		this.component.stop();
+		PrefixesResource.clear();
 	}
 }

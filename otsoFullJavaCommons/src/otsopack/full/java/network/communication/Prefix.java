@@ -4,11 +4,18 @@ import java.io.Serializable;
 import java.net.URI;
 
 public class Prefix implements Serializable {
-	
 	private static final long serialVersionUID = -1460421204139612085L;
 	
 	String name;
 	URI uri;
+	
+	public Prefix() {}
+	
+	public Prefix(String name, URI uri) {
+		this.name = name;
+		this.uri = uri;
+	}
+	
 	public String getName() {
 		return this.name;
 	}
