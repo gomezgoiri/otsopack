@@ -1,9 +1,14 @@
 package otsopack.full.java.network.communication;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.Status;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 public class PrefixResource extends ServerResource implements IPrefixResource {
@@ -19,20 +24,28 @@ public class PrefixResource extends ServerResource implements IPrefixResource {
 	}
 	
 	@Override
-    public String retrieveJson() {
-		String prefname = this.getRequest().getAttributes().get("prefixname").toString();
-		final String uri = this.pr.getPrefix(prefname);
-		if( uri == null ) {
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);  
-		}
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public String retrieveJson() throws ResourceException {
+		final String prefname = this.getRequest().getAttributes().get("prefixname").toString();
+		final URI uri;
 		try {
-			this.mapper.writeValue(baos, uri);
-		} catch (Exception e) {
-			e.printStackTrace();
+			String uriStr = URLDecoder.decode(prefname, "utf-8");
+			uri = new URI(uriStr);
+		} catch (UnsupportedEncodingException e1) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be an UTF-8 encoded URI");
+		} catch (URISyntaxException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be a valid URI");		
 		}
-		System.out.println("En JSON esto es...");
+		
+		final String name = this.pr.getPrefix(uri);
+		if( name == null )
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find uri");  
+
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			this.mapper.writeValue(baos, name);
+		} catch (Exception e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Couldn't serialize result!");
+		}
     	return baos.toString();
     }
 }

@@ -24,7 +24,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	}
 	
 	synchronized public String getPrefix(URI prefixUri) {
-		return prefixesByURI.get(prefixUri);
+		return prefixesByURI.get(prefixUri.toString());
 	}
 	
 	@Override

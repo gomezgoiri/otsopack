@@ -2,12 +2,12 @@ package otsopack.full.java.network.communication;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -76,13 +76,14 @@ public class RestServerTest {
 
 	@Test
 	public void testGetPrefix() throws Exception {
-		PrefixesResource.create("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		final String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+		PrefixesResource.create("rdf", RDF_URI);
 		
-		ClientResource cr = new ClientResource("http://localhost:8182/prefixes/rdf");
+		ClientResource cr = new ClientResource("http://localhost:8182/prefixes/" + URLEncoder.encode(RDF_URI, "utf-8"));
 		IPrefixResource prefixrsc = cr.wrap(IPrefixResource.class);
 		
 		// Test json retrieval
-		assertEquals(prefixrsc.retrieveJson(),"\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"");
+		assertEquals(prefixrsc.retrieveJson(),"\"rdf\"");
 		
 		
 		// Test non existing prefix
