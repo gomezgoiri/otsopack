@@ -8,10 +8,14 @@ public abstract class AbstractRestServerTesting {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.rs = new RestServer();
+		this.rs = new RestServer(RestServer.DEFAULT_PORT);
 		this.rs.startup();
 	}
-
+	
+	protected String getBaseURL(){
+		return "http://localhost:" + RestServer.DEFAULT_PORT + "/";
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 		this.rs.shutdown();

@@ -13,7 +13,7 @@ import org.restlet.resource.ResourceException;
 public class PrefixesTest extends AbstractRestServerTesting{
 	@Test
 	public void testCreatePrefix() throws Exception {
-		final ClientResource cr = new ClientResource("http://localhost:8182/prefixes");
+		final ClientResource cr = new ClientResource(getBaseURL() + "prefixes");
 		final IPrefixesResource prefrsc = cr.wrap(IPrefixesResource.class);
 		
 		HashMap<String, String> prefixes = prefrsc.retrieve();
@@ -30,7 +30,7 @@ public class PrefixesTest extends AbstractRestServerTesting{
 	
 	@Test
 	public void testGetPrefixes() throws Exception {
-		final ClientResource cr = new ClientResource("http://localhost:8182/prefixes");
+		final ClientResource cr = new ClientResource(getBaseURL() + "prefixes");
 		final IPrefixesResource prefrsc = cr.wrap(IPrefixesResource.class);
 		PrefixesResource.create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		PrefixesResource.create( "rdfs", "http://www.w3.org/2000/01/rdf-schema#");
@@ -64,7 +64,7 @@ public class PrefixesTest extends AbstractRestServerTesting{
 		final String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 		PrefixesResource.create("rdf", RDF_URI);
 		
-		ClientResource cr = new ClientResource("http://localhost:8182/prefixes/" + URLEncoder.encode(RDF_URI, "utf-8"));
+		ClientResource cr = new ClientResource(getBaseURL() + "prefixes/" + URLEncoder.encode(RDF_URI, "utf-8"));
 		IPrefixResource prefixrsc = cr.wrap(IPrefixResource.class);
 		
 		// Test json retrieval
@@ -72,7 +72,7 @@ public class PrefixesTest extends AbstractRestServerTesting{
 		
 		
 		// Test non existing prefix
-		cr = new ClientResource("http://localhost:8182/prefixes/doesnotexist");
+		cr = new ClientResource(getBaseURL() + "prefixes/doesnotexist");
 		try {
 			prefixrsc.retrieveJson();
 		} catch(ResourceException re) {

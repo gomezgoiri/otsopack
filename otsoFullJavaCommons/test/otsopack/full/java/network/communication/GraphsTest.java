@@ -9,7 +9,7 @@ import otsopack.full.java.network.communication.util.JSONDecoder;
 public class GraphsTest extends AbstractRestServerTesting {
 	@Test
 	public void testCreatePrefix() throws Exception {
-		final ClientResource cr = new ClientResource("http://localhost:8182/graphs");
+		final ClientResource cr = new ClientResource(getBaseURL() + "graphs");
 		final IGraphsResource prefrsc = cr.wrap(IGraphsResource.class);
 		
 		final String prefixes = prefrsc.toJson();
