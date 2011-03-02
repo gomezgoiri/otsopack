@@ -4,9 +4,6 @@ import java.io.ByteArrayOutputStream;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.Status;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 
 public class PrefixResource extends ServerResource implements IPrefixResource {
@@ -18,37 +15,24 @@ public class PrefixResource extends ServerResource implements IPrefixResource {
 		this.pr = new PrefixesResource();
 		/*super.getVariants().add(new Variant(MediaType.TEXT_PLAIN));
 		super.getVariants().add(new Variant(MediaType.APPLICATION_JSON));*/
+		//super.getVariants().add(new Variant(MediaType.APPLICATION_JAVA_OBJECT));
 	}
 	
-	@Get("json")
+	@Override
     public String retrieveJson() {
-		Prefix ret = this.retrieve();
+		String prefname = this.getRequest().getAttributes().get("prefixname").toString();
+		final String uri = this.pr.getPrefix(prefname);
+		if( uri == null ) {
+			setStatus(Status.CLIENT_ERROR_NOT_FOUND);  
+		}
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			this.mapper.writeValue(baos,ret);
+			this.mapper.writeValue(baos, uri);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("En JSON esto es...");
     	return baos.toString();
-    }
-	
-	@Get
-    public Prefix retrieve() {
-		String prefname = this.getRequest().getAttributes().get("prefixname").toString();
-		Prefix ret = this.pr.getPrefix(prefname);
-		if( ret==null ) {
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);  
-		}
-    	return ret;
-    }
-
-	@Put
-    public void store(Prefix prefix) {
-    	
-    }
-
-    @Delete
-    public void remove(Prefix prefix) {
-    	
     }
 }

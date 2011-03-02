@@ -9,35 +9,27 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.resource.ServerResource;
 
 public class PrefixesResource extends ServerResource implements IPrefixesResource {
-	ObjectMapper mapper;
-	static public Map<String,Prefix> prefixesByURI;
-	static public Map<String,Prefix> prefixesByName;
+	final ObjectMapper mapper = new ObjectMapper();
 	
-	static {
-		prefixesByURI = new HashMap<String,Prefix>();
-		prefixesByName = new HashMap<String,Prefix>();
-	}
-	
-	public PrefixesResource() {
-		this.mapper = new ObjectMapper();
-	}
+	static public final HashMap<String,String> prefixesByURI = new HashMap<String,String>();
+	static public final HashMap<String,String> prefixesByName = new HashMap<String,String>();
 	
 	synchronized public static void clear() {
 		prefixesByName.clear();
 		prefixesByURI.clear();
 	}
 	
-	synchronized public Prefix getPrefix(String prefixName) {
+	synchronized public String getPrefix(String prefixName) {
 		return prefixesByName.get(prefixName);
 	}
 	
-	synchronized public Prefix getPrefix(URI prefixUri) {
+	synchronized public String getPrefix(URI prefixUri) {
 		return prefixesByURI.get(prefixUri);
 	}
 	
 	@Override
     public String retrieveJson() {
-		Prefix[] ret = this.retrieve();
+		final Map<String, String> ret = this.retrieve();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			this.mapper.writeValue(baos,ret);
@@ -48,14 +40,12 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
     }
 	
 	@Override
-	synchronized public Prefix[] retrieve() {
-		Prefix[] ret = new Prefix[prefixesByURI.size()];
-		return prefixesByURI.values().toArray(ret);
+	synchronized public HashMap<String, String> retrieve() {
+		return prefixesByName;
 	}
 
-	@Override
-	synchronized public void create(Prefix prefix) {
-		prefixesByName.put(prefix.getName(),prefix);
-		prefixesByURI.put(prefix.getUri(),prefix);
+	synchronized public static void create(String name, String uri) {
+		prefixesByName.put(name, uri);
+		prefixesByURI.put(uri, name);
 	}
 }

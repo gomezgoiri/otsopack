@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.Component;
-import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 public class RestServer {

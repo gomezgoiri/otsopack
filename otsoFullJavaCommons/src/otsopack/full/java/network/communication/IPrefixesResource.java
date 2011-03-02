@@ -1,15 +1,13 @@
 package otsopack.full.java.network.communication;
 
+import java.util.HashMap;
+
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 
 public interface IPrefixesResource {
 	@Get
-	public abstract Prefix[] retrieve();
+	public abstract HashMap<String, String> retrieve();
 	
 	@Get("json")
     public String retrieveJson();
-
-	@Post
-	public abstract void create(Prefix prefix);
 }
