@@ -2,6 +2,8 @@ package otsopack.full.java.network.communication;
 
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.util.JSONEncoder;
+
 public class GraphsManager extends ServerResource implements GraphsResource {
 
 	public static final String ROOT = "/graphs";
@@ -37,8 +39,13 @@ public class GraphsManager extends ServerResource implements GraphsResource {
 	}
 	
 	@Override
-	public String [] retrieve() {
-		return GraphsManager.roots;
+	public String toHtml() {
+		return html;
+	}
+	
+	@Override
+	public String toJson() {
+		return JSONEncoder.encode(roots);
 	}
 	
 }
