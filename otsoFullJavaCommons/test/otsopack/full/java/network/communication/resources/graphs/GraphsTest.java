@@ -10,7 +10,7 @@ import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class GraphsTest extends AbstractRestServerTesting {
 	@Test
-	public void testCreatePrefix() throws Exception {
+	public void testQueryGraph() throws Exception {
 		final ClientResource cr = new ClientResource(getBaseURL() + "graphs");
 		final IGraphsResource prefrsc = cr.wrap(IGraphsResource.class);
 		
@@ -18,9 +18,10 @@ public class GraphsTest extends AbstractRestServerTesting {
 		
 		final String [] results = JSONDecoder.decode(prefixes, String[].class);
 		
-		assertEquals(2, results.length);
+		assertEquals(3, results.length);
 		assertEquals("/graphs", results[0]);
 		assertEquals("/graphs/wildcards", results[1]);
+		assertEquals("/graphs/wildcards/{subject}/{predicate}/{object}", results[2]);
 	}
 
 }

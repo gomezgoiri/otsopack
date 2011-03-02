@@ -5,7 +5,7 @@ import otsopack.full.java.network.communication.resources.AbstractServerResource
 
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
 
-	public static final String PATTERN = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
+	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
 
 	@Override
 	public String toJson(){
@@ -13,8 +13,9 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final String predicate = getArgument("predicate");
 		final String object    = getArgument("object");
 		
+		System.out.println(getContext());
 		
-
+		
 		return "bar";
 	}
 }

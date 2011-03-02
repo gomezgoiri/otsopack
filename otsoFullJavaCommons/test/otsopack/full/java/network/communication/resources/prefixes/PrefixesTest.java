@@ -3,7 +3,7 @@ package otsopack.full.java.network.communication.resources.prefixes;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.Test;
 import org.restlet.data.Status;
@@ -11,17 +11,25 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
-import otsopack.full.java.network.communication.resources.prefixes.IPrefixResource;
-import otsopack.full.java.network.communication.resources.prefixes.IPrefixesResource;
-import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
+import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class PrefixesTest extends AbstractRestServerTesting{
+	
+	private ConcurrentHashMap<String, String> retrieve(IPrefixesResource prefrsc){
+		return decode(prefrsc.retrieveJson());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private ConcurrentHashMap<String, String> decode(String jsonData){
+		return JSONDecoder.decode(jsonData, ConcurrentHashMap.class);
+	}
+	
 	@Test
 	public void testCreatePrefix() throws Exception {
 		final ClientResource cr = new ClientResource(getBaseURL() + "prefixes");
 		final IPrefixesResource prefrsc = cr.wrap(IPrefixesResource.class);
 		
-		HashMap<String, String> prefixes = prefrsc.retrieve();
+		ConcurrentHashMap<String, String> prefixes = retrieve(prefrsc);
 		assertEquals(prefixes.size(), 0);
 		
 		PrefixesResource.create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -29,9 +37,10 @@ public class PrefixesTest extends AbstractRestServerTesting{
 		PrefixesResource.create( "xsd", "http://www.w3.org/2001/XMLSchema#");
 		PrefixesResource.create( "owl", "http://www.w3.org/2002/07/owl#");
 		
-		prefixes = prefrsc.retrieve();
+		prefixes = retrieve(prefrsc);
 		assertEquals(prefixes.size(), 4);
 	}
+	
 	
 	@Test
 	public void testGetPrefixes() throws Exception {
@@ -42,25 +51,16 @@ public class PrefixesTest extends AbstractRestServerTesting{
 		PrefixesResource.create( "xsd", "http://www.w3.org/2001/XMLSchema#");
 		PrefixesResource.create( "owl", "http://www.w3.org/2002/07/owl#");
 		
-		// Test java object serialization retrieval
-		final HashMap<String, String> prefixes = prefrsc.retrieve();
-		assertEquals(prefixes.size(), 4);
-		checkIfItContainsPrefix(prefixes,"rdf","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		checkIfItContainsPrefix(prefixes,"rdfs","http://www.w3.org/2000/01/rdf-schema#");
-		checkIfItContainsPrefix(prefixes,"xsd","http://www.w3.org/2001/XMLSchema#");
-		checkIfItContainsPrefix(prefixes,"owl","http://www.w3.org/2002/07/owl#");
-		
 		// Test json retrieval
-		final String expectedJson = "{" +
-				"\"rdfs\":\"http://www.w3.org/2000/01/rdf-schema#\"," +
-				"\"owl\":\"http://www.w3.org/2002/07/owl#\"," +
-				"\"xsd\":\"http://www.w3.org/2001/XMLSchema#\"," +
-				"\"rdf\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" +
-			"}"; 
-		assertEquals(expectedJson, prefrsc.retrieveJson());
+		final ConcurrentHashMap<String, String> prefixes = retrieve(prefrsc);
+		assertEquals(prefixes.size(), 4);
+		checkIfItContainsPrefix(prefixes,"http://www.w3.org/1999/02/22-rdf-syntax-ns#","rdf");
+		checkIfItContainsPrefix(prefixes,"http://www.w3.org/2000/01/rdf-schema#","rdfs");
+		checkIfItContainsPrefix(prefixes,"http://www.w3.org/2001/XMLSchema#","xsd");
+		checkIfItContainsPrefix(prefixes,"http://www.w3.org/2002/07/owl#","owl");
 	}
 	
-	private void checkIfItContainsPrefix(HashMap<String, String> prefixes, String name, String uri) {
+	private void checkIfItContainsPrefix(ConcurrentHashMap<String, String> prefixes, String name, String uri) {
 		assertEquals(uri, prefixes.get(name));
 	}
 
