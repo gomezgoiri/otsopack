@@ -1,11 +1,14 @@
 package otsopack.full.java.network.communication;
 
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
-public interface WildcardGraphResource {
+public class WildcardGraphResource extends ServerResource implements IWildcardGraphResource {
+
+	public static final String PATTERN = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
 	
-	@Get
-	public abstract Representation retrieve();
-
+	@Override
+	public Representation retrieve() {
+		return null;
+	}
 }

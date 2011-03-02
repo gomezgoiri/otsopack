@@ -3,7 +3,7 @@ package otsopack.full.java.network.communication;
 import org.junit.After;
 import org.junit.Before;
 
-public class AbstractRestServerTesting {
+public abstract class AbstractRestServerTesting {
 	protected RestServer rs;
 	
 	@Before

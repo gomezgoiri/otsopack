@@ -17,9 +17,9 @@ public class RestServer {
 		PATHS.put("/prefixes/{prefixname}", PrefixResource.class);
 		PATHS.put("/prefixes",				PrefixesResource.class);
 		
-		PATHS.put(GraphsManager.ROOT,           GraphsManager.class);
-		PATHS.put(WildcardsGraphManager.ROOT,   WildcardsGraphManager.class);
-		PATHS.put(WildcardGraphManager.PATTERN, WildcardGraphManager.class);
+		PATHS.put(GraphsResource.ROOT,           GraphsResource.class);
+		PATHS.put(WildcardsGraphResource.ROOT,   WildcardsGraphResource.class);
+		PATHS.put(WildcardGraphResource.PATTERN, WildcardGraphResource.class);
 		
 	}
 	
