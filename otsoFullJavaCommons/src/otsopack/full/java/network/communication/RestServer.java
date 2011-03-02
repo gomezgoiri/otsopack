@@ -14,13 +14,13 @@ public class RestServer {
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
-		PATHS.put("/prefixes/{prefixname}", PrefixResource.class);
-		PATHS.put("/prefixes",				PrefixesResource.class);
-		
-		PATHS.put(GraphsResource.ROOT,           GraphsResource.class);
-		PATHS.put(WildcardsGraphResource.ROOT,   WildcardsGraphResource.class);
-		PATHS.put(WildcardGraphResource.PATTERN, WildcardGraphResource.class);
-		
+		addPaths(PrefixesResource.getRoots());
+		addPaths(GraphsResource.getRoots());
+	}
+	
+	private static void addPaths(Map<String, Class<?>> roots){
+		for(String uri : roots.keySet())
+			PATHS.put(uri, roots.get(uri));
 	}
 	
 	public RestServer(int port) {

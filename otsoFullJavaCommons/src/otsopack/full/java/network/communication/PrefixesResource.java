@@ -1,20 +1,30 @@
 package otsopack.full.java.network.communication;
 
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+
+import otsopack.full.java.network.communication.util.HTMLEncoder;
+import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class PrefixesResource extends ServerResource implements IPrefixesResource {
 	final ObjectMapper mapper = new ObjectMapper();
 	
 	static public final HashMap<String,String> prefixesByURI = new HashMap<String,String>();
 	static public final HashMap<String,String> prefixesByName = new HashMap<String,String>();
+	
+	public static final String ROOT = "/prefixes";
+	
+	static Map<String, Class<?>> getRoots(){
+		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+		graphsRoots.put(ROOT, PrefixesResource.class);
+		graphsRoots.putAll(PrefixResource.getRoots());
+		return graphsRoots;
+	}
 	
 	synchronized public static void clear() {
 		prefixesByName.clear();
@@ -31,14 +41,8 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	
 	@Override
     public String retrieveJson() throws ResourceException {
-		final Map<String, String> ret = this.retrieve();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			this.mapper.writeValue(baos,ret);
-		} catch (Exception e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize response", e);
-		}
-    	return baos.toString();
+		final HashMap<String, String> ret = this.retrieve();
+		return JSONEncoder.encode(ret);
     }
 	
 	@Override
@@ -49,5 +53,10 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	synchronized public static void create(String name, String uri) {
 		prefixesByName.put(name, uri);
 		prefixesByURI.put(uri, name);
+	}
+
+	@Override
+	public String retrieveHtml() {
+		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
 	}
 }

@@ -2,6 +2,8 @@ package otsopack.full.java.network.communication.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.Status;
@@ -18,6 +20,12 @@ public class JSONEncoder {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, errorMessage, e);
 		}
     	return baos.toString();
+	}
+	
+	public static String encodeSortedURIs(Set<String> uris){
+		final String [] rootURIs = uris.toArray(new String[]{});
+		Arrays.sort(rootURIs);
+		return encode(rootURIs);
 	}
 	
 	public static String encode(Serializable serializable){

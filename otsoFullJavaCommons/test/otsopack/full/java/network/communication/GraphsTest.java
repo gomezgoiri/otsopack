@@ -6,7 +6,7 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
-public class GraphsManagerTest extends AbstractRestServerTesting {
+public class GraphsTest extends AbstractRestServerTesting {
 	@Test
 	public void testCreatePrefix() throws Exception {
 		final ClientResource cr = new ClientResource("http://localhost:8182/graphs");
@@ -16,8 +16,9 @@ public class GraphsManagerTest extends AbstractRestServerTesting {
 		
 		final String [] results = JSONDecoder.decode(prefixes, String[].class);
 		
-		assertEquals(1, results.length);
-		assertEquals("/graphs/wildcards", results[0]);
+		assertEquals(2, results.length);
+		assertEquals("/graphs", results[0]);
+		assertEquals("/graphs/wildcards", results[1]);
 	}
 
 }

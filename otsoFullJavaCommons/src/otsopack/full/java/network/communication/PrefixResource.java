@@ -1,17 +1,29 @@
 package otsopack.full.java.network.communication;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.util.JSONEncoder;
+
 public class PrefixResource extends ServerResource implements IPrefixResource {
+	
+	public static final String ROOT = PrefixesResource.ROOT + "/{prefixname}";
+	
+	static Map<String, Class<?>> getRoots(){
+		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+		graphsRoots.put(ROOT, PrefixResource.class);
+		return graphsRoots;
+	}
+	
 	ObjectMapper mapper;
 	PrefixesResource pr;
 	
@@ -40,12 +52,6 @@ public class PrefixResource extends ServerResource implements IPrefixResource {
 		if( name == null )
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find uri");  
 
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			this.mapper.writeValue(baos, name);
-		} catch (Exception e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Couldn't serialize result!", e);
-		}
-    	return baos.toString();
+		return JSONEncoder.encode(name);
     }
 }

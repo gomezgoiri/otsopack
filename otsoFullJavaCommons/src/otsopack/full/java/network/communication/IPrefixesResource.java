@@ -10,4 +10,7 @@ public interface IPrefixesResource {
 	
 	@Get("json")
     public String retrieveJson();
+	
+	@Get("html")
+    public String retrieveHtml();
 }

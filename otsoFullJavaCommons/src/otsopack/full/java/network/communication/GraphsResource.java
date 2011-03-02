@@ -1,51 +1,32 @@
 package otsopack.full.java.network.communication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class GraphsResource extends ServerResource implements IGraphsResource {
 
 	public static final String ROOT = "/graphs";
 	
-	private static final String [] roots = new String[]{
-		WildcardsGraphResource.ROOT
-	};
-	
-	private static final String html;
-	
-	static{
-		final StringBuilder builder = new StringBuilder("<html>\n");
-		builder.append("<body>\n");
-		builder.append("\t<ul>\n");
-		
-		// Add other systems
-		for(String root : roots)
-			addChild(builder, root);
-		
-		builder.append("\t</ul>\n");
-		builder.append("</body>\n");
-		builder.append("</html>\n");
-		
-		html = builder.toString();
-	}
-	
-	private static void addChild(StringBuilder builder, String root){
-		builder.append("\t\t<li><a href=\"");
-		builder.append(root);
-		builder.append("\">");
-		builder.append(root);
-		builder.append("</a></li>\n");
+	static Map<String, Class<?>> getRoots(){
+		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+		graphsRoots.put(ROOT, GraphsResource.class);
+		graphsRoots.putAll(WildcardsGraphResource.getRoots());
+		return graphsRoots;
 	}
 	
 	@Override
 	public String toHtml() {
-		return html;
+		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
 	}
 	
 	@Override
 	public String toJson() {
-		return JSONEncoder.encode(roots);
+		return JSONEncoder.encodeSortedURIs(getRoots().keySet());
 	}
 	
 }
