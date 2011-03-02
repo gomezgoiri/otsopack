@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.prefixes;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class PrefixResource extends AbstractServerResource implements IPrefixResource {

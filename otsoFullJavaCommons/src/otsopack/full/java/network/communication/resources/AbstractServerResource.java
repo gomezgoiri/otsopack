@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

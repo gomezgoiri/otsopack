@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.graphs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,14 +8,13 @@ import org.restlet.resource.ServerResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class GraphsResource extends ServerResource implements IGraphsResource {
+public class WildcardsGraphResource extends ServerResource implements IWildcardsGraphResource {
 
-	public static final String ROOT = "/graphs";
+	public static final String ROOT = GraphsResource.ROOT + "/wildcards";
 	
 	static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
-		graphsRoots.put(ROOT, GraphsResource.class);
-		graphsRoots.putAll(WildcardsGraphResource.getRoots());
+		graphsRoots.put(ROOT, WildcardsGraphResource.class);
 		return graphsRoots;
 	}
 	
@@ -28,5 +27,4 @@ public class GraphsResource extends ServerResource implements IGraphsResource {
 	public String toJson() {
 		return JSONEncoder.encodeSortedURIs(getRoots().keySet());
 	}
-	
 }

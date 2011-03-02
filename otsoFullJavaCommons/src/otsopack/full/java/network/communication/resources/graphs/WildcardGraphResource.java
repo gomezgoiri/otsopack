@@ -1,4 +1,6 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.graphs;
+
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 
 
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {

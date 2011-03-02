@@ -6,6 +6,9 @@ import java.util.Map;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
+import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
+import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
+
 public class RestServer {
 	public static final int DEFAULT_PORT = 8182;
 	private final int port;

@@ -1,9 +1,11 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.graphs;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
 
+import otsopack.full.java.network.communication.AbstractRestServerTesting;
+import otsopack.full.java.network.communication.resources.graphs.IGraphsResource;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class GraphsTest extends AbstractRestServerTesting {

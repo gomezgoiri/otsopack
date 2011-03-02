@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.prefixes;
 
 import java.util.HashMap;
 

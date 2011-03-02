@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.prefixes;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	
 	public static final String ROOT = "/prefixes";
 	
-	static Map<String, Class<?>> getRoots(){
+	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, PrefixesResource.class);
 		graphsRoots.putAll(PrefixResource.getRoots());

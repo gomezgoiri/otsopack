@@ -1,4 +1,4 @@
-package otsopack.full.java.network.communication;
+package otsopack.full.java.network.communication.resources.prefixes;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +9,11 @@ import org.junit.Test;
 import org.restlet.data.Status;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
+
+import otsopack.full.java.network.communication.AbstractRestServerTesting;
+import otsopack.full.java.network.communication.resources.prefixes.IPrefixResource;
+import otsopack.full.java.network.communication.resources.prefixes.IPrefixesResource;
+import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
 
 public class PrefixesTest extends AbstractRestServerTesting{
 	@Test
