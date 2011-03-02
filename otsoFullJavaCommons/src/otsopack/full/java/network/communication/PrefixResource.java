@@ -30,10 +30,10 @@ public class PrefixResource extends ServerResource implements IPrefixResource {
 		try {
 			String uriStr = URLDecoder.decode(prefname, "utf-8");
 			uri = new URI(uriStr);
-		} catch (UnsupportedEncodingException e1) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be an UTF-8 encoded URI");
+		} catch (UnsupportedEncodingException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be an UTF-8 encoded URI", e);
 		} catch (URISyntaxException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be a valid URI");		
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be a valid URI", e);		
 		}
 		
 		final String name = this.pr.getPrefix(uri);
@@ -44,7 +44,7 @@ public class PrefixResource extends ServerResource implements IPrefixResource {
 		try {
 			this.mapper.writeValue(baos, name);
 		} catch (Exception e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Couldn't serialize result!");
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Couldn't serialize result!", e);
 		}
     	return baos.toString();
     }

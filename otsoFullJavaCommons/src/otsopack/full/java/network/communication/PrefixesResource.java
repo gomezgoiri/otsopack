@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.restlet.data.Status;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 public class PrefixesResource extends ServerResource implements IPrefixesResource {
@@ -28,13 +30,13 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	}
 	
 	@Override
-    public String retrieveJson() {
+    public String retrieveJson() throws ResourceException {
 		final Map<String, String> ret = this.retrieve();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			this.mapper.writeValue(baos,ret);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize response", e);
 		}
     	return baos.toString();
     }
