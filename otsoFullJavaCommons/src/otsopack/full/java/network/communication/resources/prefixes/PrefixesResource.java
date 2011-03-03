@@ -1,8 +1,11 @@
 package otsopack.full.java.network.communication.resources.prefixes;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -46,6 +49,28 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 
 	@Override
 	public String retrieveHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		final StringBuilder bodyHtml = new StringBuilder("<br>Available prefixes:<br>\n<ul>\n");
+		for(Entry<String, String> entry : prefixesByURI.entrySet()){
+			bodyHtml.append("\t<li><b>");
+			bodyHtml.append(entry.getValue());
+			
+			String encoded;
+			try {
+				encoded = URLEncoder.encode(entry.getKey(), "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				encoded = null;
+			}
+			bodyHtml.append(":</b> <a href=\"");
+			bodyHtml.append(ROOT);
+			bodyHtml.append("/");
+			bodyHtml.append(encoded);
+			bodyHtml.append("\">");
+			bodyHtml.append(entry.getKey());
+			bodyHtml.append("</a>");
+			bodyHtml.append("</li>\n");
+		}
+		bodyHtml.append("</ul>\n");
+		System.out.println(bodyHtml.toString());
+		return HTMLEncoder.encodeSortedURIs(getRoots().keySet(), bodyHtml.toString());
 	}
 }
