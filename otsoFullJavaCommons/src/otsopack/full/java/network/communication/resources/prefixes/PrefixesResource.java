@@ -1,7 +1,6 @@
 package otsopack.full.java.network.communication.resources.prefixes;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	final ObjectMapper mapper = new ObjectMapper();
 	
 	public static final ConcurrentHashMap<String,String> prefixesByURI  = new ConcurrentHashMap<String,String>();
+	public static final ConcurrentHashMap<String,String> prefixesByName = new ConcurrentHashMap<String,String>();
 	
 	public static final String ROOT = "/prefixes";
 	
@@ -31,10 +31,15 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	
 	public static void clear() {
 		prefixesByURI.clear();
+		prefixesByName.clear();
 	}
 	
-	public String getPrefix(URI prefixUri) {
-		return prefixesByURI.get(prefixUri.toString());
+	public static String getPrefixByName(String prefixName) {
+		return prefixesByName.get(prefixName);
+	}
+	
+	public static String getPrefixByURI(String prefixUri) {
+		return prefixesByURI.get(prefixUri);
 	}
 	
 	@Override
@@ -45,6 +50,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	
 	public static void create(String name, String uri) {
 		prefixesByURI.put(uri, name);
+		prefixesByName.put(name, uri);
 	}
 
 	@Override

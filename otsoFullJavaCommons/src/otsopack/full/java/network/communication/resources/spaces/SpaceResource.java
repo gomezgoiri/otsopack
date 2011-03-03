@@ -1,21 +1,22 @@
-package otsopack.full.java.network.communication.resources.graphs;
+package otsopack.full.java.network.communication.resources.spaces;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class WildcardsGraphResource extends ServerResource implements IWildcardsGraphResource {
+public class SpaceResource extends ServerResource implements ISpaceResource {
 
-	public static final String ROOT = GraphsResource.ROOT + "/wildcards";
+	public static final String ROOT = SpacesResource.ROOT + "/{space}";
 	
 	static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
-		graphsRoots.put(ROOT, WildcardsGraphResource.class);
-		graphsRoots.put(WildcardGraphResource.ROOT, WildcardGraphResource.class);
+		graphsRoots.put(ROOT, SpaceResource.class);
+		graphsRoots.putAll(GraphsResource.getRoots());
 		return graphsRoots;
 	}
 	

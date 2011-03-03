@@ -5,12 +5,13 @@ import java.util.Map;
 
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class GraphsResource extends ServerResource implements IGraphsResource {
 
-	public static final String ROOT = "/graphs";
+	public static final String ROOT = SpaceResource.ROOT + "/graphs";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();

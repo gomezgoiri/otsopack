@@ -6,5 +6,8 @@ public interface IWildcardGraphResource {
 	
 	@Get("json")
 	public String toJson();
+	
+	@Get("nt")
+	public String toNTriples();
 
 }

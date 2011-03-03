@@ -14,7 +14,7 @@ import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class PrefixResource extends AbstractServerResource implements IPrefixResource {
 	
-	public static final String ROOT = PrefixesResource.ROOT + "/{prefixname}";
+	public static final String ROOT = PrefixesResource.ROOT + "/{prefixeduri}";
 	
 	static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
@@ -23,26 +23,24 @@ public class PrefixResource extends AbstractServerResource implements IPrefixRes
 	}
 	
 	ObjectMapper mapper;
-	PrefixesResource pr;
 	
 	public PrefixResource() {
 		this.mapper = new ObjectMapper();
-		this.pr = new PrefixesResource();
 		/*super.getVariants().add(new Variant(MediaType.TEXT_PLAIN));
 		super.getVariants().add(new Variant(MediaType.APPLICATION_JSON));*/
 		//super.getVariants().add(new Variant(MediaType.APPLICATION_JAVA_OBJECT));
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
     public String retrieveJson() throws ResourceException {
-		final URI uri;
 		try {
-			uri = new URI(getArgument("prefixname"));
+			new URI(getArgument("prefixeduri")); // To test if it is an URI
 		} catch (URISyntaxException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be a valid URI", e);		
 		}
 		
-		final String name = this.pr.getPrefix(uri);
+		final String name = PrefixesResource.getPrefixByURI(getArgument("prefixeduri"));
 		if( name == null )
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find uri");  
 
