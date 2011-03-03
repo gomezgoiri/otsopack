@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="lib/peerdroid-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoFullJavaCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
