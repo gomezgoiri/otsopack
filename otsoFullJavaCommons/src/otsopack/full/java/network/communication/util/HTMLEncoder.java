@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class HTMLEncoder {
-	public static String encodeURIs(String [] uris){
+	public static String encodeURIs(String [] uris, String body){
 		final StringBuilder builder = new StringBuilder("<html>\n");
 		builder.append("<body>\n");
 		builder.append("\t<ul>\n");
@@ -14,16 +14,27 @@ public class HTMLEncoder {
 			addChild(builder, root);
 		
 		builder.append("\t</ul>\n");
+		
+		builder.append(body);
+		
 		builder.append("</body>\n");
 		builder.append("</html>\n");
 		
 		return builder.toString();
 	}
 	
-	public static String encodeSortedURIs(Set<String> uris){
+	public static String encodeURIs(String [] uris){
+		return encodeURIs(uris, "");
+	}
+	
+	public static String encodeSortedURIs(Set<String> uris, String body){
 		final String [] rootURIs = uris.toArray(new String[]{});
 		Arrays.sort(rootURIs);
-		return encodeURIs(rootURIs);
+		return encodeURIs(rootURIs, body);
+	}
+	
+	public static String encodeSortedURIs(Set<String> uris){
+		return encodeSortedURIs(uris, "");
 	}
 	
 	private static void addChild(StringBuilder builder, String root){
