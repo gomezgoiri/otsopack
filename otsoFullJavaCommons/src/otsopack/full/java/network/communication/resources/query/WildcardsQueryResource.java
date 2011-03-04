@@ -12,25 +12,25 @@
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 
-package otsopack.full.java.network.communication.resources.spaces;
+package otsopack.full.java.network.communication.resources.query;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
-import otsopack.full.java.network.communication.resources.graphs.WildcardGraphResource;
-import otsopack.full.java.network.communication.resources.graphs.WildcardsGraphResource;
+import org.restlet.resource.ServerResource;
+
+import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class ServerResource implements ISpacesResource {
+public class WildcardsQueryResource extends ServerResource implements IWildcardsQueryResource {
 
-	public static final String ROOT = GraphsResource.ROOT + "/wildcards";
+	public static final String ROOT = SpaceResource.ROOT + "/wildcards";
 	
-	static Map<String, Class<?>> getRoots(){
+	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
-		graphsRoots.put(ROOT, WildcardsGraphResource.class);
-		graphsRoots.put(ServerResource.ROOT, WildcardGraphResource.class);
+		graphsRoots.put(ROOT, WildcardsQueryResource.class);
+		graphsRoots.put(WildcardQueryResource.ROOT, WildcardQueryResource.class);
 		return graphsRoots;
 	}
 	
@@ -38,7 +38,7 @@ public class ServerResource implements ISpacesResource {
 	public String toHtml() {
 		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
 	}
-	
+
 	@Override
 	public String toJson() {
 		return JSONEncoder.encodeSortedURIs(getRoots().keySet());

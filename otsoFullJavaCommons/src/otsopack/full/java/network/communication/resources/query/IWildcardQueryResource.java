@@ -12,16 +12,14 @@
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 
-package otsopack.full.java.network.communication.resources.graphs;
+package otsopack.full.java.network.communication.resources.query;
 
 import org.restlet.resource.Get;
 
-public interface IWildcardGraphResource {
-	
-	@Get("json")
-	public String toJson();
-	
+public interface IWildcardQueryResource {
 	@Get("nt")
-	public String toNTriples();
+	public abstract String toNTriples();
 
+	@Get("json")
+	public abstract String toJson();
 }

@@ -1,4 +1,18 @@
-package otsopack.full.java.network.communication.resources.graphs;
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ */
+
+package otsopack.full.java.network.communication.resources.query;
 
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
@@ -10,10 +24,11 @@ import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.RestServer;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
+import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
-public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
+public class WildcardQueryResource extends AbstractServerResource implements IWildcardQueryResource {
 
-	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
+	public static final String ROOT = WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object}";
 	
 	protected IGraph getWildcard() {
 		final String space    = getArgument("space");
@@ -26,7 +41,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
 			
 			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-			ret = controller.getDataAccessService().read(space,tpl);
+			ret = controller.getDataAccessService().query(space,tpl);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (MalformedTemplateException e) {
