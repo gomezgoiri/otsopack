@@ -206,8 +206,6 @@ public class SpaceRecordTest extends TestCase {
 	}
 
 	protected void contains1Test() throws AssertionFailedException, TripleParseException {
-		final ISemanticFactory sf = new SemanticFactory();
-		
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) ) );
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) ) );
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) ) );

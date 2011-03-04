@@ -54,7 +54,7 @@
 package org.apache.log4j;
 
 public class Priority {
-    private static final Priority Priority = new Priority();
+    private static final Priority priority = new Priority();
     public static final int OFF_INT = Integer.MAX_VALUE;
     public static final int FATAL_INT = 50000;
     public static final int ERROR_INT = 40000;
@@ -63,23 +63,23 @@ public class Priority {
     public static final int DEBUG_INT = 10000;
     public static final int TRACE_INT = 5000;
     public static final int ALL_INT = Integer.MIN_VALUE;
-    public static final Priority OFF = Priority;
-    public static final Priority FATAL = Priority;
-    public static final Priority ERROR = Priority;
-    public static final Priority WARN = Priority;
-    public static final Priority INFO = Priority;
-    public static final Priority DEBUG = Priority;
-    public static final Priority TRACE = Priority;
-    public static final Priority ALL = Priority;
+    public static final Priority OFF = priority;
+    public static final Priority FATAL = priority;
+    public static final Priority ERROR = priority;
+    public static final Priority WARN = priority;
+    public static final Priority INFO = priority;
+    public static final Priority DEBUG = priority;
+    public static final Priority TRACE = priority;
+    public static final Priority ALL = priority;
     int lvl=0;
     String PriorityStr="stub";
     int syslogEquivalent=0;
     protected Priority() {}
     public static Priority toPriority(String sArg) {
-        return Priority;
+        return priority;
     }
     public static Priority toPriority(int val) {
-        return Priority;
+        return priority;
     }
     public final int getSyslogEquivalent() {
         return syslogEquivalent;
