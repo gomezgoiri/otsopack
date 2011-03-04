@@ -109,7 +109,6 @@
 		<exec executable="${wtk.home}/bin/emulator">
 			<arg line="-Xdescriptor:dist/alltests.jad otsopack.otsoME.TscMESuite" />
 		</exec>
-		<testlistener run="false" />
 	</target>
 	
 	<target name="test" depends="compile-tests">
