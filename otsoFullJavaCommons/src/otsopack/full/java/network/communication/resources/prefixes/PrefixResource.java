@@ -9,7 +9,8 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * Author:	Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * 			Pablo Orduña <pablo.orduna@deusto.es>
  */
 
 package otsopack.full.java.network.communication.resources.prefixes;
@@ -40,9 +41,6 @@ public class PrefixResource extends AbstractServerResource implements IPrefixRes
 	
 	public PrefixResource() {
 		this.mapper = new ObjectMapper();
-		/*super.getVariants().add(new Variant(MediaType.TEXT_PLAIN));
-		super.getVariants().add(new Variant(MediaType.APPLICATION_JSON));*/
-		//super.getVariants().add(new Variant(MediaType.APPLICATION_JAVA_OBJECT));
 	}
 	
 	@SuppressWarnings("unused")

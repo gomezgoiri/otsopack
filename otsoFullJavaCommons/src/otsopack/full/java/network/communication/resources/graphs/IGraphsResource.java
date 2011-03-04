@@ -15,6 +15,7 @@
 package otsopack.full.java.network.communication.resources.graphs;
 
 import org.restlet.resource.Get;
+import org.restlet.resource.Put;
 
 public interface IGraphsResource {
 	@Get("html")
@@ -22,4 +23,10 @@ public interface IGraphsResource {
 
 	@Get("json")
 	public abstract String toJson();
+	
+	@Put("json")
+	public abstract String writeGraphJSON(String json);
+	
+	@Put("nt")
+	public abstract String writeGraphNTriples(String ntriples);
 }
