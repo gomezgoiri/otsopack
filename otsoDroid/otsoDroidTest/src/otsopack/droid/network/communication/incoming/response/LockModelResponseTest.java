@@ -23,10 +23,12 @@ import otsopack.droid.sampledata.ExampleME;
 
 public class LockModelResponseTest extends TestCase {
 	private static final int MAX_WAITING_TIME = 1000;
+	private MicrojenaFactory factory;
 
 	public void setUp() throws Exception {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	public void tearDown() {
@@ -37,11 +39,11 @@ public class LockModelResponseTest extends TestCase {
 		
 		// Init "responses"
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
+		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
+		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
 		final IGraph graph2 = sf.createEmptyGraph();
-		graph2.add(sf.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8));
-		graph2.add(sf.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7));
+		graph2.add(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8));
+		graph2.add(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7));
 		
 		
 		//Wait for the first answer
@@ -56,8 +58,8 @@ public class LockModelResponseTest extends TestCase {
 		assertTrue(blockedTh.finished);
 		
 		assertEquals(resp.getGraph().size(),2);
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
 		
 		
 		//Now, we wait for 2 answers
@@ -73,9 +75,9 @@ public class LockModelResponseTest extends TestCase {
 		assertTrue(blockedTh.finished);
 		
 		assertEquals(resp.getGraph().size(),4);
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
 	}
 }

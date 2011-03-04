@@ -29,9 +29,12 @@ import otsopack.commons.sampledata.Example;
 
 public class SpaceMemTest extends TestCase {
 
+	private FakeSemanticFactory factory;
+	
 	protected void setUp() throws Exception {
 		super.setUp();
-		SemanticFactory.initialize(new FakeSemanticFactory());
+		factory = new FakeSemanticFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	public void testWrite() throws TripleParseException {
@@ -40,19 +43,19 @@ public class SpaceMemTest extends TestCase {
 		
 		final IGraph[] triples = new IGraph[3];
 		triples[0] = sf.createEmptyGraph();
-		triples[0].add( sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		triples[0].add( sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		triples[0].add( sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		triples[0].add( factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		triples[0].add( factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		triples[0].add( factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		
 		triples[1] = sf.createEmptyGraph();
-		triples[1].add( sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		triples[1].add( sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		triples[1].add( sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		triples[1].add( factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		triples[1].add( factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		triples[1].add( factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 
 		triples[2] = sf.createEmptyGraph();
-		triples[2].add( sf.createTriple(Example.subj1, Example.prop5, Example.obj6) );
-		triples[2].add( sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		triples[2].add( sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		triples[2].add( factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
+		triples[2].add( factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		triples[2].add( factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 
 		
 		String[] graphuris = new String[3];
@@ -73,21 +76,21 @@ public class SpaceMemTest extends TestCase {
 		final ITriple[] triples = new ITriple[9];
 		final IGraph[] graphs = new IGraph[3];
 		graphs[0] = sf.createEmptyGraph();
-		graphs[0].add( triples[0] = sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[1] = sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[2] = sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		space.write(graphs[0]);
 		
 		graphs[1] = sf.createEmptyGraph();
-		graphs[1].add( triples[3] = sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[4] = sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[5] = sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 		space.write(graphs[1]);
 
 		graphs[2] = sf.createEmptyGraph();
-		graphs[2].add( triples[6] = sf.createTriple(Example.subj1, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[7] = sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[8] = sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		space.write(graphs[2]);
 		
 		final IGraph retGraph1 = space.query( sf.createTemplate("<"+Example.subj1+"> ?p ?o .") );
@@ -110,21 +113,21 @@ public class SpaceMemTest extends TestCase {
 		final ITriple[] triples = new ITriple[9];
 		final IGraph[] graphs = new IGraph[3];
 		graphs[0] = sf.createEmptyGraph();
-		graphs[0].add( triples[0] = sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[1] = sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[2] = sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		space.write(graphs[0]);
 		
 		graphs[1] = sf.createEmptyGraph();
-		graphs[1].add( triples[3] = sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[4] = sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[5] = sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 		space.write(graphs[1]);
 
 		graphs[2] = sf.createEmptyGraph();
-		graphs[2].add( triples[6] = sf.createTriple(Example.subj1, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[7] = sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[8] = sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		space.write(graphs[2]);
 		
 		final IGraph retGraph1 = space.read( sf.createTemplate("<"+Example.subj1+"> ?p ?o .") );
@@ -161,21 +164,21 @@ public class SpaceMemTest extends TestCase {
 		final IGraph[] graphs = new IGraph[3];
 		String[] graphuris = new String[graphs.length];
 		graphs[0] = sf.createEmptyGraph();
-		graphs[0].add( triples[0] = sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[1] = sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[2] = sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		graphuris[0] = space.write(graphs[0]);
 		
 		graphs[1] = sf.createEmptyGraph();
-		graphs[1].add( triples[3] = sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[4] = sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[5] = sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 		graphuris[1] = space.write(graphs[1]);
 
 		graphs[2] = sf.createEmptyGraph();
-		graphs[2].add( triples[6] = sf.createTriple(Example.subj1, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[7] = sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[8] = sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		graphuris[2] = space.write(graphs[2]);
 		
 		final IGraph retGraph1 = space.read( graphuris[0] );
@@ -208,21 +211,21 @@ public class SpaceMemTest extends TestCase {
 		final ITriple[] triples = new ITriple[9];
 		final IGraph[] graphs = new IGraph[3];
 		graphs[0] = sf.createEmptyGraph();
-		graphs[0].add( triples[0] = sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[1] = sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[2] = sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		space.write(graphs[0]);
 		
 		graphs[1] = sf.createEmptyGraph();
-		graphs[1].add( triples[3] = sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[4] = sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[5] = sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 		space.write(graphs[1]);
 
 		graphs[2] = sf.createEmptyGraph();
-		graphs[2].add( triples[6] = sf.createTriple(Example.subj4, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[7] = sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[8] = sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[6] = factory.createTriple(Example.subj4, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		space.write(graphs[2]);
 		
 		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
@@ -274,21 +277,21 @@ public class SpaceMemTest extends TestCase {
 		final IGraph[] graphs = new IGraph[3];
 		final String[] graphuris = new String[graphs.length];
 		graphs[0] = sf.createEmptyGraph();
-		graphs[0].add( triples[0] = sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[1] = sf.createTriple(Example.subj2, Example.prop1, Example.obj3) );
-		graphs[0].add( triples[2] = sf.createTriple(Example.subj3, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
+		graphs[0].add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
 		graphuris[0] = space.write(graphs[0]);
 		
 		graphs[1] = sf.createEmptyGraph();
-		graphs[1].add( triples[3] = sf.createTriple(Example.subj1, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[4] = sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graphs[1].add( triples[5] = sf.createTriple(Example.subj3, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graphs[1].add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
 		graphuris[1] = space.write(graphs[1]);
 
 		graphs[2] = sf.createEmptyGraph();
-		graphs[2].add( triples[6] = sf.createTriple(Example.subj1, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[7] = sf.createTriple(Example.subj2, Example.prop5, Example.obj6) );
-		graphs[2].add( triples[8] = sf.createTriple(Example.subj3, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
+		graphs[2].add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		graphuris[2] = space.write(graphs[2]);
 		
 		final IGraph retGraph1 = space.take( graphuris[0] );

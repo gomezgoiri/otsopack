@@ -25,13 +25,17 @@ import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
 
 public class LockModelResponseTest extends TestCase {
+	
+	private MicrojenaFactory factory; 
+	
 	public LockModelResponseTest() {
-		super(1, "LockModelResponseTest");
+		super(1, LockModelResponseTest.class.getName());
 	}
 	
 	public void setUp()	throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	public void tearDown() {
@@ -40,21 +44,21 @@ public class LockModelResponseTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			addTriples1Test();
+			testAddTriples();
 			break;
 		}
 	}
 
-	public void addTriples1Test() throws AssertionFailedException, TripleParseException, MalformedTemplateException {
+	public void testAddTriples() throws AssertionFailedException, TripleParseException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		// Init "responses"
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
+		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
+		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
 		final IGraph graph2 = sf.createEmptyGraph();
-		graph2.add(sf.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8));
-		graph2.add(sf.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7));
+		graph2.add(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8));
+		graph2.add(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7));
 		
 		
 		//Wait for the first answer
@@ -67,8 +71,8 @@ public class LockModelResponseTest extends TestCase {
 		while(blockedTh.finished);
 		
 		assertEquals(resp.getGraph().size(),2);
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
 		
 		
 		//Now, we wait for 2 answers
@@ -82,9 +86,9 @@ public class LockModelResponseTest extends TestCase {
 		while(blockedTh.finished);
 		
 		assertEquals(resp.getGraph().size(),4);
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
-		assertTrue(resp.getGraph().contains(sf.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
+		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
 	}
 }

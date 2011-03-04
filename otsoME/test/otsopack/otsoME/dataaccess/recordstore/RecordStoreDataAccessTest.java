@@ -27,14 +27,18 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.otsoME.sampledata.ExampleME;
 import jmunit.framework.cldc11.TestCase;
 
-public class RecordStoreDataAccessTest extends TestCase {	
+public class RecordStoreDataAccessTest extends TestCase {
+	
+	private MicrojenaFactory factory;
+	
 	public RecordStoreDataAccessTest() {
 		super(12, "RecordStoreTest");
 	}	
 	
 	public void setUp()	throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	public void tearDown() {
@@ -168,10 +172,10 @@ public class RecordStoreDataAccessTest extends TestCase {
 		memo.joinSpace(spaceURI);
         
 		final IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		triples.add( trips[3] = sf.createTriple(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
 		
 		final String graphuri = memo.write(spaceURI, triples);
 		memo.leaveSpace(spaceURI);
@@ -213,9 +217,9 @@ public class RecordStoreDataAccessTest extends TestCase {
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
 		final IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		
 		memo.write(spaceURI, triples);
 		memo.leaveSpace(spaceURI);
@@ -255,9 +259,9 @@ public class RecordStoreDataAccessTest extends TestCase {
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj2+"> <"+ExampleME.prop1+"> ?o .");
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 
 		memo.write(spaceURI, triples);
 		final IGraph ret = memo.query(spaceURI, sel);
@@ -281,15 +285,15 @@ public class RecordStoreDataAccessTest extends TestCase {
 		memo.joinSpace(spaceURI);
         
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( trips[3] = sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[4] = sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[5] = sf.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, triples);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
@@ -350,15 +354,15 @@ public class RecordStoreDataAccessTest extends TestCase {
 		memo.joinSpace(spaceURI);
         
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		graphsuri[0] = memo.write(spaceURI, triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( trips[3] = sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[4] = sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[5] = sf.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		graphsuri[1] = memo.write(spaceURI, triples);
 		
 		final IGraph ret = memo.read(spaceURI, graphsuri[1]);
@@ -416,15 +420,15 @@ public class RecordStoreDataAccessTest extends TestCase {
 		memo.joinSpace(spaceURI);
         
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( trips[3] = sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[4] = sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[5] = sf.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, triples);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
@@ -480,15 +484,15 @@ public class RecordStoreDataAccessTest extends TestCase {
 		memo.joinSpace(spaceURI);
         
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( trips[0] = sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[1] = sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[2] = sf.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		graphsuri[0] = memo.write(spaceURI, triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( trips[3] = sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( trips[4] = sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
-		triples.add( trips[5] = sf.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
+		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
+		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		graphsuri[1] = memo.write(spaceURI, triples);
 		
 		memo.leaveSpace(spaceURI);

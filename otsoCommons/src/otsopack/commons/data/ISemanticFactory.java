@@ -19,7 +19,6 @@ import otsopack.commons.exceptions.TripleParseException;
 
 public interface ISemanticFactory {
 	public ITemplate createTemplate(String template) throws MalformedTemplateException;
-	public ITriple createTriple(String ntriple) throws TripleParseException;
 	public ITriple createTriple(String subject, String predicate, Object object) throws TripleParseException;
 	public IGraph createEmptyGraph();
 	public IModel createEmptyModel();

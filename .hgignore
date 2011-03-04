@@ -1,37 +1,28 @@
 
 syntax: regexp
+
 ^otsoCommons/dist/otsoCommons-sources\.jar$
-
-syntax: regexp
-^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
-
-syntax: regexp
-^otsoME/\.processed/
-
-syntax: regexp
-^otsoDroid/otsoDroidTest/bin
-
-syntax: regexp
-^otsoDroid/otsoDroid/bin
-
-syntax: regexp
-^otsoFullJavaCommons/bin
-
-syntax: regexp
 ^otsoCommons/bin
 
-syntax: regexp
+^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
+^otsoFullJavaCommons/bin
+
 ^otsoSE/bin
 
-syntax: regexp
 ^otsoDroid/otsoDroid/gen
 ^otsoDroid/otsoDroidTest/gen
-^otsoME/.mtj.tmp/
-
-syntax: regexp
 ^otsoDroid/otsoDroid/local\.properties$
-
-syntax: regexp
 ^otsoDroid/otsoDroid/debug\.keystore$
-syntax: regexp
 ^otsoDroid/otsoDroid/build\.properties$
+^otsoDroid/otsoDroidTest/bin
+^otsoDroid/otsoDroid/bin
+
+^otsoME/classes_cldc_unverified
+^otsoME/classes_cldc
+^otsoME/bin
+^otsoME/\.processed/
+^otsoME/.mtj.tmp/
+^otsoME/.externalToolBuilders
+^otsoME/test_jmunit_results
+^otsoME/dist/alltests.jad$
+^otsoME/dist/alltests.jar$
