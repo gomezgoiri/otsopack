@@ -37,6 +37,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, GraphsResource.class);
+		graphsRoots.put(GraphResource.ROOT, GraphsResource.class);
 		graphsRoots.putAll(WildcardsGraphResource.getRoots());
 		return graphsRoots;
 	}
