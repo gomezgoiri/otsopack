@@ -21,8 +21,12 @@ syntax: regexp
 ^otsoME/classes_cldc
 ^otsoME/bin
 ^otsoME/\.processed/
-^otsoME/.mtj.tmp/
 ^otsoME/.externalToolBuilders
 ^otsoME/test_jmunit_results
 ^otsoME/dist/alltests.jad$
 ^otsoME/dist/alltests.jar$
+^otsoME/.mtj.tmp/emulation/*
+^otsoME/.mtj.tmp/verified/*
+^otsoME/.mtj.tmp/verified/required-classes/*
+^otsoME/.mtj.tmp/verified/required-libs/*
+
