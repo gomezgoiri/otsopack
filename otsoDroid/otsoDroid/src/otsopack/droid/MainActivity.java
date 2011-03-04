@@ -48,11 +48,13 @@ public class MainActivity extends Activity {
 	
 	public static final  String space = "http://www.morelab.deusto.es/scenario/havoc";
 	Kernel kernel;
+	MicrojenaFactory microjenaFactory;
 	SemanticFactory factory;
 	
 	private void initialize(){
 		kernel = new Kernel();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		microjenaFactory = new MicrojenaFactory();
+		SemanticFactory.initialize(microjenaFactory);
 		factory = new SemanticFactory();
 		Log.e("MainActivity", "SemanticFactory created");
 	}
@@ -89,7 +91,7 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 		try {
-			kernel.write(space, factory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"));
+			kernel.write(space, microjenaFactory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"));
 			IGraph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), 5000);
 			final Enumeration<?> enume = graph.elements();
 			while(enume.hasMoreElements())

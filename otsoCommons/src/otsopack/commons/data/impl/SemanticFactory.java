@@ -18,9 +18,7 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.commons.exceptions.TripleParseException;
 
 public class SemanticFactory implements ISemanticFactory {
 	private volatile static ISemanticFactory dataFactory;
@@ -34,11 +32,6 @@ public class SemanticFactory implements ISemanticFactory {
 
 	public ITemplate createTemplate(String template) throws MalformedTemplateException {
 		return SemanticFactory.dataFactory.createTemplate(template);
-	}
-	
-	public ITriple createTriple(String subject, String predicate, Object object)
-			throws TripleParseException {
-		return SemanticFactory.dataFactory.createTriple(subject, predicate, object);
 	}
 	
 	// TODO warn about this behavior

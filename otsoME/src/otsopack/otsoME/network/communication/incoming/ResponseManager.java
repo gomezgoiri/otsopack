@@ -230,7 +230,7 @@ public class ResponseManager implements ITSCallback {
 	}
 	
 	/*Useful for time measurements of demand primitive*/
-	private void log() {
+	void log() {
 		//Since we cannot configure the url in microlog.properties, we must do it programatically 
 		HttpAppender appender = new HttpAppender();
 		appender.setPostURL("http://192.168.2.104/postReceiver.php?file=cow");
