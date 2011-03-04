@@ -15,7 +15,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 
 	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
 	
-	protected IGraph getWildcard() {
+	protected IGraph getGraphByWildcard() {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
@@ -41,14 +41,14 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final IGraph graph = getWildcard();
+		final IGraph graph = getGraphByWildcard();
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		final IGraph graph = getWildcard();
+		final IGraph graph = getGraphByWildcard();
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

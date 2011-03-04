@@ -29,7 +29,7 @@ public class QueryResource extends ServerResource implements IQueryResource {
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
-		graphsRoots.put(ROOT, SpaceResource.class);
+		graphsRoots.put(ROOT, QueryResource.class);
 		graphsRoots.putAll(WildcardsQueryResource.getRoots());
 		return graphsRoots;
 	}

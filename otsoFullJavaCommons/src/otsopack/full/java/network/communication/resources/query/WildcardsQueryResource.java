@@ -25,7 +25,7 @@ import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class WildcardsQueryResource extends ServerResource implements IWildcardsQueryResource {
 
-	public static final String ROOT = SpaceResource.ROOT + "/wildcards";
+	public static final String ROOT = QueryResource.ROOT + "/wildcards";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();

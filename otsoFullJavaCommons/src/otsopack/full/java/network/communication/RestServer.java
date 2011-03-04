@@ -22,8 +22,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
+import otsopack.full.java.network.communication.resources.spaces.SpacesResource;
 
 public class RestServer {
 	public static final int DEFAULT_PORT = 8182;
@@ -36,7 +36,7 @@ public class RestServer {
 	
 	static{
 		addPaths(PrefixesResource.getRoots());
-		addPaths(GraphsResource.getRoots());
+		addPaths(SpacesResource.getRoots());
 	}
 	
 	private static RestServer server = null;

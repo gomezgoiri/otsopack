@@ -26,7 +26,7 @@ public class SpacesResource extends ServerResource implements ISpaceResource {
 
 	public static final String ROOT = "/spaces";
 	
-	static Map<String, Class<?>> getRoots() {
+	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, SpacesResource.class);
 		graphsRoots.putAll(SpaceResource.getRoots());
