@@ -68,7 +68,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	}
 	
 	protected String write(IGraph graph) {
-		final String space    = getArgument("space");
+		final String space = getArgument("space");
 		String ret = "";
 		try {		
 			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
