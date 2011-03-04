@@ -30,6 +30,7 @@ import jmunit.framework.cldc11.TestCase;
 
 public class GraphRecordTest extends TestCase {
 	private GraphRecord record;
+	private MicrojenaFactory factory;
 
 	public GraphRecordTest() {
 		super(3, "GraphRecordTest");
@@ -37,17 +38,18 @@ public class GraphRecordTest extends TestCase {
 	
 	public void setUp() throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 		
 		record = new GraphRecord();
 		final ISemanticFactory sf = new SemanticFactory();
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj4) );
-		graph.add( sf.createTriple(ExampleME.subj3, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj4) );
-		graph.add( sf.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( sf.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj4) );
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3) );
+		graph.add( factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj4) );
+		graph.add( factory.createTriple(ExampleME.subj3, ExampleME.prop1, ExampleME.obj3) );
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj4) );
+		graph.add( factory.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj3) );
+		graph.add( factory.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj4) );
 		record.setGraph(sf.createModelForGraph(graph));
 	}
 	
@@ -97,7 +99,7 @@ public class GraphRecordTest extends TestCase {
 		gr5.graphURI="tsc://graphuri2";
 		gr5.graph=sf.createEmptyModel();
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add(sf.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
+		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
 		gr5.graph.addTriples(graph);
 		
 		assertEquals( gr, gr );
@@ -153,7 +155,7 @@ public class GraphRecordTest extends TestCase {
 		final GraphRecord gr5 = new GraphRecord();
 		gr5.graphURI="tsc://graphuri2";
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add(sf.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
+		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
 		
 		assertEquals( gr, gr );
 		assertEquals( gr, gr1 );

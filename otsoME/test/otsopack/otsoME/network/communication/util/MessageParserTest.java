@@ -31,14 +31,18 @@ import jmunit.framework.cldc11.TestCase;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 
-public class MessageParserTest extends TestCase {	
+public class MessageParserTest extends TestCase {
+	
+	MicrojenaFactory factory;
+	
 	public MessageParserTest() {
-		super(30, "MessageParserTest");
+		super(30, MessageParserTest.class.getName());
 	}
 	
 	public void setUp()	throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	public void tearDown() {
@@ -146,9 +150,9 @@ public class MessageParserTest extends TestCase {
 		listeners.addElement(fl);
 		final ITemplate template = sf.createTemplate("?s <http://predicado> ?o .");
 		final IGraph triples = sf.createEmptyGraph();
-			triples.add(sf.createTriple("http://subject1","http://predicate1","http://object1"));
-			triples.add(sf.createTriple("http://subject2","http://predicate1","http://object1"));
-			triples.add(sf.createTriple("http://subject2","http://predicate2","http://object2"));
+			triples.add(factory.createTriple("http://subject1","http://predicate1","http://object1"));
+			triples.add(factory.createTriple("http://subject2","http://predicate1","http://object1"));
+			triples.add(factory.createTriple("http://subject2","http://predicate2","http://object2"));
 		final Message msg = MessageParser.createResponseMessage(null, template, sf.createModelForGraph(triples)); 
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
@@ -163,9 +167,9 @@ public class MessageParserTest extends TestCase {
 		listeners.addElement(fl);
 		final String responseURI = "http://espaciointerestelar/grafo466";
 		final IGraph triples = sf.createEmptyGraph();
-		triples.add(sf.createTriple("http://subject1","http://predicate1","http://object1"));
-		triples.add(sf.createTriple("http://subject2","http://predicate1","http://object1"));
-		triples.add(sf.createTriple("http://subject2","http://predicate2","http://object2"));
+		triples.add(factory.createTriple("http://subject1","http://predicate1","http://object1"));
+		triples.add(factory.createTriple("http://subject2","http://predicate1","http://object1"));
+		triples.add(factory.createTriple("http://subject2","http://predicate2","http://object2"));
 		final Message msg = MessageParser.createResponseMessage(null, responseURI, sf.createModelForGraph(triples)); 
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
@@ -461,9 +465,9 @@ public class MessageParserTest extends TestCase {
 	void testSuggestCreator() throws TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
-		graph.add(sf.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
+		graph.add(factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
 		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
 		
 		checkSender(msg);
@@ -479,9 +483,9 @@ public class MessageParserTest extends TestCase {
 		final Vector listeners = new Vector();
 		listeners.addElement(fl);
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
-		graph.add(sf.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
-		graph.add( sf.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
+		graph.add(factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
+		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
 		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
 		MessageParser.parseMessage(msg,listeners);
 		assertTrue( fl.isSuggestReceived() );

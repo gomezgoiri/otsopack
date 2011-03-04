@@ -29,9 +29,12 @@ import otsopack.droid.sampledata.ExampleME;
 
 public class RemoteDemandManagerTest extends TestCase {
 	
+	private MicrojenaFactory factory;
+	
 	public void setUp() throws Exception {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 
 	public void tearDown() {
@@ -54,7 +57,7 @@ public class RemoteDemandManagerTest extends TestCase {
 		mngr.demandReceived(s[4], 1);
 		Thread.sleep(3); //the fourth demand has expired		
 		
-		final Vector tpls = mngr.getNonExpiredTemplates();
+		final Vector<?> tpls = mngr.getNonExpiredTemplates();
 		assertEquals( tpls.size(), 2 );
 		assertTrue( tpls.contains(s[0]) );
 		assertTrue( tpls.contains(s[2]) );
@@ -76,45 +79,45 @@ public class RemoteDemandManagerTest extends TestCase {
 		mngr.demandReceived( s[5], -1000); // expired
 
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) ); //<< tpl2
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) ); //<< tpl2
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) ); //<<tpl6 (but expired)
 		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj3) ); //<< tpl1
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj3) ); //<< tpl1
 		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj3) ); //<< tpl3
-		triples.add( sf.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj2) ); //<< tpl3
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj3) ); //<< tpl3
+		triples.add( factory.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj2) ); //<< tpl3
 		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj3) ); //<< tpl4
-		triples.add( sf.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj3) ); //<< tpl4
+		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2) );
 		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj4, ExampleME.prop3, ExampleME.obj4) ); //<< tpl5
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj6, ExampleME.prop2, ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj2) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj4, ExampleME.prop3, ExampleME.obj4) ); //<< tpl5
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop2, ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj2) ); //<<tpl6 (but expired)
 		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3) ); //<<tpl6 (but expired)
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5) );
+		triples.add( factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3) ); //<<tpl6 (but expired)
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5) );
 		assertFalse( mngr.hasAnyPeerResponsabilityOverThisKnowledge(triples) );
 	}
 	

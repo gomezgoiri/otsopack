@@ -36,10 +36,6 @@ public class SemanticFactory implements ISemanticFactory {
 		return SemanticFactory.dataFactory.createTemplate(template);
 	}
 	
-	public ITriple createTriple(String ntriple) throws TripleParseException {
-		return SemanticFactory.dataFactory.createTriple(ntriple);
-	}
-
 	public ITriple createTriple(String subject, String predicate, Object object)
 			throws TripleParseException {
 		return SemanticFactory.dataFactory.createTriple(subject, predicate, object);

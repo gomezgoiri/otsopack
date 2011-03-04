@@ -26,13 +26,16 @@ import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 
 public class LocalDemandManagerTest extends TestCase {
 	
+	private MicrojenaFactory factory;
+	
 	public LocalDemandManagerTest() {
-		super(1, "LocalDemandManagerTest");
+		super(1, LocalDemandManagerTest.class.getName());
 	}
 	
 	public void setUp()	throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 
 	public void tearDown() {
@@ -70,12 +73,12 @@ public class LocalDemandManagerTest extends TestCase {
 		
 		final ISemanticFactory sf = new SemanticFactory();
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5) );
+		triples.add( factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5) );
 		
 		boolean  ret = mngr.callbackForMatchingTemplates(triples);
 		assertTrue( ret );
@@ -94,8 +97,8 @@ public class LocalDemandManagerTest extends TestCase {
 		}
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4) );
 		
 		ret = mngr.callbackForMatchingTemplates(triples);
 		assertFalse( ret );

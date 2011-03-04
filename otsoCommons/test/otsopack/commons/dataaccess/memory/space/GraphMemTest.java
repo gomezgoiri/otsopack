@@ -28,9 +28,12 @@ import otsopack.commons.sampledata.Example;
 
 public class GraphMemTest extends TestCase {
 
+	private FakeSemanticFactory factory;
+	
 	protected void setUp() throws Exception {
 		super.setUp();
-		SemanticFactory.initialize(new FakeSemanticFactory());
+		factory = new FakeSemanticFactory();
+		SemanticFactory.initialize(factory);
 	}
 	
 	private void assertNotEquals(int expected, int actual){
@@ -64,9 +67,9 @@ public class GraphMemTest extends TestCase {
 	public void testContains() throws MalformedTemplateException, TripleParseException {
 		final SemanticFactory sf = new SemanticFactory();
 		IGraph graph = sf.createEmptyGraph();
-		graph.add( sf.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graph.add( sf.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graph.add( sf.createTriple(Example.subj3, Example.prop1, "\""+String.valueOf(Example.obj10)+"\"^^<http://www.w3.org/2001/XMLSchema#double>") );
+		graph.add( factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
+		graph.add( factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
+		graph.add( factory.createTriple(Example.subj3, Example.prop1, "\""+String.valueOf(Example.obj10)+"\"^^<http://www.w3.org/2001/XMLSchema#double>") );
 		
 		GraphMem mem3 = new GraphMem("http://graph/write3/");
 		mem3.write(graph);

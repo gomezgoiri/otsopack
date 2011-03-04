@@ -24,9 +24,12 @@ import otsopack.droid.sampledata.ExampleME;
 
 public class ModelResponseTest extends TestCase {
 
+	private MicrojenaFactory factory;
+	
 	public void setUp() throws Exception {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 	}
 
 	public void tearDown() {
@@ -99,12 +102,12 @@ public class ModelResponseTest extends TestCase {
 		
 		final ModelResponse resp = new ModelResponse(sf.createTemplate("?s ?p ?o ."));
 		final IGraph graph = sf.createEmptyGraph();
-		graph.add(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
+		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
+		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
 		resp.addTriples(sf.createModelForGraph(graph));
 		final IGraph ret = resp.getModel().getGraph();
 		assertEquals(ret.size(),2);
-		assertTrue(ret.contains(sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(ret.contains(sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(ret.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(ret.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
 	}
 }

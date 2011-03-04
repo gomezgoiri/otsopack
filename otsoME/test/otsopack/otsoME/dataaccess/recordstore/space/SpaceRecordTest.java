@@ -38,6 +38,7 @@ public class SpaceRecordTest extends TestCase {
 	private SpaceRecord space;
 	private String[] graphuris;
 	private GraphRecord anyStoredRecord;
+	MicrojenaFactory factory;
 
 	public SpaceRecordTest() {
 		super(9, "SpaceRecordTest");
@@ -45,7 +46,8 @@ public class SpaceRecordTest extends TestCase {
 	
 	public void setUp() throws Throwable {
 		super.setUp();
-		SemanticFactory.initialize(new MicrojenaFactory());
+		factory = new MicrojenaFactory();
+		SemanticFactory.initialize(factory);
 		
 		final ISemanticFactory sf = new SemanticFactory();
 		graphuris = new String[4];
@@ -55,32 +57,32 @@ public class SpaceRecordTest extends TestCase {
 		space.removeAll();
 
 		IGraph triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
 		graphuris[0] = space.write(triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj3,ExampleME.prop3,ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj2,ExampleME.prop4,ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop3,ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop4,ExampleME.obj4) );
 		graphuris[1] = space.write(triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj4,ExampleME.prop3,ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj4,ExampleME.prop4,ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop3,ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop4,ExampleME.obj4) );
 		graphuris[2] = space.write(triples);
 		
 		triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj4,ExampleME.prop1,ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj4,ExampleME.prop2,ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop1,ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop2,ExampleME.obj4) );
 		graphuris[3] = space.write(triples);
 		
 		space.updateStorage();
@@ -126,11 +128,11 @@ public class SpaceRecordTest extends TestCase {
 	protected void writeTest() throws TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final IGraph triples = sf.createEmptyGraph();
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) );
-		triples.add( sf.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
-		triples.add( sf.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) );
+		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
+		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
 		space.write(triples);
 	}
 	
@@ -206,28 +208,28 @@ public class SpaceRecordTest extends TestCase {
 	protected void contains1Test() throws AssertionFailedException, TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) ) );
 		
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj1) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj3) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj3,ExampleME.prop3,ExampleME.obj2) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj2,ExampleME.prop4,ExampleME.obj4) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj1) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj3) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj3,ExampleME.prop3,ExampleME.obj2) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop4,ExampleME.obj4) ) );
 		
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj4,ExampleME.prop3,ExampleME.obj2) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj4,ExampleME.prop4,ExampleME.obj4) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj4,ExampleME.prop3,ExampleME.obj2) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj4,ExampleME.prop4,ExampleME.obj4) ) );
 		
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj4,ExampleME.prop1,ExampleME.obj2) ) );
-		assertTrue( space.contains( sf.createTriple(ExampleME.subj4,ExampleME.prop2,ExampleME.obj4) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj4,ExampleME.prop1,ExampleME.obj2) ) );
+		assertTrue( space.contains( factory.createTriple(ExampleME.subj4,ExampleME.prop2,ExampleME.obj4) ) );
 		
-		assertFalse( space.contains( sf.createTriple(ExampleME.subj6,ExampleME.prop2,ExampleME.obj10) ) );
+		assertFalse( space.contains( factory.createTriple(ExampleME.subj6,ExampleME.prop2,ExampleME.obj10) ) );
 	}
 
 	protected void containsGraph1Test() {
