@@ -15,11 +15,9 @@
 package otsopack.commons.data;
 
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.commons.exceptions.TripleParseException;
 
 public interface ISemanticFactory {
 	public ITemplate createTemplate(String template) throws MalformedTemplateException;
-	public ITriple createTriple(String subject, String predicate, Object object) throws TripleParseException;
 	public IGraph createEmptyGraph();
 	public IModel createEmptyModel();
 	public IModel createModelForGraph(IGraph graph);
