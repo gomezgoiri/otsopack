@@ -1,4 +1,5 @@
-<project name="otsoDroid" default="generate-apk" basedir=".">
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="otsoDroid" basedir=".">
 	
 	<!-- The local.properties file is created and updated by the 'android'
 	     tool.
@@ -39,17 +40,29 @@
 	        <pathelement path="${sdk.dir}/tools/lib/sdklib.jar" />
 	        <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
 	    </path>
+	
+		<import file="${sdk.dir}/tools/ant/pre_setup.xml" />
+		<import file="${sdk.dir}/tools/ant/main_rules.xml" />
 
-	    <taskdef name="setup"
-	        classname="com.android.ant.SetupTask"
-	        classpathref="android.antlibs" />
-
+	    <target name="-pre-compile">
+	    	<copy file="../../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" todir="libs"/>
+	    	<copy file="../../otsoCommons/dist/otsoCommons-sources.jar" todir="libs"/>
+	    	<copy todir="libs">
+	    		<fileset dir="../../otsoCommons/lib">
+	    			<include name="*.jar"/>
+	    			<exclude name="junit*.jar"/>
+	    		</fileset>
+	    		<fileset dir="../../otsoFullJavaCommons/lib">
+	    			<include name="*.jar"/>
+	    			<exclude name="junit*.jar"/>
+	    		</fileset>
+	    	</copy>
+    	</target>
+	
 	<!-- extension targets. Uncomment the ones where you want to do custom work
 	     in between standard targets -->
 	<!--
 	    <target name="-pre-build">
-	    </target>
-	    <target name="-pre-compile">
 	    </target>
 
 	    [This is typically used for code obfuscation.
@@ -79,9 +92,4 @@
 	             - customize to your needs.
 	    -->
 	    <setup />
-
-	    <target name="generate-apk" depends="release">
-	        <copy file="${out.dir}/AssistedCity-release.apk" tofile="app.apk"/>
-	    </target>	
-	
 </project>

@@ -19,3 +19,5 @@ key.store=debug.keystore
 key.store.password=android
 key.alias=androiddebugkey
 key.alias.password=android
+
+tested.project.dir=../otsoDroid

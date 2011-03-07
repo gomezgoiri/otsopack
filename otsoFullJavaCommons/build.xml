@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="otsoFullJavaCommons" default="javac">
+<project name="otsoFullJavaCommons" default="dist">
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
 	<property name="microjena" value="lib/microjena.jar" />
+	<property name="otso.commons.jar" location="../otsoCommons/dist/otsoCommons-sources.jar"/>
 	
     <path id="project.class.path">
-		<pathelement location="../otsoCommons/dist/otsoCommons.jar"/>
+		<pathelement location="${otso.commons.jar}"/>
     	<fileset dir="../otsoCommons/lib/">
 			<include name="*.jar"/>
+    		<exclude name="junit.jar"/> <!-- We need JUnit 4 -->
     	</fileset>
     	<fileset dir="lib">
 			<include name="*.jar"/>
     	</fileset>
     </path>
 	
-	<target name="javac">
+	<fail message="otsoCommons-sources.jar not found">
+		<condition>
+	        <not>
+				<available file="${otso.commons.jar}"/>
+			</not>
+	    </condition>
+	</fail>
+	
+	<target name="javac" depends="clean">
 		<javac srcdir="src:test" destdir="bin" 
 				includes="**" debug="on" debuglevel="lines,vars,source" 
             	encoding="utf-8">
@@ -23,7 +33,7 @@
 		</javac>            
 	</target>
 	
-	<target name="droid-jar" depends="clean">
+	<target name="dist" depends="javac">
 		<copy todir="bin">
 			<fileset dir="src"/>
 		</copy>
@@ -36,7 +46,7 @@
 		<jar destfile="dist/otsoFullJavaCommons-sources.jar" basedir="bin"/>
 	</target>
 	
-	<target name="test" depends="javac">
+	<target name="test" depends="dist">
 		<mkdir dir="${testreportdir}"/>
 		<junit failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true" showoutput="true">
 			<classpath>
