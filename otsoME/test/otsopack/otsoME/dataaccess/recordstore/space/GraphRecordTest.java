@@ -59,18 +59,18 @@ public class GraphRecordTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			contains1Test();
+			testContains();
 			break;
 		case 1:
-			equals1Test();
+			testEquals();
 			break;
 		case 2:
-			hashCode1Test();
+			testHashCode();
 			break;
 		}
 	}
 
-	public void contains1Test() throws AssertionFailedException, RecordStoreException, MalformedTemplateException {
+	public void testContains() throws AssertionFailedException, RecordStoreException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		ITemplate sel = sf.createTemplate(
 						"<"+ExampleME.subj1+"> <"+ExampleME.prop2+"> <"+ExampleME.obj4+"> .");
@@ -81,7 +81,7 @@ public class GraphRecordTest extends TestCase {
 		assertFalse( record.contains(sel) );
 	}
 	
-	public void equals1Test() throws TripleParseException {
+	public void testEquals() throws TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final GraphRecord gr = new GraphRecord();
 		gr.recordId=1;
@@ -138,7 +138,7 @@ public class GraphRecordTest extends TestCase {
 		assertEquals( gr5, gr5 );
 	}
 
-	public void hashCode1Test() throws TripleParseException {
+	public void testHashCode() throws TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final GraphRecord gr = new GraphRecord();
 		gr.recordId=1;

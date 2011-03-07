@@ -40,21 +40,21 @@ public class IncomingListTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			add1Test();
+			testAdd1();
 			break;
 		case 1:
-			get1Test();
+			testGet1();
 			break;
 		case 2:
-			remove1Test();
+			testRemove1();
 			break;
 		case 3:
-			clear1Test();
+			testClear1();
 			break;
 		}
 	}
 	
-	public void add1Test() {
+	public void testAdd1() {
 		ModelResponse[] responses = new ModelResponse[3];
 		IncomingList inbox = new IncomingList();
 		inbox.add( responses[0]=new ModelResponse(new Integer(1)) );
@@ -66,7 +66,7 @@ public class IncomingListTest extends TestCase {
 		assertTrue(inbox.modelResponses.contains(responses[2]));
 	}
 
-	public void get1Test() throws ArrayStoreException, MalformedTemplateException {
+	public void testGet1() throws ArrayStoreException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		ModelResponse[] responses = new ModelResponse[5];
 		URIResponse[] responsesUri = new URIResponse[2];
@@ -99,7 +99,7 @@ public class IncomingListTest extends TestCase {
 		assertEquals(res,responsesUri[1]);
 	}
 
-	public void remove1Test() {
+	public void testRemove1() {
 		ModelResponse[] responses = new ModelResponse[3];
 		IncomingList inbox = new IncomingList();
 		inbox.add( responses[0]=new ModelResponse(new Integer(1)) );
@@ -126,7 +126,7 @@ public class IncomingListTest extends TestCase {
 		assertFalse(inbox.modelResponses.contains(responses[2]));
 	}
 
-	public void clear1Test() {
+	public void testClear1() {
 		ModelResponse[] responses = new ModelResponse[3];
 		IncomingList inbox = new IncomingList();
 		inbox.add( responses[0]=new ModelResponse(new Integer(1)) );

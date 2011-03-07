@@ -44,7 +44,7 @@ public class LocalDemandManagerTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			callbackForMatchingTemplatesTest();
+			testCallbackForMatchingTemplates();
 			break;
 		}
 	}
@@ -56,7 +56,7 @@ public class LocalDemandManagerTest extends TestCase {
 		return ret;
 	}
 	
-	public void callbackForMatchingTemplatesTest() throws Exception {
+	public void testCallbackForMatchingTemplates() throws Exception {
 		final LocalDemandManager mngr = new LocalDemandManager();
 		mngr.setDemandSender(new IDemandSender() {
 			public void demand(ITemplate template, long leaseTime) {

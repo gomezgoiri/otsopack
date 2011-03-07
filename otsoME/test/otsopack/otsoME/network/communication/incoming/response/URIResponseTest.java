@@ -37,18 +37,18 @@ public class URIResponseTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			equals1Test();
+			testEquals1();
 			break;
 		case 1:
-			hashCode1Test();
+			testHashCode1();
 			break;
 		case 2:
-			setURI1Test();
+			testSetURI1();
 			break;
 		}
 	}
 	
-	public void equals1Test() throws MalformedTemplateException {
+	public void testEquals1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final URIResponse resp1 = new URIResponse(sf.createTemplate("?s ?p ?o ."), new Object());
@@ -66,7 +66,7 @@ public class URIResponseTest extends TestCase {
 		assertNotEquals(resp3,resp2);
 	}
 
-	public void hashCode1Test() throws MalformedTemplateException {
+	public void testHashCode1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		URIResponse resp1 = new URIResponse(sf.createTemplate("?s ?p ?o ."), new Object());
@@ -77,7 +77,7 @@ public class URIResponseTest extends TestCase {
 		assertEquals(resp2.hashCode(),resp3.hashCode());
 	}
 	
-	public void setURI1Test() throws MalformedTemplateException {
+	public void testSetURI1() throws MalformedTemplateException {
 		
 		BlockedThread blockedTh = new BlockedThread(new Object());
 		new Thread(blockedTh).start();

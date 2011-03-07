@@ -38,19 +38,19 @@ public class AdvertisementTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			hashCode1Test();
+			testHashCode1();
 			break;
 		case 1:
-			equals1Test();
+			testEquals1();
 			break;
 		case 2:
-			clone1Test();
+			testClone1();
 			break;
 		}
 	}
 
 
-	public void hashCode1Test() throws MalformedTemplateException {
+	public void testHashCode1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", sf.createTemplate("<http://arvak> <http://es> <http://caballo> ."));
@@ -65,7 +65,7 @@ public class AdvertisementTest extends TestCase {
 		assertEquals(adv5.hashCode(),adv6.hashCode());
 	}
 	
-	public void equals1Test() throws MalformedTemplateException {
+	public void testEquals1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", sf.createTemplate("<http://arvak> <http://es> <http://caballo> ."));
@@ -113,7 +113,7 @@ public class AdvertisementTest extends TestCase {
 		assertNotEquals(adv6,adv4);
 	}
 	
-	public void clone1Test() throws MalformedTemplateException {
+	public void testClone1() throws MalformedTemplateException {
 		final IAdvertisement adv = NotificationsFactory.createAdvertisement("http://spaceuri1", new SemanticFactory().createTemplate("<http://arvak> <http://es> <http://caballo> ."));
 		final IAdvertisement clonedAdv = (IAdvertisement) adv.clone();
 		

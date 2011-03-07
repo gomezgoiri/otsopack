@@ -38,21 +38,21 @@ public class SubscriptionTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			hashCode1Test();
+			testHashCode1();
 			break;
 		case 1:
-			equals1Test();
+			testEquals1();
 			break;
 		case 2:
-			clone1Test();
+			testClone1();
 			break;
 		case 3:
-			matches1Test();
+			testMatches1();
 			break;
 		}
 	}
 	
-	public void hashCode1Test() throws MalformedTemplateException {
+	public void testHashCode1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", sf.createTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
@@ -67,7 +67,7 @@ public class SubscriptionTest extends TestCase {
 		assertEquals(adv5.hashCode(),adv6.hashCode());
 	}
 	
-	public void equals1Test() throws MalformedTemplateException {
+	public void testEquals1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", sf.createTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
@@ -115,7 +115,7 @@ public class SubscriptionTest extends TestCase {
 		assertNotEquals(adv6,adv4);
 	}
 	
-	public void clone1Test() throws MalformedTemplateException {
+	public void testClone1() throws MalformedTemplateException {
 		final ISubscription subs = NotificationsFactory.createSubscription("http://spaceuri1", new SemanticFactory().createTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
 		final ISubscription clonedSubs = (ISubscription) subs.clone();
 		
@@ -128,7 +128,7 @@ public class SubscriptionTest extends TestCase {
 		assertTrue( subs.getListener()==clonedSubs.getListener() );
 	}
 
-	public void matches1Test() throws AssertionFailedException, MalformedTemplateException {
+	public void testMatches1() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", sf.createTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
