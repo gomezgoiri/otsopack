@@ -14,6 +14,8 @@
  */
 package otsopack.full.java;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import otsopack.commons.data.IGraph;
@@ -25,9 +27,11 @@ import otsopack.commons.exceptions.TSException;
 
 public class FakeDataAccess implements IDataAccess {
 	final AtomicInteger graphnum;
+	final Set<String> graphsStored;
 	
 	public FakeDataAccess() {
 		this.graphnum = new AtomicInteger(0);
+		this.graphsStored = new HashSet<String>();
 	}
 	
 	@Override
@@ -59,16 +63,24 @@ public class FakeDataAccess implements IDataAccess {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public String[] getLocalGraphs(String spaceURI)
+			throws SpaceNotExistsException {
+		final String [] ret = new String[this.graphsStored.size()];
+		return this.graphsStored.toArray(ret);
+	}
 
 	@Override
 	public String write(String spaceURI, IGraph triples) throws SpaceNotExistsException {
 		if( spaceURI==null ) throw new SpaceNotExistsException();
 		if( triples!=null ) {
-			String graphURIstart = spaceURI;
-			if( !spaceURI.endsWith("/") ) graphURIstart += "/";
-			if( !spaceURI.startsWith("http://") ) graphURIstart += "http://";
-			
-			return graphURIstart+"graph"+this.graphnum.incrementAndGet();
+			String graphURI = spaceURI;
+			if( !spaceURI.endsWith("/") ) graphURI += "/";
+			if( !spaceURI.startsWith("http://") ) graphURI += "http://";
+			graphURI += "graph"+this.graphnum.incrementAndGet();
+			this.graphsStored.add(graphURI);
+			return graphURI;
 		}
 		return null;
 	}

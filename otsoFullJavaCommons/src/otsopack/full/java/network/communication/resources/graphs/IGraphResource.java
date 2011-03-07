@@ -25,4 +25,7 @@ public interface IGraphResource {
 
 	@Get("json")
 	public abstract String toJson();
+
+	@Get("html")
+	public abstract String toHtml();
 }

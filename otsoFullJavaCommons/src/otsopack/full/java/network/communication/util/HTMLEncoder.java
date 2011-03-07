@@ -15,20 +15,16 @@
 package otsopack.full.java.network.communication.util;
 
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class HTMLEncoder {
-	public static String encodeURIs(String [] uris, String body){
+	public static String encodeURIs(Set<Entry<String,String>> properties, Set<String> uris, String body){
 		final StringBuilder builder = new StringBuilder("<html>\n");
 		builder.append("<body>\n");
-		builder.append("\t<ul>\n");
 		
-		// Add other systems
-		for(String root : uris)
-			addChild(builder, root);
-		
-		builder.append("\t</ul>\n");
-		
+		appendProperties(builder,properties);
+		appendRoots(builder, uris);
 		builder.append(body);
 		
 		builder.append("</body>\n");
@@ -37,25 +33,57 @@ public class HTMLEncoder {
 		return builder.toString();
 	}
 	
-	public static String encodeURIs(String [] uris){
-		return encodeURIs(uris, "");
+	private static void appendProperties(StringBuilder builder,	Set<Entry<String, String>> properties) {
+		if( properties!=null ) {
+			builder.append("\t<p>Properties:</p>\n");
+			builder.append("\t<ul>\n");
+			
+			// Add other systems
+			for(Entry<String, String> property : properties) {
+				builder.append("\t\t<li><span style=\"font-weight: bold;\">");
+				builder.append( property.getKey() );
+				builder.append(":</span> ");
+				builder.append( property.getValue() );
+				builder.append("</li>\n");
+			}
+			
+			builder.append("\t</ul>\n");
+		} else builder.append("\t<p>No properties shown.</p>\n");
 	}
 	
-	public static String encodeSortedURIs(Set<String> uris, String body){
-		final String [] rootURIs = uris.toArray(new String[]{});
-		Arrays.sort(rootURIs);
-		return encodeURIs(rootURIs, body);
+		private static void addChild(StringBuilder builder, String root){
+			builder.append("\t\t<li><a href=\"");
+			builder.append(root);
+			builder.append("\">");
+			builder.append(root);
+			builder.append("</a></li>\n");
+		}
+
+	private static void appendRoots(final StringBuilder builder, final Set<String> uris) {
+		if( uris!=null ) {
+			final String [] rootURIs = uris.toArray(new String[]{});
+			Arrays.sort(rootURIs);
+			
+			builder.append("\t<p>Roots:</p>\n");
+			builder.append("\t<ul>\n");
+			
+			// Add other systems
+			for(String root : uris)
+				addChild(builder, root);
+			
+			builder.append("\t</ul>\n");
+		}
 	}
 	
-	public static String encodeSortedURIs(Set<String> uris){
-		return encodeSortedURIs(uris, "");
+	public static String encodeURIs(Set<String> uris, String body){
+		return encodeURIs(null,uris,body);
 	}
 	
-	private static void addChild(StringBuilder builder, String root){
-		builder.append("\t\t<li><a href=\"");
-		builder.append(root);
-		builder.append("\">");
-		builder.append(root);
-		builder.append("</a></li>\n");
+	public static String encodeURIs(Set<Entry<String,String>> properties, Set<String> uris){
+		return encodeURIs(properties,uris, "");
+	}
+	
+	public static String encodeURIs(Set<String> uris){
+		return encodeURIs(null,uris);
 	}
 }

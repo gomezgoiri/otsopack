@@ -17,13 +17,12 @@ package otsopack.full.java.network.communication.resources.query;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.restlet.resource.ServerResource;
-
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class QueryResource extends ServerResource implements IQueryResource {
+public class QueryResource extends AbstractServerResource implements IQueryResource {
 
 	public static final String ROOT = SpaceResource.ROOT + "/query";
 	
@@ -36,7 +35,10 @@ public class QueryResource extends ServerResource implements IQueryResource {
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		return HTMLEncoder.encodeURIs(
+				super.getArguments(ROOT).entrySet(),
+				getRoots().keySet()
+			);
 	}
 
 	@Override

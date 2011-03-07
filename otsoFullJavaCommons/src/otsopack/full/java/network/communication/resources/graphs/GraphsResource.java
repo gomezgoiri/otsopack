@@ -14,6 +14,8 @@
 
 package otsopack.full.java.network.communication.resources.graphs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,22 +36,59 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 
 	public static final String ROOT = SpaceResource.ROOT + "/graphs";
 	
-	public static Map<String, Class<?>> getRoots(){
+	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, GraphsResource.class);
-		graphsRoots.put(GraphResource.ROOT, GraphsResource.class);
+		graphsRoots.put(GraphResource.ROOT, GraphResource.class);
 		graphsRoots.putAll(WildcardsGraphResource.getRoots());
 		return graphsRoots;
 	}
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		final StringBuilder bodyHtml = new StringBuilder("<br>Locally available graphs:<br>\n<ul>\n");
+		try {		
+			final String space = getArgument("space");
+			final String spaceEnc = URLEncoder.encode(space, "utf-8");
+			final IController controller = getController();
+			String[] graphsuris = controller.getDataAccessService().getLocalGraphs(space);
+			for(String graphuri: graphsuris){
+				String graphEnc = URLEncoder.encode(graphuri, "utf-8");
+				
+				bodyHtml.append("\t<li>");
+				bodyHtml.append("<a href=\"");
+				bodyHtml.append(ROOT.replace("{space}", spaceEnc));
+				bodyHtml.append("/");
+				bodyHtml.append(graphEnc);
+				bodyHtml.append("\">");
+				bodyHtml.append(graphuri);
+				bodyHtml.append("</a>");
+				bodyHtml.append("</li>\n");
+			}
+			bodyHtml.append("</ul>\n");
+			System.out.println(bodyHtml.toString());
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		} catch (UnsupportedEncodingException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "URL could not be encoded", e);
+		}
+		return HTMLEncoder.encodeURIs(
+				super.getArguments(ROOT).entrySet(),
+				getRoots().keySet(),
+				bodyHtml.toString());
 	}
 	
 	@Override
 	public String toJson() {
-		return JSONEncoder.encodeSortedURIs(getRoots().keySet());
+		String[] ret = null;
+		try {		
+			final String space = getArgument("space");
+			final IController controller = getController();
+			ret = controller.getDataAccessService().getLocalGraphs(space);
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		}
+		return JSONEncoder.encode(ret);
 	}
 
 	@Override
@@ -70,9 +109,9 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	
 	protected String write(IGraph graph) {
 		final String space = getArgument("space");
-		String ret = "urichachi";
+		String ret = null;
 		try {		
-			final IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
+			final IController controller = getController();
 			ret = controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
@@ -80,4 +119,8 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		return ret;
 	}
 	
+	private IController getController() {
+		final IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
+		return controller;
+	}
 }

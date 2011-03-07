@@ -72,7 +72,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 	public String retrieveHtml() {
 		final StringBuilder bodyHtml = new StringBuilder("<br>Available prefixes:<br>\n<ul>\n");
 		for(Entry<String, String> entry : prefixesByURI.entrySet()){
-			bodyHtml.append("\t<li><b>");
+			bodyHtml.append("\t<li><span style=\"font-weight: bold;\">");
 			bodyHtml.append(entry.getValue());
 			
 			String encoded;
@@ -81,7 +81,7 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 			} catch (UnsupportedEncodingException e) {
 				encoded = null;
 			}
-			bodyHtml.append(":</b> <a href=\"");
+			bodyHtml.append(":</span> <a href=\"");
 			bodyHtml.append(ROOT);
 			bodyHtml.append("/");
 			bodyHtml.append(encoded);
@@ -92,6 +92,6 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 		}
 		bodyHtml.append("</ul>\n");
 		System.out.println(bodyHtml.toString());
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet(), bodyHtml.toString());
+		return HTMLEncoder.encodeURIs(null,getRoots().keySet(), bodyHtml.toString());
 	}
 }
