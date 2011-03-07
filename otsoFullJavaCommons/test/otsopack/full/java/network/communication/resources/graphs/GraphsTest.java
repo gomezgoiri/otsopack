@@ -14,14 +14,17 @@
 
 package otsopack.full.java.network.communication.resources.graphs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
-import otsopack.full.java.network.communication.resources.graphs.IGraphsResource;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class GraphsTest extends AbstractRestServerTesting {
@@ -35,12 +38,11 @@ public class GraphsTest extends AbstractRestServerTesting {
 		
 		final String [] results = JSONDecoder.decode(prefixes, String[].class);
 		
-		assertEquals(3, results.length);
-		assertEquals("/spaces/{space}/graphs", results[0]);
-		assertEquals("/spaces/{space}/graphs/wildcards", results[1]);
-		assertEquals("/spaces/{space}/graphs/wildcards/{subject}/{predicate}/{object}", results[2]);
+		final List<String> resultsSet = Arrays.asList(results);
+		assertEquals(4, resultsSet.size());
+		assertTrue( resultsSet.contains("/spaces/{space}/graphs") );
+		assertTrue( resultsSet.contains("/spaces/{space}/graphs/{graph}") );
+		assertTrue( resultsSet.contains("/spaces/{space}/graphs/wildcards") );
+		assertTrue( resultsSet.contains("/spaces/{space}/graphs/wildcards/{subject}/{predicate}/{object}") );
 	}
-	
-	
-
 }

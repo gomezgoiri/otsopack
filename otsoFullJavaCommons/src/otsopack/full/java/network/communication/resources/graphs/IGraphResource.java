@@ -9,24 +9,20 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * Author: FILLME
+ *
  */
-
 package otsopack.full.java.network.communication.resources.graphs;
 
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 
-public interface IGraphsResource {
-	@Get("html")
-	public abstract String toHtml();
+public interface IGraphResource {
+	@Get("nt")
+	public abstract String toNTriples();
+	
+	@Get("n3")
+	public abstract String toN3();
 
 	@Get("json")
 	public abstract String toJson();
-	
-	@Post("json")
-	public abstract String writeGraphJSON(String json);
-	
-	@Post("nt")
-	public abstract String writeGraphNTriples(String ntriples);
 }
