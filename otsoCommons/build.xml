@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="otsoCommons" default="javac">
+<project name="otsoCommons" default="dist">
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-	<property name="microjena" value="lib/microjena.jar" />
 	
     <path id="project.class.path">
-		<pathelement location="lib/microjena.jar"/>
-    	<pathelement location="lib/junit.jar"/>
-        <pathelement location="lib/easymock/easymock.jar"/>
+        <pathelement path="lib/microjena.jar"/>
+        <pathelement path="lib/junit.jar"/>
+        <pathelement path="lib/easymock/easymock.jar"/>
     </path>
 	
 	<target name="javac">
@@ -19,7 +18,7 @@
 		</javac>            
 	</target>
 	
-	<target name="droid-jar" depends="clean">
+	<target name="dist" depends="clean">
 		<copy todir="bin">
 			<fileset dir="src"/>
 		</copy>
@@ -32,7 +31,7 @@
 		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin"/>
 	</target>
 	
-	<target name="test" depends="javac">
+	<target name="test" depends="dist">
 		<mkdir dir="${testreportdir}"/>
 		<junit failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true" showoutput="true">
 			<classpath>
