@@ -47,4 +47,12 @@ public class SemanticFactory implements ISemanticFactory {
 		return SemanticFactory.dataFactory.createModelForGraph(graph);
 	}
 
+	public String[] getSupportedInputFormats() {
+		return SemanticFactory.dataFactory.getSupportedInputFormats();
+	}
+
+	public String[] getSupportedOutputFormats() {
+		return SemanticFactory.dataFactory.getSupportedOutputFormats();
+	}
+
 }

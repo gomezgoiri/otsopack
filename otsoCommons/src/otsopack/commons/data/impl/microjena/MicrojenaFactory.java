@@ -85,4 +85,12 @@ public class MicrojenaFactory implements ISemanticFactory {
 	public IModel createModel(Model model) {
 		return new ModelImpl(model);
 	}
+
+	public String[] getSupportedInputFormats() {
+		return new String[]{};
+	}
+
+	public String[] getSupportedOutputFormats() {
+		return new String[]{};
+	}
 }

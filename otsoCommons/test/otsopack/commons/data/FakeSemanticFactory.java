@@ -52,4 +52,12 @@ public class FakeSemanticFactory implements ISemanticFactory {
 		return new FakeModel(graph);
 	}
 
+	public String[] getSupportedInputFormats() {
+		return null;
+	}
+
+	public String[] getSupportedOutputFormats() {
+		return null;
+	}
+
 }
