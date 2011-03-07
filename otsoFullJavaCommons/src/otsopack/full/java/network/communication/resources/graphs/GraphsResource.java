@@ -70,9 +70,9 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	
 	protected String write(IGraph graph) {
 		final String space = getArgument("space");
-		String ret = "";
+		String ret = "urichachi";
 		try {		
-			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
+			final IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
 			ret = controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);

@@ -14,15 +14,27 @@
 
 package otsopack.full.java.network.communication;
 
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 
+import otsopack.commons.IController;
+import otsopack.commons.dataaccess.IDataAccess;
+import otsopack.full.java.FakeDataAccess;
+
 public abstract class AbstractRestServerTesting {
 	protected RestServer rs;
+	protected IController mock;
 	
 	@Before
 	public void setUp() throws Exception {
+		this.mock = EasyMock.createMock(IController.class);
+		final IDataAccess mockda = new FakeDataAccess();
+		EasyMock.expect(this.mock.getDataAccessService()).andReturn(mockda).anyTimes();
+		EasyMock.replay(this.mock);
+		
 		this.rs = new RestServer(RestServer.DEFAULT_PORT);
+		this.rs.getAttributes().put("controller", this.mock);
 		this.rs.startup();
 	}
 	
@@ -32,6 +44,7 @@ public abstract class AbstractRestServerTesting {
 	
 	@After
 	public void tearDown() throws Exception {
+		//EasyMock.verify(this.mock);
 		this.rs.shutdown();
 	}
 }
