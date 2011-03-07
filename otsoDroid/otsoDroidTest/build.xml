@@ -36,6 +36,13 @@
     <!-- Required pre-setup import -->
     <import file="${sdk.dir}/tools/ant/pre_setup.xml" />
 
+    <target name="-pre-build">
+    	<copy todir="libs">
+    		<fileset dir="../otsoDroid/libs">
+    			<include name="*.jar"/>
+    		</fileset>
+		</copy>
+    </target>
 
 <!-- extension targets. Uncomment the ones where you want to do custom work
      in between standard targets -->

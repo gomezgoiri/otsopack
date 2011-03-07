@@ -23,6 +23,7 @@ syntax: regexp
 ^otsoDroid/otsoDroidTest/debug\.keystore$
 ^otsoDroid/otsoDroidTest/build\.properties$
 ^otsoDroid/otsoDroidTest/bin
+^otsoDroid/otsoDroidTest/libs
 
 ^otsoME/classes_cldc_unverified
 ^otsoME/classes_cldc
