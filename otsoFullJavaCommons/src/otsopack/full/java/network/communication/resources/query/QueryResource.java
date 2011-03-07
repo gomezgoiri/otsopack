@@ -14,16 +14,9 @@
 
 package otsopack.full.java.network.communication.resources.query;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.restlet.data.Status;
-import org.restlet.resource.ResourceException;
-
-import otsopack.commons.IController;
-import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
