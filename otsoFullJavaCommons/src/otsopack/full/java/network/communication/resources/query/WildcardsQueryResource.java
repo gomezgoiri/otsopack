@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.restlet.resource.ServerResource;
 
-import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
@@ -36,7 +35,7 @@ public class WildcardsQueryResource extends ServerResource implements IWildcards
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		return HTMLEncoder.encodeURIs(getRoots().keySet());
 	}
 
 	@Override

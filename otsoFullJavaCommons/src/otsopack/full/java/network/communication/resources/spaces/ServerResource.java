@@ -36,7 +36,7 @@ public class ServerResource implements ISpacesResource {
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		return HTMLEncoder.encodeURIs(getRoots().keySet());
 	}
 	
 	@Override

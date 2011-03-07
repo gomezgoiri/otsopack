@@ -22,6 +22,7 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.RestServer;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
+import otsopack.full.java.network.communication.util.HTMLEncoder;
 
 public class GraphResource extends AbstractServerResource implements IGraphResource {
 	
@@ -30,7 +31,6 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	protected IGraph readGraph() {
 		final String space   = getArgument("space");
 		final String graphuri   = getArgument("graph");
-		
 		IGraph ret = null;
 		try {			
 			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
@@ -41,24 +41,73 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		return ret;
 	}
 	
+	protected IGraph takeGraph() {
+		final String space   = getArgument("space");
+		final String graphuri   = getArgument("graph");
+		IGraph ret = null;
+		try {			
+			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
+			ret = controller.getDataAccessService().take(space,graphuri);
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		}
+		return ret;
+	}
+	
 	@Override
 	public String toNTriples() {
-		IGraph graph = readGraph();
-		// TODO convert to NTriples
-		return "Muchachada nui";
+		final IGraph graph = readGraph();
+		// TODO convert to N-Triples
+		return "read graph in N-Triples";
 	}
 	
 	@Override
 	public String toN3() {
-		IGraph graph = readGraph();
+		final IGraph graph = readGraph();
 		// TODO convert to N3
-		return "Muchachada nui";
+		return "read graph in N·";
 	}
 
 	@Override
 	public String toJson() {
-		IGraph graph = readGraph();
+		final IGraph graph = readGraph();
 		// TODO convert to JSON
-		return "Muchachada nui";
+		return "read graph in JSON";
+	}
+	
+	@Override
+	public String toHtml() {
+		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
+		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
+		bodyHtml.append("\t\t<textarea rows=\"10\" cols=\"50\">");
+		bodyHtml.append("triple1, triple2,...");
+		bodyHtml.append("</textarea>\n");
+		bodyHtml.append("\t</fieldset>\n");
+		
+		return HTMLEncoder.encodeURIs(
+					super.getArguments(ROOT).entrySet(),
+					null,
+					bodyHtml.toString()); // TODO print NTriples
+	}
+	
+	@Override
+	public String deleteNTriples() {
+		final IGraph graph = readGraph();
+		// TODO convert to N-Triples
+		return "take graph in N-Triples";
+	}
+	
+		@Override
+	public String deleteN3() {
+		final IGraph graph = readGraph();
+		// TODO convert to N3
+		return "take graph in N3";
+	}
+	
+	@Override
+	public String deleteJson() {
+		final IGraph graph = readGraph();
+		// TODO convert to JSON
+		return "take graph in JSON";
 	}
 }

@@ -45,4 +45,32 @@ public class GraphsTest extends AbstractRestServerTesting {
 		assertTrue( resultsSet.contains("/spaces/{space}/graphs/wildcards") );
 		assertTrue( resultsSet.contains("/spaces/{space}/graphs/wildcards/{subject}/{predicate}/{object}") );
 	}
+	
+	@Test
+	public void testPutGraph() throws Exception {		
+		final String space = URLEncoder.encode("http://space1/", "utf-8");
+		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
+		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
+		
+		// Test PUT
+		final String uri = graphsRsc.writeGraphNTriples("blabla");
+		assertEquals("http://space1/graph1",uri);
+	}
+	
+	
+	@Test
+	public void testGetGraph() throws Exception {		
+		final String space = URLEncoder.encode("http://space1/", "utf-8");
+		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
+		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
+		
+		// Test PUT
+		graphsRsc.writeGraphNTriples("blabla");
+		graphsRsc.writeGraphNTriples("blabla1");
+		graphsRsc.writeGraphNTriples("blabla2");
+		
+		// Test json retrieval
+		final String graph = graphsRsc.toJson();
+		System.out.println(graph);
+	}
 }

@@ -35,7 +35,7 @@ public class WildcardsGraphResource extends ServerResource implements IWildcards
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		return HTMLEncoder.encodeURIs(getRoots().keySet());
 	}
 	
 	@Override

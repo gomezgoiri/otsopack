@@ -14,6 +14,7 @@
  */
 package otsopack.full.java.network.communication.resources.graphs;
 
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 
 public interface IGraphResource {
@@ -25,4 +26,16 @@ public interface IGraphResource {
 
 	@Get("json")
 	public abstract String toJson();
+
+	@Get("html")
+	public abstract String toHtml();
+	
+	@Delete("nt")
+	public abstract String deleteNTriples();
+	
+	@Delete("n3")
+	public abstract String deleteN3();
+	
+	@Delete("json")
+	public abstract String deleteJson();
 }

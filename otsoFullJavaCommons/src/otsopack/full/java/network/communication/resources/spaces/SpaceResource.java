@@ -17,14 +17,13 @@ package otsopack.full.java.network.communication.resources.spaces;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.restlet.resource.ServerResource;
-
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
 import otsopack.full.java.network.communication.resources.query.QueryResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class SpaceResource extends ServerResource implements ISpaceResource {
+public class SpaceResource extends AbstractServerResource implements ISpaceResource {
 
 	public static final String ROOT = SpacesResource.ROOT + "/{space}";
 	
@@ -38,7 +37,10 @@ public class SpaceResource extends ServerResource implements ISpaceResource {
 	
 	@Override
 	public String toHtml() {
-		return HTMLEncoder.encodeSortedURIs(getRoots().keySet());
+		return HTMLEncoder.encodeURIs(
+					super.getArguments(ROOT).entrySet(),
+					getRoots().keySet()
+				);
 	}
 	
 	@Override
