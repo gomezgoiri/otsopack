@@ -41,6 +41,40 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		return ret;
 	}
 	
+	protected IGraph takeGraph() {
+		final String space   = getArgument("space");
+		final String graphuri   = getArgument("graph");
+		IGraph ret = null;
+		try {			
+			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
+			ret = controller.getDataAccessService().take(space,graphuri);
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		}
+		return ret;
+	}
+	
+	@Override
+	public String toNTriples() {
+		final IGraph graph = readGraph();
+		// TODO convert to N-Triples
+		return "read graph in N-Triples";
+	}
+	
+	@Override
+	public String toN3() {
+		final IGraph graph = readGraph();
+		// TODO convert to N3
+		return "read graph in N·";
+	}
+
+	@Override
+	public String toJson() {
+		final IGraph graph = readGraph();
+		// TODO convert to JSON
+		return "read graph in JSON";
+	}
+	
 	@Override
 	public String toHtml() {
 		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
@@ -57,23 +91,23 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	}
 	
 	@Override
-	public String toNTriples() {
-		IGraph graph = readGraph();
-		// TODO convert to NTriples
-		return "Muchachada nui";
+	public String deleteNTriples() {
+		final IGraph graph = readGraph();
+		// TODO convert to N-Triples
+		return "take graph in N-Triples";
+	}
+	
+		@Override
+	public String deleteN3() {
+		final IGraph graph = readGraph();
+		// TODO convert to N3
+		return "take graph in N3";
 	}
 	
 	@Override
-	public String toN3() {
-		IGraph graph = readGraph();
-		// TODO convert to N3
-		return "Muchachada nui";
-	}
-
-	@Override
-	public String toJson() {
-		IGraph graph = readGraph();
+	public String deleteJson() {
+		final IGraph graph = readGraph();
 		// TODO convert to JSON
-		return "Muchachada nui";
+		return "take graph in JSON";
 	}
 }
