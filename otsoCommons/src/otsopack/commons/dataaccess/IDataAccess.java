@@ -45,6 +45,14 @@ public interface IDataAccess extends ILayer {
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException;
 	
 	/**
+	 * @param spaceURI
+	 * @return
+	 * 		The identifying URI of every locally stored graph for the given space.
+	 * @throws SpaceNotExistsException
+	 */
+	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException;
+	
+	/**
 	 * write set of triples to space
 	 * @param spaceURI
 	 * @param triples

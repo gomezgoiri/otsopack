@@ -49,22 +49,22 @@ public class RemoteDemandManagerTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			getNonExpiredTemplatesTest();
+			testGetNonExpiredTemplates();
 			break;
 		case 1:
-			hasAnyPeerResponsabilityOverThisKnowledgeTest();
+			testHasAnyPeerResponsabilityOverThisKnowledge();
 			break;
 		case 2:
-			importRecordsTest();
+			testImportRecords();
 			break;
 		case 3:
-			exportRecordsTest();
+			testExportRecords();
 			break;
 		}
 	}
 
 
-	public void getNonExpiredTemplatesTest() throws InterruptedException, MalformedTemplateException {
+	public void testGetNonExpiredTemplates() throws InterruptedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ITemplate[] s = new ITemplate[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
@@ -87,7 +87,7 @@ public class RemoteDemandManagerTest extends TestCase {
 		assertTrue( tpls.contains(s[2]) );
 	}
 	
-	public void hasAnyPeerResponsabilityOverThisKnowledgeTest() throws TripleParseException, MalformedTemplateException {
+	public void testHasAnyPeerResponsabilityOverThisKnowledge() throws TripleParseException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ITemplate[] s = new ITemplate[6];
 		s[0] = sf.createTemplate("<"+ExampleME.subj1+"> ?p1 <"+ExampleME.obj3+"> .");
@@ -165,7 +165,7 @@ public class RemoteDemandManagerTest extends TestCase {
 			return ret.getBytes();
 		}
 		
-	public void importRecordsTest() throws AssertionFailedException, MalformedTemplateException {
+	public void testImportRecords() throws AssertionFailedException, MalformedTemplateException {
 		long[] expires0 = new long[0];
 		String[] templates0 = new String[0];
 		checkImport(expires0,templates0);
@@ -180,7 +180,7 @@ public class RemoteDemandManagerTest extends TestCase {
 		checkImport(expires2,templates2);
 	}
 
-	public void exportRecordsTest() throws MalformedTemplateException {
+	public void testExportRecords() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final RemoteDemandManager mngr = new RemoteDemandManager();
 		byte[] obtained = mngr.exportRecords();

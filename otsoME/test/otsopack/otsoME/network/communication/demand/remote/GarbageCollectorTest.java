@@ -40,12 +40,12 @@ public class GarbageCollectorTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			removeExpiredTest();
+			testRemoveExpired();
 			break;
 		}
 	}
 	
-	public void removeExpiredTest() throws InterruptedException, MalformedTemplateException {
+	public void testRemoveExpired() throws InterruptedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory(); 
 		final ITemplate[] s = new ITemplate[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");

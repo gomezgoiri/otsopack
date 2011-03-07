@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="tsdit" default="test">
     <target name="test">
-      <!--<ant antfile="build.xml" dir="microjena"              target="jar" />-->
-        <ant antfile="build.xml" dir="otsoCommons"              target="test" />
+        <ant antfile="build.xml" dir="otsoCommons"             target="test" />
+        <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="test" />
         <ant antfile="build.xml" dir="otsoME"                  target="test" />
-	<ant antfile="build.xml" dir="otsoDroid/otsoDroid"                  target="test" />
-	<ant antfile="build.xml" dir="otsoDroid/otsoDroidTest"                  target="test" />
+	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="run-tests" />
     </target>
 </project> 

@@ -96,36 +96,36 @@ public class SpaceRecordTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			writeTest();
+			testWrite();
 			break;
 		case 1:
-			getGraphFromStoreTest();
+			testGetGraphFromStore();
 			break;
 		case 2:
-			query1Test();
+			testQuery1();
 			break;
 		case 3:
-			read1Test();
+			testRead1();
 			break;
 		case 4:
-			read2Test();
+			testRead2();
 			break;
 		case 5:
-			take1Test();
+			testTake1();
 			break;
 		case 6:
-			take2Test();
+			testTake2();
 			break;
 		case 7:
-			contains1Test();
+			testContains1();
 			break;
 		case 8:
-			containsGraph1Test();
+			testContainsGraph1();
 			break;
 		}
 	}
 		
-	protected void writeTest() throws TripleParseException {
+	protected void testWrite() throws TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final IGraph triples = sf.createEmptyGraph();
 		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) );
@@ -136,7 +136,7 @@ public class SpaceRecordTest extends TestCase {
 		space.write(triples);
 	}
 	
-	protected void getGraphFromStoreTest() throws RecordStoreException, MalformedTemplateException {
+	protected void testGetGraphFromStore() throws RecordStoreException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final IModel graph = space.getGraphFromStore(anyStoredRecord.recordId);
 		assertEquals(anyStoredRecord.getModel().getGraph().size(),graph.getGraph().size());
@@ -147,7 +147,7 @@ public class SpaceRecordTest extends TestCase {
 		}
 	}
 		
-	protected void query1Test() throws MalformedTemplateException {
+	protected void testQuery1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
@@ -159,7 +159,7 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void read1Test() throws MalformedTemplateException {
+	protected void testRead1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
@@ -171,7 +171,7 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void read2Test() {
+	protected void testRead2() {
 		IGraph ret = space.read(graphuris[0]);
 		assertEquals(ret.size(),5);
 		
@@ -179,7 +179,7 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void take1Test() throws MalformedTemplateException {
+	protected void testTake1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
@@ -194,7 +194,7 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void take2Test() {
+	protected void testTake2() {
 		IGraph ret = space.take(graphuris[0]);
 		assertEquals(ret.size(),5);
 		
@@ -205,7 +205,7 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void contains1Test() throws AssertionFailedException, TripleParseException {
+	protected void testContains1() throws AssertionFailedException, TripleParseException {
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj1) ) );
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj1,ExampleME.prop2,ExampleME.obj3) ) );
 		assertTrue( space.contains( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) ) );
@@ -230,7 +230,7 @@ public class SpaceRecordTest extends TestCase {
 		assertFalse( space.contains( factory.createTriple(ExampleME.subj6,ExampleME.prop2,ExampleME.obj10) ) );
 	}
 
-	protected void containsGraph1Test() {
+	protected void testContainsGraph1() {
 		for(int i=0; i<graphuris.length; i++)
 			assertTrue( space.containsGraph(graphuris[0]) );
 		

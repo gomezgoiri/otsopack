@@ -44,18 +44,18 @@ public class ModelResponseTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			equals1Test();
+			testEquals1();
 			break;
 		case 1:
-			hashCode1Test();
+			testHashCode1();
 			break;
 		case 2:
-			addTriples1Test();
+			testAddTriples1();
 			break;
 		}
 	}
 	
-	public void equals1Test() throws MalformedTemplateException {
+	public void testEquals1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ModelResponse resp1 = new ModelResponse(sf.createTemplate("?s ?p ?o ."));
@@ -103,7 +103,7 @@ public class ModelResponseTest extends TestCase {
 		assertNotEquals(resp6,resp5);
 	}
 
-	public void hashCode1Test() throws MalformedTemplateException {
+	public void testHashCode1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ModelResponse resp1 = new ModelResponse(sf.createTemplate("?s ?p ?o ."));
@@ -117,7 +117,7 @@ public class ModelResponseTest extends TestCase {
 		assertEquals(resp4.hashCode(),resp5.hashCode());
 	}
 
-	public void addTriples1Test() throws AssertionFailedException, TripleParseException, MalformedTemplateException {
+	public void testAddTriples1() throws AssertionFailedException, TripleParseException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ModelResponse resp = new ModelResponse(sf.createTemplate("?s ?p ?o ."));

@@ -59,6 +59,12 @@ public class MemoryDataAccess implements IDataAccess {
 			throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");*/
 	}
 	
+	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
+		SpaceMem espacio = getSpace(spaceURI);
+		if( espacio == null ) throw new SpaceNotExistsException();
+		return espacio.getLocalGraphs();
+	}
+	
 	protected SpaceMem getSpace(String spaceURI) {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		for(int i=0; i<spaces.size(); i++) {

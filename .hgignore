@@ -3,19 +3,27 @@ syntax: regexp
 
 ^otsoCommons/dist/otsoCommons-sources\.jar$
 ^otsoCommons/bin
+^otsoCommons/build
 
 ^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
 ^otsoFullJavaCommons/bin
+^otsoFullJavaCommons/build
 
 ^otsoSE/bin
 
 ^otsoDroid/otsoDroid/gen
-^otsoDroid/otsoDroidTest/gen
 ^otsoDroid/otsoDroid/local\.properties$
 ^otsoDroid/otsoDroid/debug\.keystore$
 ^otsoDroid/otsoDroid/build\.properties$
-^otsoDroid/otsoDroidTest/bin
 ^otsoDroid/otsoDroid/bin
+^otsoDroid/otsoDroid/libs
+
+^otsoDroid/otsoDroidTest/gen
+^otsoDroid/otsoDroidTest/local\.properties$
+^otsoDroid/otsoDroidTest/debug\.keystore$
+^otsoDroid/otsoDroidTest/build\.properties$
+^otsoDroid/otsoDroidTest/bin
+^otsoDroid/otsoDroidTest/libs
 
 ^otsoME/classes_cldc_unverified
 ^otsoME/classes_cldc

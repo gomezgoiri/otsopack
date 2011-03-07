@@ -21,7 +21,7 @@ public class JxmeCoordinationTest extends TestCase {
 	 * The default constructor. It just transmits the necessary informations to
 	 * the superclass.
 	 * 
-	 * @param totalOfTests the total of test methods present in the class.
+	 * @param testTotalOfs the total of test methods present in the class.
 	 * @param name this testcase's name.
 	 */
 	public JxmeCoordinationTest() {

@@ -46,57 +46,57 @@ public class NotificationContainerTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			add1Test();
+			testAdd1();
 			break;
 		case 1:
-			addAll1Test();
+			testAddAll1();
 			break;
 		case 2:
-			clear1Test();
+			testClear1();
 			break;
 		case 3:
-			contains1Test();
+			testContains1();
 			break;
 		case 4:
-			containsAll1Test();
+			testContainsAll1();
 			break;
 		case 5:
-			isEmpty1Test();
+			testIsEmpty1();
 			break;
 		case 6:
-			iterator1Test();
+			testIterator1();
 			break;
 		case 7:
-			remove1Test();
+			testRemove1();
 			break;
 		case 8:
-			removeAll1Test();
+			testRemoveAll1();
 			break;
 		case 9:
-			retainAll1Test();
+			testRetainAll1();
 			break;
 		case 10:
-			size1Test();
+			testSize1();
 			break;
 		case 11:
-			toArray1Test();
+			testToArray1();
 			break;
 		case 12:
-			toArray2Test();
+			testToArray2();
 			break;
 		case 13:
-			get1Test();
+			testGet1();
 			break;
 		case 14:
-			get2Test();
+			testGet2();
 			break;
 		case 15:
-			getThoseWhichMatch1Test();
+			testGetThoseWhichMatch1();
 			break;
 		}
 	}
 
-	public void add1Test() throws MalformedTemplateException {
+	public void testAdd1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		boolean added = container.add(NotificationsFactory.createAdvertisement("http://uri1", sf.createTemplate("?s1 ?p1 ?o1 .")));
@@ -138,7 +138,7 @@ public class NotificationContainerTest extends TestCase {
 		}
 	}
 
-	public void addAll1Test() throws MalformedTemplateException {
+	public void testAddAll1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		boolean added = false;
 		
@@ -197,7 +197,7 @@ public class NotificationContainerTest extends TestCase {
 		assertEquals( container.size(), 9 );
 	}
 
-	public void clear1Test() throws MalformedTemplateException {
+	public void testClear1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
@@ -218,7 +218,7 @@ public class NotificationContainerTest extends TestCase {
 		
 	}
 
-	public void contains1Test() throws AssertionFailedException, MalformedTemplateException {
+	public void testContains1() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final INotificationElement[] elements = new INotificationElement[4];
@@ -239,7 +239,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse( container.contains(NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("?s <http://p5> ?o ."),null)) );
 	}
 
-	public void containsAll1Test() throws MalformedTemplateException {
+	public void testContainsAll1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		HashSet elements = new HashSet(4);
@@ -263,7 +263,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse( container.containsAll(elements) );
 	}
 
-	public void isEmpty1Test() throws MalformedTemplateException {
+	public void testIsEmpty1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		assertTrue(container.isEmpty());
 		
@@ -282,7 +282,7 @@ public class NotificationContainerTest extends TestCase {
 		assertTrue(container.isEmpty());
 	}
 
-	public void iterator1Test() throws MalformedTemplateException {
+	public void testIterator1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
@@ -305,7 +305,7 @@ public class NotificationContainerTest extends TestCase {
 		assertEquals(i,4);
 	}
 
-	public void remove1Test() throws AssertionFailedException, MalformedTemplateException {
+	public void testRemove1() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final INotificationElement[] elements = new INotificationElement[4];
@@ -349,7 +349,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse(container.contains(elements[3]));
 	}
 
-	public void removeAll1Test() throws MalformedTemplateException {
+	public void testRemoveAll1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		
@@ -416,7 +416,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse(container.contains(els[7]));
 	}
 
-	public void retainAll1Test() throws MalformedTemplateException {
+	public void testRetainAll1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		
@@ -509,7 +509,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse(container.contains(els[7]));
 	}
 
-	public void size1Test() throws AssertionFailedException, MalformedTemplateException {
+	public void testSize1() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		assertEquals(container.size(),0);
 		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null)) );
@@ -522,7 +522,7 @@ public class NotificationContainerTest extends TestCase {
 		assertEquals(container.size(),4);
 	}
 
-	public void toArray1Test() throws MalformedTemplateException {
+	public void testToArray1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final Vector elements = new Vector(8);
 		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
@@ -543,7 +543,7 @@ public class NotificationContainerTest extends TestCase {
 		}
 	}
 
-	public void toArray2Test() throws MalformedTemplateException {
+	public void testToArray2() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final Vector elements = new Vector(8);
 		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
@@ -570,7 +570,7 @@ public class NotificationContainerTest extends TestCase {
 		}
 	}
 
-	public void get1Test() throws MalformedTemplateException {
+	public void testGet1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);
@@ -596,7 +596,7 @@ public class NotificationContainerTest extends TestCase {
 		assertNull(container.get("http://thisUriDoesnotExist"));
 	}
 
-	public void get2Test() throws AssertionFailedException, MalformedTemplateException {
+	public void testGet2() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);
@@ -622,7 +622,7 @@ public class NotificationContainerTest extends TestCase {
 		assertNull(container.get(sf.createTemplate("<http://imposible> <http://is> <http://nothing> .")));
 	}
 
-	public void getThoseWhichMatch1Test() throws MalformedTemplateException {
+	public void testGetThoseWhichMatch1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);

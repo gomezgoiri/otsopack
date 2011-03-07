@@ -110,4 +110,12 @@ public class SpaceMem {
 		}
 		return graph;
 	}
+	
+	public String[] getLocalGraphs() {
+		final String[] ret = new String[graphs.size()];
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = ((GraphMem)graphs.get(i)).getUri();
+		}
+		return ret;
+	}
 }

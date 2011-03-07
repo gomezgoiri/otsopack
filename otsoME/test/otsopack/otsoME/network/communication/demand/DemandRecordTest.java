@@ -39,15 +39,15 @@ public class DemandRecordTest extends TestCase {
 	public void test(int testNumber) throws Throwable {
 		switch (testNumber) {
 		case 0:
-			addDemandTest();
+			testAddDemand();
 			break;
 		case 1:
-			removeExpiredTilTest();
+			testRemoveExpiredTil();
 			break;
 		}
 	}
 	
-	public void addDemandTest() throws MalformedTemplateException {
+	public void testAddDemand() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ITemplate[] s = new ITemplate[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
@@ -82,7 +82,7 @@ public class DemandRecordTest extends TestCase {
 		// supposing that it may need 100ms to add the entry at maximum
 	}
 
-	public void removeExpiredTilTest() throws MalformedTemplateException {
+	public void testRemoveExpiredTil() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ITemplate[] s = new ITemplate[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
