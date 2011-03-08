@@ -142,9 +142,9 @@ public class OutcomingManager implements IDemandSender {
 		Message m = MessageParser.createQueryMessage(peerInfo.getPeerName(), template);
 		IGraph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
-			long timeneeded = System.currentTimeMillis() - start;
+			//long timeneeded = System.currentTimeMillis() - start;
 //			Statistics.setMeasure("query", timeneeded, ret.size());
 		} else {
 			if(timeout>0) ret = sendMessageWaitingTimeout(m, template, timeout);
@@ -162,9 +162,9 @@ public class OutcomingManager implements IDemandSender {
 		Message m = MessageParser.createReadMessage(peerInfo.getPeerName(), template);
 		IGraph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
-			long timeneeded = System.currentTimeMillis() - start;
+			//long timeneeded = System.currentTimeMillis() - start;
 //			Statistics.setMeasure("read", timeneeded, ret.size());
 		} else {
 			if(timeout>0) ret = sendMessageWaitingTimeout(m, template, timeout);
@@ -182,9 +182,9 @@ public class OutcomingManager implements IDemandSender {
 		Message m = MessageParser.createReadMessage(peerInfo.getPeerName(), graphuri);
 		IGraph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, graphuri, Statistics.getNumberOfResponses());
-			long timeneeded = System.currentTimeMillis() - start;
+			//long timeneeded = System.currentTimeMillis() - start;
 //			Statistics.setMeasure("read", timeneeded, ret.size());
 		} else {
 			if(timeout>0) ret = sendMessageWaitingTimeout(m, graphuri, timeout);
@@ -202,9 +202,9 @@ public class OutcomingManager implements IDemandSender {
 		Message m = MessageParser.createTakeMessage(peerInfo.getPeerName(), template);
 		IGraph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
-			long timeneeded = System.currentTimeMillis() - start;
+			//long timeneeded = System.currentTimeMillis() - start;
 //			Statistics.setMeasure("take", timeneeded, ret.size());
 		} else {
 			if(timeout>0) ret = sendMessageWaitingTimeout(m, template, timeout);
@@ -222,9 +222,9 @@ public class OutcomingManager implements IDemandSender {
 		Message m = MessageParser.createTakeMessage(peerInfo.getPeerName(), graphuri);
 		IGraph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
-			long start = System.currentTimeMillis();
+			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, graphuri, Statistics.getNumberOfResponses());
-			long timeneeded = System.currentTimeMillis() - start;
+			//long timeneeded = System.currentTimeMillis() - start;
 //			Statistics.setMeasure("take", timeneeded, ret.size());
 		} else {
 			if(timeout>0) ret = sendMessageWaitingTimeout(m, graphuri, timeout);

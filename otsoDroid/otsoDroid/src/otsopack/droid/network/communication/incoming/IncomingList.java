@@ -20,12 +20,13 @@ import otsopack.droid.network.communication.incoming.response.Response;
 import otsopack.droid.network.communication.incoming.response.URIResponse;
 
 public class IncomingList {
-	Hashtable/*<Selector,URIResponse>*/ uriResponses;
-	Hashtable/*<[URI,Selector],ModelResponse>*/ modelResponses;
+	final Hashtable<Object,URIResponse> uriResponses;
+	//Hashtable/*<[URI,Selector],ModelResponse>*/ modelResponses;
+	final Hashtable<Object,ModelResponse> modelResponses;
 	
 	public IncomingList() {
-		uriResponses = new Hashtable();
-		modelResponses = new Hashtable();
+		uriResponses = new Hashtable<Object, URIResponse>();
+		modelResponses = new Hashtable<Object, ModelResponse>();
 	}
 	
 	public void add(URIResponse r) throws ArrayStoreException {
@@ -40,17 +41,17 @@ public class IncomingList {
 	
 	public Response get(Object key, boolean waitingForURI) {
 		if( waitingForURI ) 
-			return (Response) uriResponses.get(key);
+			return uriResponses.get(key);
 		
-		return (Response) modelResponses.get(key);
+		return modelResponses.get(key);
 	}
 	
 	public URIResponse remove(URIResponse r) {
-		return (URIResponse) uriResponses.remove(r.getKey());
+		return uriResponses.remove(r.getKey());
 	}
 		
 	public ModelResponse remove(ModelResponse r) {
-		return (ModelResponse) modelResponses.remove(r.getKey());
+		return modelResponses.remove(r.getKey());
 	}
 	
 	public void clear() {
