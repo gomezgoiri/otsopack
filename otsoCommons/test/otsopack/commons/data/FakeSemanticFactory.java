@@ -60,4 +60,12 @@ public class FakeSemanticFactory implements ISemanticFactory {
 		return null;
 	}
 
+	public boolean isOutputSupported(String outputFormat) {
+		return false;
+	}
+
+	public boolean isInputSupported(String inputFormat) {
+		return false;
+	}
+
 }

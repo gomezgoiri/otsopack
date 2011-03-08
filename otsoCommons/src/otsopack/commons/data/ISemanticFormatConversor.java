@@ -16,5 +16,5 @@ package otsopack.commons.data;
 
 public interface ISemanticFormatConversor {
 	public boolean canConvert(String inputFormat, String outputFormat);
-	public String convert(String originalFormat, String originalText, String targetFormat);
+	public String convert(String inputFormat, String originalText, String outputFormat);
 }

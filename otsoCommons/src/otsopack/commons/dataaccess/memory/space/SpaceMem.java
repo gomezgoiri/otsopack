@@ -114,7 +114,7 @@ public class SpaceMem {
 	public String[] getLocalGraphs() {
 		final String[] ret = new String[graphs.size()];
 		for(int i=0; i<ret.length; i++) {
-			ret[i] = ((GraphMem)graphs.get(i)).getUri();
+			ret[i] = ((GraphMem)graphs.elementAt(i)).getUri();
 		}
 		return ret;
 	}

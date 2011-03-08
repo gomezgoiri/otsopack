@@ -89,7 +89,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ read(String spaceURI, String IGraphURI, long timeout) throws SpaceNotExistsException;
+	public IGraph/*List<ITriple>*/ read(String spaceURI, String IGraphURI, String outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * read one IGraph by using a template. Wait the specified timeout or until a response is received.
@@ -101,7 +101,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public IGraph/*List<ITriple>*/ read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
 
 	/**
 	 * Take ITriples by using a template. Wait the specified timeout or until a response is received.
@@ -113,7 +113,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ take(String spaceURI, String IGraphURI, long timeout) throws SpaceNotExistsException;
+	public IGraph/*List<ITriple>*/ take(String spaceURI, String IGraphURI, String outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * Take ITriples by using a template. Wait the specified timeout or until a response is received.
@@ -125,7 +125,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public IGraph/*List<ITriple>*/ take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
 
 	/**
 	 * query ITriples by using a template wait maximum timeout
@@ -137,7 +137,7 @@ public interface ITripleSpace extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of ITriples or set of ITriples with size 0 if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public IGraph/*List<ITriple>*/ query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * write ITriples into specified space
@@ -146,7 +146,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param ITriples
 	 * @return IGraph uri
 	 */
-	public String write(String spaceURI, IGraph ITriples) throws TSException;
+	public String write(String spaceURI, IGraph ITriples, String inputFormat) throws TSException;
 	
 	/**
 	 * write ITriples into specified space
@@ -155,7 +155,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param ITriples
 	 * @return IGraph uri
 	 */
-	public String write(String spaceURI, ITriple[] ITriples) throws TSException;
+	public String write(String spaceURI, ITriple[] ITriples, String inputFormat) throws TSException;
 	
 	/**
 	 * write ITriples into specified space
@@ -164,7 +164,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param ITriples
 	 * @return IGraph uri
 	 */
-	public String write(String spaceURI, ITriple ITriple) throws TSException;
+	public String write(String spaceURI, ITriple ITriple, String inputFormat) throws TSException;
 
 	// # # # //
 		

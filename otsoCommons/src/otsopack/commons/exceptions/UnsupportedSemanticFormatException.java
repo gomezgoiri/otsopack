@@ -12,9 +12,14 @@
  * Author: FILLME
  *
  */
-package otsopack.commons.data;
+package otsopack.commons.exceptions;
 
-public interface ISemanticFormatTranslator {
-	public String [] getSupportedInputFormats();
-	public String [] getSupportedOutputFormats();
+public class UnsupportedSemanticFormatException extends TSException {
+
+	private static final long serialVersionUID = 8681776575486682962L;
+
+	public UnsupportedSemanticFormatException(String message) {
+		super(message);
+	}
+
 }

@@ -19,8 +19,9 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.full.java.network.communication.RestServer;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 
@@ -28,49 +29,53 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	public static final String ROOT = GraphsResource.ROOT + "/{graph}";
 	
-	protected IGraph readGraph() {
+	protected IGraph readGraph(String outputFormat) {
 		final String space   = getArgument("space");
 		final String graphuri   = getArgument("graph");
-		IGraph ret = null;
+		final IGraph ret;
 		try {			
-			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-			ret = controller.getDataAccessService().read(space,graphuri);
+			final IController controller = getController();
+			ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		} catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		}
 		return ret;
 	}
 	
-	protected IGraph takeGraph() {
+	protected IGraph takeGraph(String outputFormat) {
 		final String space   = getArgument("space");
 		final String graphuri   = getArgument("graph");
-		IGraph ret = null;
+		final IGraph ret;
 		try {			
-			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-			ret = controller.getDataAccessService().take(space,graphuri);
+			final IController controller = getController();
+			ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		} catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		}
 		return ret;
 	}
 	
 	@Override
 	public String toNTriples() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.NTRIPLES);
 		// TODO convert to N-Triples
 		return "read graph in N-Triples";
 	}
 	
 	@Override
 	public String toN3() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.N3);
 		// TODO convert to N3
 		return "read graph in N·";
 	}
 
 	@Override
 	public String toJson() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.RDF_JSON);
 		// TODO convert to JSON
 		return "read graph in JSON";
 	}
@@ -92,21 +97,21 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public String deleteNTriples() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.NTRIPLES);
 		// TODO convert to N-Triples
 		return "take graph in N-Triples";
 	}
 	
 		@Override
 	public String deleteN3() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.N3);
 		// TODO convert to N3
 		return "take graph in N3";
 	}
 	
 	@Override
 	public String deleteJson() {
-		final IGraph graph = readGraph();
+		final IGraph graph = readGraph(ISemanticFormatExchangeable.RDF_JSON);
 		// TODO convert to JSON
 		return "take graph in JSON";
 	}

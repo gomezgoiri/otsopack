@@ -93,4 +93,20 @@ public class MicrojenaFactory implements ISemanticFactory {
 	public String[] getSupportedOutputFormats() {
 		return new String[]{};
 	}
+
+	public boolean isOutputSupported(String outputFormat) {
+		final String [] outputFormats = getSupportedOutputFormats();
+		for(int i = 0; i < outputFormats.length; ++i)
+			if(outputFormats[i].equals(outputFormat))
+				return true;
+		return false;
+	}
+
+	public boolean isInputSupported(String inputFormat) {
+		final String [] inputFormats = getSupportedInputFormats();
+		for(int i = 0; i < inputFormats.length; ++i)
+			if(inputFormats[i].equals(inputFormat))
+				return true;
+		return false;
+	}
 }

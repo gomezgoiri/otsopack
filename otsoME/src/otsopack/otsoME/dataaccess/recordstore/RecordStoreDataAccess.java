@@ -212,7 +212,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		updater.closeSpace(sr);
 	}
 
-	public IGraph query(String spaceURI, ITemplate template) throws SpaceNotExistsException {
+	public IGraph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final IGraph ret = sr.query(template);
@@ -220,7 +220,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public IGraph read(String spaceURI, ITemplate template) throws SpaceNotExistsException {
+	public IGraph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final IGraph ret = sr.read(template);
@@ -228,7 +228,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public IGraph read(String spaceURI, String graphURI) throws SpaceNotExistsException {
+	public IGraph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final IGraph ret = sr.read(graphURI);
@@ -236,7 +236,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public IGraph take(String spaceURI, ITemplate template) throws SpaceNotExistsException {
+	public IGraph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final IGraph ret = sr.take(template);
@@ -244,7 +244,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public IGraph take(String spaceURI, String graphURI) throws SpaceNotExistsException {
+	public IGraph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final IGraph ret = sr.take(graphURI);
@@ -252,7 +252,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public String write(String spaceURI, IGraph triples) throws SpaceNotExistsException {
+	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final String ret = sr.write(triples);

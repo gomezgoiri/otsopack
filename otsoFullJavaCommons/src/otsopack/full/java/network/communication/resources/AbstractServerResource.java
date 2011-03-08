@@ -28,6 +28,9 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import otsopack.commons.IController;
+import otsopack.full.java.network.communication.RestServer;
+
 public class AbstractServerResource extends ServerResource {
 	
 	protected String getArgument(String argumentName){
@@ -39,17 +42,21 @@ public class AbstractServerResource extends ServerResource {
 		}		
 	}
 		
-		protected Set<String> getArgumentNamesFromURI(String rootURI) {
-			final Set<String> ret = new HashSet<String>();
-			
-			Pattern pattern = Pattern.compile("\\{(\\w+)\\}");
-			Matcher matcher = pattern.matcher(rootURI);
-			while (matcher.find()) {
-				final String argn = matcher.group();
-				ret.add(argn.substring(1, argn.length()-1));
-			}
-			return ret;
+	protected Set<String> getArgumentNamesFromURI(String rootURI) {
+		final Set<String> ret = new HashSet<String>();
+		
+		Pattern pattern = Pattern.compile("\\{(\\w+)\\}");
+		Matcher matcher = pattern.matcher(rootURI);
+		while (matcher.find()) {
+			final String argn = matcher.group();
+			ret.add(argn.substring(1, argn.length()-1));
 		}
+		return ret;
+	}
+	
+	protected IController getController() {
+		return RestServer.getCurrent().getController();
+	}
 		
 	protected Map<String,String> getArguments(String rootURI) {
 		final Map<String,String> properties = new HashMap<String,String>();

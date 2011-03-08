@@ -19,6 +19,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -30,18 +31,18 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 
 	public static final String ROOT = WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object}";
 	
-	protected IGraph getWildcard() {
+	protected IGraph getWildcard(String semanticFormat) {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
 		final String object    = getArgument("object");
-		IGraph ret = null;
+		final IGraph ret;
 		
 		try {
-			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
+			final ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
 			
-			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-			ret = controller.getDataAccessService().query(space,tpl);
+			final IController controller = getController();
+			ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (MalformedTemplateException e) {
@@ -56,14 +57,14 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final IGraph graph = getWildcard();
+		final IGraph graph = getWildcard(ISemanticFormatExchangeable.RDF_JSON);
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		final IGraph graph = getWildcard();
+		final IGraph graph = getWildcard(ISemanticFormatExchangeable.NTRIPLES);
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

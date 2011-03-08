@@ -15,6 +15,7 @@ package otsopack.otsoME.dataaccess.recordstore;
 
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
 import otsopack.commons.data.impl.SemanticFactory;
@@ -177,7 +178,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
 		
-		final String graphuri = memo.write(spaceURI, triples);
+		final String graphuri = memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 
@@ -221,7 +222,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		
-		memo.write(spaceURI, triples);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -234,7 +235,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 			e.printStackTrace();
 		}
 		memo2.joinSpace(spaceURI);
-		final IGraph ret = memo2.query(spaceURI, sel);
+		final IGraph ret = memo2.query(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
 		memo2.leaveSpace(spaceURI);
 		memo2.shutdown();
 		
@@ -263,8 +264,8 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 
-		memo.write(spaceURI, triples);
-		final IGraph ret = memo.query(spaceURI, sel);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret = memo.query(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -288,19 +289,19 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final IGraph ret = memo.read(spaceURI, sel);
-		final IGraph ret2 = memo.read(spaceURI, sel2);
-		final IGraph ret3 = memo.read(spaceURI, sel);
+		final IGraph ret = memo.read(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret2 = memo.read(spaceURI, sel2, ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret3 = memo.read(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
 		assertTrue( ret.contains(trips[0]) );
@@ -357,17 +358,17 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, triples);
+		graphsuri[0] = memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, triples);
+		graphsuri[1] = memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
-		final IGraph ret = memo.read(spaceURI, graphsuri[1]);
-		final IGraph ret2 = memo.read(spaceURI, graphsuri[0]);
-		final IGraph ret3 = memo.read(spaceURI, graphsuri[1]);
+		final IGraph ret = memo.read(spaceURI, graphsuri[1], ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret2 = memo.read(spaceURI, graphsuri[0], ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret3 = memo.read(spaceURI, graphsuri[1], ISemanticFormatExchangeable.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
 		assertFalse( ret.contains(trips[0]) );
@@ -423,19 +424,19 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples);
+		memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final IGraph ret = memo.take(spaceURI, sel);
-		final IGraph ret2 = memo.take(spaceURI, sel2);
-		final IGraph ret3 = memo.take(spaceURI, sel);
+		final IGraph ret = memo.take(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret2 = memo.take(spaceURI, sel2, ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret3 = memo.take(spaceURI, sel, ISemanticFormatExchangeable.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
 		assertTrue( ret.contains(trips[0]) );
@@ -487,13 +488,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, triples);
+		graphsuri[0] = memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, triples);
+		graphsuri[1] = memo.write(spaceURI, triples, ISemanticFormatExchangeable.NTRIPLES);
 		
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
@@ -508,9 +509,9 @@ public class RecordStoreDataAccessTest extends TestCase {
 		}
 		memo2.joinSpace(spaceURI);
 		
-		final IGraph ret = memo2.take(spaceURI, graphsuri[1]);
-		final IGraph ret2 = memo2.take(spaceURI, graphsuri[0]);
-		final IGraph ret3 = memo2.take(spaceURI, graphsuri[1]);
+		final IGraph ret = memo2.take(spaceURI, graphsuri[1], ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret2 = memo2.take(spaceURI, graphsuri[0], ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph ret3 = memo2.take(spaceURI, graphsuri[1], ISemanticFormatExchangeable.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
 		assertFalse( ret.contains(trips[0]) );

@@ -55,4 +55,12 @@ public class SemanticFactory implements ISemanticFactory {
 		return SemanticFactory.dataFactory.getSupportedOutputFormats();
 	}
 
+	public boolean isOutputSupported(String outputFormat) {
+		return SemanticFactory.dataFactory.isOutputSupported(outputFormat);
+	}
+
+	public boolean isInputSupported(String inputFormat) {
+		return SemanticFactory.dataFactory.isInputSupported(inputFormat);
+	}
+
 }

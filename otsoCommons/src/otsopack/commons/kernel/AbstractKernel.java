@@ -186,11 +186,11 @@ public abstract class AbstractKernel implements ITripleSpace {
 		networkService.unadvertise(spaceURI, advertisementURI);
 	}
 
-	public IGraph query(String spaceURI, ITemplate template, long timeout) {
+	public IGraph query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException {
 		IGraph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		try {
-			IGraph localmodel = dataAccessService.query(spaceURI, template); 
+			IGraph localmodel = dataAccessService.query(spaceURI, template, outputFormat); 
 				if(localmodel!=null) ret = localmodel;
 			IGraph netmodel = networkService.query(spaceURI, template, timeout);
 				if(netmodel!=null) {
@@ -203,57 +203,41 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return ret;
 	}
 
-	public IGraph read(String spaceURI, ITemplate template, long timeout) {
+	public IGraph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException {
 		IGraph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		try {
-			ret = networkService.read(spaceURI, template, timeout);
-			if(ret==null) ret = dataAccessService.read(spaceURI, template);
-		} catch (SpaceNotExistsException e) {
-			e.printStackTrace();
-		}
+		ret = networkService.read(spaceURI, template, timeout);
+		if(ret==null) ret = dataAccessService.read(spaceURI, template, outputFormat);
 		return ret;
 	}
 	
-	public IGraph read(String spaceURI, String graphURI, long timeout) {
+	public IGraph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws TSException {
 		IGraph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		try {
-			ret = networkService.read(spaceURI, graphURI, timeout); 
-			if(ret==null) ret = dataAccessService.read(spaceURI, graphURI);
-		} catch (SpaceNotExistsException e) {
-			e.printStackTrace();
-		}
+		ret = networkService.read(spaceURI, graphURI, timeout); 
+		if(ret==null) ret = dataAccessService.read(spaceURI, graphURI, outputFormat);
 		return ret;
 	}
 
-	public IGraph take(String spaceURI, ITemplate template, long timeout) {
+	public IGraph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException {
 		IGraph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		try {
-			ret = networkService.take(spaceURI, template, timeout); 
-			if(ret==null) ret = dataAccessService.take(spaceURI, template);
-		} catch (SpaceNotExistsException e) {
-			e.printStackTrace();
-		}
+		ret = networkService.take(spaceURI, template, timeout); 
+		if(ret==null) ret = dataAccessService.take(spaceURI, template, outputFormat);
 		return ret;
 	}
 	
-	public IGraph take(String spaceURI, String graphURI, long timeout) {
+	public IGraph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws TSException {
 		IGraph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		try {
-			ret = networkService.take(spaceURI, graphURI, timeout);
-			if(ret==null) ret = dataAccessService.take(spaceURI, graphURI);
-		} catch (SpaceNotExistsException e) {
-			e.printStackTrace();
-		}
+		ret = networkService.take(spaceURI, graphURI, timeout);
+		if(ret==null) ret = dataAccessService.take(spaceURI, graphURI, outputFormat);
 		return ret;
 	}
 
-	public String write(String spaceURI, IGraph triples) throws TSException {
+	public String write(String spaceURI, IGraph triples, String inputFormat) throws TSException {
 		//TODO ### db:24002008 writing to a space without joining it? data is now there - locally - but no one can find it, temporary join space and write data?! therefore new write method in networkService...
 		final long start = System.currentTimeMillis();
 		if( spaceURI!=null && triples!=null && triples.size()>=0 ) {
@@ -272,7 +256,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 				ret = null;
 			} else {
 				/*URI graphURI = */
-				ret = dataAccessService.write(spaceURI, triples);
+				ret = dataAccessService.write(spaceURI, triples, inputFormat);
 			}
 			final long timeneeded = System.currentTimeMillis() - start;
 			Statistics.addMeasure("write", timeneeded, System.currentTimeMillis());
@@ -281,19 +265,19 @@ public abstract class AbstractKernel implements ITripleSpace {
 		throw new TSException("space uri and triples must not be null");
 	}
 	
-	public String write(String spaceURI, ITriple[] triples) throws TSException {
+	public String write(String spaceURI, ITriple[] triples, String inputFormat) throws TSException {
 		final SemanticFactory sf = new SemanticFactory();
 		IGraph trips = sf.createEmptyGraph();
 		for(int i=0; i<triples.length; i++) {
 			trips.add(triples[i]);
 		}
-		return write(spaceURI, trips);
+		return write(spaceURI, trips, inputFormat);
 	}
 
-	public String write(String spaceURI, ITriple triple) throws TSException {
+	public String write(String spaceURI, ITriple triple, String inputFormat) throws TSException {
 		ITriple[] triples = new ITriple[1];
 		triples[0] = triple;
-		return write(spaceURI, triples);
+		return write(spaceURI, triples, inputFormat);
 	}
 	
 	public IDataAccess getDataAccessService() {

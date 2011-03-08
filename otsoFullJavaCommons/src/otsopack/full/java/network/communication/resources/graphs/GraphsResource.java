@@ -24,9 +24,10 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.full.java.network.communication.RestServer;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -80,7 +81,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	
 	@Override
 	public String toJson() {
-		String[] ret = null;
+		final String[] ret;
 		try {		
 			final String space = getArgument("space");
 			final IController controller = getController();
@@ -96,7 +97,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from json to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		return write(graph);
+		return write(graph, ISemanticFormatExchangeable.RDF_JSON);
 	}
 
 	@Override
@@ -104,23 +105,20 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from ntriples to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		return write(graph);
+		return write(graph, ISemanticFormatExchangeable.NTRIPLES);
 	}
 	
-	protected String write(IGraph graph) {
+	protected String write(IGraph graph, String semanticFormat) {
 		final String space = getArgument("space");
 		String ret = null;
 		try {		
 			final IController controller = getController();
-			ret = controller.getDataAccessService().write(space,graph);
+			ret = controller.getDataAccessService().write(space,graph, semanticFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		} catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't write in format: " + semanticFormat, e);
 		}
 		return ret;
-	}
-	
-	private IController getController() {
-		final IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-		return controller;
 	}
 }

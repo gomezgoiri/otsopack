@@ -20,7 +20,10 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.RestServer;
@@ -29,8 +32,10 @@ import otsopack.full.java.network.communication.resources.AbstractServerResource
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
 
 	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
+	private final ISemanticFactory sf = new SemanticFactory();
 	
-	protected IGraph getGraphByWildcard() {
+
+	protected IGraph getGraphByWildcard(String semanticFormat) {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
@@ -40,8 +45,8 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		try {
 			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
 			
-			IController controller = (IController) RestServer.getCurrent().getAttributes().get("controller");
-			ret = controller.getDataAccessService().read(space,tpl);
+			final IController controller = getController();
+			ret = controller.getDataAccessService().read(space, tpl, semanticFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (MalformedTemplateException e) {
@@ -56,14 +61,17 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final IGraph graph = getGraphByWildcard();
+		final IGraph graph = getGraphByWildcard(ISemanticFormatExchangeable.RDF_JSON);
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		final IGraph graph = getGraphByWildcard();
+		if(!this.sf.isInputSupported(ISemanticFormatExchangeable.NTRIPLES))
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Server does not support NTriples");
+		
+		final IGraph graph = getGraphByWildcard(ISemanticFormatExchangeable.NTRIPLES);
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

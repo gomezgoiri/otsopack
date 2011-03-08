@@ -19,22 +19,22 @@ import org.junit.After;
 import org.junit.Before;
 
 import otsopack.commons.IController;
-import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.full.java.FakeDataAccess;
 
 public abstract class AbstractRestServerTesting {
 	protected RestServer rs;
 	protected IController mock;
+	protected FakeDataAccess fakeDataAccess;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.mock = EasyMock.createMock(IController.class);
-		final IDataAccess mockda = new FakeDataAccess();
-		EasyMock.expect(this.mock.getDataAccessService()).andReturn(mockda).anyTimes();
+		this.fakeDataAccess = new FakeDataAccess();
+		EasyMock.expect(this.mock.getDataAccessService()).andReturn(this.fakeDataAccess).anyTimes();
 		EasyMock.replay(this.mock);
 		
 		this.rs = new RestServer(RestServer.DEFAULT_PORT);
-		this.rs.getAttributes().put("controller", this.mock);
+		this.rs.setController(this.mock);
 		this.rs.startup();
 	}
 	

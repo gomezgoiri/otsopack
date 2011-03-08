@@ -28,6 +28,9 @@ import otsopack.commons.exceptions.TSException;
 public class FakeDataAccess implements IDataAccess {
 	final AtomicInteger graphnum;
 	final Set<String> graphsStored;
+	private IGraph nextQuery;
+	private IGraph nextRead;
+	private IGraph nextTake;
 	
 	public FakeDataAccess() {
 		this.graphnum = new AtomicInteger(0);
@@ -72,7 +75,7 @@ public class FakeDataAccess implements IDataAccess {
 	}
 
 	@Override
-	public String write(String spaceURI, IGraph triples) throws SpaceNotExistsException {
+	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException {
 		if( spaceURI==null ) throw new SpaceNotExistsException();
 		if( triples!=null ) {
 			String graphURI = spaceURI;
@@ -85,38 +88,45 @@ public class FakeDataAccess implements IDataAccess {
 		return null;
 	}
 
+	public void setNextQuery(IGraph graph){
+		this.nextQuery = graph;
+	}
+	
+	public void setNextRead(IGraph graph){
+		this.nextRead = graph;
+	}
+	
+	public void setNextTake(IGraph graph){
+		this.nextTake = graph;
+	}
+	
 	@Override
-	public IGraph query(String spaceURI, ITemplate template)
+	public IGraph query(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nextQuery;
 	}
 
 	@Override
-	public IGraph read(String spaceURI, ITemplate template)
+	public IGraph read(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nextRead;
 	}
 
 	@Override
-	public IGraph read(String spaceURI, String graphURI)
+	public IGraph read(String spaceURI, String graphURI, String outputFormat)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nextRead;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, ITemplate template)
+	public IGraph take(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nextTake;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, String graphURI)
+	public IGraph take(String spaceURI, String graphURI, String outputFormat)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nextTake;
 	}
 }

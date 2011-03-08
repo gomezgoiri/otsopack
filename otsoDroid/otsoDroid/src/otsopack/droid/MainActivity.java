@@ -19,6 +19,7 @@ import java.util.Enumeration;
 
 import otsopack.otsoDroid.R;
 import otsopack.commons.data.IGraph;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
@@ -91,8 +92,8 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 		try {
-			kernel.write(space, microjenaFactory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"));
-			IGraph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), 5000);
+			kernel.write(space, microjenaFactory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"), ISemanticFormatExchangeable.NTRIPLES);
+			IGraph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), ISemanticFormatExchangeable.NTRIPLES, 5000);
 			final Enumeration<?> enume = graph.elements();
 			while(enume.hasMoreElements())
 				System.out.println(enume.nextElement());

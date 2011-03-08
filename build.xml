@@ -4,6 +4,10 @@
         <ant antfile="build.xml" dir="otsoCommons"             target="test" />
         <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="test" />
         <ant antfile="build.xml" dir="otsoME"                  target="test" />
+	    <ant antfile="build.xml" dir="otsoDroid/otsoDroid"     target="release" />
+	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="release" />
+        <!-- Future
 	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="run-tests" />
+        -->
     </target>
 </project> 
