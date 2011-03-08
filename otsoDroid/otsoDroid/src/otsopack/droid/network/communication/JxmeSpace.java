@@ -46,7 +46,7 @@ public class JxmeSpace implements PipeMsgListener, IMessageSender {
 	
 	private PeerGroup peerGroup;
 	private String spaceURI = null;
-    private Vector/*<ITSCallback>*/ listeners = null;
+    private Vector<ITSCallback> listeners = null;
 
 	private InputPipe input;
 	private OutputPipe output;
@@ -54,7 +54,7 @@ public class JxmeSpace implements PipeMsgListener, IMessageSender {
     public JxmeSpace(PeerGroup ngroup, String spaceURI) {
     	this.peerGroup = ngroup;
     	this.spaceURI = spaceURI;
-    	this.listeners = new Vector();
+    	this.listeners = new Vector<ITSCallback>();
     }
     
 	private void createPipe() throws IOException {
@@ -105,7 +105,7 @@ public class JxmeSpace implements PipeMsgListener, IMessageSender {
 		discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, attribute, value, threshold);
 		
 		try {
-			Enumeration advs = discoveryService.getLocalAdvertisements(DiscoveryService.ADV, attribute, value);
+			Enumeration<?> advs = discoveryService.getLocalAdvertisements(DiscoveryService.ADV, attribute, value);
 			if (advs.hasMoreElements()) {
 				pipeAdvertisement = (PipeAdvertisement) advs.nextElement();
 			}

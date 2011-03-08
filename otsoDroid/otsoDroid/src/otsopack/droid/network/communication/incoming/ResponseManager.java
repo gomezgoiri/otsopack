@@ -142,7 +142,7 @@ public class ResponseManager implements ITSCallback {
 	
 	public void notify(ITemplate template) {
     	log.debug("Notify received");
-		Enumeration enumeration = subscriberList.getThoseWhichMatch(template).elements();
+		Enumeration<?> enumeration = subscriberList.getThoseWhichMatch(template).elements();
 		while( enumeration.hasMoreElements() ) {
 			ISubscription subscription = (ISubscription) enumeration.nextElement();
 			subscription.getListener().notifyEvent();

@@ -21,12 +21,12 @@ import otsopack.commons.util.collections.Collection;
 import otsopack.commons.util.collections.HashSet;
 
 public class NotificationContainer implements Collection, INotificationChooser {
-	Hashtable notificationsBySelector;
-	Hashtable notificationsByURI;
+	Hashtable<ITemplate, INotificationElement> notificationsBySelector;
+	Hashtable<String, INotificationElement> notificationsByURI;
 	
 	public NotificationContainer() {
-		notificationsByURI = new Hashtable();
-		notificationsBySelector = new Hashtable();
+		notificationsByURI = new Hashtable<String, INotificationElement>();
+		notificationsBySelector = new Hashtable<ITemplate, INotificationElement>();
 	}
 
 	public boolean add(Object obj) {
@@ -47,7 +47,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 
 	public boolean addAll(Collection collection) {
 		boolean hasChanged = false;
-		Enumeration it = collection.elements();
+		Enumeration<?> it = collection.elements();
 		while( it.hasMoreElements() ) {
 			hasChanged |= add( it.nextElement() );
 		}
@@ -64,7 +64,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 	}
 
 	public boolean containsAll(Collection collection) {
-		Enumeration elements = collection.elements();
+		Enumeration<?> elements = collection.elements();
 		while(elements.hasMoreElements()){
 			Object nextElement = elements.nextElement();
 			if(!notificationsByURI.contains(nextElement))
@@ -77,7 +77,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 		return notificationsByURI.isEmpty() && notificationsBySelector.isEmpty();
 	}
 
-	public Enumeration elements() {
+	public Enumeration<?> elements() {
 		return notificationsByURI.elements();
 	}
 
@@ -93,7 +93,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 
 	public boolean removeAll(Collection collection) {
 		boolean hasChanged = false;
-		Enumeration it = collection.elements();
+		Enumeration<?> it = collection.elements();
 		while( it.hasMoreElements() ) {
 			hasChanged |= remove(it.nextElement());
 		}
@@ -102,7 +102,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 
 	private boolean removeAll(HashSet collection) {
 		boolean hasChanged = false;
-		Enumeration it = collection.elements();
+		Enumeration<?> it = collection.elements();
 		while( it.hasMoreElements() ) {
 			hasChanged |= remove(it.nextElement());
 		}
@@ -111,7 +111,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 
 	public boolean retainAll(Collection collection) {
 		HashSet notRetained = new HashSet();
-		Enumeration it = notificationsByURI.elements();
+		Enumeration<?> it = notificationsByURI.elements();
 		while( it.hasMoreElements() ) {
 			INotificationElement el = (INotificationElement) it.nextElement();
 			if( !collection.contains(el) ) {
@@ -128,7 +128,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 	public Object[] toArray() {
 		int position = 0;
 		final Object [] newArray = new Object[notificationsByURI.size()];
-		final Enumeration elements = notificationsByURI.elements();
+		final Enumeration<?> elements = notificationsByURI.elements();
 		while(elements.hasMoreElements()){
 			final Object element = elements.nextElement();
 			newArray[position++] = element;
@@ -141,7 +141,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 			return this.toArray();
 		
 		int position = 0;
-		final Enumeration elements = notificationsByURI.elements();
+		final Enumeration<?> elements = notificationsByURI.elements();
 		while(elements.hasMoreElements()){
 			final Object element = elements.nextElement();
 			aobj[position++] = element;
@@ -163,7 +163,7 @@ public class NotificationContainer implements Collection, INotificationChooser {
 	
 	public HashSet getThoseWhichMatch(ITemplate template) {
 		HashSet ret = new HashSet();
-		Enumeration elements = notificationsBySelector.elements();
+		Enumeration<?> elements = notificationsBySelector.elements();
 		while( elements.hasMoreElements() ) {
 			INotificationElement el = (INotificationElement) elements.nextElement();
 			if( template.match(el.getTemplate()) ) {
