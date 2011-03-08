@@ -259,4 +259,13 @@ public class RecordStoreDataAccess implements IDataAccess {
 		log.debug("Write ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.dataaccess.IDataAccess#getLocalGraphs(java.lang.String)
+	 */
+	public String[] getLocalGraphs(String spaceURI)
+			throws SpaceNotExistsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
