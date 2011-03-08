@@ -28,6 +28,7 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
+import otsopack.droid.network.communication.incoming.ITSCallback;
 import otsopack.droid.network.communication.util.MessageParser;
 import otsopack.droid.sampledata.ExampleME;
 
@@ -75,7 +76,7 @@ public class MessageParserTest extends TestCase {
 	public void testParseResponseMessage1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = sf.createTemplate("?s <http://predicado> ?o .");
 		final IGraph triples = sf.createEmptyGraph();
@@ -92,7 +93,7 @@ public class MessageParserTest extends TestCase {
 	public void testParseResponseMessage2() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String responseURI = "http://espaciointerestelar/grafo466";
 		final IGraph triples = sf.createEmptyGraph();
@@ -120,7 +121,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testQueryParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createQueryMessage(null,template);
@@ -143,7 +144,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testReadTemplateParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createReadMessage(null,template);
@@ -167,7 +168,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testReadURIParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String uri = "ts://testuricreator/graph21";
 		final Message msg = MessageParser.createReadMessage(null,uri);
@@ -190,7 +191,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testTakeTemplateParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createTakeMessage(null,template);
@@ -214,7 +215,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testTakeURIParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String uri = "ts://testuricreator/graph21";
 		final Message msg = MessageParser.createTakeMessage(null,uri);
@@ -238,7 +239,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testAdvertiseParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj2+"> .");
 		final Message msg = MessageParser.createAdvertiseMessage(null,template);
@@ -262,7 +263,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testUnadvertiseParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String uri = "ts://testuricreator/adv24594";
 		final Message msg = MessageParser.createUnadvertiseMessage(null,uri);
@@ -285,7 +286,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testSubscribeParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj3+"> <"+ExampleME.prop1+"> ?o .");
 		final Message msg = MessageParser.createSubscribeMessage(null,template);
@@ -309,7 +310,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testUnsubscribeParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String uri = "ts://testuricreator/subs24594";
 		final Message msg = MessageParser.createUnsubscribeMessage(null,uri);
@@ -342,7 +343,7 @@ public class MessageParserTest extends TestCase {
 	public void testQueryMultipleParser() throws MalformedMessageException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate[] templates = new ITemplate[4];
 			templates[0] = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
@@ -381,7 +382,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testDemandParser() throws MalformedMessageException, MalformedTemplateException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj2+"> ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createDemandMessage(null,template, 2000);
@@ -409,7 +410,7 @@ public class MessageParserTest extends TestCase {
 	public void testSuggestParser() throws MalformedMessageException, TripleParseException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final IGraph graph = sf.createEmptyGraph();
 		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
@@ -433,7 +434,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testObtainDemandsParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final Message msg = MessageParser.createObtainDemandsMessage(null);
 		MessageParser.parseMessage(msg,listeners);
@@ -460,7 +461,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testResponseDemandsParser() throws MalformedMessageException {
 		final FakeCallback fl = new FakeCallback();
-		final Vector listeners = new Vector();
+		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		byte[] bytes = new byte[5];
 		bytes[0] = (byte)21;

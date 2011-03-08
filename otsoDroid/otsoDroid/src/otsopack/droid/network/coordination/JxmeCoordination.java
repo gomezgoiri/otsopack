@@ -63,7 +63,7 @@ public class JxmeCoordination implements ICoordination {
 	}
 	
 	public void shutdown() {
-		Enumeration joinedEnum = joinedSpaces.values().elements();
+		Enumeration<?> joinedEnum = joinedSpaces.values().elements();
 		
 		while( joinedEnum.hasMoreElements() ) {
 			SpaceManager space = (SpaceManager) joinedEnum.nextElement();

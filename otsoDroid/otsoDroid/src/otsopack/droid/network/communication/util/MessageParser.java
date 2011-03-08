@@ -74,7 +74,7 @@ public class MessageParser {
 		static public final String BYTES = "TSCBytes"; //for obtain demands
 	}
 	
-    static public void parseMessage(Message msg, Vector listeners) throws MalformedMessageException {
+    static public void parseMessage(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	if(msg != null) {
     		MessageElement msgElement = msg.getMessageElement(null,Properties.REQUESTYPE);
 			if( msgElement!=null ) {
@@ -114,7 +114,7 @@ public class MessageParser {
 				} else
 				if(TypeRequest.OBTAIN_DMNDS.equals(type)) {
 					for(int i=0; i<listeners.size(); i++)
-		    			((ITSCallback)listeners.elementAt(i)).obtainDemands();
+		    			listeners.elementAt(i).obtainDemands();
 				} else
 				if(TypeRequest.RESPONSE_DMNDS.equals(type)) {
 					parseResponseDemands(msg, listeners);
@@ -147,7 +147,7 @@ public class MessageParser {
     	return ret;
    	}
     
-    static private void parseResponse(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseResponse(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	final IModel mod;
     	ITemplate sel;
     	String templateuri = null;
@@ -169,23 +169,23 @@ public class MessageParser {
         
     	if( graphuri!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).response(graphuri, mod);
+    			listeners.elementAt(i).response(graphuri, mod);
         } else if( templateuri!=null) {
         	for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).response(sel, templateuri);
+    			listeners.elementAt(i).response(sel, templateuri);
         } else if( sel!=null && mod!=null) {
         	for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).response(sel, mod);
+    			listeners.elementAt(i).response(sel, mod);
         } else throw new MalformedMessageException();
     }
     
-    static private void parseQuery(Message msg, Vector listeners) throws MalformedMessageException {    	
+    static private void parseQuery(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {    	
    		final ITemplate selector = parseSelector(msg);
    		for(int i=0; i<listeners.size(); i++)
-			((ITSCallback)listeners.elementAt(i)).query(selector);
+			listeners.elementAt(i).query(selector);
     }
     
-    static private void parseQueryMultiple(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseQueryMultiple(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	try {
     		HashSet templates = new HashSet();
     		
@@ -211,38 +211,38 @@ public class MessageParser {
 			}
 			
 			ITemplate[] sels = new ITemplate[templates.size()];
-			Enumeration it = templates.elements();
+			Enumeration<?> it = templates.elements();
 			for( int i=0; it.hasMoreElements(); i++ ) {
 				sels[i] = (ITemplate) it.nextElement();
 			}
 			for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).queryMultiple(sels);
+    			listeners.elementAt(i).queryMultiple(sels);
     	} catch (MalformedMessageException e) {
     		throw new MalformedMessageException(e.toString());
 		}
     }
     
-    static private void parseRead(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseRead(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.GRAPHURI);
     	if( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).read( msgElement.toString() );
+    			listeners.elementAt(i).read( msgElement.toString() );
     	} else {
         	ITemplate selector = parseSelector(msg);
         	for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).read(selector);
+    			listeners.elementAt(i).read(selector);
         }
     }
     
-    static private void parseTake(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseTake(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.GRAPHURI);
     	if( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).take( msgElement.toString() );
+    			listeners.elementAt(i).take( msgElement.toString() );
         } else {
         	ITemplate selector = parseSelector(msg);
         	for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).take(selector);
+    			listeners.elementAt(i).take(selector);
         }
     }
     
@@ -251,54 +251,54 @@ public class MessageParser {
     	l.notify(selector);
     }*/    
     
-    static private void parseAdvertise(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseAdvertise(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	final ITemplate selector = parseSelector(msg);
     	for(int i=0; i<listeners.size(); i++)
-			((ITSCallback)listeners.elementAt(i)).advertise(selector);
+			listeners.elementAt(i).advertise(selector);
     }
     
-    static private void parseUnadvertise(Message msg, Vector listeners) {
+    static private void parseUnadvertise(Message msg, Vector<ITSCallback> listeners) {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.TEMPLATEURI);
     	if( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).unadvertise( msgElement.toString() );
+    			listeners.elementAt(i).unadvertise( msgElement.toString() );
         }
     }
     
-    static private void parseSubscribe(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseSubscribe(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
         final ITemplate selector = parseSelector(msg);
         for(int i=0; i<listeners.size(); i++)
-			((ITSCallback)listeners.elementAt(i)).subscribe(selector);
+			listeners.elementAt(i).subscribe(selector);
     }
     
-    static private void parseUnsubscribe(Message msg, Vector listeners) {
+    static private void parseUnsubscribe(Message msg, Vector<ITSCallback> listeners) {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.TEMPLATEURI);
     	if ( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).unsubscribe( msgElement.toString() );
+    			listeners.elementAt(i).unsubscribe( msgElement.toString() );
         }
     }
     
-    static private void parseDemand(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseDemand(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	final ITemplate selector = parseSelector(msg);
     	final MessageElement msgElement = msg.getMessageElement(null,Properties.LEASE_TIME);
     	if ( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
-    			((ITSCallback)listeners.elementAt(i)).demand(selector, Long.parseLong(msgElement.toString()) );
+    			listeners.elementAt(i).demand(selector, Long.parseLong(msgElement.toString()) );
         }
     }
     
-    static private void parseSuggest(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseSuggest(Message msg, Vector<ITSCallback> listeners) throws MalformedMessageException {
     	final IModel model = parseModel(msg);
 		for(int i=0; i<listeners.size(); i++)
-			((ITSCallback)listeners.elementAt(i)).suggest(model);
+			listeners.elementAt(i).suggest(model);
     }
     
-    static private void parseResponseDemands(Message msg, Vector listeners) { 
+    static private void parseResponseDemands(Message msg, Vector<ITSCallback> listeners) { 
 		final MessageElement msgElement = msg.getMessageElement(null,Properties.BYTES);
 		if ( msgElement!=null ) {
 			for(int i=0; i<listeners.size(); i++)
-				((ITSCallback)listeners.elementAt(i)).responseDemands(msgElement.getBytes(false));
+				listeners.elementAt(i).responseDemands(msgElement.getBytes(false));
 		}
     }
     

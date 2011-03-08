@@ -17,7 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
 
-import otsopack.otsoDroid.R;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.impl.SemanticFactory;

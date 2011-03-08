@@ -53,7 +53,7 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 	}
 	
 	public boolean hasAnyPeerResponsabilityOverThisKnowledge(IGraph triples) {
-		final Enumeration it = getNonExpiredTemplates().elements();
+		final Enumeration<?> it = getNonExpiredTemplates().elements();
 		while( it.hasMoreElements() ) {
 			ITemplate sel = (ITemplate) it.nextElement();
 			IModel model = new SemanticFactory().createModelForGraph(triples);
@@ -63,8 +63,8 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 		return false;
 	}
 	
-	protected Vector/*<ITemplate>*/ getNonExpiredTemplates() {
-		Vector list = new Vector();
+	protected Vector<ITemplate> getNonExpiredTemplates() {
+		final Vector<ITemplate> list = new Vector<ITemplate>();
 		synchronized( lock ) {
 			for(int i=record.size()-1; i>=0; i--) {
 				IDemandEntry entry = record.get(i);

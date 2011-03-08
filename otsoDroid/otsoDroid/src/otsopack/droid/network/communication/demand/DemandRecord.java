@@ -18,11 +18,11 @@ import java.util.Vector;
 import otsopack.commons.util.collections.Collections;
 
 public class DemandRecord {
-	Vector records;
+	Vector<IDemandEntry> records;
 	final Object lock = new Object();
 		
 	public DemandRecord() {
-		records = new Vector();
+		records = new Vector<IDemandEntry>();
 	}
 	
 	public void addDemand(IDemandEntry entry) {
@@ -44,7 +44,8 @@ public class DemandRecord {
 	
 	public void removeDemandsTil(int lastPosition) {
 		synchronized(lock) {
-			records = Collections.subList(records, lastPosition, records.size());
+			records = new Vector<IDemandEntry>(records.subList(lastPosition, records.size()));
+			//records = Collections.subList(records, lastPosition, records.size());
 		}
 	}
 	
@@ -53,7 +54,7 @@ public class DemandRecord {
 	}*/
 	
 	public IDemandEntry get(int position) {
-		return (IDemandEntry)records.elementAt(position);
+		return records.elementAt(position);
 	}
 	
 	public int size() {

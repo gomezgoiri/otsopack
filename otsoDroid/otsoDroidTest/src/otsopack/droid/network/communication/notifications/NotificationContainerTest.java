@@ -239,7 +239,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse(container.isEmpty());
 		
 		int i = 0;
-		Enumeration it = container.elements();
+		Enumeration<?> it = container.elements();
 		while( it.hasMoreElements() ) {
 			it.nextElement();
 			i++;

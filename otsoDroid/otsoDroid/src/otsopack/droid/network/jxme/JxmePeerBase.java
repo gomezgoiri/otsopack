@@ -261,7 +261,7 @@ public class JxmePeerBase {
 		discoveryService.getRemoteAdvertisements(null, DiscoveryService.GROUP, attribute, value, threshold);
 		
 		try {
-			Enumeration advs = discoveryService.getLocalAdvertisements(DiscoveryService.GROUP, attribute, value);
+			Enumeration<?> advs = discoveryService.getLocalAdvertisements(DiscoveryService.GROUP, attribute, value);
 			if (advs.hasMoreElements()) {
 				PeerGroupAdvertisement peerGroupAdvertisement = (PeerGroupAdvertisement) advs.nextElement();
 				peerGroup = this.getNetPeerGroup().newGroup(peerGroupAdvertisement);

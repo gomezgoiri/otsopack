@@ -176,7 +176,7 @@ class FakePeerGroup implements PeerGroup {
 		return null;
 	}
 
-	public Iterator getRoleMap(ID name) {
+	public Iterator<?> getRoleMap(ID name) {
 		return null;
 	}
 
