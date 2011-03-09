@@ -27,10 +27,12 @@ import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 import org.apache.log4j.Logger;
 import otsopack.commons.ILayer;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.util.uuid.UUIDFactory;
@@ -361,16 +363,15 @@ public class SpaceRecord implements ILayer {
 	
 	public IModel getGraphFromStore(int recordId) throws RecordStoreException {
 		final byte[] data = store.getRecord(recordId);
-		final ByteArrayInputStream bin = new ByteArrayInputStream(data);
+		final Graph graph = new Graph(new String(data), SemanticFormats.NTRIPLES);
 		final IModel ret = new SemanticFactory().createEmptyModel();
-        ret.read(bin,IModel.ntriple);
+        ret.read(graph);
         return ret;
 	}
 		
 	private int addGraphToStore(IModel graph) throws RecordStoreException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		graph.write(baos,IModel.ntriple);
-		final byte[] data = baos.toByteArray();
+		final String retrievedData = graph.write(SemanticFormats.NTRIPLES).getData();
+		final byte[] data = retrievedData.getBytes();
 		return store.addRecord(data, 0, data.length);
 	}
 	

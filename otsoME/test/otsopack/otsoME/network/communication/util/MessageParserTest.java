@@ -13,23 +13,23 @@
  */
 package otsopack.otsoME.network.communication.util;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Vector;
 
+import jmunit.framework.cldc11.TestCase;
+import net.jxta.endpoint.Message;
+import net.jxta.endpoint.MessageElement;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
-import otsopack.otsoME.network.communication.util.MessageParser;
 import otsopack.otsoME.sampledata.ExampleME;
-import jmunit.framework.cldc11.TestCase;
-import net.jxta.endpoint.Message;
-import net.jxta.endpoint.MessageElement;
 
 public class MessageParserTest extends TestCase {
 	
@@ -132,10 +132,9 @@ public class MessageParserTest extends TestCase {
 		
 		private void checkModel(Message msg, IModel model) {
 			MessageElement msgElement = msg.getMessageElement(null,MessageParser.Properties.MODEL);
-			ByteArrayOutputStream bin = new ByteArrayOutputStream();
-	        model.write(bin,IModel.ntriple);
+	        final Graph graph = model.write(SemanticFormats.NTRIPLES);
 	        
-	        byte[] expected = bin.toByteArray();
+	        byte[] expected = graph.getData().getBytes();
 	        byte[] obtained = msgElement.getBytes(true);
 	        assertEquals(obtained.length, expected.length);
 	        for(int i=0; i<expected.length; i++) {

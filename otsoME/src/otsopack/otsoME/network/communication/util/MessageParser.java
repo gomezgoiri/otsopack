@@ -13,8 +13,6 @@
  */
 package otsopack.otsoME.network.communication.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -26,14 +24,16 @@ import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.util.java.io.BufferedReader;
 import net.jxta.util.java.io.StringReader;
-import otsopack.otsoME.network.communication.incoming.ITSCallback;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.UnrecognizedFormatException;
 import otsopack.commons.util.collections.HashSet;
+import otsopack.otsoME.network.communication.incoming.ITSCallback;
 
 public class MessageParser {
 	public class TypeRequest {
@@ -141,8 +141,9 @@ public class MessageParser {
     	if( msgElement!=null ) {
         		ret = new SemanticFactory().createEmptyModel();
         		if(ret==null) throw new MalformedMessageException();
-    	        ByteArrayInputStream bin = new ByteArrayInputStream(msgElement.getBytes(true));
-    	        ret.read(bin, "N-TRIPLE");
+        		final byte [] data = msgElement.getBytes(true);
+        		final Graph graph = new Graph(new String(data), SemanticFormats.NTRIPLES);
+    	        ret.read(graph);
     	}
     	return ret;
    	}
@@ -464,9 +465,8 @@ public class MessageParser {
 	        //System.err.println("Modelo a enviar");
 	        //System.err.println("---------------");
 	        //triples.write(System.out, "N-TRIPLE");
-	        ByteArrayOutputStream bin = new ByteArrayOutputStream();
-	        triples.write(bin,IModel.ntriple);
-	        msg.addMessageElement(null, new ByteArrayMessageElement(Properties.MODEL, MimeMediaType.TEXT_DEFAULTENCODING, bin.toByteArray(), null));
+	        final Graph graph = triples.write(SemanticFormats.NTRIPLES);
+	        msg.addMessageElement(null, new ByteArrayMessageElement(Properties.MODEL, MimeMediaType.TEXT_DEFAULTENCODING, graph.getData().getBytes(), null));
 			return msg;
 		}
 }

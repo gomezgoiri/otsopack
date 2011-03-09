@@ -14,8 +14,6 @@
 package otsopack.droid.network.communication.util;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Enumeration;
@@ -26,8 +24,10 @@ import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
@@ -141,8 +141,8 @@ public class MessageParser {
     	if( msgElement!=null ) {
         		ret = new SemanticFactory().createEmptyModel();
         		if(ret==null) throw new MalformedMessageException();
-    	        ByteArrayInputStream bin = new ByteArrayInputStream(msgElement.getBytes(true));
-    	        ret.read(bin, "N-TRIPLE");
+        		final String data = new String(msgElement.getBytes(true));
+    	        ret.read(new Graph(data, SemanticFormats.NTRIPLES));
     	}
     	return ret;
    	}
@@ -464,9 +464,8 @@ public class MessageParser {
 	        //System.err.println("Modelo a enviar");
 	        //System.err.println("---------------");
 	        //triples.write(System.out, "N-TRIPLE");
-	        ByteArrayOutputStream bin = new ByteArrayOutputStream();
-	        triples.write(bin,IModel.ntriple);
-	        msg.addMessageElement(null, new ByteArrayMessageElement(Properties.MODEL, MimeMediaType.TEXT_DEFAULTENCODING, bin.toByteArray(), null));
+	        final Graph graph = triples.write(SemanticFormats.NTRIPLES);
+	        msg.addMessageElement(null, new ByteArrayMessageElement(Properties.MODEL, MimeMediaType.TEXT_DEFAULTENCODING, graph.getData().getBytes(), null));
 			return msg;
 		}
 }

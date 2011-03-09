@@ -97,8 +97,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from json to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		//return write(graph, SemanticFormats.RDF_JSON);
-		return "me molo";
+		return write(graph, SemanticFormats.RDF_JSON);
 	}
 
 	@Override
@@ -106,8 +105,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from ntriples to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		//return write(graph, SemanticFormats.NTRIPLES);
-		return "me molo menos";
+		return write(graph, SemanticFormats.NTRIPLES);
 	}
 	
 	protected String write(IGraph graph, String semanticFormat) {
