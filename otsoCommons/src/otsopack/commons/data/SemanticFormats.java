@@ -14,10 +14,39 @@
  */
 package otsopack.commons.data;
 
+import java.util.Vector;
+
 public final class SemanticFormats {
 	public static final String NTRIPLES = "nt";
 	public static final String N3       = "n3";
 	public static final String TURTLE   = "turtle";
 	public static final String RDF_XML  = "rdf/xml";
 	public static final String RDF_JSON = "json";
+	
+	private static final Vector/*<String>*/ FORMATS = new Vector();
+	
+	static{
+		loadDefaultFormats();
+	}
+	
+	private static void loadDefaultFormats(){
+		FORMATS.addElement(NTRIPLES);
+		FORMATS.addElement(N3);
+		FORMATS.addElement(TURTLE);
+		FORMATS.addElement(RDF_XML);
+		FORMATS.addElement(RDF_JSON);
+	}
+	
+	public static boolean isSemanticFormat(String format){
+		return FORMATS.contains(format);
+	}
+	
+	public static void clear(){
+		FORMATS.removeAllElements();
+		loadDefaultFormats();
+	}
+	
+	public static void registerSemanticFormat(String format){
+		FORMATS.addElement(format);
+	}
 }

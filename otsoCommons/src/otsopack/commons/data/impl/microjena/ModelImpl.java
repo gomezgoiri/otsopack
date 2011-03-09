@@ -16,10 +16,12 @@ package otsopack.commons.data.impl.microjena;
 
 import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.StmtIterator;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Enumeration;
 
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
@@ -67,18 +69,25 @@ public class ModelImpl implements IModel {
 		Enumeration en = triples.elements();
 		while( en.hasMoreElements() ) {
 			 model.remove( ((TripleImpl)en.nextElement()).asStatement() );
-		}	}
+		}	
+	}
 
 	public IModel union(IModel model) {
 		return new ModelImpl( this.model.union(((ModelImpl)model).model) );
 	}
-
-	public void write(OutputStream out, String language) {
-		model.write(out, language);
+	
+	public Graph write(String outputFormat) {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		model.write(baos, MicrojenaFactory.getMicroJenaFormat(outputFormat));
+		final String content = baos.toString();
+		return new Graph(content, outputFormat);
 	}
-
-	public void read(InputStream in, String language) {
-		model.read(in, language);
+	
+	public void read(Graph graph){
+		final byte [] binaryData = graph.getData().getBytes();
+		final ByteArrayInputStream bais = new ByteArrayInputStream(binaryData);
+		final String microjenaFormat = MicrojenaFactory.getMicroJenaFormat(graph.getFormat());
+		model.read(bais, microjenaFormat);
 	}
 	
 	public Model getModel() {

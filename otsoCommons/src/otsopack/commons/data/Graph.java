@@ -9,15 +9,27 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
 package otsopack.commons.data;
 
-/**
- * @author nctrun
- *
- */
 public class Graph {
-
+	private final String data;
+	private final String format;
+	
+	public Graph(String data, String format){
+		if(!SemanticFormats.isSemanticFormat(format))
+			throw new IllegalArgumentException("Unrecognized semantic format in " + SemanticFormats.class.getName() + ": " + format);
+		this.data   = data;
+		this.format = format;
+	}
+	
+	public String getData(){
+		return this.data;
+	}
+	
+	public String getFormat(){
+		return this.format;
+	}
 }

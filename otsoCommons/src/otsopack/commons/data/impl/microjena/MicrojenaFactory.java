@@ -19,12 +19,14 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
 
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
@@ -34,6 +36,22 @@ import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
 
 public class MicrojenaFactory implements ISemanticFactory {
 
+	private static final String [] INPUT_SUPPORTED_FORMATS  = new String[]{ SemanticFormats.NTRIPLES };
+	private static final String [] OUTPUT_SUPPORTED_FORMATS = INPUT_SUPPORTED_FORMATS;
+	static final Hashtable/*<String, String>*/ OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS = new Hashtable();
+	
+	static{
+		OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.put(SemanticFormats.NTRIPLES, "N-TRIPLE");
+	}
+	
+	static String getMicroJenaFormat(String semanticFormat){
+		final String microjenaFormat = (String)OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.get(semanticFormat);
+		if(microjenaFormat == null)
+			throw new IllegalArgumentException("Semantic format " + semanticFormat + " not available in " + MicrojenaFactory.class.getName());
+		return microjenaFormat;
+	}
+	
+	
 	public IGraph createEmptyGraph() {
 		// TODO it is never called confusing implementation :-S
 		return new SemanticFactory().createEmptyGraph();
@@ -87,25 +105,23 @@ public class MicrojenaFactory implements ISemanticFactory {
 	}
 
 	public String[] getSupportedInputFormats() {
-		return new String[]{};
+		return INPUT_SUPPORTED_FORMATS;
 	}
 
 	public String[] getSupportedOutputFormats() {
-		return new String[]{};
+		return OUTPUT_SUPPORTED_FORMATS;
 	}
 
 	public boolean isOutputSupported(String outputFormat) {
-		final String [] outputFormats = getSupportedOutputFormats();
-		for(int i = 0; i < outputFormats.length; ++i)
-			if(outputFormats[i].equals(outputFormat))
+		for(int i = 0; i < OUTPUT_SUPPORTED_FORMATS.length; ++i)
+			if(OUTPUT_SUPPORTED_FORMATS[i].equals(outputFormat))
 				return true;
 		return false;
 	}
 
 	public boolean isInputSupported(String inputFormat) {
-		final String [] inputFormats = getSupportedInputFormats();
-		for(int i = 0; i < inputFormats.length; ++i)
-			if(inputFormats[i].equals(inputFormat))
+		for(int i = 0; i < INPUT_SUPPORTED_FORMATS.length; ++i)
+			if(INPUT_SUPPORTED_FORMATS[i].equals(inputFormat))
 				return true;
 		return false;
 	}

@@ -72,12 +72,15 @@ public class FakeModel implements IModel {
 	}
 
 	public void write(OutputStream bin, String language) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void read(InputStream bin, String language) {
-		// TODO Auto-generated method stub
+	}
 
+	public Graph write(String language) {
+		return null;
+	}
+
+	public void read(Graph graph) {
 	}
 }

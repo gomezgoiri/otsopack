@@ -14,8 +14,6 @@
 
 package otsopack.commons.data;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public interface IModel {
 	static final String ntriple = "N-TRIPLE";
@@ -25,6 +23,6 @@ public interface IModel {
 	void addTriples(IGraph triples);
 	void removeTriples(IGraph triples);
 	boolean isEmpty();
-	void write(OutputStream bin, String language);
-	void read(InputStream bin, String language);
+	Graph write(String language);
+	void read(Graph graph);
 }

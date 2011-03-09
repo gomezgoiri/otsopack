@@ -23,7 +23,7 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 	private static final Vector/*<ISemanticFormatConversor>*/ conversors = new Vector/*<ISemanticFormatConversor>*/();
 	
 	public static void initialize(ISemanticFormatConversor [] conversors){
-		SemanticFormatsManager.conversors.clear();
+		SemanticFormatsManager.conversors.removeAllElements();
 		addSemanticFormatConversors(conversors);
 	}
 	
