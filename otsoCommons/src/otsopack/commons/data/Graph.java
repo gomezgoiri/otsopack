@@ -14,9 +14,10 @@
  */
 package otsopack.commons.data;
 
-public interface ISemanticFormatExchangeable {
-	public String [] getSupportedInputFormats();
-	public String [] getSupportedOutputFormats();
-	public boolean isOutputSupported(String outputFormat);
-	public boolean isInputSupported(String inputFormat);
+/**
+ * @author nctrun
+ *
+ */
+public class Graph {
+
 }

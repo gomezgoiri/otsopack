@@ -9,14 +9,15 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
 package otsopack.commons.data;
 
-public interface ISemanticFormatExchangeable {
-	public String [] getSupportedInputFormats();
-	public String [] getSupportedOutputFormats();
-	public boolean isOutputSupported(String outputFormat);
-	public boolean isInputSupported(String inputFormat);
+public final class SemanticFormats {
+	public static final String NTRIPLES = "nt";
+	public static final String N3       = "n3";
+	public static final String TURTLE   = "turtle";
+	public static final String RDF_XML  = "rdf/xml";
+	public static final String RDF_JSON = "json";
 }

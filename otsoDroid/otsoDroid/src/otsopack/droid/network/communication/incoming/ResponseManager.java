@@ -22,8 +22,8 @@ import org.apache.log4j.Logger;
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -68,7 +68,7 @@ public class ResponseManager implements ITSCallback {
 	public void query(ITemplate template) {
     	log.debug("Query received");
     	try {
-			IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, ISemanticFormatExchangeable.NTRIPLES);
+			IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -83,7 +83,7 @@ public class ResponseManager implements ITSCallback {
 		try {
 			if( templates!=null ) {
 				for( int i=0; i<templates.length; i++ ) {
-					IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], ISemanticFormatExchangeable.NTRIPLES);
+					IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], SemanticFormats.NTRIPLES);
 					if(resp!=null)						
 						outcoming.response(templates[i], resp);
 				}
@@ -98,7 +98,7 @@ public class ResponseManager implements ITSCallback {
 	public void read(ITemplate template) {
     	log.debug("Read received.");
 		try {
-			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, ISemanticFormatExchangeable.NTRIPLES);
+			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -111,7 +111,7 @@ public class ResponseManager implements ITSCallback {
 	public void read(String graphuri) {
     	log.debug("Read received.");
 		try {
-			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, ISemanticFormatExchangeable.NTRIPLES);
+			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {
@@ -124,7 +124,7 @@ public class ResponseManager implements ITSCallback {
 	public void take(ITemplate template) {
 		log.debug("Take received.");
 		try {
-			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, ISemanticFormatExchangeable.NTRIPLES);
+			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -137,7 +137,7 @@ public class ResponseManager implements ITSCallback {
 	public void take(String graphuri) {
 		log.debug("Take received.");
 		try {
-			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, ISemanticFormatExchangeable.NTRIPLES);
+			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {

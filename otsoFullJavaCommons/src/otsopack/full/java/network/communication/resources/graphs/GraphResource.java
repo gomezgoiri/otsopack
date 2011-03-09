@@ -19,7 +19,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
-import otsopack.commons.data.ISemanticFormatExchangeable;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -61,21 +61,21 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public String toNTriples() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph graph = readGraph(SemanticFormats.NTRIPLES);
 		// TODO convert to N-Triples
 		return "read graph in N-Triples";
 	}
 	
 	@Override
 	public String toN3() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.N3);
+		final IGraph graph = readGraph(SemanticFormats.N3);
 		// TODO convert to N3
 		return "read graph in N·";
 	}
 
 	@Override
 	public String toJson() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.RDF_JSON);
+		final IGraph graph = readGraph(SemanticFormats.RDF_JSON);
 		// TODO convert to JSON
 		return "read graph in JSON";
 	}
@@ -97,21 +97,21 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public String deleteNTriples() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.NTRIPLES);
+		final IGraph graph = readGraph(SemanticFormats.NTRIPLES);
 		// TODO convert to N-Triples
 		return "take graph in N-Triples";
 	}
 	
 		@Override
 	public String deleteN3() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.N3);
+		final IGraph graph = readGraph(SemanticFormats.N3);
 		// TODO convert to N3
 		return "take graph in N3";
 	}
 	
 	@Override
 	public String deleteJson() {
-		final IGraph graph = readGraph(ISemanticFormatExchangeable.RDF_JSON);
+		final IGraph graph = readGraph(SemanticFormats.RDF_JSON);
 		// TODO convert to JSON
 		return "take graph in JSON";
 	}

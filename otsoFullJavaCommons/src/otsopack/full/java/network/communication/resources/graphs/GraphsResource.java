@@ -24,7 +24,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.IGraph;
-import otsopack.commons.data.ISemanticFormatExchangeable;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
@@ -97,7 +97,8 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from json to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		return write(graph, ISemanticFormatExchangeable.RDF_JSON);
+		//return write(graph, SemanticFormats.RDF_JSON);
+		return "me molo";
 	}
 
 	@Override
@@ -105,7 +106,8 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		// TODO convert from ntriples to graph
 		final IGraph graph = new SemanticFactory().createEmptyGraph();
 		
-		return write(graph, ISemanticFormatExchangeable.NTRIPLES);
+		//return write(graph, SemanticFormats.NTRIPLES);
+		return "me molo menos";
 	}
 	
 	protected String write(IGraph graph, String semanticFormat) {

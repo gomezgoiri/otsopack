@@ -18,11 +18,10 @@ import junit.framework.TestCase;
 import otsopack.commons.data.FakeSemanticFactory;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -123,7 +122,7 @@ public class MemoryDataAccessTest extends TestCase {
 		triples[2].add( factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
 		
 		for(int i=0; i<triples.length; i++) {
-			assertNotNull( memo.write(spaceuri,triples[i], ISemanticFormatExchangeable.NTRIPLES) );
+			assertNotNull( memo.write(spaceuri,triples[i], SemanticFormats.NTRIPLES) );
 		}
 		
 		memo.leaveSpace(spaceuri);
@@ -146,23 +145,23 @@ public class MemoryDataAccessTest extends TestCase {
 		graph.add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
 		graph.add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
 		graph.add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 		
 		graph =  sf.createEmptyGraph();
 		graph.add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
 		graph.add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
 		graph.add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 
 		graph = sf.createEmptyGraph();
 		graph.add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
 		graph.add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
 		graph.add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
-		memo.write(spaceuri2,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri2,graph, SemanticFormats.NTRIPLES);
 		
-		final IGraph retGraph1 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph2 = memo.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), ISemanticFormatExchangeable.NTRIPLES );
+		final IGraph retGraph1 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
+		final IGraph retGraph2 = memo.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
+		final IGraph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormats.NTRIPLES );
 		
 		assertEquals( retGraph1.size(), 2 );
 		assertTrue( retGraph1.contains(triples[0]) );
@@ -192,23 +191,23 @@ public class MemoryDataAccessTest extends TestCase {
 		graph.add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
 		graph.add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
 		graph.add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 		
 		graph = sf.createEmptyGraph();
 		graph.add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
 		graph.add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
 		graph.add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 
 		graph = sf.createEmptyGraph();
 		graph.add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
 		graph.add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
 		graph.add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
-		memo.write(spaceuri2,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri2,graph, SemanticFormats.NTRIPLES);
 		
-		final IGraph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+" ?p <"+Example.obj4+"> ."), ISemanticFormatExchangeable.NTRIPLES );
+		final IGraph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
+		final IGraph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
+		final IGraph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+" ?p <"+Example.obj4+"> ."), SemanticFormats.NTRIPLES );
 		
 		assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.contains(triples[0]) ) {
@@ -247,26 +246,26 @@ public class MemoryDataAccessTest extends TestCase {
 		graph.add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
 		graph.add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
 		graph.add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
-		graphuris[0] = memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[0] = memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 		
 		graph = sf.createEmptyGraph();
 		graph.add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
 		graph.add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
 		graph.add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
-		graphuris[1] = memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[1] = memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 
 		graph = sf.createEmptyGraph();
 		graph.add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
 		graph.add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
 		graph.add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
-		graphuris[2] = memo.write(spaceuri2,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[2] = memo.write(spaceuri2,graph, SemanticFormats.NTRIPLES);
 		
-		final IGraph retGraph1 = memo.read( spaceuri1, graphuris[0], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph2 = memo.read( spaceuri1, graphuris[1], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph3 = memo.read( spaceuri1, graphuris[2], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph4 = memo.read( spaceuri2, graphuris[0], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph5 = memo.read( spaceuri2, graphuris[1], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph6 = memo.read( spaceuri2, graphuris[2], ISemanticFormatExchangeable.NTRIPLES );		
+		final IGraph retGraph1 = memo.read( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
+		final IGraph retGraph2 = memo.read( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
+		final IGraph retGraph3 = memo.read( spaceuri1, graphuris[2], SemanticFormats.NTRIPLES );
+		final IGraph retGraph4 = memo.read( spaceuri2, graphuris[0], SemanticFormats.NTRIPLES );
+		final IGraph retGraph5 = memo.read( spaceuri2, graphuris[1], SemanticFormats.NTRIPLES );
+		final IGraph retGraph6 = memo.read( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );		
 		
 		assertEquals( retGraph1.size(), 3 );
 		assertTrue( retGraph1.contains(triples[0]) );
@@ -308,30 +307,30 @@ public class MemoryDataAccessTest extends TestCase {
 		graph.add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
 		graph.add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
 		graph.add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 		
 		graph = sf.createEmptyGraph();
 		graph.add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
 		graph.add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
 		graph.add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
-		memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 
 		graph = sf.createEmptyGraph();
 		graph.add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
 		graph.add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
 		graph.add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
-		memo.write(spaceuri2,graph, ISemanticFormatExchangeable.NTRIPLES);
+		memo.write(spaceuri2,graph, SemanticFormats.NTRIPLES);
 		
 		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
 		final ITemplate sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
-		final IGraph retGraph1 = memo.take( spaceuri1, sel1, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph2 = memo.take( spaceuri1, sel1, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph3 = memo.take( spaceuri1, sel1, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph4 = memo.take( spaceuri2, sel2, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph5 = memo.take( spaceuri2, sel2, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph6 = memo.take( spaceuri1, sel3, ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph7 = memo.take( spaceuri2, sel3, ISemanticFormatExchangeable.NTRIPLES );
+		final IGraph retGraph1 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
+		final IGraph retGraph2 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
+		final IGraph retGraph3 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
+		final IGraph retGraph4 = memo.take( spaceuri2, sel2, SemanticFormats.NTRIPLES );
+		final IGraph retGraph5 = memo.take( spaceuri2, sel2, SemanticFormats.NTRIPLES );
+		final IGraph retGraph6 = memo.take( spaceuri1, sel3, SemanticFormats.NTRIPLES );
+		final IGraph retGraph7 = memo.take( spaceuri2, sel3, SemanticFormats.NTRIPLES );
 		
 		assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.contains(triples[0]) ) {
@@ -386,29 +385,29 @@ public class MemoryDataAccessTest extends TestCase {
 		graph.add( triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
 		graph.add( triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3) );
 		graph.add( triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3) );
-		graphuris[0] = memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[0] = memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 		
 		graph = sf.createEmptyGraph();
 		graph.add( triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4) );
 		graph.add( triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
 		graph.add( triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4) );
-		graphuris[1] = memo.write(spaceuri1,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[1] = memo.write(spaceuri1,graph, SemanticFormats.NTRIPLES);
 
 		graph = sf.createEmptyGraph();
 		graph.add( triples[6] = factory.createTriple(Example.subj1, Example.prop5, Example.obj6) );
 		graph.add( triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6) );
 		graph.add( triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6) );
-		graphuris[2] = memo.write(spaceuri2,graph, ISemanticFormatExchangeable.NTRIPLES);
+		graphuris[2] = memo.write(spaceuri2,graph, SemanticFormats.NTRIPLES);
 		
-		final IGraph retGraph1 = memo.take( spaceuri1, graphuris[0], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph2 = memo.take( spaceuri1, graphuris[0], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph3 = memo.take( spaceuri1, graphuris[1], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph4 = memo.take( spaceuri1, graphuris[1], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph5 = memo.take( spaceuri1, graphuris[2], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph6 = memo.take( spaceuri2, graphuris[0], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph7 = memo.take( spaceuri2, graphuris[1], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph8 = memo.take( spaceuri2, graphuris[2], ISemanticFormatExchangeable.NTRIPLES );
-		final IGraph retGraph9 = memo.take( spaceuri2, graphuris[2], ISemanticFormatExchangeable.NTRIPLES );
+		final IGraph retGraph1 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
+		final IGraph retGraph2 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
+		final IGraph retGraph3 = memo.take( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
+		final IGraph retGraph4 = memo.take( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
+		final IGraph retGraph5 = memo.take( spaceuri1, graphuris[2], SemanticFormats.NTRIPLES );
+		final IGraph retGraph6 = memo.take( spaceuri2, graphuris[0], SemanticFormats.NTRIPLES );
+		final IGraph retGraph7 = memo.take( spaceuri2, graphuris[1], SemanticFormats.NTRIPLES );
+		final IGraph retGraph8 = memo.take( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );
+		final IGraph retGraph9 = memo.take( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );
 		
 		assertEquals( retGraph1.size(), 3 );
 		assertTrue( retGraph1.contains(triples[0]) );

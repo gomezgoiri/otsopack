@@ -49,7 +49,8 @@ public class GraphsTest extends AbstractRestServerTesting {
 		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
 		
 		// Test PUT
-		final String uri = graphsRsc.writeGraphNTriples("blabla");
+		//final String uri = graphsRsc.writeGraphNTriples("blabla");
+		final String uri = graphsRsc.writeGraphJSON("blabla");
 		assertEquals("http://space1/graph1",uri);
 	}
 	

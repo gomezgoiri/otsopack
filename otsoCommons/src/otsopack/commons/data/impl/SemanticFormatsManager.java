@@ -14,20 +14,28 @@
  */
 package otsopack.commons.data.impl;
 
+import java.util.Vector;
+
 import otsopack.commons.data.ISemanticFormatConversor;
 
 public class SemanticFormatsManager implements ISemanticFormatConversor {
 
-	private static ISemanticFormatConversor [] conversors;
+	private static final Vector/*<ISemanticFormatConversor>*/ conversors = new Vector/*<ISemanticFormatConversor>*/();
 	
 	public static void initialize(ISemanticFormatConversor [] conversors){
-		SemanticFormatsManager.conversors = conversors;
+		SemanticFormatsManager.conversors.clear();
+		addSemanticFormatConversors(conversors);
+	}
+	
+	public static void addSemanticFormatConversors(ISemanticFormatConversor [] conversors){
+		for(int i = 0; i < conversors.length; ++i)
+			SemanticFormatsManager.conversors.addElement(conversors[i]);
 	}
 	
 	private ISemanticFormatConversor getConversor(String inputFormat, String outputFormat){
-		for(int i = 0; i < conversors.length; ++i)
-			if(conversors[i].canConvert(inputFormat, outputFormat))
-				return conversors[i];
+		for(int i = 0; i < conversors.size(); ++i)
+			if(((ISemanticFormatConversor)conversors.elementAt(i)).canConvert(inputFormat, outputFormat))
+				return (ISemanticFormatConversor)conversors.elementAt(i);
 		return null;
 	}
 	
