@@ -9,21 +9,28 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * Author: FILLME
+ *
  */
-
 package otsopack.commons.data.impl.microjena;
 
-import it.polimi.elet.contextaddict.microjena.graph.Graph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 
-public class MappingUtils {
-
-	public static Graph createFromIGraph() {
-		return null;
+/**
+ * @deprecated
+ */
+public class TemporalUtilities {
+	/**
+	 * @deprecated
+	 */
+	public static Graph iGraph2Graph(IGraph graph, String outputFormat){
+		return new ModelImpl(graph).write(outputFormat);
 	}
-	
-	public static IGraph createFromGraph() {
-		return null;
+	/**
+	 * @deprecated
+	 */
+	public static IGraph graph2IGraph(Graph graph){
+		return new ModelImpl(graph).getIGraph();
 	}
 }

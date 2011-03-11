@@ -16,10 +16,9 @@ package otsopack.commons.dataaccess.memory.space;
 
 import java.util.Vector;
 
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 
 /**
  * Each MemorySpace can store a model and a spaceURI which identifies this model. 
@@ -27,12 +26,12 @@ import otsopack.commons.data.impl.SemanticFactory;
 public class SpaceMem {	
 	String spaceURI = null;
 	Vector/*<GraphMem>*/ graphs = null;
-	IModel model = null;
+	ModelImpl model = null;
 	
 	
 	protected SpaceMem(String spaceURI) {
 		this.spaceURI = spaceURI;
-		model = new SemanticFactory().createEmptyModel();
+		model = new ModelImpl();
 		graphs = new Vector();
 	}
 
@@ -52,45 +51,45 @@ public class SpaceMem {
 		return spaceURI;
 	}
 	
-	public String write(IGraph triples) {
-			GraphMem gm = MemoryFactory.createGraph(spaceURI);
-			gm.write(triples);
+	public String write(ModelImpl triples) {
+		GraphMem gm = MemoryFactory.createGraph(spaceURI);
+		gm.write(triples);
 		graphs.addElement(gm);
 		model.addTriples(triples);
 		return gm.getUri();
 	}
 	
-	public IGraph query(ITemplate template) {
+	public ModelImpl query(ITemplate template) {
 		IModel ret = model.query(template);
 		return (ret.isEmpty())?null:ret.getGraph();
 	}
 
-	public IGraph read(ITemplate template) {
-		IGraph graph = null;
+	public ModelImpl read(ITemplate template) {
+		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.contains(template) )
-				graph = gm.getGraph(); // we hold the first graph which contains a triple like that
+				graph = gm.getModel(); // we hold the first graph which contains a triple like that
 		}
 		return graph;
 	}
 
-	public IGraph read(String graphURI) {
-		IGraph mod = null;
+	public ModelImpl read(String graphURI) {
+		ModelImpl mod = null;
 		for(int i=0; i<graphs.size() && mod==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.getUri().equals(graphURI) )
-				mod = gm.getGraph(); // we hold the first graph which contains a triple like that
+				mod = gm.getModel(); // we hold the first graph which contains a triple like that
 		}
 		return mod;
 	}
 	
-	public IGraph take(ITemplate template) {		
-		IGraph graph = null;
+	public ModelImpl take(ITemplate template) {		
+		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.contains(template) ) { 
-				graph = gm.getGraph(); // we hold the first graph which contains a triple like that
+				graph = gm.getModel(); // we hold the first graph which contains a triple like that
 				model.removeTriples(graph);
 				graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
 			}
@@ -98,12 +97,12 @@ public class SpaceMem {
 		return graph;
 	}
 
-	public IGraph take(String graphURI) {
-		IGraph graph = null;
+	public ModelImpl take(String graphURI) {
+		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.getUri().equals(graphURI) ) {
-				graph = gm.getGraph(); // we hold the first graph which contains a triple like that
+				graph = gm.getModel(); // we hold the first graph which contains a triple like that
 				model.removeTriples(graph);
 				graphs.removeElement(gm);
 			}

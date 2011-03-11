@@ -16,8 +16,9 @@ package otsopack.commons.dataaccess.memory;
 
 import java.util.Vector;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
@@ -95,57 +96,58 @@ public class MemoryDataAccess implements IDataAccess {
 		return exit;
 	}
 	
-	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException {
+	// TODO: remove inputFormat
+	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
-		String ret = space.write(triples);
+		String ret = space.write(new ModelImpl(triples));
 		log.debug("Write ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 	
-	public IGraph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
-		IGraph ret = space.query(template);
+		ModelImpl ret = space.query(template);
 		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		return ret.write(outputFormat);
 	}
 
-	public IGraph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		
-		IGraph ret = space.read(template);
+		ModelImpl ret = space.read(template);
 		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		return ret.write(outputFormat);
 	}
 
-	public IGraph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
-		IGraph ret = space.read(graphURI);
+		ModelImpl ret = space.read(graphURI);
 		log.debug("Read with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		return ret.write(outputFormat);
 	}
 	
-	public IGraph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		
-		IGraph ret = space.take(template);
+		ModelImpl ret = space.take(template);
 		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		return ret.write(outputFormat);
 	}
 
-	public IGraph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
-		IGraph ret = space.take(graphURI);		
+		ModelImpl ret = space.take(graphURI);		
 		log.debug("Take with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		return ret.write(outputFormat);
 	}
 }

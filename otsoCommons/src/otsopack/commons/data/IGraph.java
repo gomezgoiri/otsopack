@@ -17,7 +17,7 @@ package otsopack.commons.data;
 import java.util.Enumeration;
 
 /**
- * TODO @eprecated Use Graph instead
+ * @deprecated Use Graph instead
  */
 public interface IGraph {
     public abstract int size();

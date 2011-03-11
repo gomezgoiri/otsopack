@@ -14,14 +14,16 @@
 
 package otsopack.commons.data;
 
+import otsopack.commons.data.impl.microjena.ModelImpl;
+
 
 public interface IModel {
 	static final String ntriple = "N-TRIPLE";
 	IModel query(ITemplate template);
 	IModel union(IModel model);	
-	IGraph getGraph();
-	void addTriples(IGraph triples);
-	void removeTriples(IGraph triples);
+	ModelImpl getGraph();
+	void addTriples(ModelImpl triples);
+	void removeTriples(ModelImpl triples);
 	boolean isEmpty();
 	Graph write(String language);
 	void read(Graph graph);

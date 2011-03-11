@@ -31,26 +31,52 @@ import es.deustotech.microjena.rdf.model.ModelFactory;
 public class ModelImpl implements IModel {
 	final Model model;
 	
-	protected ModelImpl() {
+	public ModelImpl() {
 		this(ModelFactory.createDefaultModel());
 	}
 	
 	protected ModelImpl(Model model) {
 		this.model = model;
 	}
+	
+	public ModelImpl(Graph graph){
+		this();
+		this.read(graph);
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public ModelImpl(IGraph graph){
+		this();
+		Enumeration en = graph.elements();
+	    while( en.hasMoreElements() ) {
+	     	model.add( ((TripleImpl)en.nextElement()).asStatement() );
+	    }
+	}
 
 	public IModel query(ITemplate template) {
 		//must be a TemplateImpl since there is no other implementation
 		return new ModelImpl(model.query((TemplateImpl)template));
 	}
+	
+	/**
+	 * @deprecated
+	 */
+	public IGraph getIGraph() {
+	     final SemanticFactory sf = new SemanticFactory();
+	     final IGraph ret = sf.createEmptyGraph();
+	     final StmtIterator it = model.listStatements();
+	     while( it.hasNext() ) {
+	     	ret.add(new TripleImpl(it.nextStatement()));
+	     }
+	     return ret;
+	}
+	    
 
-	public IGraph getGraph() {
-		final SemanticFactory sf = new SemanticFactory();
-		final IGraph ret = sf.createEmptyGraph();
-		final StmtIterator it = model.listStatements();
-		while( it.hasNext() ) {
-			ret.add(new TripleImpl(it.nextStatement()));
-		}
+	public ModelImpl getGraph() {
+		final ModelImpl ret = new ModelImpl();
+		ret.addTriples(this);
 		return ret;
 	}
 
@@ -58,18 +84,12 @@ public class ModelImpl implements IModel {
 		return model.isEmpty();
 	}
 
-	public void addTriples(IGraph triples) {
-		Enumeration en = triples.elements();
-		while( en.hasMoreElements() ) {
-			 model.add( ((TripleImpl)en.nextElement()).asStatement() );
-		}
+	public void addTriples(ModelImpl triples) {
+		this.model.add(triples.getModel());
 	}
 
-	public void removeTriples(IGraph triples) {
-		Enumeration en = triples.elements();
-		while( en.hasMoreElements() ) {
-			 model.remove( ((TripleImpl)en.nextElement()).asStatement() );
-		}	
+	public void removeTriples(ModelImpl triples) {
+		this.model.remove(triples.getModel());
 	}
 
 	public IModel union(IModel model) {

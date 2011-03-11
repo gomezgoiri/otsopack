@@ -14,25 +14,24 @@
 
 package otsopack.commons.dataaccess.memory.space;
 
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 
 public class GraphMem {
 	final private String uri;
-	private IGraph graph;
+	private ModelImpl model;
 	
 	public GraphMem(String graphUri) {
 		uri = graphUri;
-		graph = null;
+		model = null;
 	}
 	
-	public void write(IGraph graph) {
-		this.graph = graph;
+	public void write(ModelImpl model) {
+		this.model = model;
 	}
 	
 	public boolean contains(ITemplate template) {
-		return !(new SemanticFactory()).createModelForGraph(graph).query(template).isEmpty();
+		return !model.query(template).isEmpty();
 	}
 	
 	public boolean equals(Object o) {
@@ -43,8 +42,8 @@ public class GraphMem {
 		return uri.hashCode();
 	}
 	
-	public IGraph getGraph() {
-		return graph;
+	public ModelImpl getModel() {
+		return model;
 	}
 
 	public String getUri() {
