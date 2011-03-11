@@ -38,7 +38,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		final IGraph ret;
 		
 		try {
-			final ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
+			final ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
 			
 			final IController controller = getController();
 			ret = controller.getDataAccessService().query(space,tpl, semanticFormat);

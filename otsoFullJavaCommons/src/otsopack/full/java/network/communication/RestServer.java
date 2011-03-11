@@ -17,8 +17,6 @@ package otsopack.full.java.network.communication;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
@@ -28,14 +26,12 @@ import otsopack.full.java.network.communication.resources.prefixes.PrefixesResou
 import otsopack.full.java.network.communication.resources.spaces.SpacesResource;
 
 public class RestServer {
-	private static final String CONTROLLER_PROPERTY_NAME = "controller";
-
 	public static final int DEFAULT_PORT = 8182;
 	
 	private final int port;
 	private final Component component;
+	private final OtsopackApplication application;
 	
-	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
@@ -43,55 +39,43 @@ public class RestServer {
 		addPaths(SpacesResource.getRoots());
 	}
 	
-	private static RestServer server = null;
-	
-	public static RestServer getCurrent(){
-		return server;
-	}
-	
 	private static void addPaths(Map<String, Class<?>> roots){
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}
 	
-	public RestServer(int port) {
+	public RestServer(int port, IController controller) {
 		this.port = port;
 		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    for(String pattern : RestServer.PATHS.keySet())
-	    	this.component.getDefaultHost().attach(pattern, RestServer.PATHS.get(pattern));
-	    
-		server = this;
+	    this.application = new OtsopackApplication(RestServer.PATHS);
+	    this.application.setController(controller);
+	    this.component.getDefaultHost().attach(this.application);
+	}
+	
+	public RestServer(IController controller){
+		this(DEFAULT_PORT, controller);
+	}
+	
+	public RestServer(int port){
+		this(port, null);
 	}
 	
 	public RestServer(){
-		this(DEFAULT_PORT);
+		this(DEFAULT_PORT, null);
 	}
 	
-	public ConcurrentMap<String, Object> getAttributes(){
-		return this.attributes;
-	}
-	
-	public IController getController(){
-		return (IController)this.attributes.get(CONTROLLER_PROPERTY_NAME);
-	}
-	
-	public void setController(IController controller){
-		this.attributes.put(CONTROLLER_PROPERTY_NAME, controller);
+	public OtsopackApplication getApplication(){
+		return this.application;
 	}
 	
 	public void startup() throws Exception {
 		this.component.start();
 	}
 	
-	public void attach(String pattern, Class<?> targetClass){
-		this.component.getDefaultHost().attach(pattern, targetClass);
-	}
-	
 	public void shutdown() throws Exception {
 		this.component.stop();
-		PrefixesResource.clear();
 	}
 }

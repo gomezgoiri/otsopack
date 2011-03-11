@@ -20,6 +20,7 @@ import org.junit.Before;
 
 import otsopack.commons.IController;
 import otsopack.full.java.FakeDataAccess;
+import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public abstract class AbstractRestServerTesting {
 	protected RestServer rs;
@@ -33,9 +34,12 @@ public abstract class AbstractRestServerTesting {
 		EasyMock.expect(this.mock.getDataAccessService()).andReturn(this.fakeDataAccess).anyTimes();
 		EasyMock.replay(this.mock);
 		
-		this.rs = new RestServer(RestServer.DEFAULT_PORT);
-		this.rs.setController(this.mock);
+		this.rs = new RestServer(RestServer.DEFAULT_PORT, this.mock);
 		this.rs.startup();
+	}
+	
+	protected PrefixesStorage getPrefixesStorage(){
+		return this.rs.getApplication().getPrefixesStorage();
 	}
 	
 	protected String getBaseURL(){

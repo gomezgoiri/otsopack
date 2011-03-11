@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
-import otsopack.full.java.network.communication.RestServer;
+import otsopack.full.java.network.communication.OtsopackApplication;
 
 public class AbstractServerResource extends ServerResource {
 	
@@ -55,7 +56,11 @@ public class AbstractServerResource extends ServerResource {
 	}
 	
 	protected IController getController() {
-		return RestServer.getCurrent().getController();
+		return getOtsopackApplication().getController();
+	}
+	
+	protected OtsopackApplication getOtsopackApplication(){
+		return (OtsopackApplication)this.getApplication();
 	}
 		
 	protected Map<String,String> getArguments(String rootURI) {
@@ -66,4 +71,22 @@ public class AbstractServerResource extends ServerResource {
 		}
 		return properties;
 	}
+	
+	
+	protected ConcurrentHashMap<String, String> getPrefixesByURI(){
+		return getOtsopackApplication().getPrefixesStorage().getPrefixesByURI();
+	}
+	
+	protected ConcurrentHashMap<String, String> getPrefixesByName(){
+		return getOtsopackApplication().getPrefixesStorage().getPrefixesByName();
+	}
+	
+	protected String getPrefixByName(String prefixName) {
+		return getOtsopackApplication().getPrefixesStorage().getPrefixByName(prefixName);
+	}
+	
+	protected String getPrefixByURI(String prefixUri) {
+		return getOtsopackApplication().getPrefixesStorage().getPrefixByURI(prefixUri);
+	}
+
 }

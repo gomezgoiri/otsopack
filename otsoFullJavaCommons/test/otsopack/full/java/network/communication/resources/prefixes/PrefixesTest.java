@@ -46,10 +46,10 @@ public class PrefixesTest extends AbstractRestServerTesting{
 		ConcurrentHashMap<String, String> prefixes = retrieve(prefrsc);
 		assertEquals(prefixes.size(), 0);
 		
-		PrefixesResource.create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		PrefixesResource.create( "rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-		PrefixesResource.create( "xsd", "http://www.w3.org/2001/XMLSchema#");
-		PrefixesResource.create( "owl", "http://www.w3.org/2002/07/owl#");
+		getPrefixesStorage().create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		getPrefixesStorage().create( "rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+		getPrefixesStorage().create( "xsd", "http://www.w3.org/2001/XMLSchema#");
+		getPrefixesStorage().create( "owl", "http://www.w3.org/2002/07/owl#");
 		
 		prefixes = retrieve(prefrsc);
 		assertEquals(prefixes.size(), 4);
@@ -60,10 +60,10 @@ public class PrefixesTest extends AbstractRestServerTesting{
 	public void testGetPrefixes() throws Exception {
 		final ClientResource cr = new ClientResource(getBaseURL() + "prefixes");
 		final IPrefixesResource prefrsc = cr.wrap(IPrefixesResource.class);
-		PrefixesResource.create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		PrefixesResource.create( "rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-		PrefixesResource.create( "xsd", "http://www.w3.org/2001/XMLSchema#");
-		PrefixesResource.create( "owl", "http://www.w3.org/2002/07/owl#");
+		getPrefixesStorage().create( "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		getPrefixesStorage().create( "rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+		getPrefixesStorage().create( "xsd", "http://www.w3.org/2001/XMLSchema#");
+		getPrefixesStorage().create( "owl", "http://www.w3.org/2002/07/owl#");
 		
 		// Test json retrieval
 		final ConcurrentHashMap<String, String> prefixes = retrieve(prefrsc);
@@ -81,7 +81,7 @@ public class PrefixesTest extends AbstractRestServerTesting{
 	@Test
 	public void testGetPrefix() throws Exception {
 		final String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-		PrefixesResource.create("rdf", RDF_URI);
+		getPrefixesStorage().create("rdf", RDF_URI);
 		
 		ClientResource cr = new ClientResource(getBaseURL() + "prefixes/" + URLEncoder.encode(RDF_URI, "utf-8"));
 		IPrefixResource prefixrsc = cr.wrap(IPrefixResource.class);

@@ -42,7 +42,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		IGraph ret = null;
 		
 		try {
-			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object);
+			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
 			
 			final IController controller = getController();
 			ret = controller.getDataAccessService().read(space, tpl, semanticFormat);

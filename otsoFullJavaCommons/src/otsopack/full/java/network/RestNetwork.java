@@ -33,7 +33,7 @@ public class RestNetwork implements INetwork {
 	
 	public RestNetwork(IController controller) {
 		this.rs = new RestServer();
-		this.rs.getAttributes().put("controller", controller);
+		this.rs.getApplication().setController(controller);
 	}
 
 	@Override

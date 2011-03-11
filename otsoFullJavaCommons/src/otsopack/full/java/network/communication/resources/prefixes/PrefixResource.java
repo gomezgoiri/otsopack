@@ -52,7 +52,7 @@ public class PrefixResource extends AbstractServerResource implements IPrefixRes
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Prefix must be a valid URI", e);		
 		}
 		
-		final String name = PrefixesResource.getPrefixByURI(getArgument("prefixeduri"));
+		final String name = getPrefixByURI(getArgument("prefixeduri"));
 		if( name == null )
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find uri");  
 

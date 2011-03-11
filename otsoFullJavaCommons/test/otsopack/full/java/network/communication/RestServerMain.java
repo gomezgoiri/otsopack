@@ -28,14 +28,13 @@ import otsopack.full.java.FakeDataAccess;
  */
 public class RestServerMain {
 	public static void main(String [] args) throws Exception {
-		final RestServer rs = new RestServer();
-		
 		final IController controller = EasyMock.createMock(IController.class);
 		final IDataAccess mockda = new FakeDataAccess();
 		EasyMock.expect(controller.getDataAccessService()).andReturn(mockda).anyTimes();
 		EasyMock.replay(controller);
 		
-		rs.getAttributes().put("controller", controller);
+		final RestServer rs = new RestServer(controller);
+		
 		rs.startup();	
 	}
 }

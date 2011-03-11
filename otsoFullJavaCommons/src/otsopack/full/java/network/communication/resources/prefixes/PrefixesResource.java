@@ -24,16 +24,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class PrefixesResource extends ServerResource implements IPrefixesResource {
+public class PrefixesResource extends AbstractServerResource implements IPrefixesResource {
 	final ObjectMapper mapper = new ObjectMapper();
-	
-	public static final ConcurrentHashMap<String,String> prefixesByURI  = new ConcurrentHashMap<String,String>();
-	public static final ConcurrentHashMap<String,String> prefixesByName = new ConcurrentHashMap<String,String>();
 	
 	public static final String ROOT = "/prefixes";
 	
@@ -44,34 +41,16 @@ public class PrefixesResource extends ServerResource implements IPrefixesResourc
 		return graphsRoots;
 	}
 	
-	public static void clear() {
-		prefixesByURI.clear();
-		prefixesByName.clear();
-	}
-	
-	public static String getPrefixByName(String prefixName) {
-		return prefixesByName.get(prefixName);
-	}
-	
-	public static String getPrefixByURI(String prefixUri) {
-		return prefixesByURI.get(prefixUri);
-	}
-	
 	@Override
     public String retrieveJson() throws ResourceException {
-		final ConcurrentHashMap<String, String> ret = prefixesByURI;
+		final ConcurrentHashMap<String, String> ret = getPrefixesByURI();
 		return JSONEncoder.encode(ret);
     }
 	
-	public static void create(String name, String uri) {
-		prefixesByURI.put(uri, name);
-		prefixesByName.put(name, uri);
-	}
-
 	@Override
 	public String retrieveHtml() {
 		final StringBuilder bodyHtml = new StringBuilder("<br>Available prefixes:<br>\n<ul>\n");
-		for(Entry<String, String> entry : prefixesByURI.entrySet()){
+		for(Entry<String, String> entry : getPrefixesByURI().entrySet()){
 			bodyHtml.append("\t<li><span style=\"font-weight: bold;\">");
 			bodyHtml.append(entry.getValue());
 			
