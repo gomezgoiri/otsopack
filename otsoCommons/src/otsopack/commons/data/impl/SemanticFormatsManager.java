@@ -17,8 +17,9 @@ package otsopack.commons.data.impl;
 import java.util.Vector;
 
 import otsopack.commons.data.ISemanticFormatConversor;
+import otsopack.commons.data.ISemanticFormatExchangeable;
 
-public class SemanticFormatsManager implements ISemanticFormatConversor {
+public class SemanticFormatsManager implements ISemanticFormatConversor, ISemanticFormatExchangeable {
 
 	private static final Vector/*<ISemanticFormatConversor>*/ conversors = new Vector/*<ISemanticFormatConversor>*/();
 	
@@ -48,5 +49,27 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 
 	public String convert(String inputFormat, String originalText, String outputFormat) {
 		return getConversor(inputFormat, outputFormat).convert(inputFormat, originalText, outputFormat);
+	}
+	
+	public boolean isInputSupported(String inputFormat){
+		final SemanticFactory sf = new SemanticFactory();
+		final String [] supportedInputFormats = sf.getSupportedInputFormats();
+		
+		for(int i = 0; i < supportedInputFormats.length; ++i)
+			if(canConvert(inputFormat, supportedInputFormats[i]))
+				return true;
+		
+		return false;
+	}
+
+	public boolean isOutputSupported(String outputFormat) {
+		final SemanticFactory sf = new SemanticFactory();
+		final String [] supportedOutputFormats = sf.getSupportedOutputFormats();
+		
+		for(int i = 0; i < supportedOutputFormats.length; ++i)
+			if(canConvert(supportedOutputFormats[i], outputFormat))
+				return true;
+		
+		return false;
 	}
 }

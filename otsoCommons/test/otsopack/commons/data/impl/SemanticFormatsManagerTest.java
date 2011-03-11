@@ -37,6 +37,14 @@ public class SemanticFormatsManagerTest extends TestCase {
 		public boolean canConvert(String inputFormat, String outputFormat) {
 			return inputFormat.equals(ENGLISH) && outputFormat.equals(SPANISH);
 		}
+
+		public boolean isOutputSupported(String outputFormat) {
+			return outputFormat.equals(SPANISH);
+		}
+
+		public boolean isInputSupported(String inputFormat) {
+			return inputFormat.equals(ENGLISH);
+		}
 	};
 	
 	private ISemanticFormatConversor spanish2english = new ISemanticFormatConversor() {
@@ -51,6 +59,14 @@ public class SemanticFormatsManagerTest extends TestCase {
 		
 		public boolean canConvert(String inputFormat, String outputFormat) {
 			return inputFormat.equals(SPANISH) && outputFormat.equals(ENGLISH);
+		}
+
+		public boolean isOutputSupported(String outputFormat) {
+			return outputFormat.equals(ENGLISH);
+		}
+
+		public boolean isInputSupported(String inputFormat) {
+			return inputFormat.equals(SPANISH);
 		}
 	};
 	
