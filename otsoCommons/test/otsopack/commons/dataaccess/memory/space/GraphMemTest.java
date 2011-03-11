@@ -15,25 +15,20 @@
 package otsopack.commons.dataaccess.memory.space;
 
 import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
-
-import otsopack.commons.data.FakeSemanticFactory;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.dataaccess.memory.space.GraphMem;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.commons.sampledata.Example;
 
 public class GraphMemTest extends TestCase {
-
-	private FakeSemanticFactory factory;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		factory = new FakeSemanticFactory();
-		SemanticFactory.initialize(factory);
+		SemanticFactory.initialize(new MicrojenaFactory());
 	}
 	
 	private void assertNotEquals(int expected, int actual){
@@ -58,20 +53,21 @@ public class GraphMemTest extends TestCase {
 		graph.add( new Triple(Example.tsubj1, Example.tprop2, Example.tobj4) );
 		graph.add( new Triple(Example.tsubj2, Example.tprop1, Example.tobj3) );
 		graph.add( new Triple(Example.tsubj3, Example.tprop2, Example.tobj4) );*/
-		IGraph graph = (IGraph) EasyMock.createMock(IGraph.class);
+		final ModelImpl graph = new ModelImpl();
 		
-		GraphMem mem3 = new GraphMem("http://graph/write3/");
+		final GraphMem mem3 = new GraphMem("http://graph/write3/");
 		mem3.write(graph);
 	}
 
 	public void testContains() throws MalformedTemplateException, TripleParseException {
 		final SemanticFactory sf = new SemanticFactory();
-		IGraph graph = sf.createEmptyGraph();
-		graph.add( factory.createTriple(Example.subj1, Example.prop1, Example.obj3) );
-		graph.add( factory.createTriple(Example.subj2, Example.prop2, Example.obj4) );
-		graph.add( factory.createTriple(Example.subj3, Example.prop1, "\""+String.valueOf(Example.obj10)+"\"^^<http://www.w3.org/2001/XMLSchema#double>") );
+		final String triples =	"<"+Example.subj1+"> <"+Example.prop1+"> <"+Example.obj3+"> .\n" +
+								"<"+Example.subj2+"> <"+Example.prop2+"> <"+Example.obj4+"> .\n" +
+								"<"+Example.subj3+"> <"+Example.prop1+"> \""+String.valueOf(Example.obj10)+"\"^^<http://www.w3.org/2001/XMLSchema#double> .\n";
+		final ModelImpl graph = new ModelImpl();
+		graph.read( new Graph(triples, SemanticFormats.NTRIPLES) );
 		
-		GraphMem mem3 = new GraphMem("http://graph/write3/");
+		final GraphMem mem3 = new GraphMem("http://graph/write3/");
 		mem3.write(graph);
 		
 		assertTrue( mem3.contains(sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> <"+Example.obj3+"> .")) );
