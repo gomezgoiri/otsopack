@@ -15,7 +15,7 @@
 package otsopack.commons.dataaccess;
 
 import otsopack.commons.ILayer;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -59,7 +59,7 @@ public interface IDataAccess extends ILayer {
 	 * @param triples
 	 * @return uri of written graph
 	 */
-	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * query form space according to template (all found triples will be returned)
@@ -67,7 +67,7 @@ public interface IDataAccess extends ILayer {
 	 * @param template
 	 * @return set of triples or null if no triples were found
 	 */
-	public IGraph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public Graph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * read form space according to template (only one graph will be returned)
@@ -75,7 +75,7 @@ public interface IDataAccess extends ILayer {
 	 * @param template
 	 * @return set of triples or null if no triples were found
 	 */
-	public IGraph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 
 	/**
 	 * read graph from space
@@ -83,7 +83,7 @@ public interface IDataAccess extends ILayer {
 	 * @param graphURI
 	 * @return set of triples or null if no triples were found
 	 */
-	public IGraph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 
 	/**
 	 * read and remove a graph from the space.
@@ -91,7 +91,7 @@ public interface IDataAccess extends ILayer {
 	 * @param template
 	 * @return set of triples or null if no triples were found
 	 */
-	public IGraph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * read and remove a graph from the space.
@@ -99,5 +99,5 @@ public interface IDataAccess extends ILayer {
 	 * @param graphURI
 	 * @return set of triples or null if no triples were found
 	 */
-	public IGraph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 }
