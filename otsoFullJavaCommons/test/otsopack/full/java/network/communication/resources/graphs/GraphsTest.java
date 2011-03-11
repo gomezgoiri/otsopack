@@ -21,9 +21,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.restlet.engine.Engine;
+import org.restlet.engine.converter.ConverterHelper;
+import org.restlet.ext.jackson.JacksonRepresentation;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
+import otsopack.full.java.network.communication.representations.NTriplesRepresentation;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class GraphsTest extends AbstractRestServerTesting {
@@ -43,15 +48,23 @@ public class GraphsTest extends AbstractRestServerTesting {
 	}
 	
 	@Test
-	public void testPutGraph() throws Exception {		
+	public void testPostGraph() throws Exception {		
 		final String space = URLEncoder.encode("http://space1/", "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
 		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
 		
-		// Test PUT
-		//final String uri = graphsRsc.writeGraphNTriples("blabla");
-		final String uri = graphsRsc.writeGraphJSON("blabla");
-		assertEquals("http://space1/graph1",uri);
+		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
+		for(ConverterHelper helper : converters)
+			System.out.println(helper.getClass().getName());
+		
+//		// Test POST
+//		Representation rep = new NTriplesRepresentation("");
+//		String uri = graphsRsc.write(rep);
+//		//assertEquals("http://space1/graph1",uri);
+//		
+//		rep = new JacksonRepresentation<String>("JSONRepresentation");
+//		uri = graphsRsc.write(rep);
+//		//assertEquals("\"http://space1/graph2\"",uri);
 	}
 	
 	
@@ -62,9 +75,9 @@ public class GraphsTest extends AbstractRestServerTesting {
 		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
 		
 		// Test PUT
-		graphsRsc.writeGraphNTriples("blabla");
+		/*graphsRsc.writeGraphNTriples("blabla");
 		graphsRsc.writeGraphNTriples("blabla1");
-		graphsRsc.writeGraphNTriples("blabla2");
+		graphsRsc.writeGraphNTriples("blabla2");*/
 		
 		// Test json retrieval
 		final String graph = graphsRsc.toJson();

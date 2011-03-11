@@ -37,7 +37,7 @@ public class WildcardConverter {
 			return "<" + field + ">";
 		} else {
 			final String[] split = field.split(":");
-			String uri = prefixesStorage.getPrefixesByName().get(split[0]);
+			String uri = prefixesStorage.getPrefixByName(split[0]);
 			if(uri==null) {
 				throw new Exception("This prefix does not exist.");
 			}

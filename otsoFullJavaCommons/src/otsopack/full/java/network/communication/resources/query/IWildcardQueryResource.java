@@ -17,9 +17,12 @@ package otsopack.full.java.network.communication.resources.query;
 import org.restlet.resource.Get;
 
 public interface IWildcardQueryResource {
-	@Get("nt")
-	public abstract String toNTriples();
-
+	@Get("html")
+	public abstract String toHtml();
+	
 	@Get("json")
 	public abstract String toJson();
+	
+	@Get("nt")
+	public abstract String toNTriples();
 }

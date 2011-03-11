@@ -14,6 +14,11 @@
 
 package otsopack.full.java.network.communication;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import org.restlet.resource.ClientResource;
+
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -21,16 +26,29 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.full.java.network.communication.resources.graphs.IGraphResource;
 
-public class RestCommunication implements ICommunication {
 
-	public RestCommunication() {
+public class RestUnicastCommunication implements ICommunication {
+	
+	public RestUnicastCommunication() {
 		/*Router router = new Router(svr.getContext());
 		router.attach("/user", UserResource.class);*/
+	}
+	
+	String getBaseURI(String spaceuri) {
+		String ret = "http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/";
+		try {
+			ret = URLEncoder.encode(spaceuri, "utf-8")+"/";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return ret;
 	}
 
 	@Override
 	public void startup() throws TSException {
+		
 	}
 
 	@Override
@@ -40,7 +58,15 @@ public class RestCommunication implements ICommunication {
 	@Override
 	public IGraph read(String spaceURI, String graphURI, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		IGraph ret = null;
+		try {
+			ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
+			IGraphResource res = cr.wrap(IGraphResource.class);
+			res.toN3();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		//final IGraphResource prefrsc = cr.wrap(IGraphResource.class);
 		return null;
 	}
 

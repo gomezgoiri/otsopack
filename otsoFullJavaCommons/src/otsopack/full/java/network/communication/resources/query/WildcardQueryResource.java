@@ -25,6 +25,7 @@ import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
+import otsopack.full.java.network.communication.util.HTMLEncoder;
 
 public class WildcardQueryResource extends AbstractServerResource implements IWildcardQueryResource {
 
@@ -52,6 +53,21 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
 		}
 		return ret;
+	}
+	
+	@Override
+	public String toHtml() {
+		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
+		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
+		bodyHtml.append("\t\t<textarea rows=\"10\" cols=\"50\">");
+		bodyHtml.append("triple1, triple2,...");
+		bodyHtml.append("\t\t</textarea>\n");
+		bodyHtml.append("\t</fieldset>\n");
+		
+		return HTMLEncoder.encodeURIs(
+					super.getArguments(ROOT).entrySet(),
+					null,
+					bodyHtml.toString()); // TODO print NTriples
 	}
 	
 	@Override

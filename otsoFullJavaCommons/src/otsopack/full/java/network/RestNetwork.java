@@ -26,10 +26,12 @@ import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.util.collections.Set;
 import otsopack.full.java.network.communication.RestServer;
+import otsopack.full.java.network.communication.RestUnicastCommunication;
 
 public class RestNetwork implements INetwork {
 	
 	RestServer rs;
+	RestUnicastCommunication comm;
 	
 	public RestNetwork(IController controller) {
 		this.rs = new RestServer();
@@ -48,6 +50,7 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void shutdown() throws TSException {
 		try {
+			this.comm.shutdown();
 			this.rs.shutdown();
 		} catch (Exception e) {
 			throw new TSException("Rest server could not be restarted. " + e.getMessage());
@@ -57,8 +60,7 @@ public class RestNetwork implements INetwork {
 	@Override
 	public IGraph read(String spaceURI, String graphURI, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm.read(spaceURI, graphURI, timeout);
 	}
 
 	@Override
