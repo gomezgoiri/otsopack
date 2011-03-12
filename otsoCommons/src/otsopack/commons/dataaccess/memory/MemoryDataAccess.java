@@ -112,7 +112,7 @@ public class MemoryDataAccess implements IDataAccess {
 		if( space == null ) throw new SpaceNotExistsException();
 		ModelImpl ret = space.query(template);
 		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret.write(outputFormat);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
 
 	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
@@ -121,7 +121,7 @@ public class MemoryDataAccess implements IDataAccess {
 		if( space == null ) throw new SpaceNotExistsException();		
 		ModelImpl ret = space.read(template);
 		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret.write(outputFormat);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
 
 	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
@@ -130,7 +130,7 @@ public class MemoryDataAccess implements IDataAccess {
 		if( space == null ) throw new SpaceNotExistsException();
 		ModelImpl ret = space.read(graphURI);
 		log.debug("Read with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret.write(outputFormat);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
 	
 	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
@@ -139,7 +139,7 @@ public class MemoryDataAccess implements IDataAccess {
 		if( space == null ) throw new SpaceNotExistsException();		
 		ModelImpl ret = space.take(template);
 		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret.write(outputFormat);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
 
 	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
@@ -148,6 +148,6 @@ public class MemoryDataAccess implements IDataAccess {
 		if( space == null ) throw new SpaceNotExistsException();
 		ModelImpl ret = space.take(graphURI);		
 		log.debug("Take with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret.write(outputFormat);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
 }
