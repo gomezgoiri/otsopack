@@ -25,7 +25,6 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.commons.exceptions.TripleParseException;
 import otsopack.commons.sampledata.Example;
 
 public class SpaceMemTest extends TestCase {
@@ -85,7 +84,7 @@ public class SpaceMemTest extends TestCase {
 		}
 	}
 
-	public void testQuery() throws MalformedTemplateException, TripleParseException {
+	public void testQuery() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/query1/");
 		
@@ -105,7 +104,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph3 );
 	}
 
-	public void testRead1() throws MalformedTemplateException, TripleParseException {
+	public void testRead1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/read1/");
 		
@@ -139,7 +138,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph3 );
 	}
 
-	public void testRead2() throws TripleParseException {
+	public void testRead2() {
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/read2/");
 		
 		String[] graphuris = new String[models.length];
@@ -182,7 +181,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph4 );
 	}
 
-	public void testTake1() throws TripleParseException, MalformedTemplateException {
+	public void testTake1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take1/");
 		
@@ -231,7 +230,7 @@ public class SpaceMemTest extends TestCase {
 		}
 	
 	
-	public void testTake2() throws TripleParseException {
+	public void testTake2() {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take2/");
 		
