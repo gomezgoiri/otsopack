@@ -17,22 +17,20 @@ import java.util.Enumeration;
 
 import javax.microedition.rms.RecordStoreException;
 
+import jmunit.framework.cldc11.AssertionFailedException;
+import jmunit.framework.cldc11.TestCase;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
-import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.otsoME.dataaccess.recordstore.space.GraphRecord;
-import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
-import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.sampledata.ExampleME;
-
-import jmunit.framework.cldc11.AssertionFailedException;
-import jmunit.framework.cldc11.TestCase;
 
 public class SpaceRecordTest extends TestCase {
 	private SpaceRecord space;
@@ -62,28 +60,28 @@ public class SpaceRecordTest extends TestCase {
 		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
 		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
 		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
-		graphuris[0] = space.write(triples);
+		graphuris[0] = space.write(new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj1) );
 		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj3) );
 		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop3,ExampleME.obj2) );
 		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop4,ExampleME.obj4) );
-		graphuris[1] = space.write(triples);
+		graphuris[1] = space.write(new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
 		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
 		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop3,ExampleME.obj2) );
 		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop4,ExampleME.obj4) );
-		graphuris[2] = space.write(triples);
+		graphuris[2] = space.write(new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop1,ExampleME.obj1) );
 		triples.add( factory.createTriple(ExampleME.subj3,ExampleME.prop2,ExampleME.obj3) );
 		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop1,ExampleME.obj2) );
 		triples.add( factory.createTriple(ExampleME.subj4,ExampleME.prop2,ExampleME.obj4) );
-		graphuris[3] = space.write(triples);
+		graphuris[3] = space.write(new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		space.updateStorage();
 		anyStoredRecord = (GraphRecord) space.graphs.firstElement();
@@ -133,17 +131,17 @@ public class SpaceRecordTest extends TestCase {
 		triples.add( factory.createTriple(ExampleME.subj2,ExampleME.prop3,ExampleME.obj2) );
 		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop4,ExampleME.obj4) );
 		triples.add( factory.createTriple(ExampleME.subj1,ExampleME.prop5,ExampleME.obj6) );
-		space.write(triples);
+		space.write(new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 	}
 	
 	protected void testGetGraphFromStore() throws RecordStoreException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
-		final IModel graph = space.getGraphFromStore(anyStoredRecord.recordId);
-		assertEquals(anyStoredRecord.getModel().getGraph().size(),graph.getGraph().size());
+		final ModelImpl graph = space.getGraphFromStore(anyStoredRecord.recordId);
+		assertEquals( anyStoredRecord.getModel().getGraph().getIGraph().size(), graph.getIGraph().size() );
 		
-		final Enumeration en = anyStoredRecord.getModel().query(sf.createTemplate("?s ?p ?o .")).getGraph().elements();
+		final Enumeration en = anyStoredRecord.getModel().query(sf.createTemplate("?s ?p ?o .")).getGraph().getIGraph().elements();
 		while( en.hasMoreElements() ) {
-			assertTrue( graph.getGraph().contains( (ITriple) en.nextElement() ) );
+			assertTrue( graph.getGraph().getIGraph().contains( (ITriple) en.nextElement() ) );
 		}
 	}
 		
@@ -151,11 +149,11 @@ public class SpaceRecordTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
-		IGraph ret = space.query(sel);
-		assertEquals(ret.size(),1);
+		Graph ret = space.query( sel, SemanticFormats.NTRIPLES );
+		assertEquals( new ModelImpl(ret).getIGraph().size(), 1 );
 		
 		sel = sf.createTemplate("<"+ExampleME.subj5+"> ?p ?o .");
-		ret = space.query(sel);
+		ret = space.query( sel, SemanticFormats.NTRIPLES );
 		assertNull(ret);
 	}
 
@@ -163,19 +161,19 @@ public class SpaceRecordTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
-		IGraph ret = space.read(sel);
-		assertEquals(ret.size(),5);
+		Graph ret = space.read( sel, SemanticFormats.NTRIPLES );
+		assertEquals( new ModelImpl(ret).getIGraph().size(), 5 );
 		
 		sel = sf.createTemplate("<"+ExampleME.subj3+"> ?p <"+ExampleME.obj8+"> .");
-		ret = space.read(sel);
+		ret = space.read( sel, SemanticFormats.NTRIPLES );
 		assertNull(ret);
 	}
 
 	protected void testRead2() {
-		IGraph ret = space.read(graphuris[0]);
-		assertEquals(ret.size(),5);
+		Graph ret = space.read( graphuris[0], SemanticFormats.NTRIPLES );
+		assertEquals(new ModelImpl(ret).getIGraph().size(),5);
 		
-		ret = space.read("http://blablah/space/");
+		ret = space.read( "http://blablah/space/", SemanticFormats.NTRIPLES );
 		assertNull(ret);
 	}
 
@@ -183,25 +181,25 @@ public class SpaceRecordTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
-		IGraph ret = space.take(sel);
-		assertEquals(ret.size(),5);
+		Graph ret = space.take( sel, SemanticFormats.NTRIPLES );
+		assertEquals( new ModelImpl(ret).getIGraph().size(), 5 );
 		
-		ret = space.take(sel);
+		ret = space.take( sel, SemanticFormats.NTRIPLES );
 		assertNull(ret); // nothing the second time
 		
 		sel = sf.createTemplate("<"+ExampleME.subj3+"> ?p <"+ExampleME.obj8+"> .");
-		ret = space.read(sel);
+		ret = space.read( sel, SemanticFormats.NTRIPLES );
 		assertNull(ret);
 	}
 
 	protected void testTake2() {
-		IGraph ret = space.take(graphuris[0]);
-		assertEquals(ret.size(),5);
+		Graph ret = space.take( graphuris[0], SemanticFormats.NTRIPLES );
+		assertEquals( new ModelImpl(ret).getIGraph().size(), 5 );
 		
-		ret = space.take(graphuris[0]);
+		ret = space.take( graphuris[0], SemanticFormats.NTRIPLES );
 		assertNull(ret); // nothing the second time
 		
-		ret = space.take("http://blablah/space/");
+		ret = space.take( "http://blablah/space/", SemanticFormats.NTRIPLES );
 		assertNull(ret);
 	}
 

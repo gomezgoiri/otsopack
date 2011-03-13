@@ -14,6 +14,7 @@
 package otsopack.otsoME.dataaccess.recordstore;
 
 import jmunit.framework.cldc11.TestCase;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
@@ -21,6 +22,7 @@ import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -177,7 +179,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
 		
-		final String graphuri = memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		final String graphuri = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 
@@ -221,7 +223,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -234,14 +236,14 @@ public class RecordStoreDataAccessTest extends TestCase {
 			e.printStackTrace();
 		}
 		memo2.joinSpace(spaceURI);
-		final IGraph ret = memo2.query(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo2.query(spaceURI, sel, SemanticFormats.NTRIPLES);
 		memo2.leaveSpace(spaceURI);
 		memo2.shutdown();
 		
 		assertNotNull( ret );
-		assertTrue( ret.contains(trips[0]) );
-		assertFalse( ret.contains(trips[1]) );
-		assertFalse( ret.contains(trips[2]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[2]) );
 	}
 	
 	public void testEmptyQuery() throws TSException {
@@ -263,8 +265,8 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
-		final IGraph ret = memo.query(spaceURI, sel, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		final Graph ret = memo.query(spaceURI, sel, SemanticFormats.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -288,43 +290,43 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final IGraph ret = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
-		final IGraph ret2 = memo.read(spaceURI, sel2, SemanticFormats.NTRIPLES);
-		final IGraph ret3 = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret2 = memo.read(spaceURI, sel2, SemanticFormats.NTRIPLES);
+		final Graph ret3 = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
-		assertTrue( ret.contains(trips[0]) );
-		assertTrue( ret.contains(trips[1]) );
-		assertTrue( ret.contains(trips[2]) );
-		assertFalse( ret.contains(trips[3]) );
-		assertFalse( ret.contains(trips[4]) );
-		assertFalse( ret.contains(trips[5]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[0]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[1]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[2]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[3]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[4]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[5]) );
 			
 		// We check if the second read has returned the correct triples
-		assertFalse( ret2.contains(trips[0]) );
-		assertFalse( ret2.contains(trips[1]) );
-		assertFalse( ret2.contains(trips[2]) );
-		assertTrue( ret2.contains(trips[3]) );
-		assertTrue( ret2.contains(trips[4]) );
-		assertTrue( ret2.contains(trips[5]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[2]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[3]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[4]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[5]) );
 		
 		// If we do the same query again, same result
-		assertTrue( ret3.contains(trips[0]) );
-		assertTrue( ret3.contains(trips[1]) );
-		assertTrue( ret3.contains(trips[2]) );
-		assertFalse( ret3.contains(trips[3]) );
-		assertFalse( ret3.contains(trips[4]) );
-		assertFalse( ret3.contains(trips[5]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[0]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[1]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[2]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[3]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[4]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[5]) );
 		
 		// We check if triples remain in the space
 		SpaceRecord m = memo.getSpace(spaceURI);
@@ -357,41 +359,41 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
-		final IGraph ret = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
-		final IGraph ret2 = memo.read(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
-		final IGraph ret3 = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret2 = memo.read(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
+		final Graph ret3 = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
-		assertFalse( ret.contains(trips[0]) );
-		assertFalse( ret.contains(trips[1]) );
-		assertFalse( ret.contains(trips[2]) );
-		assertTrue( ret.contains(trips[3]) );
-		assertTrue( ret.contains(trips[4]) );
-		assertTrue( ret.contains(trips[5]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[2]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[3]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[4]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[5]) );
 			
 		// We check if the second read has returned the correct triples
-		assertTrue( ret2.contains(trips[0]) );
-		assertTrue( ret2.contains(trips[1]) );
-		assertTrue( ret2.contains(trips[2]) );
-		assertFalse( ret2.contains(trips[3]) );
-		assertFalse( ret2.contains(trips[4]) );
-		assertFalse( ret2.contains(trips[5]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[0]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[1]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[2]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[3]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[4]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[5]) );
 		
 		// If we do the same query again, same result
-		assertFalse( ret3.contains(trips[0]) );
-		assertFalse( ret3.contains(trips[1]) );
-		assertFalse( ret3.contains(trips[2]) );
-		assertTrue( ret3.contains(trips[3]) );
-		assertTrue( ret3.contains(trips[4]) );
-		assertTrue( ret3.contains(trips[5]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret3).getIGraph().contains(trips[2]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[3]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[4]) );
+		assertTrue( new ModelImpl(ret3).getIGraph().contains(trips[5]) );
 		
 		// We check if triples remain in the space
 		SpaceRecord m = memo.getSpace(spaceURI);
@@ -423,35 +425,35 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final IGraph ret = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
-		final IGraph ret2 = memo.take(spaceURI, sel2, SemanticFormats.NTRIPLES);
-		final IGraph ret3 = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret2 = memo.take(spaceURI, sel2, SemanticFormats.NTRIPLES);
+		final Graph ret3 = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
-		assertTrue( ret.contains(trips[0]) );
-		assertTrue( ret.contains(trips[1]) );
-		assertTrue( ret.contains(trips[2]) );
-		assertFalse( ret.contains(trips[3]) );
-		assertFalse( ret.contains(trips[4]) );
-		assertFalse( ret.contains(trips[5]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[0]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[1]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[2]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[3]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[4]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[5]) );
 			
 		// We check if the second read has returned the correct triples
-		assertFalse( ret2.contains(trips[0]) );
-		assertFalse( ret2.contains(trips[1]) );
-		assertFalse( ret2.contains(trips[2]) );
-		assertTrue( ret2.contains(trips[3]) );
-		assertTrue( ret2.contains(trips[4]) );
-		assertTrue( ret2.contains(trips[5]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[2]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[3]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[4]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[5]) );
 		
 		// If we do the same query again, the triples shouldn't be in the space because of the "take"
 		assertNull( ret3 );
@@ -487,13 +489,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, triples, SemanticFormats.NTRIPLES);
+		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
 		
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
@@ -508,25 +510,25 @@ public class RecordStoreDataAccessTest extends TestCase {
 		}
 		memo2.joinSpace(spaceURI);
 		
-		final IGraph ret = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
-		final IGraph ret2 = memo2.take(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
-		final IGraph ret3 = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret2 = memo2.take(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
+		final Graph ret3 = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
 	
 		// We check if the first read has returned the correct triples
-		assertFalse( ret.contains(trips[0]) );
-		assertFalse( ret.contains(trips[1]) );
-		assertFalse( ret.contains(trips[2]) );
-		assertTrue( ret.contains(trips[3]) );
-		assertTrue( ret.contains(trips[4]) );
-		assertTrue( ret.contains(trips[5]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[0]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[1]) );
+		assertFalse( new ModelImpl(ret).getIGraph().contains(trips[2]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[3]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[4]) );
+		assertTrue( new ModelImpl(ret).getIGraph().contains(trips[5]) );
 			
 		// We check if the second read has returned the correct triples
-		assertTrue( ret2.contains(trips[0]) );
-		assertTrue( ret2.contains(trips[1]) );
-		assertTrue( ret2.contains(trips[2]) );
-		assertFalse( ret2.contains(trips[3]) );
-		assertFalse( ret2.contains(trips[4]) );
-		assertFalse( ret2.contains(trips[5]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[0]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[1]) );
+		assertTrue( new ModelImpl(ret2).getIGraph().contains(trips[2]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[3]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[4]) );
+		assertFalse( new ModelImpl(ret2).getIGraph().contains(trips[5]) );
 		
 		// If we do the same query again, the triples shouldn't be in the space because of the "take"
 		assertNull( ret3 );

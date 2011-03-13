@@ -20,18 +20,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
+
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
+
 import org.apache.log4j.Logger;
+
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.IDataAccess;
-import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
-import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
+import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
 
 public class RecordStoreDataAccess implements IDataAccess {
 	private final static Logger log = Logger.getInstance(RecordStoreDataAccess.class.getName());
@@ -212,60 +218,56 @@ public class RecordStoreDataAccess implements IDataAccess {
 		updater.closeSpace(sr);
 	}
 
-	public IGraph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final IGraph ret = sr.query(template);
+		final Graph ret = sr.query(template,outputFormat);
 		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
-	public IGraph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final IGraph ret = sr.read(template);
+		final Graph ret = sr.read(template,outputFormat);
 		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
-	public IGraph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final IGraph ret = sr.read(graphURI);
+		final Graph ret = sr.read(graphURI,outputFormat);
 		log.debug("Read with uri ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
-	public IGraph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final IGraph ret = sr.take(template);
+		final Graph ret = sr.take(template,outputFormat);
 		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
-	public IGraph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final IGraph ret = sr.take(graphURI);
+		final Graph ret = sr.take(graphURI,outputFormat);
 		log.debug("Take with uri ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
-	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException {
+	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final String ret = sr.write(triples);
 		log.debug("Write ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.dataaccess.IDataAccess#getLocalGraphs(java.lang.String)
-	 */
-	public String[] getLocalGraphs(String spaceURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
+		final SpaceRecord sr = getJoinedSpace(spaceURI);
+		return sr.getLocalGraphs();
 	}
 }

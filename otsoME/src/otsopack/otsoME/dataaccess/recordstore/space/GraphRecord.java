@@ -17,6 +17,7 @@ import javax.microedition.rms.RecordStoreException;
 
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 
 public class GraphRecord {		
 	int recordId;
@@ -53,7 +54,7 @@ public class GraphRecord {
 		return graphURI;
 	}
 
-	public void setGraph(IModel triples) {
+	public void setGraph(ModelImpl triples) {
 		this.graph = triples;
 	}
 	

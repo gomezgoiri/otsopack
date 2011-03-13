@@ -24,7 +24,7 @@ public final class RecordFactory {
 		record.setHasToBeLoaded(false);
 		record.setSpaceRecord(spaceRecord);
 		record.setGraphURI(graphuri);
-		record.setGraph(graph);
+		record.setGraph(graph.getGraph());
 		return record;
 	}
 	

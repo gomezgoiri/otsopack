@@ -20,20 +20,22 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Vector;
+
 import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotOpenException;
+
 import org.apache.log4j.Logger;
+
 import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.util.uuid.UUIDFactory;
 
@@ -131,9 +133,9 @@ public class SpaceRecord implements ILayer {
 		}
 	}
 	
-	private String add(IGraph graph) {
+	private String add(Graph graph) {
 		final String graphUri = spaceURI + UUIDFactory.newUUID().toString();
-		final GraphRecord gr = RecordFactory.createLoadedGraphRecord(this, graphUri, new SemanticFactory().createModelForGraph(graph));
+		final GraphRecord gr = RecordFactory.createLoadedGraphRecord(this, graphUri, new ModelImpl(graph));
 		
 		graphs.addElement(gr);
 		synchronized (additionVectorlock) {
@@ -170,29 +172,30 @@ public class SpaceRecord implements ILayer {
 		graphs.removeAllElements(); // if we do inside the for, crashes
 	}
 	
-	public IGraph query(ITemplate template) {
-		IGraph ret = new SemanticFactory().createEmptyGraph();
+	public Graph query(ITemplate template, String outputFormat) {
+		//Graph ret = new Graph("", format);
+		IModel ret = new ModelImpl();
 		for(int i=0; i<graphs.size(); i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
 			try {
-				IModel graph = gm.query(template);
+				ModelImpl graph = (ModelImpl) gm.query(template);
 				if( graph!=null ) {
-					ret.addAll( graph.getGraph() );
+					ret.addTriples( graph );
 				}
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
 			}
 		}
-		return (ret.isEmpty())? null: ret;
+		return (ret.isEmpty())? null: ret.write(outputFormat);
 	}
 	
-	public IGraph read(ITemplate template) {
-		IGraph ret = null;
+	public Graph read(ITemplate template, String outputFormat) {
+		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
 			try {
 				if(gm.contains(template)) {
-					ret = gm.getModel().getGraph();
+					ret = gm.getModel().write(outputFormat);
 				}
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
@@ -201,13 +204,13 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public IGraph read(String graphURI) {
-		IGraph ret = null;
+	public Graph read(String graphURI, String outputFormat) {
+		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
 			try {
 				if(gm.graphURI.equals(graphURI)) {
-					ret = gm.getModel().getGraph();
+					ret = gm.getModel().write(outputFormat);
 				}
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
@@ -216,14 +219,14 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public IGraph take(ITemplate template) {
-		IGraph ret = null;
+	public Graph take(ITemplate template, String outputFormat) {
+		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
 			try {
 				if(gm.contains(template)) {
 					remove(gm);
-					ret = gm.getModel().getGraph(); // we hold the first graph which contains a triple like that
+					ret = gm.getModel().write(outputFormat); // we hold the first graph which contains a triple like that
 				}
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
@@ -232,14 +235,14 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public IGraph take(String graphURI) {
-		IGraph ret = null;
+	public Graph take(String graphURI, String outputFormat) {
+		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
 			try {
 				if(gm.graphURI.equals(graphURI)) {
 					remove(gm);
-					ret = gm.getModel().getGraph();
+					ret = gm.getModel().write(outputFormat);
 				}
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
@@ -248,7 +251,7 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 	
-	public String write(IGraph graph) {
+	public String write(Graph graph) {
 		return add(graph);
 	}
 	
@@ -258,7 +261,7 @@ public class SpaceRecord implements ILayer {
 		try {
 			for(int i=0; graphs!=null && i<graphs.size() && !ret; i++) {
 				GraphRecord gm = (GraphRecord) graphs.elementAt(i);
-				ret = gm.getModel().getGraph().contains(triple);
+				ret = gm.getModel().getGraph().getIGraph().contains(triple);
 			}
 		} catch (RecordStoreNotOpenException e) {
 			e.printStackTrace();
@@ -361,12 +364,10 @@ public class SpaceRecord implements ILayer {
 	}
 	
 	
-	public IModel getGraphFromStore(int recordId) throws RecordStoreException {
+	public ModelImpl getGraphFromStore(int recordId) throws RecordStoreException {
 		final byte[] data = store.getRecord(recordId);
 		final Graph graph = new Graph(new String(data), SemanticFormats.NTRIPLES);
-		final IModel ret = new SemanticFactory().createEmptyModel();
-        ret.read(graph);
-        return ret;
+        return new ModelImpl(graph);
 	}
 		
 	private int addGraphToStore(IModel graph) throws RecordStoreException {
@@ -377,5 +378,13 @@ public class SpaceRecord implements ILayer {
 	
 	private void removeGraphFromStore(int recordId) throws RecordStoreException {
 		store.deleteRecord(recordId);
+	}
+	
+	public String[] getLocalGraphs() {
+		final String[] ret = new String[graphs.size()];
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = ((GraphRecord)graphs.elementAt(i)).getGraphURI();
+		}
+		return null;
 	}
 }

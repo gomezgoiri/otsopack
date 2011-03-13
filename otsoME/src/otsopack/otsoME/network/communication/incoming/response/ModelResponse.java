@@ -15,6 +15,7 @@ package otsopack.otsoME.network.communication.incoming.response;
 
 import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 
 public class ModelResponse extends Response {
 	private IModel model = null;
@@ -28,7 +29,7 @@ public class ModelResponse extends Response {
 	}
 	
 	public IGraph getGraph() {
-		return (model==null)? null: model.getGraph();
+		return (model==null)? null: ((ModelImpl)model).getIGraph();
 	}
 
 	public void addTriples(IModel model) {

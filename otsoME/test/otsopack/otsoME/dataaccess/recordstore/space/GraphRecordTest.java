@@ -20,6 +20,7 @@ import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.otsoME.dataaccess.recordstore.space.GraphRecord;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
@@ -50,7 +51,7 @@ public class GraphRecordTest extends TestCase {
 		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj4) );
 		graph.add( factory.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj3) );
 		graph.add( factory.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj4) );
-		record.setGraph(sf.createModelForGraph(graph));
+		record.setGraph( new ModelImpl(graph) );
 	}
 	
 	public void tearDown() {
@@ -100,7 +101,7 @@ public class GraphRecordTest extends TestCase {
 		gr5.graph=sf.createEmptyModel();
 		final IGraph graph = sf.createEmptyGraph();
 		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
-		gr5.graph.addTriples(graph);
+		gr5.graph.addTriples(new ModelImpl(graph));
 		
 		assertEquals( gr, gr );
 		assertEquals( gr, gr1 );
