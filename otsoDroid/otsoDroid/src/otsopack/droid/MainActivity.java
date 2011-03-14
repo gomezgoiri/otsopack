@@ -20,6 +20,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.TripleParseException;
@@ -90,7 +91,9 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 		try {
-			kernel.write(space, microjenaFactory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"), SemanticFormats.NTRIPLES);
+			ModelImpl model = new ModelImpl();
+			model.addTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj");
+			kernel.write(space, model.write(SemanticFormats.NTRIPLES));
 			Graph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), SemanticFormats.NTRIPLES, 5000);
 			//final Enumeration<?> enume = graph.elements();
 			//while(enume.hasMoreElements())

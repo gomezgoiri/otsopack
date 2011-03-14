@@ -18,12 +18,8 @@ import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
 import otsopack.commons.converters.UnionUtility;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
-import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.data.impl.microjena.TemporalUtilities;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -249,8 +245,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 	public String write(String spaceURI, Graph triples) throws TSException {
 		//TODO ### db:24002008 writing to a space without joining it? data is now there - locally - but no one can find it, temporary join space and write data?! therefore new write method in networkService...
 		final long start = System.currentTimeMillis();
-		final IGraph iTriples = TemporalUtilities.graph2IGraph(triples);
-		if( spaceURI!=null && iTriples != null && iTriples.size()>=0 ) {
+		if( spaceURI!=null && triples != null ) {
 			final String ret;
 			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 			if( !networkService.getJoinedSpaces().contains(spaceURI) ) {
@@ -273,21 +268,6 @@ public abstract class AbstractKernel implements ITripleSpace {
 			return ret;
 		}
 		throw new TSException("space uri and triples must not be null");
-	}
-	
-	public String write(String spaceURI, ITriple[] triples, String inputFormat) throws TSException {
-		final SemanticFactory sf = new SemanticFactory();
-		IGraph trips = sf.createEmptyGraph();
-		for(int i=0; i<triples.length; i++) {
-			trips.add(triples[i]);
-		}
-		return write(spaceURI, TemporalUtilities.iGraph2Graph(trips, inputFormat));
-	}
-
-	public String write(String spaceURI, ITriple triple, String inputFormat) throws TSException {
-		ITriple[] triples = new ITriple[1];
-		triples[0] = triple;
-		return write(spaceURI, triples, inputFormat);
 	}
 	
 	public IDataAccess getDataAccessService() {

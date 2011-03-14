@@ -16,7 +16,6 @@ package otsopack.commons;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
@@ -148,24 +147,6 @@ public interface ITripleSpace extends ILayer {
 	 */
 	public String write(String spaceURI, Graph ITriples) throws TSException;
 	
-	/**
-	 * write ITriples into specified space
-	 * @throws TSException
-	 * @param spaceURI
-	 * @param ITriples
-	 * @return IGraph uri
-	 */
-	public String write(String spaceURI, ITriple[] ITriples, String inputFormat) throws TSException;
-	
-	/**
-	 * write ITriples into specified space
-	 * @throws TSException
-	 * @param spaceURI
-	 * @param ITriples
-	 * @return IGraph uri
-	 */
-	public String write(String spaceURI, ITriple ITriple, String inputFormat) throws TSException;
-
 	// # # # //
 		
 	/**
