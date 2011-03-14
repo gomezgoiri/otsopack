@@ -46,7 +46,7 @@ public class ModelImpl implements IModel {
 		return new ModelImpl(model.query((TemplateImpl)template));
 	}
 	
-	public ModelImpl getGraph() {
+	public ModelImpl getModelImpl() {
 		final ModelImpl ret = new ModelImpl();
 		ret.addTriples(this);
 		return ret;

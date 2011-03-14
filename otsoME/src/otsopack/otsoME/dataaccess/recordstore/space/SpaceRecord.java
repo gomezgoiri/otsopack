@@ -262,7 +262,7 @@ public class SpaceRecord implements ILayer {
 		try {
 			for(int i=0; graphs!=null && i<graphs.size() && !ret; i++) {
 				GraphRecord gm = (GraphRecord) graphs.elementAt(i);
-				ret = gm.getModel().getGraph().getModel().contains(((TripleImpl)triple).asStatement());
+				ret = gm.getModel().getModelImpl().getModel().contains(((TripleImpl)triple).asStatement());
 			}
 		} catch (RecordStoreNotOpenException e) {
 			e.printStackTrace();

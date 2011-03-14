@@ -134,11 +134,11 @@ public class SpaceRecordTest extends TestCase {
 	protected void testGetGraphFromStore() throws RecordStoreException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ModelImpl graph = space.getGraphFromStore(anyStoredRecord.recordId);
-		assertEquals( anyStoredRecord.getModel().getGraph().getModel().size(), graph.getModel().size() );
+		assertEquals( anyStoredRecord.getModel().getModelImpl().getModel().size(), graph.getModel().size() );
 		
-		final StmtIterator en = anyStoredRecord.getModel().query(sf.createTemplate("?s ?p ?o .")).getGraph().getModel().listStatements();
+		final StmtIterator en = anyStoredRecord.getModel().query(sf.createTemplate("?s ?p ?o .")).getModelImpl().getModel().listStatements();
 		while( en.hasNext() ) {
-			assertTrue( graph.getGraph().getModel().contains( en.nextStatement()));
+			assertTrue( graph.getModelImpl().getModel().contains( en.nextStatement()));
 		}
 	}
 		

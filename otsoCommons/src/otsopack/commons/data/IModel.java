@@ -21,7 +21,7 @@ public interface IModel {
 	static final String ntriple = "N-TRIPLE";
 	IModel query(ITemplate template);
 	IModel union(IModel model);	
-	ModelImpl getGraph();
+	ModelImpl getModelImpl();
 	void addTriples(ModelImpl triples);
 	void removeTriples(ModelImpl triples);
 	boolean isEmpty();

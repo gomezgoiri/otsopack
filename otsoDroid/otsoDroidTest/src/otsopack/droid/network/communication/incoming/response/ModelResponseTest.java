@@ -106,7 +106,7 @@ public class ModelResponseTest extends TestCase {
 		graph.addTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10);
 		graph.addTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9);
 		resp.addTriples(graph);
-		final Model ret = resp.getModel().getGraph().getModel();
+		final Model ret = resp.getModel().getModelImpl().getModel();
 		assertEquals(ret.size(),2);
 		assertTrue(ret.contains(new TripleImpl(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10).asStatement()));
 		assertTrue(ret.contains(new TripleImpl(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9).asStatement()));

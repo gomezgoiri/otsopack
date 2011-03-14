@@ -243,7 +243,7 @@ public class ResponseManager implements ITSCallback {
 	}
 
 	public void suggest(IModel triples) {
-		suggestionCallback.callbackForMatchingTemplates(triples.getGraph().write(SemanticFormats.NTRIPLES));
+		suggestionCallback.callbackForMatchingTemplates(triples.getModelImpl().write(SemanticFormats.NTRIPLES));
 	}
 
 	public void obtainDemands() {

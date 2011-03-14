@@ -61,7 +61,7 @@ public class SpaceMem {
 	
 	public ModelImpl query(ITemplate template) {
 		IModel ret = model.query(template);
-		return (ret.isEmpty())?null:ret.getGraph();
+		return (ret.isEmpty())?null:ret.getModelImpl();
 	}
 
 	public ModelImpl read(ITemplate template) {
