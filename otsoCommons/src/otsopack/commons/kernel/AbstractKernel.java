@@ -247,7 +247,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return TemporalUtilities.iGraph2Graph(ret, outputFormat);
 	}
 
-	public String write(String spaceURI, Graph triples, String inputFormat) throws TSException {
+	public String write(String spaceURI, Graph triples) throws TSException {
 		//TODO ### db:24002008 writing to a space without joining it? data is now there - locally - but no one can find it, temporary join space and write data?! therefore new write method in networkService...
 		final long start = System.currentTimeMillis();
 		final IGraph iTriples = TemporalUtilities.graph2IGraph(triples);
@@ -267,7 +267,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 				ret = null;
 			} else {
 				/*URI graphURI = */
-				ret = dataAccessService.write(spaceURI, triples, inputFormat);
+				ret = dataAccessService.write(spaceURI, triples);
 			}
 			final long timeneeded = System.currentTimeMillis() - start;
 			Statistics.addMeasure("write", timeneeded, System.currentTimeMillis());
@@ -282,7 +282,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		for(int i=0; i<triples.length; i++) {
 			trips.add(triples[i]);
 		}
-		return write(spaceURI, TemporalUtilities.iGraph2Graph(trips, inputFormat), inputFormat);
+		return write(spaceURI, TemporalUtilities.iGraph2Graph(trips, inputFormat));
 	}
 
 	public String write(String spaceURI, ITriple triple, String inputFormat) throws TSException {

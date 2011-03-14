@@ -59,7 +59,7 @@ public interface IDataAccess extends ILayer {
 	 * @param triples
 	 * @return uri of written graph
 	 */
-	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * query form space according to template (all found triples will be returned)

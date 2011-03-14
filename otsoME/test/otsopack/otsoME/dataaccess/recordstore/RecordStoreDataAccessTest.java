@@ -179,7 +179,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
 		
-		final String graphuri = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		final String graphuri = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 
@@ -223,7 +223,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -265,7 +265,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		final Graph ret = memo.query(spaceURI, sel, SemanticFormats.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
@@ -290,13 +290,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
@@ -359,13 +359,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		final Graph ret = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
 		final Graph ret2 = memo.read(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
@@ -425,13 +425,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
@@ -489,13 +489,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		triples.add( trips[0] = factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[1] = factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[2] = factory.createTriple(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		graphsuri[0] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		triples = sf.createEmptyGraph();
 		triples.add( trips[3] = factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		triples.add( trips[4] = factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		triples.add( trips[5] = factory.createTriple(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES), SemanticFormats.NTRIPLES);
+		graphsuri[1] = memo.write(spaceURI, new ModelImpl(triples).write(SemanticFormats.NTRIPLES));
 		
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();

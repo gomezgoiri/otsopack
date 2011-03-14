@@ -28,14 +28,11 @@ import javax.microedition.rms.RecordStoreException;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
-import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
 import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
 
@@ -258,7 +255,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException {
+	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final String ret = sr.write(triples);

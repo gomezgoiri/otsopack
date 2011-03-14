@@ -146,7 +146,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param ITriples
 	 * @return IGraph uri
 	 */
-	public String write(String spaceURI, Graph ITriples, String inputFormat) throws TSException;
+	public String write(String spaceURI, Graph ITriples) throws TSException;
 	
 	/**
 	 * write ITriples into specified space

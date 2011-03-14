@@ -16,7 +16,6 @@ package otsopack.commons.dataaccess.memory;
 
 import junit.framework.TestCase;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
@@ -126,7 +125,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.joinSpace(spaceuri);
 		
 		for(int i=0; i<models.length; i++) {
-			assertNotNull( memo.write(spaceuri,models[i], SemanticFormats.NTRIPLES) );
+			assertNotNull( memo.write(spaceuri,models[i]) );
 		}
 		
 		memo.leaveSpace(spaceuri);
@@ -144,9 +143,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
-		memo.write( spaceuri1, models[0], SemanticFormats.NTRIPLES );
-		memo.write(spaceuri1, models[1], SemanticFormats.NTRIPLES);
-		memo.write(spaceuri2, models[2], SemanticFormats.NTRIPLES);
+		memo.write( spaceuri1, models[0]);
+		memo.write(spaceuri1, models[1]);
+		memo.write(spaceuri2, models[2]);
 		
 		final Graph retGraph1 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
 		final Graph retGraph2 = memo.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
@@ -175,9 +174,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
-		memo.write( spaceuri1, models[0], SemanticFormats.NTRIPLES );
-		memo.write(spaceuri1, models[1], SemanticFormats.NTRIPLES);
-		memo.write(spaceuri2, models[2], SemanticFormats.NTRIPLES);
+		memo.write( spaceuri1, models[0]);
+		memo.write(spaceuri1, models[1]);
+		memo.write(spaceuri2, models[2]);
 		
 		final Graph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
 		final Graph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
@@ -214,9 +213,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.joinSpace(spaceuri2);
 		
 		String[] graphuris = new String[models.length];
-		graphuris[0] = memo.write( spaceuri1, models[0], SemanticFormats.NTRIPLES );
-		graphuris[1] = memo.write(spaceuri1, models[1], SemanticFormats.NTRIPLES);
-		graphuris[2] = memo.write(spaceuri2, models[2], SemanticFormats.NTRIPLES);
+		graphuris[0] = memo.write( spaceuri1, models[0]);
+		graphuris[1] = memo.write(spaceuri1, models[1]);
+		graphuris[2] = memo.write(spaceuri2, models[2]);
 		
 		final Graph retGraph1 = memo.read( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
 		final Graph retGraph2 = memo.read( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
@@ -260,9 +259,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
-		memo.write( spaceuri1, models[0], SemanticFormats.NTRIPLES );
-		memo.write(spaceuri1, models[1], SemanticFormats.NTRIPLES);
-		memo.write(spaceuri2, models[2], SemanticFormats.NTRIPLES);
+		memo.write( spaceuri1, models[0]);
+		memo.write(spaceuri1, models[1]);
+		memo.write(spaceuri2, models[2]);
 		
 		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
@@ -322,9 +321,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.joinSpace(spaceuri2);
 		
 		String[] graphuris = new String[models.length];
-		graphuris[0] = memo.write( spaceuri1, models[0], SemanticFormats.NTRIPLES );
-		graphuris[1] = memo.write(spaceuri1, models[1], SemanticFormats.NTRIPLES);
-		graphuris[2] = memo.write(spaceuri2, models[2], SemanticFormats.NTRIPLES);
+		graphuris[0] = memo.write( spaceuri1, models[0]);
+		graphuris[1] = memo.write(spaceuri1, models[1]);
+		graphuris[2] = memo.write(spaceuri2, models[2]);
 		
 		final Graph retGraph1 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
 		final Graph retGraph2 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );

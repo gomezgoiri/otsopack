@@ -96,8 +96,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return exit;
 	}
 	
-	// TODO: remove inputFormat
-	public String write(String spaceURI, Graph triples, String inputFormat) throws SpaceNotExistsException {
+	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
