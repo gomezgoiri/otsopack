@@ -13,17 +13,16 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
-import otsopack.commons.data.IGraph;
+import jmunit.framework.cldc11.AssertionFailedException;
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
-import otsopack.otsoME.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoME.sampledata.ExampleME;
-import jmunit.framework.cldc11.AssertionFailedException;
-import jmunit.framework.cldc11.TestCase;
 
 public class ModelResponseTest extends TestCase {
 
@@ -126,9 +125,9 @@ public class ModelResponseTest extends TestCase {
 		model.addTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10);
 		model.addTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9);
 		resp.addTriples(model);
-		final IGraph ret = resp.getModel().getGraph().getIGraph();
-		assertEquals(ret.size(),2);
-		assertTrue(ret.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(ret.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		final ModelImpl ret = resp.getModel().getGraph();
+		assertEquals(ret.getModel().size(),2);
+		assertTrue(ret.getModel().contains(new TripleImpl(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10).asStatement()));
+		assertTrue(ret.getModel().contains(new TripleImpl(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9).asStatement()));
 	}
 }

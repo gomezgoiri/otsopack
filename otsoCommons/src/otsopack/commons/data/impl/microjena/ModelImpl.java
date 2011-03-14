@@ -89,6 +89,10 @@ public class ModelImpl implements IModel {
 		this.model.add(new TripleImpl(subject, predicate, object).asStatement());
 	}
 
+	public void addTriple(TripleImpl triple){
+		this.model.add(triple.asStatement());
+	}
+
 	public void addTriples(ModelImpl triples) {
 		this.model.add(triples.getModel());
 	}

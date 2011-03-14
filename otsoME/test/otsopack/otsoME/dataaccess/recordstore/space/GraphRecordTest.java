@@ -15,19 +15,16 @@ package otsopack.otsoME.dataaccess.recordstore.space;
 
 import javax.microedition.rms.RecordStoreException;
 
-import otsopack.commons.data.IGraph;
+import jmunit.framework.cldc11.AssertionFailedException;
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
-import otsopack.otsoME.dataaccess.recordstore.space.GraphRecord;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.sampledata.ExampleME;
-
-import jmunit.framework.cldc11.AssertionFailedException;
-import jmunit.framework.cldc11.TestCase;
 
 public class GraphRecordTest extends TestCase {
 	private GraphRecord record;
@@ -43,15 +40,14 @@ public class GraphRecordTest extends TestCase {
 		SemanticFactory.initialize(factory);
 		
 		record = new GraphRecord();
-		final ISemanticFactory sf = new SemanticFactory();
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( factory.createTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj4) );
-		graph.add( factory.createTriple(ExampleME.subj3, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj4) );
-		graph.add( factory.createTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj3) );
-		graph.add( factory.createTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj4) );
-		record.setGraph( new ModelImpl(graph) );
+		final ModelImpl graph = new ModelImpl();
+		graph.addTriple( ExampleME.subj1, ExampleME.prop1, ExampleME.obj3);
+		graph.addTriple( ExampleME.subj2, ExampleME.prop2, ExampleME.obj4);
+		graph.addTriple( ExampleME.subj3, ExampleME.prop1, ExampleME.obj3);
+		graph.addTriple( ExampleME.subj1, ExampleME.prop2, ExampleME.obj4);
+		graph.addTriple( ExampleME.subj2, ExampleME.prop1, ExampleME.obj3);
+		graph.addTriple( ExampleME.subj3, ExampleME.prop2, ExampleME.obj4);
+		record.setGraph( graph );
 	}
 	
 	public void tearDown() {
@@ -99,9 +95,9 @@ public class GraphRecordTest extends TestCase {
 		final GraphRecord gr5 = new GraphRecord();
 		gr5.graphURI="tsc://graphuri2";
 		gr5.graph=sf.createEmptyModel();
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
-		gr5.graph.addTriples(new ModelImpl(graph));
+		ModelImpl model = new ModelImpl();
+		model.addTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2);
+		gr5.graph.addTriples(model);
 		
 		assertEquals( gr, gr );
 		assertEquals( gr, gr1 );
@@ -139,7 +135,7 @@ public class GraphRecordTest extends TestCase {
 		assertEquals( gr5, gr5 );
 	}
 
-	public void testHashCode() throws TripleParseException {
+	public void testHashCode() {
 		final ISemanticFactory sf = new SemanticFactory();
 		final GraphRecord gr = new GraphRecord();
 		gr.recordId=1;
@@ -155,8 +151,6 @@ public class GraphRecordTest extends TestCase {
 		gr4.graphURI="tsc://graphuri2";
 		final GraphRecord gr5 = new GraphRecord();
 		gr5.graphURI="tsc://graphuri2";
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2));
 		
 		assertEquals( gr, gr );
 		assertEquals( gr, gr1 );

@@ -13,17 +13,16 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
-import otsopack.commons.data.IGraph;
+import jmunit.framework.cldc11.AssertionFailedException;
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
-import otsopack.otsoME.network.communication.incoming.response.LockModelResponse;
 import otsopack.otsoME.sampledata.ExampleME;
-import jmunit.framework.cldc11.AssertionFailedException;
-import jmunit.framework.cldc11.TestCase;
 
 public class LockModelResponseTest extends TestCase {
 	
@@ -54,12 +53,12 @@ public class LockModelResponseTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		// Init "responses"
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
-		final IGraph graph2 = sf.createEmptyGraph();
-		graph2.add(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8));
-		graph2.add(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7));
+		final ModelImpl graph = new ModelImpl();
+		graph.addTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10);
+		graph.addTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9);
+		final ModelImpl graph2 = new ModelImpl();
+		graph2.addTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8);
+		graph2.addTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7);
 		
 		
 		//Wait for the first answer
@@ -68,13 +67,13 @@ public class LockModelResponseTest extends TestCase {
 		LockModelResponse resp = new LockModelResponse(sf.createTemplate("?s ?p ?o ."),blockedTh.lock,1);
 		
 		assertFalse(blockedTh.finished);
-		resp.addTriples(sf.createModelForGraph(graph));
+		resp.addTriples(graph);
 		while(blockedTh.finished);
 		
-		IGraph iGraph = new ModelImpl(resp.getGraph()).getIGraph();
-		assertEquals(iGraph.size(),2);
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		ModelImpl model = new ModelImpl(resp.getGraph());
+		assertEquals(model.getModel().size(),2);
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10).asStatement()));
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9).asStatement()));
 		
 		
 		//Now, we wait for 2 answers
@@ -83,15 +82,15 @@ public class LockModelResponseTest extends TestCase {
 		resp = new LockModelResponse(sf.createTemplate("?s ?p ?o ."),blockedTh.lock,2);
 		
 		assertFalse(blockedTh.finished);
-		resp.addTriples(sf.createModelForGraph(graph));
-		resp.addTriples(sf.createModelForGraph(graph2));
+		resp.addTriples(graph);
+		resp.addTriples(graph2);
 		while(blockedTh.finished);
 		
-		iGraph = new ModelImpl(resp.getGraph()).getIGraph();
-		assertEquals(iGraph.size(),4);
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
-		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
+		model = new ModelImpl(resp.getGraph());
+		assertEquals(model.getModel().size(),4);
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10).asStatement()));
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9).asStatement()));
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8).asStatement()));
+		assertTrue(model.getModel().contains(new TripleImpl(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7).asStatement()));
 	}
 }

@@ -36,6 +36,7 @@ import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.util.uuid.UUIDFactory;
 
@@ -261,7 +262,7 @@ public class SpaceRecord implements ILayer {
 		try {
 			for(int i=0; graphs!=null && i<graphs.size() && !ret; i++) {
 				GraphRecord gm = (GraphRecord) graphs.elementAt(i);
-				ret = gm.getModel().getGraph().getIGraph().contains(triple);
+				ret = gm.getModel().getGraph().getModel().contains(((TripleImpl)triple).asStatement());
 			}
 		} catch (RecordStoreNotOpenException e) {
 			e.printStackTrace();

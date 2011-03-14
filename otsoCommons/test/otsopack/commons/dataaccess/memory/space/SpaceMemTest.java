@@ -14,9 +14,9 @@
 
 package otsopack.commons.dataaccess.memory.space;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
 import junit.framework.TestCase;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
@@ -30,24 +30,24 @@ import otsopack.commons.sampledata.Example;
 public class SpaceMemTest extends TestCase {
 
 	final ModelImpl[] models = new ModelImpl[3];
-	final ITriple[] triples = new ITriple[9];
+	final TripleImpl[] triples = new TripleImpl[9];
 	
 	protected void setUp() throws Exception {
 		super.setUp();
 		final MicrojenaFactory factory = new MicrojenaFactory();
 		SemanticFactory.initialize(factory);
 		
-		triples[0] = factory.createTriple(Example.subj1, Example.prop1, Example.obj3);
-		triples[1] = factory.createTriple(Example.subj2, Example.prop1, Example.obj3);
-		triples[2] = factory.createTriple(Example.subj3, Example.prop1, Example.obj3);
+		triples[0] = new TripleImpl(Example.subj1, Example.prop1, Example.obj3);
+		triples[1] = new TripleImpl(Example.subj2, Example.prop1, Example.obj3);
+		triples[2] = new TripleImpl(Example.subj3, Example.prop1, Example.obj3);
 		
-		triples[3] = factory.createTriple(Example.subj1, Example.prop2, Example.obj4);
-		triples[4] = factory.createTriple(Example.subj2, Example.prop2, Example.obj4);
-		triples[5] = factory.createTriple(Example.subj3, Example.prop2, Example.obj4);
+		triples[3] = new TripleImpl(Example.subj1, Example.prop2, Example.obj4);
+		triples[4] = new TripleImpl(Example.subj2, Example.prop2, Example.obj4);
+		triples[5] = new TripleImpl(Example.subj3, Example.prop2, Example.obj4);
 		
-		triples[6] = factory.createTriple(Example.subj4, Example.prop5, Example.obj6);
-		triples[7] = factory.createTriple(Example.subj2, Example.prop5, Example.obj6);
-		triples[8] = factory.createTriple(Example.subj3, Example.prop5, Example.obj6);
+		triples[6] = new TripleImpl(Example.subj4, Example.prop5, Example.obj6);
+		triples[7] = new TripleImpl(Example.subj2, Example.prop5, Example.obj6);
+		triples[8] = new TripleImpl(Example.subj3, Example.prop5, Example.obj6);
 		
 		
 		models[0] = new ModelImpl();
@@ -96,11 +96,12 @@ public class SpaceMemTest extends TestCase {
 		final ModelImpl retGraph2 = space.query( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .") );
 		final ModelImpl retGraph3 = space.query( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .") );
 		
-		assertEquals( retGraph1.getIGraph().size(), 2 );
-		assertTrue( retGraph1.getIGraph().contains( triples[0] ) );
-		assertTrue( retGraph1.getIGraph().contains(triples[3]) );
-		assertEquals( retGraph2.getIGraph().size(), 1 );
-		assertTrue( retGraph2.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph1.getModel().size(), 2 );
+		
+		assertTrue( retGraph1.getModel().contains(triples[0].asStatement()) );
+		assertTrue( retGraph1.getModel().contains(triples[3].asStatement()) );
+		assertEquals( retGraph2.getModel().size(), 1 );
+		assertTrue( retGraph2.getModel().contains(triples[8].asStatement()) );
 		assertNull( retGraph3 );
 	}
 
@@ -116,24 +117,24 @@ public class SpaceMemTest extends TestCase {
 		final ModelImpl retGraph2 = space.read( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .") );
 		final ModelImpl retGraph3 = space.read( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .") );
 		
-		assertEquals( retGraph1.getIGraph().size(), 3 );
-		if( retGraph1.getIGraph().contains(triples[0]) ) {
-			assertTrue( retGraph1.getIGraph().contains(triples[1]) );
-			assertTrue( retGraph1.getIGraph().contains(triples[2]) );
+		assertEquals( retGraph1.getModel().size(), 3 );
+		if( retGraph1.getModel().contains(triples[0].asStatement()) ) {
+			assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
+			assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
 		} else
-		if( retGraph1.getIGraph().contains(triples[3]) ) {
-			assertTrue( retGraph1.getIGraph().contains(triples[4]) );
-			assertTrue( retGraph1.getIGraph().contains(triples[5]) );
+		if( retGraph1.getModel().contains(triples[3].asStatement()) ) {
+			assertTrue( retGraph1.getModel().contains(triples[4].asStatement()) );
+			assertTrue( retGraph1.getModel().contains(triples[5].asStatement()) );
 		} else
-		if( retGraph1.getIGraph().contains(triples[6]) ) {
-			assertTrue( retGraph1.getIGraph().contains(triples[7]) );
-			assertTrue( retGraph1.getIGraph().contains(triples[8]) );
+		if( retGraph1.getModel().contains(triples[6].asStatement()) ) {
+			assertTrue( retGraph1.getModel().contains(triples[7].asStatement()) );
+			assertTrue( retGraph1.getModel().contains(triples[8].asStatement()) );
 		} else fail("At least one graph must be returned.");
 		
-		assertEquals( retGraph2.getIGraph().size(), 3 );
-		assertTrue( retGraph2.getIGraph().contains(triples[6]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[7]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph2.getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph3 );
 	}
@@ -151,32 +152,32 @@ public class SpaceMemTest extends TestCase {
 		final ModelImpl retGraph3 = space.read( graphuris[2] );
 		final ModelImpl retGraph4 = space.read( "http://invalid/graph-uri/" );
 		
-		assertEquals( retGraph1.getIGraph().size(), 3 );
-		assertTrue( retGraph1.getIGraph().contains(triples[0]) );
-		assertTrue( retGraph1.getIGraph().contains(triples[1]) );
-		assertTrue( retGraph1.getIGraph().contains(triples[2]) );
+		assertEquals( retGraph1.getModel().size(), 3 );
+		assertTrue( retGraph1.getModel().contains(triples[0].asStatement()) );
+		assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
+		assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
 		
-		assertEquals( retGraph2.getIGraph().size(), 3 );
-		assertTrue( retGraph2.getIGraph().contains(triples[3]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[4]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[5]) );
+		assertEquals( retGraph2.getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getIGraph().size(), 3 );
-		assertTrue( retGraph3.getIGraph().contains(triples[6]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[7]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph3.getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 		
-		assertEquals( retGraph2.getIGraph().size(), 3 );
-		assertTrue( retGraph2.getIGraph().contains(triples[3]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[4]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[5]) );
+		assertEquals( retGraph2.getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getIGraph().size(), 3 );
-		assertTrue( retGraph3.getIGraph().contains(triples[6]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[7]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph3.getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 	}
@@ -199,39 +200,38 @@ public class SpaceMemTest extends TestCase {
 		final ModelImpl retGraph5 = space.take( sel2 );
 		final ModelImpl retGraph6 = space.take( sel3 );
 		
-		hasCheckRightTriples( retGraph1.getIGraph() );
-		hasCheckRightTriples( retGraph2.getIGraph() );
+		hasCheckRightTriples( retGraph1.getModel() );
+		hasCheckRightTriples( retGraph2.getModel() );
 		assertNull( retGraph3 );
 		
-		assertEquals( retGraph4.getIGraph().size(), 3 );
-		assertTrue( retGraph4.getIGraph().contains(triples[6]) );
-		assertTrue( retGraph4.getIGraph().contains(triples[7]) );
-		assertTrue( retGraph4.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph4.getModel().size(), 3 );
+		assertTrue( retGraph4.getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph4.getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph4.getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph5 );
 		
 		assertNull( retGraph6 );
 	}
 	
-		private void hasCheckRightTriples(IGraph graph) {
-			assertEquals( graph.size(), 3 );
-			if( graph.contains(triples[0]) ) {
-				assertTrue( graph.contains(triples[1]) );
-				assertTrue( graph.contains(triples[2]) );
+		private void hasCheckRightTriples(Model model) {
+			assertEquals( model.size(), 3 );
+			if( model.contains(triples[0].asStatement()) ) {
+				assertTrue( model.contains(triples[1].asStatement()) );
+				assertTrue( model.contains(triples[2].asStatement()) );
 			} else
-			if( graph.contains(triples[3]) ) {
-				assertTrue( graph.contains(triples[4]) );
-				assertTrue( graph.contains(triples[5]) );
+			if( model.contains(triples[3].asStatement()) ) {
+				assertTrue( model.contains(triples[4].asStatement()) );
+				assertTrue( model.contains(triples[5].asStatement()) );
 			} else
-			if( graph.contains(triples[3]) ) {
-				assertTrue( graph.contains(triples[4]) );
-				assertTrue( graph.contains(triples[5]) );
+			if( model.contains(triples[3].asStatement()) ) {
+				assertTrue( model.contains(triples[4].asStatement()) );
+				assertTrue( model.contains(triples[5].asStatement()) );
 			} else fail("At least one graph must be returned.");
 		}
 	
 	
 	public void testTake2() {
-		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take2/");
 		
 		String[] graphuris = new String[models.length];
@@ -247,20 +247,20 @@ public class SpaceMemTest extends TestCase {
 		final ModelImpl retGraph6 = space.take( graphuris[1] );
 		final ModelImpl retGraph7 = space.take( graphuris[2] );
 		
-		assertEquals( retGraph1.getIGraph().size(), 3 );
-		assertTrue( retGraph1.getIGraph().contains(triples[0]) );
-		assertTrue( retGraph1.getIGraph().contains(triples[1]) );
-		assertTrue( retGraph1.getIGraph().contains(triples[2]) );
+		assertEquals( retGraph1.getModel().size(), 3 );
+		assertTrue( retGraph1.getModel().contains(triples[0].asStatement()) );
+		assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
+		assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
 		
-		assertEquals( retGraph2.getIGraph().size(), 3 );
-		assertTrue( retGraph2.getIGraph().contains(triples[3]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[4]) );
-		assertTrue( retGraph2.getIGraph().contains(triples[5]) );
+		assertEquals( retGraph2.getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getIGraph().size(), 3 );
-		assertTrue( retGraph3.getIGraph().contains(triples[6]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[7]) );
-		assertTrue( retGraph3.getIGraph().contains(triples[8]) );
+		assertEquals( retGraph3.getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 		assertNull( retGraph5 );

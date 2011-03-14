@@ -20,7 +20,6 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;

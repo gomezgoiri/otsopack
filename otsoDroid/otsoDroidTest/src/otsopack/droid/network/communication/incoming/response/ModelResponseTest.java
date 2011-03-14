@@ -13,13 +13,14 @@
  */
 package otsopack.droid.network.communication.incoming.response;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import junit.framework.TestCase;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.droid.network.communication.incoming.response.ModelResponse;
 import otsopack.droid.sampledata.ExampleME;
 
 public class ModelResponseTest extends TestCase {
@@ -101,13 +102,13 @@ public class ModelResponseTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ModelResponse resp = new ModelResponse(sf.createTemplate("?s ?p ?o ."));
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
-		resp.addTriples(sf.createModelForGraph(graph));
-		final IGraph ret = resp.getModel().getGraph().getIGraph();
+		final ModelImpl graph = new ModelImpl();
+		graph.addTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10);
+		graph.addTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9);
+		resp.addTriples(graph);
+		final Model ret = resp.getModel().getGraph().getModel();
 		assertEquals(ret.size(),2);
-		assertTrue(ret.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(ret.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(ret.contains(new TripleImpl(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10).asStatement()));
+		assertTrue(ret.contains(new TripleImpl(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9).asStatement()));
 	}
 }

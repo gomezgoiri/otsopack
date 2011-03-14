@@ -13,19 +13,21 @@
  */
 package otsopack.droid.network.communication.util;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
+
 import java.util.Vector;
 
 import junit.framework.TestCase;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
@@ -79,32 +81,31 @@ public class MessageParserTest extends TestCase {
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final ITemplate template = sf.createTemplate("?s <http://predicado> ?o .");
-		final IGraph triples = sf.createEmptyGraph();
-			triples.add(factory.createTriple("http://subject1","http://predicate1","http://object1"));
-			triples.add(factory.createTriple("http://subject2","http://predicate1","http://object1"));
-			triples.add(factory.createTriple("http://subject2","http://predicate2","http://object2"));
-		final Message msg = MessageParser.createResponseMessage(null, template, sf.createModelForGraph(triples)); 
+		final ModelImpl triples = new ModelImpl();
+		triples.addTriple("http://subject1","http://predicate1","http://object1");
+		triples.addTriple("http://subject2","http://predicate1","http://object1");
+		triples.addTriple("http://subject2","http://predicate2","http://object2");
+		final Message msg = MessageParser.createResponseMessage(null, template, triples); 
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
 		assertEquals( fl.getSelector(), template );
-		assertTrue( fl.getModel().getGraph().getIGraph().containsAll(triples) );
+		assertTrue( fl.getModel().getGraph().getModel().containsAll(triples.getModel()) );
 	}
 	
 	public void testParseResponseMessage2() throws Exception {
-		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
 		final String responseURI = "http://espaciointerestelar/grafo466";
-		final IGraph triples = sf.createEmptyGraph();
-		triples.add(factory.createTriple("http://subject1","http://predicate1","http://object1"));
-		triples.add(factory.createTriple("http://subject2","http://predicate1","http://object1"));
-		triples.add(factory.createTriple("http://subject2","http://predicate2","http://object2"));
-		final Message msg = MessageParser.createResponseMessage(null, responseURI, sf.createModelForGraph(triples)); 
+		final ModelImpl triples = new ModelImpl();
+		triples.addTriple("http://subject1","http://predicate1","http://object1");
+		triples.addTriple("http://subject2","http://predicate1","http://object1");
+		triples.addTriple("http://subject2","http://predicate2","http://object2");
+		final Message msg = MessageParser.createResponseMessage(null, responseURI, triples); 
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
 		assertEquals( fl.getGraphURI(), responseURI );
-		assertTrue( fl.getModel().getGraph().getIGraph().containsAll(triples) );
+		assertTrue( fl.getModel().getGraph().getModel().containsAll(triples.getModel()) );
 	}
 
 	public void testQueryCreator() throws MalformedTemplateException {
@@ -393,35 +394,33 @@ public class MessageParserTest extends TestCase {
 	}
 
 	public void testSuggestCreator() throws TripleParseException {
-		final ISemanticFactory sf = new SemanticFactory();
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
-		graph.add(factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
-		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
+		final ModelImpl graph = new ModelImpl();
+		graph.addTriple( ExampleME.subj1, ExampleME.prop1, ExampleME.obj3);
+		graph.addTriple( ExampleME.subj1, ExampleME.prop2, ExampleME.obj10);
+		graph.addTriple( ExampleME.subj1, ExampleME.prop3, ExampleME.obj7);
+		final Message msg = MessageParser.createSuggestMessage(null, graph);
 		
 		checkSender(msg);
-		checkModel(msg, sf.createModelForGraph(graph));
+		checkModel(msg, graph);
 		final MessageElement msgElement = msg.getMessageElement(null,MessageParser.Properties.REQUESTYPE);
 		assertEquals( msgElement.toString(), MessageParser.TypeRequest.SUGGEST );
 
 	}
 
 	public void testSuggestParser() throws MalformedMessageException, TripleParseException {
-		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
-		graph.add(factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
-		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
+		final ModelImpl graph = new ModelImpl();
+		graph.addTriple( ExampleME.subj1, ExampleME.prop1, ExampleME.obj3);
+		graph.addTriple( ExampleME.subj1, ExampleME.prop2, ExampleME.obj10);
+		graph.addTriple( ExampleME.subj1, ExampleME.prop3, ExampleME.obj7);
+		final Message msg = MessageParser.createSuggestMessage(null, graph);
 		MessageParser.parseMessage(msg,listeners);
 		assertTrue( fl.isSuggestReceived() );
-		final IGraph obtainedGraph = fl.getModel().getGraph().getIGraph();
-		assertTrue( graph.containsAll(obtainedGraph) );
-		assertTrue( obtainedGraph.containsAll(graph) );
+		final Model obtainedGraph = fl.getModel().getGraph().getModel();
+		assertTrue( graph.getModel().containsAll(obtainedGraph) );
+		assertTrue( obtainedGraph.containsAll(graph.getModel()) );
 	}
 	
 	public void testObtainDemandsCreator() {
