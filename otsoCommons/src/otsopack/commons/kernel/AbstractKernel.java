@@ -22,7 +22,6 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
 import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TemporalUtilities;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
