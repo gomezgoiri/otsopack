@@ -33,7 +33,6 @@ import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
@@ -257,12 +256,12 @@ public class SpaceRecord implements ILayer {
 	}
 	
 	
-	public boolean contains(ITriple triple) {
+	public boolean contains(TripleImpl triple) {
 		boolean ret = false;
 		try {
 			for(int i=0; graphs!=null && i<graphs.size() && !ret; i++) {
 				GraphRecord gm = (GraphRecord) graphs.elementAt(i);
-				ret = gm.getModel().getModelImpl().getModel().contains(((TripleImpl)triple).asStatement());
+				ret = gm.getModel().getModelImpl().getModel().contains(triple.asStatement());
 			}
 		} catch (RecordStoreNotOpenException e) {
 			e.printStackTrace();

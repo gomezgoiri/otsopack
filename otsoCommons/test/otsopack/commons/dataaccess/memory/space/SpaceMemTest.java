@@ -19,7 +19,6 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
 import junit.framework.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -66,8 +65,8 @@ public class SpaceMemTest extends TestCase {
 		models[2].getModel().add( asStmt(triples[8]) );
 	}
 	
-	private Statement asStmt(ITriple triple) {
-		return ((TripleImpl)triple).asStatement();
+	private Statement asStmt(TripleImpl triple) {
+		return triple.asStatement();
 	}
 	
 	public void testWrite() {

@@ -16,10 +16,9 @@ package otsopack.commons.data.impl;
 
 import java.util.Vector;
 
-import otsopack.commons.data.ITriple;
 import otsopack.commons.exceptions.TripleParseException;
 
-public abstract class AbstractTriple implements ITriple {
+public abstract class AbstractTriple {
 	private String subject;
 	private String predicate;
 	// can be an URI, a literal URI or an object representing an URI

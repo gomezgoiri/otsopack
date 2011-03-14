@@ -14,19 +14,13 @@
 
 package otsopack.commons.data.impl.microjena;
 
-import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
-import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
-import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
-
 import java.util.Hashtable;
 
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.commons.exceptions.TripleParseException;
 import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
 import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
 
@@ -59,31 +53,10 @@ public class MicrojenaFactory implements ISemanticFactory {
 		}
 	}
 
-	public ITriple createTriple(String ntriple) throws TripleParseException {
-		return new TripleImpl(ntriple);
-	}
-
-	public ITriple createTriple(String subject, String predicate, Object object)
-			throws TripleParseException {
-		return new TripleImpl(subject,predicate,object);
-	}
-	
 	  ///////////////////////
 	 // Methods for users //
 	///////////////////////
 	
-	public ITemplate createTemplate(Selector template) {
-		return new TemplateImpl(template);
-	}
-	
-	public ITriple createTriple(Statement triple) {
-		return new TripleImpl(triple);
-	}
-	
-	public IModel createModel(Model model) {
-		return new ModelImpl(model);
-	}
-
 	public String[] getSupportedInputFormats() {
 		return INPUT_SUPPORTED_FORMATS;
 	}

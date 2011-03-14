@@ -19,11 +19,10 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.RDFNode;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Resource;
 import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
-import otsopack.commons.data.ITriple;
 import otsopack.commons.data.impl.AbstractTriple;
 import otsopack.commons.exceptions.TripleParseException;
 
-public class TripleImpl extends AbstractTriple implements ITriple {
+public class TripleImpl extends AbstractTriple {
 	Statement triple;
 	
 	protected TripleImpl(Statement triple) {
