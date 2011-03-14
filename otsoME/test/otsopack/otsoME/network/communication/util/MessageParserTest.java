@@ -26,6 +26,7 @@ import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
@@ -462,15 +463,14 @@ public class MessageParserTest extends TestCase {
 	}
 
 	void testSuggestCreator() throws TripleParseException {
-		final ISemanticFactory sf = new SemanticFactory();
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3));
-		graph.add(factory.createTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj10));
-		graph.add( factory.createTriple(ExampleME.subj1, ExampleME.prop3, ExampleME.obj7));
-		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
+		final ModelImpl model = new ModelImpl();
+		model.addTriple( ExampleME.subj1, ExampleME.prop1, ExampleME.obj3);
+		model.addTriple( ExampleME.subj1, ExampleME.prop2, ExampleME.obj10);
+		model.addTriple( ExampleME.subj1, ExampleME.prop3, ExampleME.obj7);
+		final Message msg = MessageParser.createSuggestMessage(null, model);
 		
 		checkSender(msg);
-		checkModel(msg, sf.createModelForGraph(graph));
+		checkModel(msg, model);
 		final MessageElement msgElement = msg.getMessageElement(null,MessageParser.Properties.REQUESTYPE);
 		assertEquals( msgElement.toString(), MessageParser.TypeRequest.SUGGEST );
 

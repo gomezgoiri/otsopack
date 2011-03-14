@@ -13,8 +13,9 @@
  */
 package otsopack.droid.network.communication.incoming.response;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
+import otsopack.commons.data.SemanticFormats;
 
 public class ModelResponse extends Response {
 	private IModel model = null;
@@ -27,8 +28,8 @@ public class ModelResponse extends Response {
 		return model;
 	}
 	
-	public IGraph getGraph() {
-		return (model==null)? null: model.getGraph();
+	public Graph getGraph() {
+		return (model==null)? null: model.write(SemanticFormats.NTRIPLES);
 	}
 
 	public void addTriples(IModel model) {

@@ -18,7 +18,7 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.droid.network.communication.incoming.response.LockModelResponse;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.droid.sampledata.ExampleME;
 
 public class LockModelResponseTest extends TestCase {
@@ -57,9 +57,10 @@ public class LockModelResponseTest extends TestCase {
 		t1.join(MAX_WAITING_TIME);
 		assertTrue(blockedTh.finished);
 		
-		assertEquals(resp.getGraph().size(),2);
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		IGraph iGraph = new ModelImpl(resp.getGraph()).getIGraph();
+		assertEquals(iGraph.size(),2);
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
 		
 		
 		//Now, we wait for 2 answers
@@ -74,10 +75,11 @@ public class LockModelResponseTest extends TestCase {
 		t2.join(MAX_WAITING_TIME);
 		assertTrue(blockedTh.finished);
 		
-		assertEquals(resp.getGraph().size(),4);
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
-		assertTrue(resp.getGraph().contains(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
+		iGraph = new ModelImpl(resp.getGraph()).getIGraph();
+		assertEquals(iGraph.size(),4);
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj3,ExampleME.prop5,ExampleME.obj8)));
+		assertTrue(iGraph.contains(factory.createTriple(ExampleME.subj4,ExampleME.prop6,ExampleME.obj7)));
 	}
 }

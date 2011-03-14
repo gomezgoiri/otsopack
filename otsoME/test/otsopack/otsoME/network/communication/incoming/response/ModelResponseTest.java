@@ -17,6 +17,7 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.network.communication.incoming.response.ModelResponse;
@@ -121,10 +122,10 @@ public class ModelResponseTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final ModelResponse resp = new ModelResponse(sf.createTemplate("?s ?p ?o ."));
-		final IGraph graph = sf.createEmptyGraph();
-		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
-		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
-		resp.addTriples(sf.createModelForGraph(graph));
+		final ModelImpl model = new ModelImpl();
+		model.addTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10);
+		model.addTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9);
+		resp.addTriples(model);
 		final IGraph ret = resp.getModel().getGraph().getIGraph();
 		assertEquals(ret.size(),2);
 		assertTrue(ret.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));

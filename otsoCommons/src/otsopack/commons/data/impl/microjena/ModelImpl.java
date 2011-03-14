@@ -26,6 +26,7 @@ import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.exceptions.TripleParseException;
 import es.deustotech.microjena.rdf.model.ModelFactory;
 
 public class ModelImpl implements IModel {
@@ -82,6 +83,10 @@ public class ModelImpl implements IModel {
 
 	public boolean isEmpty() {
 		return model.isEmpty();
+	}
+	
+	public void addTriple(String subject, String predicate, Object object) throws TripleParseException{
+		this.model.add(new TripleImpl(subject, predicate, object).asStatement());
 	}
 
 	public void addTriples(ModelImpl triples) {

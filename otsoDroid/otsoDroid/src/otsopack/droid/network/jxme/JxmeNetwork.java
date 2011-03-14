@@ -14,7 +14,7 @@
 package otsopack.droid.network.jxme;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -76,23 +76,23 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public IGraph query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
         return communication.query(spaceURI, template, timeout);
 	}
 	
-	public IGraph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
 		return communication.read(spaceURI, graphURI, timeout);
 	}
 
-	public IGraph read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
 		return communication.read(spaceURI, template, timeout);
 	}
 	
-	public IGraph take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
 		return communication.take(spaceURI,template,timeout);
 	}
 	
-	public IGraph take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
 		return communication.take(spaceURI, graphURI, timeout);
 	}
 
@@ -129,18 +129,18 @@ public class JxmeNetwork implements INetwork {
 		communication.demand(spaceURI, template, leaseTime, callback);
 	}
 
-	public void suggest(String spaceURI, IGraph graph) throws TSException {
+	public void suggest(String spaceURI, Graph graph) throws TSException {
 		communication.suggest(spaceURI, graph);
 	}
 
 	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(String spaceURI,
-			IGraph triples) throws TSException {
+			Graph triples) throws TSException {
 		return communication.callbackIfIHaveResponsabilityOverThisKnowlege(spaceURI, triples);
 		
 	}
 
 	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI,
-			IGraph triples) throws TSException {
+			Graph triples) throws TSException {
 		return communication.hasAnyPeerResponsabilityOverThisKnowlege(spaceURI, triples);
 	}
 }

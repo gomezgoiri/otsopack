@@ -20,7 +20,7 @@ import net.jxta.peergroup.PeerGroup;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
@@ -102,37 +102,37 @@ public class SpaceManager implements ISpaceInformationHolder {
     	localDemandMngr.shutdown();
     }
 
-	public IGraph read(String graphURI, long timeout) {
+	public Graph read(String graphURI, long timeout) {
 		log.debug("BEGIN read.");
-		IGraph ret = outcoming.read(graphURI, timeout);
+		Graph ret = outcoming.read(graphURI, timeout);
 		log.debug("END read.");
 		return ret;
 	}
 
-	public IGraph read(ITemplate template, long timeout) {
+	public Graph read(ITemplate template, long timeout) {
 		log.debug("BEGIN read.");
-		IGraph ret = outcoming.read(template, timeout);
+		Graph ret = outcoming.read(template, timeout);
 		log.debug("END read.");
 		return ret;
 	}
 
-	public IGraph take(String graphURI, long timeout) {
+	public Graph take(String graphURI, long timeout) {
 		log.debug("BEGIN take.");
-		IGraph ret = outcoming.take(graphURI, timeout);
+		Graph ret = outcoming.take(graphURI, timeout);
 		log.debug("END take.");
 		return ret;
 	}
 
-	public IGraph take(ITemplate template, long timeout) {
+	public Graph take(ITemplate template, long timeout) {
 		log.debug("BEGIN take.");
-		IGraph ret = outcoming.take(template, timeout);
+		Graph ret = outcoming.take(template, timeout);
 		log.debug("END take.");
 		return ret;
 	}
 
-	public IGraph query(ITemplate template, long timeout) {
+	public Graph query(ITemplate template, long timeout) {
 		log.debug("BEGIN query.");
-		IGraph ret = outcoming.query(template, timeout);
+		Graph ret = outcoming.query(template, timeout);
 		log.debug("END query.");
 		return ret;
 	}
@@ -175,18 +175,18 @@ public class SpaceManager implements ISpaceInformationHolder {
 		log.debug("END demand.");
 	}
 	
-	public void suggest(IGraph graph) {
+	public void suggest(Graph graph) {
 		log.debug("BEGIN suggest.");
 		outcoming.suggest(graph);
 		log.debug("END suggest.");
 	}
 	
-	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(IGraph triples) {
+	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(Graph triples) {
 		return localDemandMngr.callbackForMatchingTemplates(triples);
 	}
 	
 	
-	public boolean hasAnyPeerResponsabilityOverThisKnowlege(IGraph triples) {
+	public boolean hasAnyPeerResponsabilityOverThisKnowlege(Graph triples) {
 		return remoteDemandMngr.hasAnyPeerResponsabilityOverThisKnowledge(triples);
 	}
 	

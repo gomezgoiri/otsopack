@@ -15,9 +15,8 @@ package otsopack.droid;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Enumeration;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
@@ -92,10 +91,12 @@ public class MainActivity extends Activity {
 		}
 		try {
 			kernel.write(space, microjenaFactory.createTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj"), SemanticFormats.NTRIPLES);
-			IGraph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), SemanticFormats.NTRIPLES, 5000);
-			final Enumeration<?> enume = graph.elements();
-			while(enume.hasMoreElements())
-				System.out.println(enume.nextElement());
+			Graph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), SemanticFormats.NTRIPLES, 5000);
+			//final Enumeration<?> enume = graph.elements();
+			//while(enume.hasMoreElements())
+				//System.out.println(enume.nextElement());
+			System.out.println("Gathered: " + graph.getFormat());
+			System.out.println(graph.getData());
 		} catch (TripleParseException e) {
 			e.printStackTrace();
 		} catch (TSException e) {

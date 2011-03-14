@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 
 public interface IRemoteDemandManager extends IRemoteDemandIOManager {
@@ -22,7 +22,7 @@ public interface IRemoteDemandManager extends IRemoteDemandIOManager {
 	public abstract void shutdown();
 	
 	public abstract boolean hasAnyPeerResponsabilityOverThisKnowledge(
-			IGraph triples);
+			Graph triples);
 
 	public abstract byte[] exportRecords();
 	

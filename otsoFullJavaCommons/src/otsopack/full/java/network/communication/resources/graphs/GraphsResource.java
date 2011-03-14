@@ -23,9 +23,8 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormats;
-import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -94,26 +93,24 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 
 	@Override
 	public String writeGraphJSON(String json) {
-		// TODO convert from json to graph
-		final IGraph graph = new SemanticFactory().createEmptyGraph();
+		final Graph graph = new Graph(json, SemanticFormats.RDF_JSON);
 		
 		return write(graph, SemanticFormats.RDF_JSON);
 	}
 
 	@Override
 	public String writeGraphNTriples(String ntriples) {
-		// TODO convert from ntriples to graph
-		final IGraph graph = new SemanticFactory().createEmptyGraph();
+		final Graph graph = new Graph(ntriples, SemanticFormats.NTRIPLES);
 		
 		return write(graph, SemanticFormats.NTRIPLES);
 	}
 	
-	protected String write(IGraph graph, String semanticFormat) {
+	protected String write(Graph graph, String semanticFormat) {
 		final String space = getArgument("space");
 		String ret = null;
 		try {		
 			final IController controller = getController();
-			ret = controller.getDataAccessService().write(space,graph, semanticFormat);
+			ret = controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {

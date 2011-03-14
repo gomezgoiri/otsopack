@@ -13,9 +13,9 @@
  */
 package otsopack.droid.network.communication.demand.remote;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 
 public interface IRemoteResponsabilityChecker {
 	public abstract boolean hasAnyPeerResponsabilityOverThisKnowledge(
-			IGraph triples);
+			Graph triples);
 }

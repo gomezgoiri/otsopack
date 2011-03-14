@@ -105,7 +105,7 @@ public class ModelResponseTest extends TestCase {
 		graph.add(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10));
 		graph.add(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9));
 		resp.addTriples(sf.createModelForGraph(graph));
-		final IGraph ret = resp.getModel().getGraph();
+		final IGraph ret = resp.getModel().getGraph().getIGraph();
 		assertEquals(ret.size(),2);
 		assertTrue(ret.contains(factory.createTriple(ExampleME.subj1,ExampleME.prop1,ExampleME.obj10)));
 		assertTrue(ret.contains(factory.createTriple(ExampleME.subj2,ExampleME.prop1,ExampleME.obj9)));

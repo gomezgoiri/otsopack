@@ -13,11 +13,11 @@
  */
 package otsopack.otsoME.network.communication.outcoming;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 
 public interface IResponseSender {
-	void response(ITemplate responseTo, IGraph triples);
-	void response(String responseToGraphURI, IGraph triples);
+	void response(ITemplate responseTo, Graph triples);
+	void response(String responseToGraphURI, Graph triples);
 	void responseToObtainDemands(byte[] recordsExported);
 }

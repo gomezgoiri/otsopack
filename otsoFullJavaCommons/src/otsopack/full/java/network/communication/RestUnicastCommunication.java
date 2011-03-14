@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 
 import org.restlet.resource.ClientResource;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -56,9 +56,9 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 
 	@Override
-	public IGraph read(String spaceURI, String graphURI, long timeout)
+	public Graph read(String spaceURI, String graphURI, long timeout)
 			throws SpaceNotExistsException {
-		IGraph ret = null;
+		Graph ret = null;
 		try {
 			ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			IGraphResource res = cr.wrap(IGraphResource.class);
@@ -71,28 +71,28 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 
 	@Override
-	public IGraph read(String spaceURI, ITemplate template, long timeout)
+	public Graph read(String spaceURI, ITemplate template, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, String graphURI, long timeout)
+	public Graph take(String spaceURI, String graphURI, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, ITemplate template, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IGraph query(String spaceURI, ITemplate template, long timeout)
+	public Graph query(String spaceURI, ITemplate template, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
@@ -134,21 +134,21 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 
 	@Override
-	public void suggest(String spaceURI, IGraph graph) throws TSException {
+	public void suggest(String spaceURI, Graph graph) throws TSException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(
-			String spaceURI, IGraph triples) throws TSException {
+			String spaceURI, Graph triples) throws TSException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI,
-			IGraph triples) throws TSException {
+			Graph triples) throws TSException {
 		// TODO Auto-generated method stub
 		return false;
 	}

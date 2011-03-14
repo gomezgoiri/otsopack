@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
@@ -28,9 +28,9 @@ import otsopack.commons.exceptions.TSException;
 public class FakeDataAccess implements IDataAccess {
 	final AtomicInteger graphnum;
 	final Set<String> graphsStored;
-	private IGraph nextQuery;
-	private IGraph nextRead;
-	private IGraph nextTake;
+	private Graph nextQuery;
+	private Graph nextRead;
+	private Graph nextTake;
 	
 	public FakeDataAccess() {
 		this.graphnum = new AtomicInteger(0);
@@ -75,7 +75,7 @@ public class FakeDataAccess implements IDataAccess {
 	}
 
 	@Override
-	public String write(String spaceURI, IGraph triples, String inputFormat) throws SpaceNotExistsException {
+	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException {
 		if( spaceURI==null ) throw new SpaceNotExistsException();
 		if( triples!=null ) {
 			String graphURI = spaceURI;
@@ -88,44 +88,44 @@ public class FakeDataAccess implements IDataAccess {
 		return null;
 	}
 
-	public void setNextQuery(IGraph graph){
+	public void setNextQuery(Graph graph){
 		this.nextQuery = graph;
 	}
 	
-	public void setNextRead(IGraph graph){
+	public void setNextRead(Graph graph){
 		this.nextRead = graph;
 	}
 	
-	public void setNextTake(IGraph graph){
+	public void setNextTake(Graph graph){
 		this.nextTake = graph;
 	}
 	
 	@Override
-	public IGraph query(String spaceURI, ITemplate template, String outputFormat)
+	public Graph query(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextQuery;
 	}
 
 	@Override
-	public IGraph read(String spaceURI, ITemplate template, String outputFormat)
+	public Graph read(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextRead;
 	}
 
 	@Override
-	public IGraph read(String spaceURI, String graphURI, String outputFormat)
+	public Graph read(String spaceURI, String graphURI, String outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextRead;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, ITemplate template, String outputFormat)
+	public Graph take(String spaceURI, ITemplate template, String outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextTake;
 	}
 
 	@Override
-	public IGraph take(String spaceURI, String graphURI, String outputFormat)
+	public Graph take(String spaceURI, String graphURI, String outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextTake;
 	}

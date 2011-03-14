@@ -20,11 +20,11 @@ import net.jxta.endpoint.Message;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
@@ -68,7 +68,7 @@ public class ResponseManager implements ITSCallback {
 	public void query(ITemplate template) {
     	log.debug("Query received");
     	try {
-			IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
+			Graph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -83,7 +83,7 @@ public class ResponseManager implements ITSCallback {
 		try {
 			if( templates!=null ) {
 				for( int i=0; i<templates.length; i++ ) {
-					IGraph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], SemanticFormats.NTRIPLES);
+					Graph resp = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], SemanticFormats.NTRIPLES);
 					if(resp!=null)						
 						outcoming.response(templates[i], resp);
 				}
@@ -98,7 +98,7 @@ public class ResponseManager implements ITSCallback {
 	public void read(ITemplate template) {
     	log.debug("Read received.");
 		try {
-			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
+			Graph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -111,7 +111,7 @@ public class ResponseManager implements ITSCallback {
 	public void read(String graphuri) {
     	log.debug("Read received.");
 		try {
-			IGraph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
+			Graph resp = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {
@@ -124,7 +124,7 @@ public class ResponseManager implements ITSCallback {
 	public void take(ITemplate template) {
 		log.debug("Take received.");
 		try {
-			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
+			Graph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -137,7 +137,7 @@ public class ResponseManager implements ITSCallback {
 	public void take(String graphuri) {
 		log.debug("Take received.");
 		try {
-			IGraph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
+			Graph resp = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {
@@ -243,7 +243,7 @@ public class ResponseManager implements ITSCallback {
 	}
 
 	public void suggest(IModel triples) {
-		suggestionCallback.callbackForMatchingTemplates(triples.getGraph());
+		suggestionCallback.callbackForMatchingTemplates(triples.getGraph().write(SemanticFormats.NTRIPLES));
 	}
 
 	public void obtainDemands() {
@@ -271,13 +271,13 @@ class OutcomingResponseSender implements IResponseSender {
 		this.peerInfo = peerInfo;
 	}
 	
-	public void response(ITemplate responseTo, IGraph triples) {
-		Message m = MessageParser.createResponseMessage(peerInfo.getPeerName(), responseTo, new SemanticFactory().createModelForGraph(triples));
+	public void response(ITemplate responseTo, Graph triples) {
+		Message m = MessageParser.createResponseMessage(peerInfo.getPeerName(), responseTo, new ModelImpl(triples));
 		space.send(m);
 	}
 	
-	public void response(String responseToGraphURI, IGraph triples) {
-		Message m = MessageParser.createResponseMessage(peerInfo.getPeerName(), responseToGraphURI, new SemanticFactory().createModelForGraph(triples));
+	public void response(String responseToGraphURI, Graph triples) {
+		Message m = MessageParser.createResponseMessage(peerInfo.getPeerName(), responseToGraphURI, new ModelImpl(triples));
 		space.send(m);
 	}
 	

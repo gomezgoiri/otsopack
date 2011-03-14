@@ -13,8 +13,9 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 
 public class ModelResponse extends Response {
@@ -28,8 +29,8 @@ public class ModelResponse extends Response {
 		return model;
 	}
 	
-	public IGraph getGraph() {
-		return (model==null)? null: ((ModelImpl)model).getIGraph();
+	public Graph getGraph() {
+		return (model==null)? null: ((ModelImpl)model).write(SemanticFormats.NTRIPLES);
 	}
 
 	public void addTriples(IModel model) {

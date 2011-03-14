@@ -16,13 +16,14 @@ package otsopack.otsoME.network.communication.demand.remote;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import otsopack.otsoME.network.communication.demand.DemandRecord;
-import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.otsoME.network.communication.demand.DemandRecord;
+import otsopack.otsoME.network.communication.demand.IDemandEntry;
 
 public class RemoteDemandManager implements IRemoteDemandManager {
 	final protected DemandRecord record;
@@ -52,11 +53,11 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 		}
 	}
 	
-	public boolean hasAnyPeerResponsabilityOverThisKnowledge(IGraph triples) {
+	public boolean hasAnyPeerResponsabilityOverThisKnowledge(Graph triples) {
 		final Enumeration it = getNonExpiredTemplates().elements();
 		while( it.hasMoreElements() ) {
 			ITemplate sel = (ITemplate) it.nextElement();
-			IModel model = new SemanticFactory().createModelForGraph(triples);
+			IModel model = new ModelImpl(triples);
 			if( !model.query(sel).isEmpty() )
 				return true;
 		}

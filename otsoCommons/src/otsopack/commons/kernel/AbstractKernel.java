@@ -196,9 +196,8 @@ public abstract class AbstractKernel implements ITripleSpace {
 			Graph localmodel = dataAccessService.query(spaceURI, template, outputFormat); 
 			if(localmodel!=null) 
 				ret = localmodel;
-			IGraph netmodelIGraph = networkService.query(spaceURI, template, timeout);
-			if(netmodelIGraph != null) {
-				Graph netmodel = TemporalUtilities.iGraph2Graph(netmodelIGraph, outputFormat);
+			Graph netmodel = networkService.query(spaceURI, template, timeout);
+			if(netmodel != null) {
 				if(ret == null) 
 					ret = netmodel; 
 				else 
@@ -212,38 +211,38 @@ public abstract class AbstractKernel implements ITripleSpace {
 
 	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		IGraph ret = networkService.read(spaceURI, template, timeout);
+		Graph ret = networkService.read(spaceURI, template, timeout);
 		if(ret==null) 
 			return dataAccessService.read(spaceURI, template, outputFormat);
-		return TemporalUtilities.iGraph2Graph(ret, outputFormat);
+		return ret;
 	}
 	
 	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		IGraph ret = networkService.read(spaceURI, graphURI, timeout); 
+		Graph ret = networkService.read(spaceURI, graphURI, timeout); 
 		if(ret==null) 
 			return dataAccessService.read(spaceURI, graphURI, outputFormat);
-		return TemporalUtilities.iGraph2Graph(ret, outputFormat);
+		return ret;
 	}
 
 	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		IGraph ret = networkService.take(spaceURI, template, timeout); 
+		Graph ret = networkService.take(spaceURI, template, timeout); 
 		if(ret==null) 
 			return dataAccessService.take(spaceURI, template, outputFormat);
 		
-		return TemporalUtilities.iGraph2Graph(ret, outputFormat);
+		return ret;
 	}
 	
 	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		IGraph ret = networkService.take(spaceURI, graphURI, timeout);
+		Graph ret = networkService.take(spaceURI, graphURI, timeout);
 		if(ret==null) 
 			return dataAccessService.take(spaceURI, graphURI, outputFormat);
 		
-		return TemporalUtilities.iGraph2Graph(ret, outputFormat);
+		return ret;
 	}
 
 	public String write(String spaceURI, Graph triples) throws TSException {
@@ -258,11 +257,11 @@ public abstract class AbstractKernel implements ITripleSpace {
 			}
 			
 			//new implementation of write primitive
-			if( networkService.callbackIfIHaveResponsabilityOverThisKnowlege(spaceURI, iTriples) ) {
+			if( networkService.callbackIfIHaveResponsabilityOverThisKnowlege(spaceURI, triples) ) {
 				ret = null;
-			} else if( networkService.hasAnyPeerResponsabilityOverThisKnowlege(spaceURI, iTriples) ) {
+			} else if( networkService.hasAnyPeerResponsabilityOverThisKnowlege(spaceURI, triples) ) {
 				// should be call it even if local callbacks have been performed?
-				networkService.suggest(spaceURI, iTriples);
+				networkService.suggest(spaceURI, triples);
 				ret = null;
 			} else {
 				/*URI graphURI = */

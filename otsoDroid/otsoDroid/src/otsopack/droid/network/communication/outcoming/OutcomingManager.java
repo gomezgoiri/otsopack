@@ -18,9 +18,9 @@ import net.jxta.endpoint.Message;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.configuration.TscMEConfiguration;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IPeerInformationHolder;
 import otsopack.commons.stats.Statistics;
@@ -43,7 +43,7 @@ public class OutcomingManager implements IDemandSender {
 		this.inbox = inbox;
 	}
 	
-	private IGraph sendMessageWaitingResponse(Message m, Object responseKey) {
+	private Graph sendMessageWaitingResponse(Message m, Object responseKey) {
 		space.send(m);
 		
 		LockModelResponse ru = null;
@@ -63,7 +63,7 @@ public class OutcomingManager implements IDemandSender {
 		return ru.getGraph();
 	}
 	
-	private IGraph sendMessageWaitingNResponses(Message m, Object responseKey, int numberOfResponsesExpected) {
+	private Graph sendMessageWaitingNResponses(Message m, Object responseKey, int numberOfResponsesExpected) {
 		space.send(m);
 		
 		LockModelResponse ru = null;
@@ -109,7 +109,7 @@ public class OutcomingManager implements IDemandSender {
 		return ru.getURI();
 	}
 	
-	private IGraph sendMessageWaitingTimeout(Message m, Object responseKey, long timeout) {
+	private Graph sendMessageWaitingTimeout(Message m, Object responseKey, long timeout) {
 		space.send(m);
 		
 		/*ModelResponse ru = new ModelResponse(responseKey);
@@ -138,9 +138,9 @@ public class OutcomingManager implements IDemandSender {
 		return ru.getGraph();
 	}
 	
-	public IGraph query(ITemplate template, long timeout) {
+	public Graph query(ITemplate template, long timeout) {
 		Message m = MessageParser.createQueryMessage(peerInfo.getPeerName(), template);
-		IGraph ret = null;
+		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
 			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
@@ -158,9 +158,9 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public IGraph read(ITemplate template, long timeout) {
+	public Graph read(ITemplate template, long timeout) {
 		Message m = MessageParser.createReadMessage(peerInfo.getPeerName(), template);
-		IGraph ret = null;
+		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
 			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
@@ -178,9 +178,9 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public IGraph read(String graphuri, long timeout) {
+	public Graph read(String graphuri, long timeout) {
 		Message m = MessageParser.createReadMessage(peerInfo.getPeerName(), graphuri);
-		IGraph ret = null;
+		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
 			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, graphuri, Statistics.getNumberOfResponses());
@@ -198,9 +198,9 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public IGraph take(ITemplate template, long timeout) {
+	public Graph take(ITemplate template, long timeout) {
 		Message m = MessageParser.createTakeMessage(peerInfo.getPeerName(), template);
-		IGraph ret = null;
+		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
 			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, template, Statistics.getNumberOfResponses());
@@ -218,9 +218,9 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public IGraph take(String graphuri, long timeout) {
+	public Graph take(String graphuri, long timeout) {
 		Message m = MessageParser.createTakeMessage(peerInfo.getPeerName(), graphuri);
-		IGraph ret = null;
+		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
 			//long start = System.currentTimeMillis();
 			ret = sendMessageWaitingNResponses(m, graphuri, Statistics.getNumberOfResponses());
@@ -263,9 +263,9 @@ public class OutcomingManager implements IDemandSender {
 		space.send(m);
 	}
 	
-	public void suggest(IGraph graph) {
+	public void suggest(Graph graph) {
 		Message m = MessageParser.createSuggestMessage(
-				peerInfo.getPeerName(), new SemanticFactory().createModelForGraph(graph));
+				peerInfo.getPeerName(), new ModelImpl(graph));
 		space.send(m);
 	}
 	

@@ -18,7 +18,7 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.exceptions.MalformedTemplateException;
@@ -31,12 +31,12 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 
 	public static final String ROOT = WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object}";
 	
-	protected IGraph getWildcard(String semanticFormat) {
+	protected Graph getWildcard(String semanticFormat) {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
 		final String object    = getArgument("object");
-		final IGraph ret;
+		final Graph ret;
 		
 		try {
 			final ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
@@ -72,14 +72,14 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final IGraph graph = getWildcard(SemanticFormats.RDF_JSON);
+		final Graph graph = getWildcard(SemanticFormats.RDF_JSON);
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		final IGraph graph = getWildcard(SemanticFormats.NTRIPLES);
+		final Graph graph = getWildcard(SemanticFormats.NTRIPLES);
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

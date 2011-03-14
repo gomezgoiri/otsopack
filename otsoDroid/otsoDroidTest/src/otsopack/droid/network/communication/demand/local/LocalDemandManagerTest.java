@@ -14,14 +14,14 @@
 package otsopack.droid.network.communication.demand.local;
 
 import junit.framework.TestCase;
-import otsopack.commons.data.IGraph;
-import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
-import otsopack.droid.network.communication.demand.local.LocalDemandManager;
 import otsopack.droid.network.communication.outcoming.IDemandSender;
 import otsopack.droid.sampledata.ExampleME;
 
@@ -60,16 +60,15 @@ public class LocalDemandManagerTest extends TestCase {
 		callbacks[3] = addLocalEntry(mngr, "<"+ExampleME.subj4+"> ?p4 ?o4 .");
 		callbacks[4] = addLocalEntry(mngr, "<"+ExampleME.subj5+"> ?p5 ?o5 .");
 		
-		final ISemanticFactory sf = new SemanticFactory();
-		IGraph triples = sf.createEmptyGraph();
-		triples.add( factory.createTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4) );
-		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1) );
-		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1) );
-		triples.add( factory.createTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3) );
-		triples.add( factory.createTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5) );
+		ModelImpl model = new ModelImpl();
+		model.addTriple( ExampleME.subj4, ExampleME.prop1, ExampleME.obj1);
+		model.addTriple( ExampleME.subj1, ExampleME.prop1, ExampleME.obj4);
+		model.addTriple( ExampleME.subj5, ExampleME.prop1, ExampleME.obj1);
+		model.addTriple( ExampleME.subj5, ExampleME.prop2, ExampleME.obj1);
+		model.addTriple( ExampleME.subj5, ExampleME.prop2, ExampleME.obj3);
+		model.addTriple( ExampleME.subj1, ExampleME.prop4, ExampleME.obj5);
 		
-		boolean  ret = mngr.callbackForMatchingTemplates(triples);
+		boolean  ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormats.NTRIPLES));
 		assertTrue( ret );
 		Thread.sleep(500); // wait just a little bit...
 		
@@ -85,11 +84,11 @@ public class LocalDemandManagerTest extends TestCase {
 			callbacks[i].reset();
 		}
 		
-		triples = sf.createEmptyGraph();
-		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2) );
-		triples.add( factory.createTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4) );
+		model = new ModelImpl();
+		model.addTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2);
+		model.addTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4);
 		
-		ret = mngr.callbackForMatchingTemplates(triples);
+		ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormats.NTRIPLES));
 		assertFalse( ret );
 		for(int i=0; i<callbacks.length; i++) {
 			assertFalse( callbacks[i].called );
@@ -105,7 +104,7 @@ class CallbackClass implements ISuggestionCallback {
 		reset();
 	}
 	
-	public void suggested(IGraph triple) {
+	public void suggested(Graph triple) {
 		this.called = true;
 	}
 	

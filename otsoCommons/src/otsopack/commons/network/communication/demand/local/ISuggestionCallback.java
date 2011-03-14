@@ -14,8 +14,8 @@
 
 package otsopack.commons.network.communication.demand.local;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 
 public interface ISuggestionCallback {
-	abstract public void suggested(IGraph triple);
+	abstract public void suggested(Graph triple);
 }

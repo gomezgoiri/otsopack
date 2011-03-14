@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.demand.local;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 
 public interface ISuggestionCallbackManager {
 	/**
@@ -25,5 +25,5 @@ public interface ISuggestionCallbackManager {
 	 * 		or (the same)
 	 * 		has any class be called back?
 	 */
-	public abstract boolean callbackForMatchingTemplates(final IGraph triples);
+	public abstract boolean callbackForMatchingTemplates(final Graph triples);
 }

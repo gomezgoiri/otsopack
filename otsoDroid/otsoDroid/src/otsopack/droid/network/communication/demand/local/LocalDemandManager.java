@@ -13,10 +13,10 @@
  */
 package otsopack.droid.network.communication.demand.local;
 
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.droid.network.communication.demand.DemandRecord;
 import otsopack.droid.network.communication.demand.IDemandEntry;
@@ -56,9 +56,9 @@ public class LocalDemandManager implements ISuggestionCallbackManager {
 		// the same template and I'm undemanding it
 	}
 	
-	public boolean callbackForMatchingTemplates(final IGraph triples) {
+	public boolean callbackForMatchingTemplates(final Graph triples) {
 		boolean anyCallback = false;
-		final IModel model = new SemanticFactory().createModelForGraph(triples);
+		final IModel model = new ModelImpl(triples);
 		synchronized( record.getUseLock() ) {//error, more than one could be reading it
 			for(int i=0; i<record.size(); i++) {
 				final LocalDemandEntry entry = (LocalDemandEntry)record.get(i);

@@ -39,7 +39,7 @@ public class TripleImpl extends AbstractTriple implements ITriple {
 		initializeStatement();
 	}
 	
-	protected TripleImpl(String subject, String predicate, Object object) throws TripleParseException {
+	public TripleImpl(String subject, String predicate, Object object) throws TripleParseException {
 		super(subject,predicate,object);
 		initializeStatement();
 	}

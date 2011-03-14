@@ -15,7 +15,7 @@
 package otsopack.commons.network;
 
 import otsopack.commons.ILayer;
-import otsopack.commons.data.IGraph;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -70,7 +70,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public IGraph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -82,7 +82,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -94,7 +94,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -106,7 +106,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * query triples by using a template wait maximum timeout
@@ -118,7 +118,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public IGraph/*List<ITriple>*/ query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * subscribe to one template
@@ -170,7 +170,7 @@ public interface ICommunication extends ILayer {
 	 * 		Knowledge to possibly be changed.
 	 * @throws TSException
 	 */
-	public void suggest(String spaceURI, IGraph graph) throws TSException;
+	public void suggest(String spaceURI, Graph graph) throws TSException;
 	
 	/**
 	 * Checks whether this peer has responsibility over the specified knowledge
@@ -178,7 +178,7 @@ public interface ICommunication extends ILayer {
 	 * @param spaceURI
 	 * @param graph
 	 */
-	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(String spaceURI, IGraph triples) throws TSException;
+	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(String spaceURI, Graph triples) throws TSException;
 	
 	/**
 	 * Checks whether other peers have responsibility over the specified knowledge.
@@ -186,5 +186,5 @@ public interface ICommunication extends ILayer {
 	 * @param graph
 	 * @return 
 	 */
-	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI, IGraph triples) throws TSException;
+	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI, Graph triples) throws TSException;
 }

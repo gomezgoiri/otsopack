@@ -87,7 +87,7 @@ public class MessageParserTest extends TestCase {
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
 		assertEquals( fl.getSelector(), template );
-		assertTrue( fl.getModel().getGraph().containsAll(triples) );
+		assertTrue( fl.getModel().getGraph().getIGraph().containsAll(triples) );
 	}
 	
 	public void testParseResponseMessage2() throws Exception {
@@ -104,7 +104,7 @@ public class MessageParserTest extends TestCase {
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isResponseReceived() );
 		assertEquals( fl.getGraphURI(), responseURI );
-		assertTrue( fl.getModel().getGraph().containsAll(triples) );
+		assertTrue( fl.getModel().getGraph().getIGraph().containsAll(triples) );
 	}
 
 	public void testQueryCreator() throws MalformedTemplateException {
@@ -419,7 +419,7 @@ public class MessageParserTest extends TestCase {
 		final Message msg = MessageParser.createSuggestMessage(null, sf.createModelForGraph(graph));
 		MessageParser.parseMessage(msg,listeners);
 		assertTrue( fl.isSuggestReceived() );
-		final IGraph obtainedGraph = fl.getModel().getGraph();
+		final IGraph obtainedGraph = fl.getModel().getGraph().getIGraph();
 		assertTrue( graph.containsAll(obtainedGraph) );
 		assertTrue( obtainedGraph.containsAll(graph) );
 	}
