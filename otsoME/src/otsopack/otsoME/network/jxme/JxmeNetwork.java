@@ -76,24 +76,24 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
-        return communication.query(spaceURI, template, timeout);
+	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+        return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
-		return communication.read(spaceURI, graphURI, timeout);
+	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException {
+		return communication.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
-		return communication.read(spaceURI, template, timeout);
+	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+		return communication.read(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException {
-		return communication.take(spaceURI,template,timeout);
+	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+		return communication.take(spaceURI,template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException {
-		return communication.take(spaceURI, graphURI, timeout);
+	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException {
+		return communication.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 
 	public void createSpace(String spaceURI) throws TSException {

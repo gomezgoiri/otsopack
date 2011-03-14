@@ -58,34 +58,34 @@ public class RestNetwork implements INetwork {
 	}
 	
 	@Override
-	public Graph read(String spaceURI, String graphURI, long timeout)
+	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		return this.comm.read(spaceURI, graphURI, timeout);
+		return this.comm.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
 	@Override
-	public Graph read(String spaceURI, ITemplate template, long timeout)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI, long timeout)
+	public Graph read(String spaceURI, ITemplate template, String outputFormat,long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph query(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout)
+			throws SpaceNotExistsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;

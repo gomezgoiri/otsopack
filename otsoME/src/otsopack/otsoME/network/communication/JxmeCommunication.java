@@ -16,6 +16,7 @@ package otsopack.otsoME.network.communication;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -37,30 +38,40 @@ public class JxmeCommunication implements ICommunication {
 	private SpaceManager getSpace(String spaceURI) throws SpaceNotExistsException {
 		return ((JxmeCoordination)controller.getNetworkService().getCoordination()).getSpace(spaceURI);
 	}
-
-	public Graph read(String spaceURI, String graphURI, long timeout)
-			throws SpaceNotExistsException {
-		return getSpace(spaceURI).read(graphURI,timeout);
+	
+	private void checkFormat(String outputFormat){
+		if(!outputFormat.equals(SemanticFormats.NTRIPLES))
+			throw new IllegalArgumentException("When using JXME, the only supported output format is " + SemanticFormats.NTRIPLES);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, long timeout)
+	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		return getSpace(spaceURI).read(template,timeout);
+		checkFormat(outputFormat);
+		return getSpace(spaceURI).read(graphURI, timeout);
 	}
 
-	public Graph take(String spaceURI, String graphURI, long timeout)
+	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		return getSpace(spaceURI).take(graphURI,timeout);
+		checkFormat(outputFormat);
+		return getSpace(spaceURI).read(template, timeout);
 	}
 
-	public Graph take(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		return getSpace(spaceURI).take(template,timeout);
+		checkFormat(outputFormat);
+		return getSpace(spaceURI).take(graphURI, timeout);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		return getSpace(spaceURI).query(template,timeout);
+		checkFormat(outputFormat);
+		return getSpace(spaceURI).take(template, timeout);
+	}
+
+	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout)
+			throws SpaceNotExistsException {
+		checkFormat(outputFormat);
+		return getSpace(spaceURI).query(template, timeout);
 	}
 
 	public String subscribe(String spaceURI, ITemplate template,

@@ -70,7 +70,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -82,7 +82,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -94,7 +94,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, String graphURI, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -106,7 +106,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * query triples by using a template wait maximum timeout
@@ -118,7 +118,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, ITemplate template, long timeout) throws SpaceNotExistsException;
+	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * subscribe to one template

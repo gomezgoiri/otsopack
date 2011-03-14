@@ -56,7 +56,7 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI, long timeout)
+	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		Graph ret = null;
 		try {
@@ -71,28 +71,28 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, ITemplate template, long timeout)
+	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, long timeout)
+	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, ITemplate template, long timeout)
+	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph query(String spaceURI, ITemplate template, long timeout)
+	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
