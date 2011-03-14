@@ -14,7 +14,6 @@
 
 package otsopack.commons.data.impl;
 
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
@@ -34,19 +33,10 @@ public class SemanticFactory implements ISemanticFactory {
 		return SemanticFactory.dataFactory.createTemplate(template);
 	}
 	
-	// TODO warn about this behavior
-	public IGraph createEmptyGraph() {
-		return new GraphImpl();
-	}
-	
 	public IModel createEmptyModel() {
 		return SemanticFactory.dataFactory.createEmptyModel();
 	}
 	
-	public IModel createModelForGraph(IGraph graph) {
-		return SemanticFactory.dataFactory.createModelForGraph(graph);
-	}
-
 	public String[] getSupportedInputFormats() {
 		return SemanticFactory.dataFactory.getSupportedInputFormats();
 	}

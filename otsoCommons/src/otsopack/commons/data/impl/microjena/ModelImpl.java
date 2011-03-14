@@ -15,17 +15,13 @@
 package otsopack.commons.data.impl.microjena;
 
 import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
-import it.polimi.elet.contextaddict.microjena.rdf.model.StmtIterator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Enumeration;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.TripleParseException;
 import es.deustotech.microjena.rdf.model.ModelFactory;
 
@@ -45,36 +41,11 @@ public class ModelImpl implements IModel {
 		this.read(graph);
 	}
 	
-	/**
-	 * @deprecated
-	 */
-	public ModelImpl(IGraph graph){
-		this();
-		Enumeration en = graph.elements();
-	    while( en.hasMoreElements() ) {
-	     	model.add( ((TripleImpl)en.nextElement()).asStatement() );
-	    }
-	}
-
 	public IModel query(ITemplate template) {
 		//must be a TemplateImpl since there is no other implementation
 		return new ModelImpl(model.query((TemplateImpl)template));
 	}
 	
-	/**
-	 * @deprecated
-	 */
-	public IGraph getIGraph() {
-	     final SemanticFactory sf = new SemanticFactory();
-	     final IGraph ret = sf.createEmptyGraph();
-	     final StmtIterator it = model.listStatements();
-	     while( it.hasNext() ) {
-	     	ret.add(new TripleImpl(it.nextStatement()));
-	     }
-	     return ret;
-	}
-	    
-
 	public ModelImpl getGraph() {
 		final ModelImpl ret = new ModelImpl();
 		ret.addTriples(this);

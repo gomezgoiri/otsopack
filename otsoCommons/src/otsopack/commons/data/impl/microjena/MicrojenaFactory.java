@@ -18,19 +18,15 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-import otsopack.commons.data.IGraph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.ITriple;
 import otsopack.commons.data.SemanticFormats;
-import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
-import es.deustotech.microjena.rdf.model.ModelFactory;
 import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
 import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
 
@@ -51,24 +47,8 @@ public class MicrojenaFactory implements ISemanticFactory {
 		return microjenaFormat;
 	}
 	
-	
-	public IGraph createEmptyGraph() {
-		// TODO it is never called confusing implementation :-S
-		return new SemanticFactory().createEmptyGraph();
-	}
-
 	public IModel createEmptyModel() {
 		return new ModelImpl();
-	}
-
-	public IModel createModelForGraph(IGraph graph) {
-		final Model model = ModelFactory.createDefaultModel();
-		final Enumeration en = graph.elements();
-		while( en.hasMoreElements() ) {
-			TripleImpl triple = (TripleImpl) en.nextElement();
-			model.add(triple.asStatement());
-		}
-		return new ModelImpl(model);
 	}
 
 	public ITemplate createTemplate(String template) throws MalformedTemplateException {
