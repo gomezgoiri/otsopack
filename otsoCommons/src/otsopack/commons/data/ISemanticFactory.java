@@ -18,5 +18,4 @@ import otsopack.commons.exceptions.MalformedTemplateException;
 
 public interface ISemanticFactory extends ISemanticFormatExchangeable, ISemanticFormatSupportable {
 	public ITemplate createTemplate(String template) throws MalformedTemplateException;
-	public IModel createEmptyModel();
 }

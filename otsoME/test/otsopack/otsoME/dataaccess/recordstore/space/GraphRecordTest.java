@@ -79,7 +79,6 @@ public class GraphRecordTest extends TestCase {
 	}
 	
 	public void testEquals() throws TripleParseException {
-		final ISemanticFactory sf = new SemanticFactory();
 		final GraphRecord gr = new GraphRecord();
 		gr.recordId=1;
 		final GraphRecord gr1 = new GraphRecord();
@@ -87,14 +86,14 @@ public class GraphRecordTest extends TestCase {
 		gr1.graphURI="tsc://graphuri1";
 		final GraphRecord gr2 = new GraphRecord();
 		gr2.graphURI="tsc://graphuri1";
-		gr2.graph=sf.createEmptyModel();
+		gr2.graph = new ModelImpl();
 		final GraphRecord gr3 = new GraphRecord();
-		gr3.graph=sf.createEmptyModel();
+		gr3.graph = new ModelImpl();
 		final GraphRecord gr4 = new GraphRecord();
 		gr4.graphURI="tsc://graphuri2";
 		final GraphRecord gr5 = new GraphRecord();
 		gr5.graphURI="tsc://graphuri2";
-		gr5.graph=sf.createEmptyModel();
+		gr5.graph = new ModelImpl();
 		ModelImpl model = new ModelImpl();
 		model.addTriple(ExampleME.subj2,ExampleME.prop2,ExampleME.obj2);
 		gr5.graph.addTriples(model);
@@ -136,7 +135,6 @@ public class GraphRecordTest extends TestCase {
 	}
 
 	public void testHashCode() {
-		final ISemanticFactory sf = new SemanticFactory();
 		final GraphRecord gr = new GraphRecord();
 		gr.recordId=1;
 		final GraphRecord gr1 = new GraphRecord();
@@ -144,9 +142,9 @@ public class GraphRecordTest extends TestCase {
 		gr1.graphURI="tsc://graphuri1";
 		final GraphRecord gr2 = new GraphRecord();
 		gr2.graphURI="tsc://graphuri1";
-		gr2.graph=sf.createEmptyModel();
+		gr2.graph = new ModelImpl();
 		final GraphRecord gr3 = new GraphRecord();
-		gr3.graph=sf.createEmptyModel();
+		gr3.graph = new ModelImpl();
 		final GraphRecord gr4 = new GraphRecord();
 		gr4.graphURI="tsc://graphuri2";
 		final GraphRecord gr5 = new GraphRecord();

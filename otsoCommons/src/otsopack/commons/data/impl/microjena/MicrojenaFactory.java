@@ -16,7 +16,6 @@ package otsopack.commons.data.impl.microjena;
 
 import java.util.Hashtable;
 
-import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
@@ -41,10 +40,6 @@ public class MicrojenaFactory implements ISemanticFactory {
 		return microjenaFormat;
 	}
 	
-	public IModel createEmptyModel() {
-		return new ModelImpl();
-	}
-
 	public ITemplate createTemplate(String template) throws MalformedTemplateException {
 		try {
 			return new TemplateImpl( SelectorFactory.createSelector(template) );

@@ -29,6 +29,7 @@ import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormats;
 import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.UnrecognizedFormatException;
@@ -135,12 +136,11 @@ public class MessageParser {
     	throw new MalformedMessageException("Template was not sent");
 	}
    	
-   	static private IModel parseModel(Message msg) throws MalformedMessageException {
+   	static private IModel parseModel(Message msg) {
    		IModel ret = null;
    		final MessageElement msgElement = msg.getMessageElement(null,Properties.MODEL);
     	if( msgElement!=null ) {
-        		ret = new SemanticFactory().createEmptyModel();
-        		if(ret==null) throw new MalformedMessageException();
+        		ret = new ModelImpl();
         		final byte [] data = msgElement.getBytes(true);
         		final Graph graph = new Graph(new String(data), SemanticFormats.NTRIPLES);
     	        ret.read(graph);
@@ -289,7 +289,7 @@ public class MessageParser {
         }
     }
     
-    static private void parseSuggest(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseSuggest(Message msg, Vector listeners) {
     	final IModel model = parseModel(msg);
 		for(int i=0; i<listeners.size(); i++)
 			((ITSCallback)listeners.elementAt(i)).suggest(model);

@@ -14,7 +14,6 @@
 
 package otsopack.commons.data.impl;
 
-import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.exceptions.MalformedTemplateException;
@@ -31,10 +30,6 @@ public class SemanticFactory implements ISemanticFactory {
 
 	public ITemplate createTemplate(String template) throws MalformedTemplateException {
 		return SemanticFactory.dataFactory.createTemplate(template);
-	}
-	
-	public IModel createEmptyModel() {
-		return SemanticFactory.dataFactory.createEmptyModel();
 	}
 	
 	public String[] getSupportedInputFormats() {
