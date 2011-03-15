@@ -60,7 +60,7 @@ public final class SemanticFormat {
 	public static SemanticFormat [] getSemanticFormats(){
 		final SemanticFormat [] semanticFormats = new SemanticFormat[FORMATS.size()];
 		for(int i = 0; i< semanticFormats.length; ++i)
-			semanticFormats[i] = (SemanticFormat)FORMATS.get(i);
+			semanticFormats[i] = (SemanticFormat)FORMATS.elementAt(i);
 		
 		return semanticFormats;
 	}

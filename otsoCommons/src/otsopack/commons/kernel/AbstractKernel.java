@@ -198,7 +198,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 				if(ret == null) 
 					ret = netmodel; 
 				else 
-					ret = UnionUtility.union(ret, netmodel);
+					ret = UnionUtility.union(ret, netmodel, outputFormat);
 			}
 		} catch (SpaceNotExistsException e) {
 			e.printStackTrace();
