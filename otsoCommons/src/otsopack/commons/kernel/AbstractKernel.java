@@ -193,7 +193,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 			Graph localmodel = dataAccessService.query(spaceURI, template, outputFormat); 
 			if(localmodel!=null) 
 				ret = localmodel;
-			Graph netmodel = networkService.query(spaceURI, template, SemanticFormats.NTRIPLES, timeout);
+			Graph netmodel = networkService.query(spaceURI, template, outputFormat, timeout);
 			if(netmodel != null) {
 				if(ret == null) 
 					ret = netmodel; 

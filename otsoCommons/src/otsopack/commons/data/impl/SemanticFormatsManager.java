@@ -16,6 +16,7 @@ package otsopack.commons.data.impl;
 
 import java.util.Vector;
 
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFormatConversor;
 
 public class SemanticFormatsManager implements ISemanticFormatConversor {
@@ -30,6 +31,10 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 	public static void addSemanticFormatConversors(ISemanticFormatConversor [] conversors){
 		for(int i = 0; i < conversors.length; ++i)
 			SemanticFormatsManager.conversors.addElement(conversors[i]);
+	}
+	
+	public static void clear(){
+		conversors.removeAllElements();
 	}
 	
 	private ISemanticFormatConversor getConversor(String inputFormat, String outputFormat){
@@ -52,6 +57,11 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 		if(inputFormat.equals(outputFormat))
 			return originalText;
 		return getConversor(inputFormat, outputFormat).convert(inputFormat, originalText, outputFormat);
+	}
+	
+	public Graph convert(Graph input, String outputFormat){
+		final String outputText = convert(input.getFormat(), input.getData(), outputFormat);
+		return new Graph(outputText, outputFormat);
 	}
 	
 	public boolean isInputSupported(String inputFormat){
