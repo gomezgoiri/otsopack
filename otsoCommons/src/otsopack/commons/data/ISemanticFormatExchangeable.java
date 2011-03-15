@@ -15,6 +15,6 @@
 package otsopack.commons.data;
 
 public interface ISemanticFormatExchangeable {
-	public boolean isOutputSupported(String outputFormat);
-	public boolean isInputSupported(String inputFormat);
+	public boolean isOutputSupported(SemanticFormat outputFormat);
+	public boolean isInputSupported(SemanticFormat inputFormat);
 }

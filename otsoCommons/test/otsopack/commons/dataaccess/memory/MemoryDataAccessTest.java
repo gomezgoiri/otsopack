@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
@@ -49,13 +49,13 @@ public class MemoryDataAccessTest extends TestCase {
 		triples[8] = "<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .";
 		
 		String graph = triples[0] + "\n" + triples[1] + "\n" + triples[2];
-		models[0] = new Graph(graph,SemanticFormats.NTRIPLES);
+		models[0] = new Graph(graph,SemanticFormat.NTRIPLES);
 		
 		graph =	triples[3] + "\n" + triples[4] + "\n" + triples[5];
-		models[1] = new Graph(graph,SemanticFormats.NTRIPLES);
+		models[1] = new Graph(graph,SemanticFormat.NTRIPLES);
 
 		graph =	triples[6] + "\n" + triples[7] + "\n" + triples[8];
-		models[2] = new Graph(graph,SemanticFormats.NTRIPLES);
+		models[2] = new Graph(graph,SemanticFormat.NTRIPLES);
 	}
 	
 	public void tearDown() {
@@ -147,9 +147,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.write(spaceuri1, models[1]);
 		memo.write(spaceuri2, models[2]);
 		
-		final Graph retGraph1 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
-		final Graph retGraph2 = memo.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
-		final Graph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormats.NTRIPLES );
+		final Graph retGraph1 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 2 );
 		assertTrue( retGraph1.getData().contains(triples[0]) );
@@ -178,9 +178,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.write(spaceuri1, models[1]);
 		memo.write(spaceuri2, models[2]);
 		
-		final Graph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormats.NTRIPLES );
-		final Graph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormats.NTRIPLES );
-		final Graph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+" ?p <"+Example.obj4+"> ."), SemanticFormats.NTRIPLES );
+		final Graph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+" ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.getData().contains(triples[0]) ) {
@@ -217,12 +217,12 @@ public class MemoryDataAccessTest extends TestCase {
 		graphuris[1] = memo.write(spaceuri1, models[1]);
 		graphuris[2] = memo.write(spaceuri2, models[2]);
 		
-		final Graph retGraph1 = memo.read( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
-		final Graph retGraph2 = memo.read( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
-		final Graph retGraph3 = memo.read( spaceuri1, graphuris[2], SemanticFormats.NTRIPLES );
-		final Graph retGraph4 = memo.read( spaceuri2, graphuris[0], SemanticFormats.NTRIPLES );
-		final Graph retGraph5 = memo.read( spaceuri2, graphuris[1], SemanticFormats.NTRIPLES );
-		final Graph retGraph6 = memo.read( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );		
+		final Graph retGraph1 = memo.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = memo.read( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = memo.read( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = memo.read( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );		
 		
 		//assertEquals( retGraph1.size(), 3 );
 		assertTrue( retGraph1.getData().contains(triples[0]) );
@@ -266,13 +266,13 @@ public class MemoryDataAccessTest extends TestCase {
 		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
 		final ITemplate sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
-		final Graph retGraph1 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
-		final Graph retGraph2 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
-		final Graph retGraph3 = memo.take( spaceuri1, sel1, SemanticFormats.NTRIPLES );
-		final Graph retGraph4 = memo.take( spaceuri2, sel2, SemanticFormats.NTRIPLES );
-		final Graph retGraph5 = memo.take( spaceuri2, sel2, SemanticFormats.NTRIPLES );
-		final Graph retGraph6 = memo.take( spaceuri1, sel3, SemanticFormats.NTRIPLES );
-		final Graph retGraph7 = memo.take( spaceuri2, sel3, SemanticFormats.NTRIPLES );
+		final Graph retGraph1 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = memo.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = memo.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = memo.take( spaceuri1, sel3, SemanticFormat.NTRIPLES );
+		final Graph retGraph7 = memo.take( spaceuri2, sel3, SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.getData().contains(triples[0]) ) {
@@ -325,15 +325,15 @@ public class MemoryDataAccessTest extends TestCase {
 		graphuris[1] = memo.write(spaceuri1, models[1]);
 		graphuris[2] = memo.write(spaceuri2, models[2]);
 		
-		final Graph retGraph1 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
-		final Graph retGraph2 = memo.take( spaceuri1, graphuris[0], SemanticFormats.NTRIPLES );
-		final Graph retGraph3 = memo.take( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
-		final Graph retGraph4 = memo.take( spaceuri1, graphuris[1], SemanticFormats.NTRIPLES );
-		final Graph retGraph5 = memo.take( spaceuri1, graphuris[2], SemanticFormats.NTRIPLES );
-		final Graph retGraph6 = memo.take( spaceuri2, graphuris[0], SemanticFormats.NTRIPLES );
-		final Graph retGraph7 = memo.take( spaceuri2, graphuris[1], SemanticFormats.NTRIPLES );
-		final Graph retGraph8 = memo.take( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );
-		final Graph retGraph9 = memo.take( spaceuri2, graphuris[2], SemanticFormats.NTRIPLES );
+		final Graph retGraph1 = memo.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = memo.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = memo.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = memo.take( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph7 = memo.take( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph8 = memo.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph9 = memo.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		assertTrue( retGraph1.getData().contains(triples[0]) );

@@ -17,7 +17,7 @@ import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -177,7 +177,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		model.addTriple( trips[3] = new TripleImpl(ExampleME.subj4, ExampleME.prop4, ExampleME.obj4) );
 		
-		final String graphuri = memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		final String graphuri = memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 
@@ -221,7 +221,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 		
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -234,7 +234,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 			e.printStackTrace();
 		}
 		memo2.joinSpace(spaceURI);
-		final Graph ret = memo2.query(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo2.query(spaceURI, sel, SemanticFormat.NTRIPLES);
 		memo2.leaveSpace(spaceURI);
 		memo2.shutdown();
 		
@@ -263,8 +263,8 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
 
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
-		final Graph ret = memo.query(spaceURI, sel, SemanticFormats.NTRIPLES);
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
+		final Graph ret = memo.query(spaceURI, sel, SemanticFormat.NTRIPLES);
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
 		
@@ -288,19 +288,19 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		model = new ModelImpl();
 		model.addTriple( trips[3] = new TripleImpl(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[4] = new TripleImpl(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final Graph ret = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
-		final Graph ret2 = memo.read(spaceURI, sel2, SemanticFormats.NTRIPLES);
-		final Graph ret3 = memo.read(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo.read(spaceURI, sel, SemanticFormat.NTRIPLES);
+		final Graph ret2 = memo.read(spaceURI, sel2, SemanticFormat.NTRIPLES);
+		final Graph ret3 = memo.read(spaceURI, sel, SemanticFormat.NTRIPLES);
 	
 		// We check if the first read has returned the correct model
 		assertTrue( new ModelImpl(ret).getModel().contains(trips[0].asStatement()) );
@@ -356,17 +356,17 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		graphsuri[0] = memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		model = new ModelImpl();
 		model.addTriple( trips[3] = new TripleImpl(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[4] = new TripleImpl(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		graphsuri[1] = memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
-		final Graph ret = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
-		final Graph ret2 = memo.read(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
-		final Graph ret3 = memo.read(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret = memo.read(spaceURI, graphsuri[1], SemanticFormat.NTRIPLES);
+		final Graph ret2 = memo.read(spaceURI, graphsuri[0], SemanticFormat.NTRIPLES);
+		final Graph ret3 = memo.read(spaceURI, graphsuri[1], SemanticFormat.NTRIPLES);
 	
 		// We check if the first read has returned the correct model
 		assertFalse( new ModelImpl(ret).getModel().contains(trips[0].asStatement()) );
@@ -422,19 +422,19 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		model = new ModelImpl();
 		model.addTriple( trips[3] = new TripleImpl(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[4] = new TripleImpl(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
-		final Graph ret = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
-		final Graph ret2 = memo.take(spaceURI, sel2, SemanticFormats.NTRIPLES);
-		final Graph ret3 = memo.take(spaceURI, sel, SemanticFormats.NTRIPLES);
+		final Graph ret = memo.take(spaceURI, sel, SemanticFormat.NTRIPLES);
+		final Graph ret2 = memo.take(spaceURI, sel2, SemanticFormat.NTRIPLES);
+		final Graph ret3 = memo.take(spaceURI, sel, SemanticFormat.NTRIPLES);
 	
 		// We check if the first read has returned the correct model
 		assertTrue( new ModelImpl(ret).getModel().contains(trips[0].asStatement()) );
@@ -485,13 +485,13 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[2] = new TripleImpl(ExampleME.subj3, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[0] = memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		graphsuri[0] = memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		model = new ModelImpl();
 		model.addTriple( trips[3] = new TripleImpl(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[4] = new TripleImpl(ExampleME.subj5, ExampleME.prop2, ExampleME.obj2) );
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
-		graphsuri[1] = memo.write(spaceURI, model.write(SemanticFormats.NTRIPLES));
+		graphsuri[1] = memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
 		memo.leaveSpace(spaceURI);
 		memo.shutdown();
@@ -506,9 +506,9 @@ public class RecordStoreDataAccessTest extends TestCase {
 		}
 		memo2.joinSpace(spaceURI);
 		
-		final Graph ret = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
-		final Graph ret2 = memo2.take(spaceURI, graphsuri[0], SemanticFormats.NTRIPLES);
-		final Graph ret3 = memo2.take(spaceURI, graphsuri[1], SemanticFormats.NTRIPLES);
+		final Graph ret = memo2.take(spaceURI, graphsuri[1], SemanticFormat.NTRIPLES);
+		final Graph ret2 = memo2.take(spaceURI, graphsuri[0], SemanticFormat.NTRIPLES);
+		final Graph ret3 = memo2.take(spaceURI, graphsuri[1], SemanticFormat.NTRIPLES);
 	
 		// We check if the first read has returned the correct model
 		assertFalse( new ModelImpl(ret).getModel().contains(trips[0].asStatement()) );

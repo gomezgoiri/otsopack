@@ -24,7 +24,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -93,19 +93,19 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 
 	@Override
 	public String writeGraphJSON(String json) {
-		final Graph graph = new Graph(json, SemanticFormats.RDF_JSON);
+		final Graph graph = new Graph(json, SemanticFormat.RDF_JSON);
 		
-		return write(graph, SemanticFormats.RDF_JSON);
+		return write(graph, SemanticFormat.RDF_JSON);
 	}
 
 	@Override
 	public String writeGraphNTriples(String ntriples) {
-		final Graph graph = new Graph(ntriples, SemanticFormats.NTRIPLES);
+		final Graph graph = new Graph(ntriples, SemanticFormat.NTRIPLES);
 		
-		return write(graph, SemanticFormats.NTRIPLES);
+		return write(graph, SemanticFormat.NTRIPLES);
 	}
 	
-	protected String write(Graph graph, String semanticFormat) {
+	protected String write(Graph graph, SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
 		String ret = null;
 		try {		

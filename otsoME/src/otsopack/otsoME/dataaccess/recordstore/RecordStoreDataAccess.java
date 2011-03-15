@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -215,7 +216,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		updater.closeSpace(sr);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.query(template,outputFormat);
@@ -223,7 +224,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.read(template,outputFormat);
@@ -231,7 +232,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.read(graphURI,outputFormat);
@@ -239,7 +240,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.take(template,outputFormat);
@@ -247,7 +248,7 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
-	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.take(graphURI,outputFormat);

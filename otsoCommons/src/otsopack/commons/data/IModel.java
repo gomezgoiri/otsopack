@@ -25,6 +25,6 @@ public interface IModel {
 	void addTriples(ModelImpl triples);
 	void removeTriples(ModelImpl triples);
 	boolean isEmpty();
-	Graph write(String language);
+	Graph write(SemanticFormat language);
 	void read(Graph graph);
 }

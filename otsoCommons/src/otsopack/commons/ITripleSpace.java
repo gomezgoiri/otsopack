@@ -16,6 +16,7 @@ package otsopack.commons;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
@@ -88,7 +89,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ read(String spaceURI, String IGraphURI, String outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ read(String spaceURI, String IGraphURI, SemanticFormat outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * read one IGraph by using a template. Wait the specified timeout or until a response is received.
@@ -100,7 +101,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
 
 	/**
 	 * Take ITriples by using a template. Wait the specified timeout or until a response is received.
@@ -112,7 +113,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ take(String spaceURI, String IGraphURI, String outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ take(String spaceURI, String IGraphURI, SemanticFormat outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * Take ITriples by using a template. Wait the specified timeout or until a response is received.
@@ -124,7 +125,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
 
 	/**
 	 * query ITriples by using a template wait maximum timeout
@@ -136,7 +137,7 @@ public interface ITripleSpace extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of ITriples or set of ITriples with size 0 if nothing found
 	 */
-	public Graph/*List<ITriple>*/ query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * write ITriples into specified space

@@ -15,6 +15,6 @@
 package otsopack.commons.data;
 
 public interface ISemanticFormatConversor extends ISemanticFormatExchangeable {
-	public boolean canConvert(String inputFormat, String outputFormat);
-	public String convert(String inputFormat, String originalText, String outputFormat);
+	public boolean canConvert(SemanticFormat inputFormat, SemanticFormat outputFormat);
+	public String convert(SemanticFormat inputFormat, String originalText, SemanticFormat outputFormat);
 }

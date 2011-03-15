@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
@@ -105,7 +106,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return ret;
 	}
 	
-	public Graph query(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
@@ -114,7 +115,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return (ret==null)? null: ret.write(outputFormat);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		
@@ -123,7 +124,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return (ret==null)? null: ret.write(outputFormat);
 	}
 
-	public Graph read(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();
@@ -132,7 +133,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return (ret==null)? null: ret.write(outputFormat);
 	}
 	
-	public Graph take(String spaceURI, ITemplate template, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		
@@ -141,7 +142,7 @@ public class MemoryDataAccess implements IDataAccess {
 		return (ret==null)? null: ret.write(outputFormat);
 	}
 
-	public Graph take(String spaceURI, String graphURI, String outputFormat) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();

@@ -17,6 +17,7 @@ package otsopack.full.java.network;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -58,34 +59,34 @@ public class RestNetwork implements INetwork {
 	}
 	
 	@Override
-	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout)
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
 	@Override
-	public Graph read(String spaceURI, ITemplate template, String outputFormat,long timeout)
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat,long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout)
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout)
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout)
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;

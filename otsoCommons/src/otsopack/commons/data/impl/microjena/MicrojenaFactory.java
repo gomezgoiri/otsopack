@@ -18,22 +18,22 @@ import java.util.Hashtable;
 
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
 import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
 
 public class MicrojenaFactory implements ISemanticFactory {
 
-	private static final String [] INPUT_SUPPORTED_FORMATS  = new String[]{ SemanticFormats.NTRIPLES };
-	private static final String [] OUTPUT_SUPPORTED_FORMATS = INPUT_SUPPORTED_FORMATS;
+	private static final SemanticFormat [] INPUT_SUPPORTED_FORMATS  = new SemanticFormat[]{ SemanticFormat.NTRIPLES };
+	private static final SemanticFormat [] OUTPUT_SUPPORTED_FORMATS = INPUT_SUPPORTED_FORMATS;
 	static final Hashtable/*<String, String>*/ OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS = new Hashtable();
 	
 	static{
-		OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.put(SemanticFormats.NTRIPLES, "N-TRIPLE");
+		OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.put(SemanticFormat.NTRIPLES, "N-TRIPLE");
 	}
 	
-	static String getMicroJenaFormat(String semanticFormat){
+	static String getMicroJenaFormat(SemanticFormat semanticFormat){
 		final String microjenaFormat = (String)OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.get(semanticFormat);
 		if(microjenaFormat == null)
 			throw new IllegalArgumentException("Semantic format " + semanticFormat + " not available in " + MicrojenaFactory.class.getName());
@@ -52,22 +52,22 @@ public class MicrojenaFactory implements ISemanticFactory {
 	 // Methods for users //
 	///////////////////////
 	
-	public String[] getSupportedInputFormats() {
+	public SemanticFormat[] getSupportedInputFormats() {
 		return INPUT_SUPPORTED_FORMATS;
 	}
 
-	public String[] getSupportedOutputFormats() {
+	public SemanticFormat[] getSupportedOutputFormats() {
 		return OUTPUT_SUPPORTED_FORMATS;
 	}
 
-	public boolean isOutputSupported(String outputFormat) {
+	public boolean isOutputSupported(SemanticFormat outputFormat) {
 		for(int i = 0; i < OUTPUT_SUPPORTED_FORMATS.length; ++i)
 			if(OUTPUT_SUPPORTED_FORMATS[i].equals(outputFormat))
 				return true;
 		return false;
 	}
 
-	public boolean isInputSupported(String inputFormat) {
+	public boolean isInputSupported(SemanticFormat inputFormat) {
 		for(int i = 0; i < INPUT_SUPPORTED_FORMATS.length; ++i)
 			if(INPUT_SUPPORTED_FORMATS[i].equals(inputFormat))
 				return true;

@@ -19,27 +19,27 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 
 
 public class SemanticFormatRepresentationFactoryTest {
 	
 	@Test
 	public void testFactoryN3(){
-		checkSemanticFormat(SemanticFormats.N3, N3Representation.class);
+		checkSemanticFormat(SemanticFormat.N3, N3Representation.class);
 	}
 	
 	@Test
 	public void testFactoryNTriples(){
-		checkSemanticFormat(SemanticFormats.NTRIPLES, NTriplesRepresentation.class);
+		checkSemanticFormat(SemanticFormat.NTRIPLES, NTriplesRepresentation.class);
 	}
 
 	@Test
 	public void testFactoryTurtle(){
-		checkSemanticFormat(SemanticFormats.TURTLE, TurtleRepresentation.class);
+		checkSemanticFormat(SemanticFormat.TURTLE, TurtleRepresentation.class);
 	}
 
-	private void checkSemanticFormat(final String format,
+	private void checkSemanticFormat(final SemanticFormat format,
 			final Class<? extends SemanticFormatRepresentation> formatClass) {
 		final SemanticFormatRepresentationFactory factory = new SemanticFormatRepresentationFactory();
 		final String data = "sample data";

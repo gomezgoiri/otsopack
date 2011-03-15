@@ -19,28 +19,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 
 public class SemanticFormatRepresentationFactory {
-	private final Map<String, Class<? extends SemanticFormatRepresentation>> registeredClasses = new HashMap<String, Class<? extends SemanticFormatRepresentation>>();
+	private final Map<SemanticFormat, Class<? extends SemanticFormatRepresentation>> registeredClasses = new HashMap<SemanticFormat, Class<? extends SemanticFormatRepresentation>>();
 	
 	{   // Default semantic formats
-		registerRepresentation(SemanticFormats.N3,       N3Representation.class);
-		registerRepresentation(SemanticFormats.NTRIPLES, NTriplesRepresentation.class);
-		registerRepresentation(SemanticFormats.TURTLE,   TurtleRepresentation.class);
-		registerRepresentation(SemanticFormats.RDF_JSON, RdfJsonRepresentation.class);
-		registerRepresentation(SemanticFormats.RDF_XML,  RdfXmlRepresentation.class);
+		registerRepresentation(SemanticFormat.N3,       N3Representation.class);
+		registerRepresentation(SemanticFormat.NTRIPLES, NTriplesRepresentation.class);
+		registerRepresentation(SemanticFormat.TURTLE,   TurtleRepresentation.class);
+		registerRepresentation(SemanticFormat.RDF_JSON, RdfJsonRepresentation.class);
+		registerRepresentation(SemanticFormat.RDF_XML,  RdfXmlRepresentation.class);
 		
 		checkDefaultFormats();
 	}
 
 	private void checkDefaultFormats() {
-		for(String semanticFormat : SemanticFormats.getSemanticFormats())
+		for(SemanticFormat semanticFormat : SemanticFormat.getSemanticFormats())
 			if(!this.registeredClasses.containsKey(semanticFormat))
-				System.err.println("WARNING: Semantic format " + semanticFormat + ", registered in " + SemanticFormats.class.getName() + " is not registered in " + SemanticFormatRepresentationFactory.class.getName());
+				System.err.println("WARNING: Semantic format " + semanticFormat + ", registered in " + SemanticFormat.class.getName() + " is not registered in " + SemanticFormatRepresentationFactory.class.getName());
 	}
 	
-	public void registerRepresentation(String name, Class<? extends SemanticFormatRepresentation> representationClass) {
+	public void registerRepresentation(SemanticFormat name, Class<? extends SemanticFormatRepresentation> representationClass) {
 		this.registeredClasses.put(name, representationClass);
 	}
 	

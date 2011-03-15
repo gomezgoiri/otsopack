@@ -16,6 +16,7 @@ package otsopack.commons.data.impl;
 
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.MalformedTemplateException;
 
 public class SemanticFactory implements ISemanticFactory {
@@ -32,19 +33,19 @@ public class SemanticFactory implements ISemanticFactory {
 		return SemanticFactory.dataFactory.createTemplate(template);
 	}
 	
-	public String[] getSupportedInputFormats() {
+	public SemanticFormat[] getSupportedInputFormats() {
 		return SemanticFactory.dataFactory.getSupportedInputFormats();
 	}
 
-	public String[] getSupportedOutputFormats() {
+	public SemanticFormat[] getSupportedOutputFormats() {
 		return SemanticFactory.dataFactory.getSupportedOutputFormats();
 	}
 
-	public boolean isOutputSupported(String outputFormat) {
+	public boolean isOutputSupported(SemanticFormat outputFormat) {
 		return SemanticFactory.dataFactory.isOutputSupported(outputFormat);
 	}
 
-	public boolean isInputSupported(String inputFormat) {
+	public boolean isInputSupported(SemanticFormat inputFormat) {
 		return SemanticFactory.dataFactory.isInputSupported(inputFormat);
 	}
 

@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -101,31 +102,31 @@ public class FakeDataAccess implements IDataAccess {
 	}
 	
 	@Override
-	public Graph query(String spaceURI, ITemplate template, String outputFormat)
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextQuery;
 	}
 
 	@Override
-	public Graph read(String spaceURI, ITemplate template, String outputFormat)
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextRead;
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI, String outputFormat)
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextRead;
 	}
 
 	@Override
-	public Graph take(String spaceURI, ITemplate template, String outputFormat)
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextTake;
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, String outputFormat)
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextTake;
 	}

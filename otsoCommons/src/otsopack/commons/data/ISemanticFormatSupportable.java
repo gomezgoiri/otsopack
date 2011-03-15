@@ -15,6 +15,6 @@
 package otsopack.commons.data;
 
 public interface ISemanticFormatSupportable extends ISemanticFormatExchangeable{
-	public String [] getSupportedInputFormats();
-	public String [] getSupportedOutputFormats();
+	public SemanticFormat [] getSupportedInputFormats();
+	public SemanticFormat [] getSupportedOutputFormats();
 }

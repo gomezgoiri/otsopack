@@ -36,6 +36,7 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
 import otsopack.full.java.network.communication.OtsopackApplication;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationFactory;
@@ -101,37 +102,37 @@ public class AbstractServerResource extends ServerResource {
 		return getOtsopackApplication().getPrefixesStorage().getPrefixByURI(prefixUri);
 	}
 
-	protected String [] getAcceptedSemanticFormats(){
-		final List<String> acceptedSemanticFormats = new Vector<String>();
+	protected SemanticFormat [] getAcceptedSemanticFormats(){
+		final List<SemanticFormat> acceptedSemanticFormats = new Vector<SemanticFormat>();
 		for(Preference<MediaType> acceptedMediaType : getRequest().getClientInfo().getAcceptedMediaTypes()){
-			final String acceptedSemanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(acceptedMediaType.getMetadata());
+			final SemanticFormat acceptedSemanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(acceptedMediaType.getMetadata());
 			if(acceptedSemanticFormat != null)
 				acceptedSemanticFormats.add(acceptedSemanticFormat);
 		}
 		
-		return acceptedSemanticFormats.toArray(new String[]{});
+		return acceptedSemanticFormats.toArray(new SemanticFormat[]{});
 	}
 	
 	protected Representation serializeGraph(Graph graph){
 		return semanticFormatRepresentationFactory.create(graph);
 	}
 	
-	protected  String checkInputOutputSemanticFormats() {
-		checkInputFormat();
-		final String outputFormat = checkOutputFormats();
+	protected  SemanticFormat checkInputOutputSemanticFormats() {
+		checkInputSemanticFormat();
+		final SemanticFormat outputFormat = checkOutputSemanticFormats();
 		return outputFormat;
 	}
 
-	protected String checkOutputFormats() {
-		final String outputFormat = semanticFormatsManager.retrieveProperOutput(getAcceptedSemanticFormats());
+	protected SemanticFormat checkOutputSemanticFormats() {
+		final SemanticFormat outputFormat = semanticFormatsManager.retrieveProperOutput(getAcceptedSemanticFormats());
 		if(outputFormat == null)
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't accept requested formats");
 		return outputFormat;
 	}
 
-	protected void checkInputFormat() {
+	protected void checkInputSemanticFormat() {
 		final MediaType contentType = this.getRequestEntity().getMediaType();
-		final String semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(contentType);
+		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(contentType);
 		
 		if(semanticFormat == null)
 			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Invalid semantic format: " + contentType.getName());

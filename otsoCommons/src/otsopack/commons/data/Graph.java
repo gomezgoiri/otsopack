@@ -16,11 +16,9 @@ package otsopack.commons.data;
 
 public class Graph {
 	private final String data;
-	private final String format;
+	private final SemanticFormat format;
 	
-	public Graph(String data, String format){
-		if(!SemanticFormats.isSemanticFormat(format))
-			throw new IllegalArgumentException("Unrecognized semantic format in " + SemanticFormats.class.getName() + ": " + format);
+	public Graph(String data, SemanticFormat format){
 		this.data   = data;
 		this.format = format;
 	}
@@ -29,7 +27,7 @@ public class Graph {
 		return this.data;
 	}
 	
-	public String getFormat(){
+	public SemanticFormat getFormat(){
 		return this.format;
 	}
 }

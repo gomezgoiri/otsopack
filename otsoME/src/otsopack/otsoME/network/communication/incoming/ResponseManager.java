@@ -25,7 +25,7 @@ import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -69,8 +69,8 @@ public class ResponseManager implements ITSCallback {
 	public void query(ITemplate template) {
     	log.debug("Query received");
     	try {
-			Graph graph = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
-			Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+			Graph graph = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
+			Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -85,8 +85,8 @@ public class ResponseManager implements ITSCallback {
 		try {
 			if( templates!=null ) {
 				for( int i=0; i<templates.length; i++ ) {
-					Graph graph = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], SemanticFormats.NTRIPLES);
-					Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+					Graph graph = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), templates[i], SemanticFormat.NTRIPLES);
+					Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 					if(resp!=null)						
 						outcoming.response(templates[i], resp);
 				}
@@ -101,8 +101,8 @@ public class ResponseManager implements ITSCallback {
 	public void read(ITemplate template) {
     	log.debug("Read received.");
 		try {
-			Graph graph = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
-			Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+			Graph graph = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
+			Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -115,8 +115,8 @@ public class ResponseManager implements ITSCallback {
 	public void read(String graphuri) {
     	log.debug("Read received.");
 		try {
-			Graph graph = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
-			Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+			Graph graph = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), graphuri, SemanticFormat.NTRIPLES);
+			Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {
@@ -129,8 +129,8 @@ public class ResponseManager implements ITSCallback {
 	public void take(ITemplate template) {
 		log.debug("Take received.");
 		try {
-			Graph graph = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormats.NTRIPLES);
-			Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+			Graph graph = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
+			Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(template, resp);
 		} catch (SpaceNotExistsException e) {
@@ -143,8 +143,8 @@ public class ResponseManager implements ITSCallback {
 	public void take(String graphuri) {
 		log.debug("Take received.");
 		try {
-			Graph graph = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, SemanticFormats.NTRIPLES);
-			Graph resp = new ModelImpl(graph).write(SemanticFormats.NTRIPLES);
+			Graph graph = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), graphuri, SemanticFormat.NTRIPLES);
+			Graph resp = new ModelImpl(graph).write(SemanticFormat.NTRIPLES);
 			if(resp!=null)
 				outcoming.response(graphuri, resp);
 		} catch (SpaceNotExistsException e) {
@@ -262,7 +262,7 @@ public class ResponseManager implements ITSCallback {
 	}
 
 	public void suggest(IModel triples) {
-		suggestionCallback.callbackForMatchingTemplates( ((ModelImpl)triples).write(SemanticFormats.NTRIPLES) );
+		suggestionCallback.callbackForMatchingTemplates( ((ModelImpl)triples).write(SemanticFormat.NTRIPLES) );
 	}
 
 	public void obtainDemands() {

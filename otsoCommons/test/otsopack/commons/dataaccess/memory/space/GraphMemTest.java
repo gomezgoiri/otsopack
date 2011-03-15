@@ -16,7 +16,7 @@ package otsopack.commons.dataaccess.memory.space;
 
 import junit.framework.TestCase;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -64,7 +64,7 @@ public class GraphMemTest extends TestCase {
 								"<"+Example.subj2+"> <"+Example.prop2+"> <"+Example.obj4+"> .\n" +
 								"<"+Example.subj3+"> <"+Example.prop1+"> \""+String.valueOf(Example.obj10)+"\"^^<http://www.w3.org/2001/XMLSchema#double> .\n";
 		final ModelImpl graph = new ModelImpl();
-		graph.read( new Graph(triples, SemanticFormats.NTRIPLES) );
+		graph.read( new Graph(triples, SemanticFormat.NTRIPLES) );
 		
 		final GraphMem mem3 = new GraphMem("http://graph/write3/");
 		mem3.write(graph);

@@ -17,7 +17,7 @@ package otsopack.commons.converters;
 import java.util.Vector;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
 
 // TODO: change this name
@@ -38,7 +38,7 @@ public class UnionUtility {
 		if(utility.isInputSupported(graph.getFormat()))
 			return graph;
 		
-		final String [] supportedInputFormats = utility.getSupportedInputFormats();
+		final SemanticFormat [] supportedInputFormats = utility.getSupportedInputFormats();
 		for(int i = 0; i < supportedInputFormats.length; ++i)
 			if(formatsManager.canConvert(graph.getFormat(), supportedInputFormats[i]))
 				return formatsManager.convert(graph, supportedInputFormats[i]);
@@ -50,7 +50,7 @@ public class UnionUtility {
 		if(utility.isInputSupported(graph.getFormat()))
 			return true;
 		
-		final String [] supportedInputFormats = utility.getSupportedInputFormats();
+		final SemanticFormat [] supportedInputFormats = utility.getSupportedInputFormats();
 		for(int i = 0; i < supportedInputFormats.length; ++i)
 			if(formatsManager.canConvert(graph.getFormat(), supportedInputFormats[i]))
 				return true;
@@ -69,8 +69,8 @@ public class UnionUtility {
 		}
 		
 		
-		if(graph1.getFormat().equals(SemanticFormats.NTRIPLES) && graph2.getFormat().equals(SemanticFormats.NTRIPLES))
-			return new Graph(graph1.getData() + "\n" + graph2.getData(), SemanticFormats.NTRIPLES);
+		if(graph1.getFormat().equals(SemanticFormat.NTRIPLES) && graph2.getFormat().equals(SemanticFormat.NTRIPLES))
+			return new Graph(graph1.getData() + "\n" + graph2.getData(), SemanticFormat.NTRIPLES);
 		// TODO
 		throw new IllegalArgumentException("Can't convert other formats that ntriples at the moment ");
 	}

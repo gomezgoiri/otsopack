@@ -27,7 +27,7 @@ import net.jxta.endpoint.StringMessageElement;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedMessageException;
@@ -142,7 +142,7 @@ public class MessageParser {
     	if( msgElement!=null ) {
         		ret = new ModelImpl();
         		final String data = new String(msgElement.getBytes(true));
-    	        ret.read(new Graph(data, SemanticFormats.NTRIPLES));
+    	        ret.read(new Graph(data, SemanticFormat.NTRIPLES));
     	}
     	return ret;
    	}
@@ -464,7 +464,7 @@ public class MessageParser {
 	        //System.err.println("Modelo a enviar");
 	        //System.err.println("---------------");
 	        //triples.write(System.out, "N-TRIPLE");
-	        final Graph graph = triples.write(SemanticFormats.NTRIPLES);
+	        final Graph graph = triples.write(SemanticFormat.NTRIPLES);
 	        msg.addMessageElement(null, new ByteArrayMessageElement(Properties.MODEL, MimeMediaType.TEXT_DEFAULTENCODING, graph.getData().getBytes(), null));
 			return msg;
 		}

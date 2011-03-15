@@ -16,20 +16,38 @@ package otsopack.commons.data;
 
 import java.util.Vector;
 
-public final class SemanticFormats {
-	public static final String NTRIPLES = "nt";
-	public static final String N3       = "n3";
-	public static final String TURTLE   = "turtle";
-	public static final String RDF_XML  = "rdf/xml";
-	public static final String RDF_JSON = "json";
+public final class SemanticFormat {
+	public static final SemanticFormat NTRIPLES = new SemanticFormat("nt");
+	public static final SemanticFormat N3       = new SemanticFormat("n3");
+	public static final SemanticFormat TURTLE   = new SemanticFormat("turtle");
+	public static final SemanticFormat RDF_XML  = new SemanticFormat("rdf/xml");
+	public static final SemanticFormat RDF_JSON = new SemanticFormat("json");
 	
 	private static final Vector/*<String>*/ FORMATS = new Vector();
+	
+	private final String name;
 	
 	static{
 		loadDefaultFormats();
 	}
 	
-	private SemanticFormats(){}
+	public SemanticFormat(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public int hashCode(){
+		return this.name.hashCode();
+	}
+	
+	public boolean equals(Object o){
+		if(!(o instanceof SemanticFormat))
+			return false;
+		return this.name.equals(((SemanticFormat)o).getName());
+	}
 	
 	private static void loadDefaultFormats(){
 		FORMATS.addElement(NTRIPLES);
@@ -39,10 +57,10 @@ public final class SemanticFormats {
 		FORMATS.addElement(RDF_JSON);
 	}
 	
-	public static String [] getSemanticFormats(){
-		final String [] semanticFormats = new String[FORMATS.size()];
+	public static SemanticFormat [] getSemanticFormats(){
+		final SemanticFormat [] semanticFormats = new SemanticFormat[FORMATS.size()];
 		for(int i = 0; i< semanticFormats.length; ++i)
-			semanticFormats[i] = (String)FORMATS.get(i);
+			semanticFormats[i] = (SemanticFormat)FORMATS.get(i);
 		
 		return semanticFormats;
 	}

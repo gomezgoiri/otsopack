@@ -21,7 +21,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -31,7 +31,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	public static final String ROOT = GraphsResource.ROOT + "/{graph}";
 	
-	protected Graph readGraph(String outputFormat) {
+	protected Graph readGraph(SemanticFormat outputFormat) {
 		final String space   = getArgument("space");
 		final String graphuri   = getArgument("graph");
 		final Graph ret;
@@ -46,7 +46,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		return ret;
 	}
 	
-	protected Graph takeGraph(String outputFormat) {
+	protected Graph takeGraph(SemanticFormat outputFormat) {
 		final String space   = getArgument("space");
 		final String graphuri   = getArgument("graph");
 		final Graph ret;
@@ -63,21 +63,21 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public Representation toNTriples() {
-		final String outputFormat = checkInputOutputSemanticFormats();
+		final SemanticFormat outputFormat = checkInputOutputSemanticFormats();
 		final Graph graph = readGraph(outputFormat);
 		return serializeGraph(graph);
 	}
 
 	@Override
 	public Representation toN3() {
-		final Graph graph = readGraph(SemanticFormats.N3);
+		final Graph graph = readGraph(SemanticFormat.N3);
 		// TODO convert to N3
 		return new StringRepresentation("read graph in N·");
 	}
 
 	@Override
 	public Representation toJson() {
-		final Graph graph = readGraph(SemanticFormats.RDF_JSON);
+		final Graph graph = readGraph(SemanticFormat.RDF_JSON);
 		// TODO convert to JSON
 		return new StringRepresentation("read graph in JSON");
 	}
@@ -99,21 +99,21 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public Representation deleteNTriples() {
-		final Graph graph = readGraph(SemanticFormats.NTRIPLES);
+		final Graph graph = readGraph(SemanticFormat.NTRIPLES);
 		// TODO convert to N-Triples
 		return new StringRepresentation("take graph in N-Triples");
 	}
 	
 		@Override
 	public Representation deleteN3() {
-		final Graph graph = readGraph(SemanticFormats.N3);
+		final Graph graph = readGraph(SemanticFormat.N3);
 		// TODO convert to N3
 		return new StringRepresentation("take graph in N3");
 	}
 	
 	@Override
 	public Representation deleteJson() {
-		final Graph graph = readGraph(SemanticFormats.RDF_JSON);
+		final Graph graph = readGraph(SemanticFormat.RDF_JSON);
 		// TODO convert to JSON
 		return new StringRepresentation("take graph in JSON");
 	}

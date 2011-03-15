@@ -16,7 +16,7 @@ package otsopack.otsoME.network.communication.demand.local;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -80,7 +80,7 @@ public class LocalDemandManagerTest extends TestCase {
 		model.addTriple( ExampleME.subj5, ExampleME.prop2, ExampleME.obj3);
 		model.addTriple( ExampleME.subj1, ExampleME.prop4, ExampleME.obj5);
 		
-		boolean  ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormats.NTRIPLES));
+		boolean  ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormat.NTRIPLES));
 		assertTrue( ret );
 		Thread.sleep(500); // wait just a little bit...
 		
@@ -100,7 +100,7 @@ public class LocalDemandManagerTest extends TestCase {
 		model.addTriple( ExampleME.subj6, ExampleME.prop1, ExampleME.obj2);
 		model.addTriple( ExampleME.subj6, ExampleME.prop1, ExampleME.obj4);
 		
-		ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormats.NTRIPLES));
+		ret = mngr.callbackForMatchingTemplates(model.write(SemanticFormat.NTRIPLES));
 		assertFalse( ret );
 		for(int i=0; i<callbacks.length; i++) {
 			assertFalse( callbacks[i].called );

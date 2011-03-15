@@ -15,18 +15,19 @@
 package otsopack.commons.data.impl;
 
 import otsopack.commons.data.ISemanticFormatConversor;
+import otsopack.commons.data.SemanticFormat;
 import junit.framework.TestCase;
 
 public class SemanticFormatsManagerTest extends TestCase {
 	
 	private SemanticFormatsManager formats;
-	private final String ENGLISH = "english";
-	private final String SPANISH = "spanish";
-	private final String FRENCH  = "french";
+	private final SemanticFormat ENGLISH = new SemanticFormat("english");
+	private final SemanticFormat SPANISH = new SemanticFormat("spanish");
+	private final SemanticFormat FRENCH  = new SemanticFormat("french");
 	
 	private ISemanticFormatConversor english2spanish = new ISemanticFormatConversor() {
 		
-		public String convert(String originalFormat, String originalText, String targetFormat) {
+		public String convert(SemanticFormat originalFormat, String originalText, SemanticFormat targetFormat) {
 			if(originalText.equals("hello"))
 				return "hola";
 			if(originalText.equals("bye"))
@@ -34,22 +35,22 @@ public class SemanticFormatsManagerTest extends TestCase {
 			throw new IllegalArgumentException("Couldn't translate: " + originalText);
 		}
 		
-		public boolean canConvert(String inputFormat, String outputFormat) {
+		public boolean canConvert(SemanticFormat inputFormat, SemanticFormat outputFormat) {
 			return inputFormat.equals(ENGLISH) && outputFormat.equals(SPANISH);
 		}
 
-		public boolean isOutputSupported(String outputFormat) {
+		public boolean isOutputSupported(SemanticFormat outputFormat) {
 			return outputFormat.equals(SPANISH);
 		}
 
-		public boolean isInputSupported(String inputFormat) {
+		public boolean isInputSupported(SemanticFormat inputFormat) {
 			return inputFormat.equals(ENGLISH);
 		}
 	};
 	
 	private ISemanticFormatConversor spanish2english = new ISemanticFormatConversor() {
 		
-		public String convert(String originalFormat, String originalText, String targetFormat) {
+		public String convert(SemanticFormat originalFormat, String originalText, SemanticFormat targetFormat) {
 			if(originalText.equals("hola"))
 				return "hello";
 			if(originalText.equals("adios"))
@@ -57,15 +58,15 @@ public class SemanticFormatsManagerTest extends TestCase {
 			throw new IllegalArgumentException("Couldn't translate: " + originalText);
 		}
 		
-		public boolean canConvert(String inputFormat, String outputFormat) {
+		public boolean canConvert(SemanticFormat inputFormat, SemanticFormat outputFormat) {
 			return inputFormat.equals(SPANISH) && outputFormat.equals(ENGLISH);
 		}
 
-		public boolean isOutputSupported(String outputFormat) {
+		public boolean isOutputSupported(SemanticFormat outputFormat) {
 			return outputFormat.equals(ENGLISH);
 		}
 
-		public boolean isInputSupported(String inputFormat) {
+		public boolean isInputSupported(SemanticFormat inputFormat) {
 			return inputFormat.equals(SPANISH);
 		}
 	};

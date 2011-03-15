@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -93,8 +93,8 @@ public class MainActivity extends Activity {
 		try {
 			ModelImpl model = new ModelImpl();
 			model.addTriple("http://www.morelab.deusto.es/sub", "http://www.morelab.deusto.es/pred", "http://www.morelab.deusto.es/obj");
-			kernel.write(space, model.write(SemanticFormats.NTRIPLES));
-			Graph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), SemanticFormats.NTRIPLES, 5000);
+			kernel.write(space, model.write(SemanticFormat.NTRIPLES));
+			Graph graph = kernel.query(space, factory.createTemplate("?s ?p ?o ."), SemanticFormat.NTRIPLES, 5000);
 			//final Enumeration<?> enume = graph.elements();
 			//while(enume.hasMoreElements())
 				//System.out.println(enume.nextElement());

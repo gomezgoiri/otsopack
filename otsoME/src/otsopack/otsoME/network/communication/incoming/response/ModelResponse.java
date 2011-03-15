@@ -15,7 +15,7 @@ package otsopack.otsoME.network.communication.incoming.response;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 
 public class ModelResponse extends Response {
@@ -30,7 +30,7 @@ public class ModelResponse extends Response {
 	}
 	
 	public Graph getGraph() {
-		return (model==null)? null: ((ModelImpl)model).write(SemanticFormats.NTRIPLES);
+		return (model==null)? null: ((ModelImpl)model).write(SemanticFormat.NTRIPLES);
 	}
 
 	public void addTriples(IModel model) {

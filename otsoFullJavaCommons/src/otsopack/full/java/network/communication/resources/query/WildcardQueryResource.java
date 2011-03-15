@@ -20,7 +20,7 @@ import org.restlet.resource.ResourceException;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -31,7 +31,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 
 	public static final String ROOT = WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object}";
 	
-	protected Graph getWildcard(String semanticFormat) {
+	protected Graph getWildcard(SemanticFormat semanticFormat) {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
@@ -72,14 +72,14 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final Graph graph = getWildcard(SemanticFormats.RDF_JSON);
+		final Graph graph = getWildcard(SemanticFormat.RDF_JSON);
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		final Graph graph = getWildcard(SemanticFormats.NTRIPLES);
+		final Graph graph = getWildcard(SemanticFormat.NTRIPLES);
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

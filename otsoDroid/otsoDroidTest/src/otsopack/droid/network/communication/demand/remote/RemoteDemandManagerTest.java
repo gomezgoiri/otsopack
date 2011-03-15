@@ -18,7 +18,7 @@ import java.util.Vector;
 import junit.framework.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -81,34 +81,34 @@ public class RemoteDemandManagerTest extends TestCase {
 		model.addTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1); //<< tpl2
 		model.addTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj3);
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj1); //<<tpl6 (but expired)
-		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 		
 		model = new ModelImpl();
 		model.addTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4);
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj1, ExampleME.prop2, ExampleME.obj3); //<< tpl1
-		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 		
 		model = new ModelImpl();
 		model.addTriple(ExampleME.subj1, ExampleME.prop1, ExampleME.obj4);
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj2, ExampleME.prop2, ExampleME.obj3); //<< tpl3
 		model.addTriple(ExampleME.subj2, ExampleME.prop1, ExampleME.obj2); //<< tpl3
-		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 		
 		model = new ModelImpl();
 		model.addTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj4);
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj3, ExampleME.prop2, ExampleME.obj3); //<< tpl4
 		model.addTriple(ExampleME.subj6, ExampleME.prop1, ExampleME.obj2);
-		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 		
 		model = new ModelImpl();
 		model.addTriple(ExampleME.subj4, ExampleME.prop3, ExampleME.obj4); //<< tpl5
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj3); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj6, ExampleME.prop2, ExampleME.obj3);
 		model.addTriple(ExampleME.subj5, ExampleME.prop1, ExampleME.obj2); //<<tpl6 (but expired)
-		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertTrue( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 		
 		model = new ModelImpl();
 		model.addTriple(ExampleME.subj4, ExampleME.prop1, ExampleME.obj1);
@@ -117,7 +117,7 @@ public class RemoteDemandManagerTest extends TestCase {
 		model.addTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj1); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj5, ExampleME.prop2, ExampleME.obj3); //<<tpl6 (but expired)
 		model.addTriple(ExampleME.subj1, ExampleME.prop4, ExampleME.obj5);
-		assertFalse( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormats.NTRIPLES)) );
+		assertFalse( mngr.hasAnyPeerResponsabilityOverThisKnowledge(model.write(SemanticFormat.NTRIPLES)) );
 	}
 	
 		private void checkImport(long[] expires, String[] template) throws Exception {

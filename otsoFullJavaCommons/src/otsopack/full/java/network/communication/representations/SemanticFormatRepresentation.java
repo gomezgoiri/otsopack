@@ -23,6 +23,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.WriterRepresentation;
 
 import otsopack.commons.data.Graph;
+import otsopack.commons.data.SemanticFormat;
 
 public abstract class SemanticFormatRepresentation extends WriterRepresentation {
 
@@ -48,7 +49,7 @@ public abstract class SemanticFormatRepresentation extends WriterRepresentation 
 	}
 
 	
-	private String getSemanticFormat(){
+	private SemanticFormat getSemanticFormat(){
 		return SemanticFormatRepresentationRegistry.getSemanticFormat(getMediaType());
 	}
 	

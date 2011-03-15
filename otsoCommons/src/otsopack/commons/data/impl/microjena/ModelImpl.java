@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.TripleParseException;
 import es.deustotech.microjena.rdf.model.ModelFactory;
 
@@ -76,7 +77,7 @@ public class ModelImpl implements IModel {
 		return new ModelImpl( this.model.union(((ModelImpl)model).model) );
 	}
 	
-	public Graph write(String outputFormat) {
+	public Graph write(SemanticFormat outputFormat) {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		model.write(baos, MicrojenaFactory.getMicroJenaFormat(outputFormat));
 		final String content = baos.toString();

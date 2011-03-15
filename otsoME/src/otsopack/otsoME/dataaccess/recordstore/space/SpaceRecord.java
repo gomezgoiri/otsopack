@@ -33,7 +33,7 @@ import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.TSException;
@@ -172,7 +172,7 @@ public class SpaceRecord implements ILayer {
 		graphs.removeAllElements(); // if we do inside the for, crashes
 	}
 	
-	public Graph query(ITemplate template, String outputFormat) {
+	public Graph query(ITemplate template, SemanticFormat outputFormat) {
 		//Graph ret = new Graph("", format);
 		IModel ret = new ModelImpl();
 		for(int i=0; i<graphs.size(); i++) {
@@ -189,7 +189,7 @@ public class SpaceRecord implements ILayer {
 		return (ret.isEmpty())? null: ret.write(outputFormat);
 	}
 	
-	public Graph read(ITemplate template, String outputFormat) {
+	public Graph read(ITemplate template, SemanticFormat outputFormat) {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
@@ -204,7 +204,7 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public Graph read(String graphURI, String outputFormat) {
+	public Graph read(String graphURI, SemanticFormat outputFormat) {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
@@ -219,7 +219,7 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public Graph take(ITemplate template, String outputFormat) {
+	public Graph take(ITemplate template, SemanticFormat outputFormat) {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
@@ -235,7 +235,7 @@ public class SpaceRecord implements ILayer {
 		return ret;
 	}
 
-	public Graph take(String graphURI, String outputFormat) {
+	public Graph take(String graphURI, SemanticFormat outputFormat) {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
@@ -366,12 +366,12 @@ public class SpaceRecord implements ILayer {
 	
 	public ModelImpl getGraphFromStore(int recordId) throws RecordStoreException {
 		final byte[] data = store.getRecord(recordId);
-		final Graph graph = new Graph(new String(data), SemanticFormats.NTRIPLES);
+		final Graph graph = new Graph(new String(data), SemanticFormat.NTRIPLES);
         return new ModelImpl(graph);
 	}
 		
 	private int addGraphToStore(IModel graph) throws RecordStoreException {
-		final String retrievedData = graph.write(SemanticFormats.NTRIPLES).getData();
+		final String retrievedData = graph.write(SemanticFormat.NTRIPLES).getData();
 		final byte[] data = retrievedData.getBytes();
 		return store.addRecord(data, 0, data.length);
 	}

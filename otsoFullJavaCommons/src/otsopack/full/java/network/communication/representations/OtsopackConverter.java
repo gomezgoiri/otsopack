@@ -14,7 +14,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.UniformResource;
 
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 
 public class OtsopackConverter extends ConverterHelper {
     private static final VariantInfo VARIANT_TURTLE   = new VariantInfo(MediaType.APPLICATION_RDF_TURTLE);
@@ -40,16 +40,16 @@ public class OtsopackConverter extends ConverterHelper {
     }
     
     private static void checkDefaultFormats(){
-    	final List<String> formats = new Vector<String>();
+    	final List<SemanticFormat> formats = new Vector<SemanticFormat>();
     	for(VariantInfo variantInfo : VARIANT2CLASS.keySet()){
-    		final String semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(variantInfo.getMediaType());
+    		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(variantInfo.getMediaType());
     		if(semanticFormat == null)
     			System.err.println("WARNING: " + variantInfo.getMediaType().getName() + " registered in " + OtsopackConverter.class.getName() + " but not in " + SemanticFormatRepresentationRegistry.class.getName());
     		else
     			formats.add(semanticFormat);
     	}
     	
-    	for(String format : SemanticFormats.getSemanticFormats())
+    	for(SemanticFormat format : SemanticFormat.getSemanticFormats())
     		if(!formats.contains(format))
     			System.err.println("WARNING: Format " + format + " not registered in " + OtsopackConverter.class.getName());
     }

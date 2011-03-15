@@ -16,6 +16,7 @@ package otsopack.otsoME.network.jxme;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -76,23 +77,23 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
         return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.read(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.take(spaceURI,template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 

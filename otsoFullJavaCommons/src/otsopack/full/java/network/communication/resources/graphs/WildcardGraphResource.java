@@ -22,7 +22,7 @@ import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -34,7 +34,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	private final ISemanticFactory sf = new SemanticFactory();
 	
 
-	protected Graph getGraphByWildcard(String semanticFormat) {
+	protected Graph getGraphByWildcard(SemanticFormat semanticFormat) {
 		final String space    = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
@@ -60,17 +60,17 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	
 	@Override
 	public String toJson(){
-		final Graph graph = getGraphByWildcard(SemanticFormats.RDF_JSON);
+		final Graph graph = getGraphByWildcard(SemanticFormat.RDF_JSON);
 		// TODO convert IGraph to Json format
 		return "JsonGraph";
 	}
 	
 	@Override
 	public String toNTriples(){
-		if(!this.sf.isInputSupported(SemanticFormats.NTRIPLES))
+		if(!this.sf.isInputSupported(SemanticFormat.NTRIPLES))
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Server does not support NTriples");
 		
-		final Graph graph = getGraphByWildcard(SemanticFormats.NTRIPLES);
+		final Graph graph = getGraphByWildcard(SemanticFormat.NTRIPLES);
 		// TODO convert IGraph to N-Triples format
 		return "set of ntriples";
 	}

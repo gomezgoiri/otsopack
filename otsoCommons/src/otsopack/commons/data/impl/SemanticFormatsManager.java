@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFormatConversor;
+import otsopack.commons.data.SemanticFormat;
 
 public class SemanticFormatsManager implements ISemanticFormatConversor {
 
@@ -37,14 +38,14 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 		conversors.removeAllElements();
 	}
 	
-	private ISemanticFormatConversor getConversor(String inputFormat, String outputFormat){
+	private ISemanticFormatConversor getConversor(SemanticFormat inputFormat, SemanticFormat outputFormat){
 		for(int i = 0; i < conversors.size(); ++i)
 			if(((ISemanticFormatConversor)conversors.elementAt(i)).canConvert(inputFormat, outputFormat))
 				return (ISemanticFormatConversor)conversors.elementAt(i);
 		return null;
 	}
 	
-	public boolean canConvert(String inputFormat, String outputFormat){
+	public boolean canConvert(SemanticFormat inputFormat, SemanticFormat outputFormat){
 		if(inputFormat.equals(outputFormat))
 			return true;
 		final ISemanticFormatConversor conversor = getConversor(inputFormat, outputFormat);
@@ -53,20 +54,20 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 		return true;
 	}
 
-	public String convert(String inputFormat, String originalText, String outputFormat) {
+	public String convert(SemanticFormat inputFormat, String originalText, SemanticFormat outputFormat) {
 		if(inputFormat.equals(outputFormat))
 			return originalText;
 		return getConversor(inputFormat, outputFormat).convert(inputFormat, originalText, outputFormat);
 	}
 	
-	public Graph convert(Graph input, String outputFormat){
+	public Graph convert(Graph input, SemanticFormat outputFormat){
 		final String outputText = convert(input.getFormat(), input.getData(), outputFormat);
 		return new Graph(outputText, outputFormat);
 	}
 	
-	public boolean isInputSupported(String inputFormat){
+	public boolean isInputSupported(SemanticFormat inputFormat){
 		final SemanticFactory sf = new SemanticFactory();
-		final String [] supportedInputFormats = sf.getSupportedInputFormats();
+		final SemanticFormat [] supportedInputFormats = sf.getSupportedInputFormats();
 		
 		for(int i = 0; i < supportedInputFormats.length; ++i)
 			if(canConvert(inputFormat, supportedInputFormats[i]))
@@ -75,9 +76,9 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 		return false;
 	}
 
-	public boolean isOutputSupported(String outputFormat) {
+	public boolean isOutputSupported(SemanticFormat outputFormat) {
 		final SemanticFactory sf = new SemanticFactory();
-		final String [] supportedOutputFormats = sf.getSupportedOutputFormats();
+		final SemanticFormat [] supportedOutputFormats = sf.getSupportedOutputFormats();
 		
 		for(int i = 0; i < supportedOutputFormats.length; ++i)
 			if(canConvert(supportedOutputFormats[i], outputFormat))
@@ -86,7 +87,7 @@ public class SemanticFormatsManager implements ISemanticFormatConversor {
 		return false;
 	}
 	
-	public String retrieveProperOutput(String [] acceptedOutputFormats){
+	public SemanticFormat retrieveProperOutput(SemanticFormat [] acceptedOutputFormats){
 		for(int i = 0; i < acceptedOutputFormats.length; ++i)
 			if(isOutputSupported(acceptedOutputFormats[i]))
 				return acceptedOutputFormats[i];

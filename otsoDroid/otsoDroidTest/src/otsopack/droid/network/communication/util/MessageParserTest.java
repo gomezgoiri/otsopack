@@ -24,7 +24,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.SemanticFormats;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -65,7 +65,7 @@ public class MessageParserTest extends TestCase {
 	private void checkModel(Message msg, IModel model) {
 		MessageElement msgElement = msg.getMessageElement(null,MessageParser.Properties.MODEL);
 		
-        final Graph graph = model.write(SemanticFormats.NTRIPLES);
+        final Graph graph = model.write(SemanticFormat.NTRIPLES);
         
         byte[] expected = graph.getData().getBytes();
         byte[] obtained = msgElement.getBytes(true);

@@ -17,6 +17,7 @@ package otsopack.commons.network;
 import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
@@ -70,7 +71,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -82,7 +83,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -94,7 +95,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, String graphURI, String outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -106,7 +107,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * query triples by using a template wait maximum timeout
@@ -118,7 +119,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, ITemplate template, String outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * subscribe to one template
