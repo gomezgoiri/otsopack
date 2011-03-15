@@ -11,7 +11,6 @@ import org.restlet.routing.Router;
 import org.restlet.service.MetadataService;
 
 import otsopack.commons.IController;
-import otsopack.full.java.network.communication.representations.TurtleRepresentation;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public class OtsopackApplication extends Application {
@@ -28,7 +27,8 @@ public class OtsopackApplication extends Application {
 	}
 	
 	public static void registerExtensions(MetadataService metadataService){
-		metadataService.addExtension("turtle", TurtleRepresentation.TEXT_RDF_TURTLE);
+		metadataService.addExtension("turtle", MediaType.APPLICATION_RDF_TURTLE);
+		metadataService.addExtension("rdf+xml", MediaType.APPLICATION_RDF_XML);
 		// For some reason by default nt is registered in Restlet as TEXT_PLAIN
 		metadataService.addExtension("nt", MediaType.TEXT_RDF_NTRIPLES, true); 
 		// n3 is already registered

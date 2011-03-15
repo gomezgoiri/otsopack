@@ -6,7 +6,6 @@ import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
 
 public class NTriplesRepresentation extends SemanticFormatRepresentation {
 
@@ -21,10 +20,4 @@ public class NTriplesRepresentation extends SemanticFormatRepresentation {
 	public NTriplesRepresentation(String data) {
 		super(MediaType.TEXT_RDF_NTRIPLES, data);
 	}
-
-	@Override
-	protected String getSemanticFormat() {
-		return SemanticFormats.NTRIPLES;
-	}
-
 }

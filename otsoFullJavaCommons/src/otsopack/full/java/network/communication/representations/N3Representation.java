@@ -6,7 +6,6 @@ import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormats;
 
 public class N3Representation extends SemanticFormatRepresentation {
 	
@@ -21,10 +20,5 @@ public class N3Representation extends SemanticFormatRepresentation {
 
 	public N3Representation(String data) {
 		super(MediaType.TEXT_RDF_N3, data);
-	}
-
-	@Override
-	protected String getSemanticFormat() {
-		return SemanticFormats.N3;
 	}
 }

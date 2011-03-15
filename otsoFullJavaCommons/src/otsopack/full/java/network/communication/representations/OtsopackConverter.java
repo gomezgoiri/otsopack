@@ -1,7 +1,10 @@
 package otsopack.full.java.network.communication.representations;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import org.restlet.data.MediaType;
 import org.restlet.data.Preference;
@@ -11,24 +14,56 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.UniformResource;
 
+import otsopack.commons.data.SemanticFormats;
+
 public class OtsopackConverter extends ConverterHelper {
-    private static final VariantInfo VARIANT_TURTLE   = new VariantInfo(TurtleRepresentation.TEXT_RDF_TURTLE);
+    private static final VariantInfo VARIANT_TURTLE   = new VariantInfo(MediaType.APPLICATION_RDF_TURTLE);
     private static final VariantInfo VARIANT_NTRIPLES = new VariantInfo(MediaType.TEXT_RDF_NTRIPLES);
     private static final VariantInfo VARIANT_N3       = new VariantInfo(MediaType.TEXT_RDF_N3);
+    private static final VariantInfo VARIANT_RDF_XML  = new VariantInfo(MediaType.APPLICATION_RDF_XML);
+    private static final VariantInfo VARIANT_RDF_JSON = new VariantInfo(MediaType.APPLICATION_JSON);
+    
+    private static final Map<VariantInfo, Class<? extends SemanticFormatRepresentation>> VARIANT2CLASS = new HashMap<VariantInfo, Class<? extends SemanticFormatRepresentation>>();
+    private static final Map<Class<? extends SemanticFormatRepresentation>, VariantInfo> CLASS2VARIANTS = new HashMap<Class<? extends SemanticFormatRepresentation>, VariantInfo>();
+    
+    static{
+    	VARIANT2CLASS.put(VARIANT_TURTLE,   TurtleRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_NTRIPLES, NTriplesRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_N3,       N3Representation.class);
+    	VARIANT2CLASS.put(VARIANT_RDF_XML,  RdfXmlRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_RDF_JSON, RdfJsonRepresentation.class);
+    	
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
+    		CLASS2VARIANTS.put(VARIANT2CLASS.get(variantInfo), variantInfo);
+
+    	checkDefaultFormats();
+    }
+    
+    private static void checkDefaultFormats(){
+    	final List<String> formats = new Vector<String>();
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet()){
+    		final String semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(variantInfo.getMediaType());
+    		if(semanticFormat == null)
+    			System.err.println("WARNING: " + variantInfo.getMediaType().getName() + " registered in " + OtsopackConverter.class.getName() + " but not in " + SemanticFormatRepresentationRegistry.class.getName());
+    		else
+    			formats.add(semanticFormat);
+    	}
+    	
+    	for(String format : SemanticFormats.getSemanticFormats())
+    		if(!formats.contains(format))
+    			System.err.println("WARNING: Format " + format + " not registered in " + OtsopackConverter.class.getName());
+    }
+    
 
     @Override
     public List<Class<?>> getObjectClasses(Variant source) {
         List<Class<?>> result = null;
 
-        if (VARIANT_TURTLE.isCompatible(source)) {
-            result = addObjectClass(result, Object.class);
-            result = addObjectClass(result, TurtleRepresentation.class);
-        }else if(VARIANT_NTRIPLES.isCompatible(source)) {
-            result = addObjectClass(result, Object.class);
-            result = addObjectClass(result, NTriplesRepresentation.class);
-        }else if(VARIANT_N3.isCompatible(source)) {
-            result = addObjectClass(result, Object.class);
-            result = addObjectClass(result, N3Representation.class);
+        for(VariantInfo variantInfo : VARIANT2CLASS.keySet()){
+        	if(variantInfo.isCompatible(source)){
+        		result = addObjectClass(result, Object.class);
+                result = addObjectClass(result, VARIANT2CLASS.get(variantInfo));
+        	}
         }
 
         return result;
@@ -38,32 +73,54 @@ public class OtsopackConverter extends ConverterHelper {
     public List<VariantInfo> getVariants(Class<?> source) {
         List<VariantInfo> result = null;
 
-        if (source != null) {
-        	if(TurtleRepresentation.class.isAssignableFrom(source))
-        		result = addVariant(result, VARIANT_TURTLE);
-        	if(NTriplesRepresentation.class.isAssignableFrom(source))
-        		result = addVariant(result, VARIANT_NTRIPLES);
-        	if(N3Representation.class.isAssignableFrom(source))
-        		result = addVariant(result, VARIANT_N3);
-        }
+        if (source != null) 
+        	for(Class<? extends SemanticFormatRepresentation> klass : CLASS2VARIANTS.keySet())
+        		if(klass.isAssignableFrom(source))
+        			result = addVariant(result, CLASS2VARIANTS.get(klass));
 
         return result;
+    }
+    
+    private boolean isAssignable(Object source){
+    	return isAssignable(source.getClass());
+    }
+    
+    private boolean isAssignable(Class<?> target){
+    	for(Class<? extends SemanticFormatRepresentation> klass : CLASS2VARIANTS.keySet())
+    		if(klass.isAssignableFrom(target))
+    			return true;
+    	return false;
+    }
+    
+    private boolean isCompatible(Variant target){
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
+    		if(variantInfo.isCompatible(target))
+    			return true;
+    	return false;
+    }
+    
+    private Representation buildRepresentation(Representation source){
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
+    		if(variantInfo.isCompatible(source))
+    			try{
+    				return VARIANT2CLASS.get(variantInfo).getDeclaredConstructor(Representation.class).newInstance(source);
+    			}catch(Exception e){
+    				System.err.println("Couldn't build representation: " + e.getMessage());
+    				e.printStackTrace();
+    			}
+    	return null;
     }
 
     @Override
     public float score(Object source, Variant target, UniformResource resource) {
         float result = -1.0F;
 
-        if (source instanceof TurtleRepresentation || source instanceof NTriplesRepresentation || source instanceof N3Representation) {
+        if (isAssignable(source)) {
             result = 1.0F;
         } else {
             if (target == null) {
                 result = 0.5F;
-            } else if (VARIANT_TURTLE.isCompatible(target)) {
-                result = 0.8F;
-            } else if (VARIANT_N3.isCompatible(target)) {
-                result = 0.8F;
-            } else if (VARIANT_NTRIPLES.isCompatible(target)) {
+            } else if (isCompatible(target)) {
                 result = 0.8F;
             } else {
                 result = 0.5F;
@@ -78,23 +135,11 @@ public class OtsopackConverter extends ConverterHelper {
             UniformResource resource) {
         float result = -1.0F;
 
-        if (source instanceof TurtleRepresentation) {
+        if (isAssignable(source)) {
             result = 1.0F;
-        } else if(source instanceof N3Representation) {
+        } else if (target != null && isAssignable(target)) {
             result = 1.0F;
-        } else if(source instanceof NTriplesRepresentation) {
-            result = 1.0F;
-        } else if ((target != null)
-        		&& (TurtleRepresentation.class.isAssignableFrom(target)
-            			|| N3Representation.class.isAssignableFrom(target)
-            			|| NTriplesRepresentation.class.isAssignableFrom(target)
-        				)) {
-            result = 1.0F;
-        } else if (VARIANT_TURTLE.isCompatible(source)) {
-            result = 0.8F;
-        } else if (VARIANT_N3.isCompatible(source)) {
-            result = 0.8F;
-        } else if (VARIANT_NTRIPLES.isCompatible(source)) {
+        } else if (isCompatible(source)) {
             result = 0.8F;
         }
 
@@ -108,30 +153,15 @@ public class OtsopackConverter extends ConverterHelper {
 
         Representation representation = null;
 
-        if (source instanceof TurtleRepresentation) {
+        if (isAssignable(source))
             representation = source;
-        } else if (source instanceof N3Representation) {
-            representation = source;
-        } else if (source instanceof NTriplesRepresentation) {
-            representation = source;
-        } else if (VARIANT_TURTLE.isCompatible(source)) {
-            representation = new TurtleRepresentation(source);
-        } else if (VARIANT_N3.isCompatible(source)) {
-            representation = new N3Representation(source);
-        } else if (VARIANT_NTRIPLES.isCompatible(source)) {
-            representation = new NTriplesRepresentation(source);
-        }
+        else 
+        	representation = buildRepresentation(source);
 
         if (representation != null) {
             // Handle the conversion
-            if ((target != null)
-                    && (TurtleRepresentation.class.isAssignableFrom(target)
-                    		|| N3Representation.class.isAssignableFrom(target)
-                    		|| NTriplesRepresentation.class.isAssignableFrom(target)
-                    		)) {
+            if (target != null && isAssignable(target)) {
                 result = representation;
-            } else {
-            	throw new IllegalStateException("ESTO NO DEBERÍA SER ASÍ");
             }
         }
 
@@ -143,13 +173,8 @@ public class OtsopackConverter extends ConverterHelper {
             UniformResource resource) {
         Representation result = null;
 
-        if (source instanceof TurtleRepresentation) {
-            result = (TurtleRepresentation) source;
-        } else if(source instanceof N3Representation){
-        	result = (N3Representation) source;
-        } else if(source instanceof NTriplesRepresentation){
-        	result = (NTriplesRepresentation) source;
-        } 
+        if(isAssignable(source))
+        	result = (Representation) source;
 
         return result;
     }
@@ -157,9 +182,8 @@ public class OtsopackConverter extends ConverterHelper {
     @Override
     public <T> void updatePreferences(List<Preference<MediaType>> preferences,
             Class<T> entity) {
-        updatePreferences(preferences, TurtleRepresentation.TEXT_RDF_TURTLE, 1.0F);
-        updatePreferences(preferences, MediaType.TEXT_RDF_N3, 1.0F);
-        updatePreferences(preferences, MediaType.TEXT_RDF_NTRIPLES, 1.0F);
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
+    		updatePreferences(preferences, variantInfo.getMediaType(), 1.0F);
     }
 
 }

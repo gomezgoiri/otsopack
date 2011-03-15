@@ -14,28 +14,29 @@
  */
 package otsopack.full.java.network.communication.resources.graphs;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 
 public interface IGraphResource {
 	@Get("nt")
-	public abstract String toNTriples();
+	public abstract Representation toNTriples();
 	
 	@Get("n3")
-	public abstract String toN3();
+	public abstract Representation toN3();
 
 	@Get("json")
-	public abstract String toJson();
+	public abstract Representation toJson();
 
 	@Get("html")
-	public abstract String toHtml();
+	public abstract Representation toHtml();
 	
 	@Delete("nt")
-	public abstract String deleteNTriples();
+	public abstract Representation deleteNTriples();
 	
 	@Delete("n3")
-	public abstract String deleteN3();
+	public abstract Representation deleteN3();
 	
 	@Delete("json")
-	public abstract String deleteJson();
+	public abstract Representation deleteJson();
 }

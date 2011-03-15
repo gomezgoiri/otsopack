@@ -19,20 +19,32 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.restlet.data.MediaType;
+import org.restlet.data.Preference;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
+import otsopack.commons.data.Graph;
+import otsopack.commons.data.impl.SemanticFormatsManager;
 import otsopack.full.java.network.communication.OtsopackApplication;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationFactory;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 
 public class AbstractServerResource extends ServerResource {
+	
+	protected final static SemanticFormatsManager semanticFormatsManager = new SemanticFormatsManager();
+	protected final static SemanticFormatRepresentationFactory semanticFormatRepresentationFactory = new SemanticFormatRepresentationFactory();
 	
 	protected String getArgument(String argumentName){
 		final String prefname = this.getRequest().getAttributes().get(argumentName).toString();
@@ -89,4 +101,42 @@ public class AbstractServerResource extends ServerResource {
 		return getOtsopackApplication().getPrefixesStorage().getPrefixByURI(prefixUri);
 	}
 
+	protected String [] getAcceptedSemanticFormats(){
+		final List<String> acceptedSemanticFormats = new Vector<String>();
+		for(Preference<MediaType> acceptedMediaType : getRequest().getClientInfo().getAcceptedMediaTypes()){
+			final String acceptedSemanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(acceptedMediaType.getMetadata());
+			if(acceptedSemanticFormat != null)
+				acceptedSemanticFormats.add(acceptedSemanticFormat);
+		}
+		
+		return acceptedSemanticFormats.toArray(new String[]{});
+	}
+	
+	protected Representation serializeGraph(Graph graph){
+		return semanticFormatRepresentationFactory.create(graph);
+	}
+	
+	protected  String checkInputOutputSemanticFormats() {
+		checkInputFormat();
+		final String outputFormat = checkOutputFormats();
+		return outputFormat;
+	}
+
+	protected String checkOutputFormats() {
+		final String outputFormat = semanticFormatsManager.retrieveProperOutput(getAcceptedSemanticFormats());
+		if(outputFormat == null)
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't accept requested formats");
+		return outputFormat;
+	}
+
+	protected void checkInputFormat() {
+		final MediaType contentType = this.getRequestEntity().getMediaType();
+		final String semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(contentType);
+		
+		if(semanticFormat == null)
+			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Invalid semantic format: " + contentType.getName());
+		
+		if(semanticFormatsManager.isInputSupported(semanticFormat))
+			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Could not read " + semanticFormat + " format!");
+	}
 }

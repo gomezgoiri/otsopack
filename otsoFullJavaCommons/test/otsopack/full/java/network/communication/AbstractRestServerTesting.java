@@ -49,6 +49,8 @@ public abstract class AbstractRestServerTesting {
 	@After
 	public void tearDown() throws Exception {
 		//EasyMock.verify(this.mock);
+		System.out.println("Shutting down...");
 		this.rs.shutdown();
+		System.out.println("Shut down!");
 	}
 }

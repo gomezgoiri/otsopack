@@ -48,7 +48,9 @@ public abstract class SemanticFormatRepresentation extends WriterRepresentation 
 	}
 
 	
-	protected abstract String getSemanticFormat();
+	private String getSemanticFormat(){
+		return SemanticFormatRepresentationRegistry.getSemanticFormat(getMediaType());
+	}
 	
 	@Override
 	public void write(Writer writer) throws IOException {

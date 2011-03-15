@@ -28,6 +28,16 @@ public class SemanticFormatRepresentationFactory {
 		registerRepresentation(SemanticFormats.N3,       N3Representation.class);
 		registerRepresentation(SemanticFormats.NTRIPLES, NTriplesRepresentation.class);
 		registerRepresentation(SemanticFormats.TURTLE,   TurtleRepresentation.class);
+		registerRepresentation(SemanticFormats.RDF_JSON, RdfJsonRepresentation.class);
+		registerRepresentation(SemanticFormats.RDF_XML,  RdfXmlRepresentation.class);
+		
+		checkDefaultFormats();
+	}
+
+	private void checkDefaultFormats() {
+		for(String semanticFormat : SemanticFormats.getSemanticFormats())
+			if(!this.registeredClasses.containsKey(semanticFormat))
+				System.err.println("WARNING: Semantic format " + semanticFormat + ", registered in " + SemanticFormats.class.getName() + " is not registered in " + SemanticFormatRepresentationFactory.class.getName());
 	}
 	
 	public void registerRepresentation(String name, Class<? extends SemanticFormatRepresentation> representationClass) {
@@ -43,7 +53,7 @@ public class SemanticFormatRepresentationFactory {
 			final Constructor<? extends SemanticFormatRepresentation> constructor = representationClass.getDeclaredConstructor(Graph.class);
 			return constructor.newInstance(graph);
 		} catch (Exception e) {
-			throw new IllegalStateException("Couldn't build " + SemanticFormatRepresentation.class.getName() + ": " + e.getMessage(), e);
+			throw new IllegalStateException("Couldn't build " + SemanticFormatRepresentation.class.getName() + " with class" + representationClass.getName() + ": " + e.getMessage(), e);
 		}
 	}
 }

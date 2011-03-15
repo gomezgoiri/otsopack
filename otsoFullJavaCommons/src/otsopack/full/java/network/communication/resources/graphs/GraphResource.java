@@ -15,6 +15,8 @@
 package otsopack.full.java.network.communication.resources.graphs;
 
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
@@ -60,28 +62,28 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	}
 	
 	@Override
-	public String toNTriples() {
-		final Graph graph = readGraph(SemanticFormats.NTRIPLES);
-		// TODO convert to N-Triples
-		return "read graph in N-Triples";
-	}
-	
-	@Override
-	public String toN3() {
-		final Graph graph = readGraph(SemanticFormats.N3);
-		// TODO convert to N3
-		return "read graph in N·";
+	public Representation toNTriples() {
+		final String outputFormat = checkInputOutputSemanticFormats();
+		final Graph graph = readGraph(outputFormat);
+		return serializeGraph(graph);
 	}
 
 	@Override
-	public String toJson() {
+	public Representation toN3() {
+		final Graph graph = readGraph(SemanticFormats.N3);
+		// TODO convert to N3
+		return new StringRepresentation("read graph in N·");
+	}
+
+	@Override
+	public Representation toJson() {
 		final Graph graph = readGraph(SemanticFormats.RDF_JSON);
 		// TODO convert to JSON
-		return "read graph in JSON";
+		return new StringRepresentation("read graph in JSON");
 	}
 	
 	@Override
-	public String toHtml() {
+	public Representation toHtml() {
 		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
 		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
 		bodyHtml.append("\t\t<textarea rows=\"10\" cols=\"50\">");
@@ -89,30 +91,30 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		bodyHtml.append("</textarea>\n");
 		bodyHtml.append("\t</fieldset>\n");
 		
-		return HTMLEncoder.encodeURIs(
+		return new StringRepresentation(HTMLEncoder.encodeURIs(
 					super.getArguments(ROOT).entrySet(),
 					null,
-					bodyHtml.toString()); // TODO print NTriples
+					bodyHtml.toString())); // TODO print NTriples
 	}
 	
 	@Override
-	public String deleteNTriples() {
+	public Representation deleteNTriples() {
 		final Graph graph = readGraph(SemanticFormats.NTRIPLES);
 		// TODO convert to N-Triples
-		return "take graph in N-Triples";
+		return new StringRepresentation("take graph in N-Triples");
 	}
 	
 		@Override
-	public String deleteN3() {
+	public Representation deleteN3() {
 		final Graph graph = readGraph(SemanticFormats.N3);
 		// TODO convert to N3
-		return "take graph in N3";
+		return new StringRepresentation("take graph in N3");
 	}
 	
 	@Override
-	public String deleteJson() {
+	public Representation deleteJson() {
 		final Graph graph = readGraph(SemanticFormats.RDF_JSON);
 		// TODO convert to JSON
-		return "take graph in JSON";
+		return new StringRepresentation("take graph in JSON");
 	}
 }

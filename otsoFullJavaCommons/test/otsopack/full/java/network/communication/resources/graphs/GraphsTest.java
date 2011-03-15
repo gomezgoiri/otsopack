@@ -49,13 +49,16 @@ public class GraphsTest extends AbstractRestServerTesting {
 	
 	@Test
 	public void testPostGraph() throws Exception {		
+		System.out.println("testPostGraph");
 		final String space = URLEncoder.encode("http://space1/", "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
 		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
 		
+		System.out.println("converters");
 		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
 		for(ConverterHelper helper : converters)
 			System.out.println(helper.getClass().getName());
+		System.out.println("postconverters");
 		
 //		// Test POST
 //		Representation rep = new NTriplesRepresentation("");

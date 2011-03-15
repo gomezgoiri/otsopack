@@ -29,12 +29,22 @@ public final class SemanticFormats {
 		loadDefaultFormats();
 	}
 	
+	private SemanticFormats(){}
+	
 	private static void loadDefaultFormats(){
 		FORMATS.addElement(NTRIPLES);
 		FORMATS.addElement(N3);
 		FORMATS.addElement(TURTLE);
 		FORMATS.addElement(RDF_XML);
 		FORMATS.addElement(RDF_JSON);
+	}
+	
+	public static String [] getSemanticFormats(){
+		final String [] semanticFormats = new String[FORMATS.size()];
+		for(int i = 0; i< semanticFormats.length; ++i)
+			semanticFormats[i] = (String)FORMATS.get(i);
+		
+		return semanticFormats;
 	}
 	
 	public static boolean isSemanticFormat(String format){
