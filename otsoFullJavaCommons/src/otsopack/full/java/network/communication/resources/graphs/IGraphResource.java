@@ -18,25 +18,16 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 
+import otsopack.full.java.network.communication.representations.OtsopackConverter;
+
 public interface IGraphResource {
-	@Get("nt")
-	public abstract Representation toNTriples();
+	@Get(OtsopackConverter.MEDIA_TYPE_SEMANTIC_FORMATS)
+	public abstract Representation read();
 	
-	@Get("n3")
-	public abstract Representation toN3();
-
-	@Get("json")
-	public abstract Representation toJson();
-
 	@Get("html")
 	public abstract Representation toHtml();
 	
-	@Delete("nt")
-	public abstract Representation deleteNTriples();
+	@Delete
+	public abstract Representation take();
 	
-	@Delete("n3")
-	public abstract Representation deleteN3();
-	
-	@Delete("json")
-	public abstract Representation deleteJson();
 }

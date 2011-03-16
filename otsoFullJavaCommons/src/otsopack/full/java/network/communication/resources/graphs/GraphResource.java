@@ -32,54 +32,43 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	public static final String ROOT = GraphsResource.ROOT + "/{graph}";
 	
 	protected Graph readGraph(SemanticFormat outputFormat) {
-		final String space   = getArgument("space");
-		final String graphuri   = getArgument("graph");
-		final Graph ret;
+		final String space    = getArgument("space");
+		final String graphuri = getArgument("graph");
 		try {			
 			final IController controller = getController();
-			ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+			return controller.getDataAccessService().read(space, graphuri, outputFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		}
-		return ret;
 	}
 	
 	protected Graph takeGraph(SemanticFormat outputFormat) {
-		final String space   = getArgument("space");
-		final String graphuri   = getArgument("graph");
-		final Graph ret;
+		final String space    = getArgument("space");
+		final String graphuri = getArgument("graph");
 		try {			
 			final IController controller = getController();
-			ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
+			return controller.getDataAccessService().take(space, graphuri, outputFormat);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		}
-		return ret;
 	}
 	
 	@Override
-	public Representation toNTriples() {
-		final SemanticFormat outputFormat = checkInputOutputSemanticFormats();
+	public Representation read() {
+		final SemanticFormat outputFormat = checkOutputSemanticFormats();
 		final Graph graph = readGraph(outputFormat);
 		return serializeGraph(graph);
 	}
 
 	@Override
-	public Representation toN3() {
-		final Graph graph = readGraph(SemanticFormat.N3);
-		// TODO convert to N3
-		return new StringRepresentation("read graph in N·");
-	}
-
-	@Override
-	public Representation toJson() {
-		final Graph graph = readGraph(SemanticFormat.RDF_JSON);
-		// TODO convert to JSON
-		return new StringRepresentation("read graph in JSON");
+	public Representation take() {
+		final SemanticFormat outputFormat = checkOutputSemanticFormats();
+		final Graph graph = takeGraph(outputFormat);
+		return serializeGraph(graph);
 	}
 	
 	@Override
@@ -95,26 +84,5 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 					super.getArguments(ROOT).entrySet(),
 					null,
 					bodyHtml.toString())); // TODO print NTriples
-	}
-	
-	@Override
-	public Representation deleteNTriples() {
-		final Graph graph = readGraph(SemanticFormat.NTRIPLES);
-		// TODO convert to N-Triples
-		return new StringRepresentation("take graph in N-Triples");
-	}
-	
-		@Override
-	public Representation deleteN3() {
-		final Graph graph = readGraph(SemanticFormat.N3);
-		// TODO convert to N3
-		return new StringRepresentation("take graph in N3");
-	}
-	
-	@Override
-	public Representation deleteJson() {
-		final Graph graph = readGraph(SemanticFormat.RDF_JSON);
-		// TODO convert to JSON
-		return new StringRepresentation("take graph in JSON");
 	}
 }

@@ -63,7 +63,7 @@ public class RestUnicastCommunication implements ICommunication {
 		try {
 			ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			IGraphResource res = cr.wrap(IGraphResource.class);
-			res.toN3();
+			res.read();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

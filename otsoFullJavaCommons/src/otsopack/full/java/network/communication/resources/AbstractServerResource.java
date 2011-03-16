@@ -129,6 +129,12 @@ public class AbstractServerResource extends ServerResource {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't accept requested formats");
 		return outputFormat;
 	}
+	
+	protected SemanticFormat getInputSemanticFormat(){
+		final MediaType contentType = this.getRequestEntity().getMediaType();
+		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(contentType);
+		return semanticFormat;
+	}
 
 	protected void checkInputSemanticFormat() {
 		final MediaType contentType = this.getRequestEntity().getMediaType();

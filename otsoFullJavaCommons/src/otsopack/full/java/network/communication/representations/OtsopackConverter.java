@@ -17,6 +17,11 @@ import org.restlet.resource.UniformResource;
 import otsopack.commons.data.SemanticFormat;
 
 public class OtsopackConverter extends ConverterHelper {
+	
+	// Using "|" as required by RESTlet  
+	public static final String MEDIA_TYPE_SEMANTIC_FORMATS = "nt|n3|json|rdf+xml|turtle";
+	
+
     private static final VariantInfo VARIANT_TURTLE   = new VariantInfo(MediaType.APPLICATION_RDF_TURTLE);
     private static final VariantInfo VARIANT_NTRIPLES = new VariantInfo(MediaType.TEXT_RDF_NTRIPLES);
     private static final VariantInfo VARIANT_N3       = new VariantInfo(MediaType.TEXT_RDF_N3);
@@ -52,6 +57,9 @@ public class OtsopackConverter extends ConverterHelper {
     	for(SemanticFormat format : SemanticFormat.getSemanticFormats())
     		if(!formats.contains(format))
     			System.err.println("WARNING: Format " + format + " not registered in " + OtsopackConverter.class.getName());
+    	
+    	if(MEDIA_TYPE_SEMANTIC_FORMATS.split("|").length != VARIANT2CLASS.size())
+    		System.err.println("WARNING: Media type semantic formats size is different of VARIANT2CLASS size at " + OtsopackConverter.class.getName());
     }
     
 

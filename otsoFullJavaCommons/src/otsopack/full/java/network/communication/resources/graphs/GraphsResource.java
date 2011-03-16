@@ -27,6 +27,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -92,30 +93,21 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	}
 
 	@Override
-	public String writeGraphJSON(String json) {
-		final Graph graph = new Graph(json, SemanticFormat.RDF_JSON);
-		
-		return write(graph, SemanticFormat.RDF_JSON);
-	}
-
-	@Override
-	public String writeGraphNTriples(String ntriples) {
-		final Graph graph = new Graph(ntriples, SemanticFormat.NTRIPLES);
-		
-		return write(graph, SemanticFormat.NTRIPLES);
+	public String write(SemanticFormatRepresentation semanticData) {
+		final SemanticFormat outputFormat = checkInputOutputSemanticFormats();
+		final String graphURI = write(semanticData.getGraph(), outputFormat);
+		return graphURI;
 	}
 	
 	protected String write(Graph graph, SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
-		String ret = null;
 		try {		
 			final IController controller = getController();
-			ret = controller.getDataAccessService().write(space,graph);
+			return controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't write in format: " + semanticFormat, e);
 		}
-		return ret;
 	}
 }

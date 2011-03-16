@@ -17,6 +17,9 @@ package otsopack.full.java.network.communication.resources.graphs;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
+import otsopack.full.java.network.communication.representations.OtsopackConverter;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
+
 public interface IGraphsResource {
 	@Get("html")
 	public abstract String toHtml();
@@ -24,9 +27,6 @@ public interface IGraphsResource {
 	@Get("json")
 	public abstract String toJson();
 	
-	@Post("json")
-	public abstract String writeGraphJSON(String json);
-	
-	@Post("nt")
-	public abstract String writeGraphNTriples(String ntriples);
+	@Post(OtsopackConverter.MEDIA_TYPE_SEMANTIC_FORMATS)
+	public abstract String write(SemanticFormatRepresentation semanticData);
 }
