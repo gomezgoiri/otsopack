@@ -15,6 +15,8 @@
 package otsopack.commons.data.impl.microjena;
 
 import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
+import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
+import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,8 +25,13 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.TripleParseException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import es.deustotech.microjena.rdf.model.ModelFactory;
+import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
+import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
 
 public class ModelImpl implements IModel {
 	final Model model;
@@ -45,6 +52,53 @@ public class ModelImpl implements IModel {
 	public IModel query(ITemplate template) {
 		//must be a TemplateImpl since there is no other implementation
 		return new ModelImpl(model.query((TemplateImpl)template));
+	}
+	
+	private String wildcard2str(WildcardTemplate tpl){
+		final StringBuffer buff = new StringBuffer();
+		if(tpl.getSubject() == null)
+			buff.append("?");
+		else{
+			buff.append("<");
+			buff.append(tpl.getSubject());
+			buff.append(">");
+		}
+		buff.append(" ");
+		if(tpl.getPredicate() == null)
+			buff.append("?");
+		else{
+			buff.append("<");
+			buff.append(tpl.getPredicate());
+			buff.append(">");
+		}
+		buff.append(" ");
+		if(tpl.getObject() == null)
+			buff.append("?");
+		else{
+			final Object obj = tpl.getObject();
+			if(obj == null)
+				buff.append("?");
+			else{
+				buff.append(ResourceFactory.createTypedLiteral(obj).toString());
+			}
+		}
+		return buff.toString();
+	}
+	
+	public IModel query(Template template) throws UnsupportedTemplateException {
+		if(template instanceof WildcardTemplate){
+			final WildcardTemplate wildcard = (WildcardTemplate)template;
+			final String wildcardStr = wildcard2str(wildcard);
+			final Selector selector;
+			try {
+				selector = SelectorFactory.createSelector(wildcardStr);
+			} catch (InvalidTemplateException e) {
+				throw new UnsupportedTemplateException("Could not create template with " + wildcardStr);
+			}
+			return new ModelImpl(model.query(new TemplateImpl(selector)));
+		}
+		
+		throw new UnsupportedTemplateException("Template class " + template.getClass().getName() + " unsupported in " + getClass().getName());
 	}
 	
 	public ModelImpl getModelImpl() {

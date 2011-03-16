@@ -19,12 +19,14 @@ import java.util.Vector;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.Util;
 
 public class MemoryDataAccess implements IDataAccess {
@@ -115,7 +117,25 @@ public class MemoryDataAccess implements IDataAccess {
 		return (ret==null)? null: ret.write(outputFormat);
 	}
 
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
+		long start = System.currentTimeMillis();
+		SpaceMem space = getSpace(spaceURI);
+		if( space == null ) throw new SpaceNotExistsException();
+		ModelImpl ret = space.query(template);
+		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return (ret==null)? null: ret.write(outputFormat);
+	}
+
 	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		long start = System.currentTimeMillis();
+		SpaceMem space = getSpace(spaceURI);
+		if( space == null ) throw new SpaceNotExistsException();		
+		ModelImpl ret = space.read(template);
+		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return (ret==null)? null: ret.write(outputFormat);
+	}
+
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		
@@ -134,6 +154,15 @@ public class MemoryDataAccess implements IDataAccess {
 	}
 	
 	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		long start = System.currentTimeMillis();
+		SpaceMem space = getSpace(spaceURI);
+		if( space == null ) throw new SpaceNotExistsException();		
+		ModelImpl ret = space.take(template);
+		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return (ret==null)? null: ret.write(outputFormat);
+	}
+
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
 		long start = System.currentTimeMillis();
 		SpaceMem space = getSpace(spaceURI);
 		if( space == null ) throw new SpaceNotExistsException();		

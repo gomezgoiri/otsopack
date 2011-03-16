@@ -18,9 +18,11 @@ import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 /**
  * Data Access (local database) Interface
@@ -67,16 +69,36 @@ public interface IDataAccess extends ILayer {
 	 * @param spaceURI
 	 * @param template
 	 * @return set of triples or null if no triples were found
+	 * @deprecated
 	 */
 	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	
+	/**
+	 * query form space according to template (all found triples will be returned)
+	 * @param spaceURI
+	 * @param template
+	 * @return set of triples or null if no triples were found
+	 * @throws UnsupportedTemplateException 
+	 */
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
 	
 	/**
 	 * read form space according to template (only one graph will be returned)
 	 * @param spaceURI
 	 * @param template
 	 * @return set of triples or null if no triples were found
+	 * @deprecated
 	 */
 	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+
+	/**
+	 * read form space according to template (only one graph will be returned)
+	 * @param spaceURI
+	 * @param template
+	 * @return set of triples or null if no triples were found
+	 * @throws UnsupportedTemplateException 
+	 */
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
 
 	/**
 	 * read graph from space
@@ -91,8 +113,18 @@ public interface IDataAccess extends ILayer {
 	 * @param spaceURI
 	 * @param template
 	 * @return set of triples or null if no triples were found
+	 * @deprecated
 	 */
 	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	
+	/**
+	 * read and remove a graph from the space.
+	 * @param spaceURI
+	 * @param template
+	 * @return set of triples or null if no triples were found
+	 * @throws UnsupportedTemplateException 
+	 */
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
 	
 	/**
 	 * read and remove a graph from the space.

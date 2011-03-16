@@ -15,7 +15,9 @@
 package otsopack.commons.dataaccess.memory.space;
 
 import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public class GraphMem {
 	final private String uri;
@@ -31,6 +33,10 @@ public class GraphMem {
 	}
 	
 	public boolean contains(ITemplate template) {
+		return !model.query(template).isEmpty();
+	}
+	
+	public boolean contains(Template template) throws UnsupportedTemplateException {
 		return !model.query(template).isEmpty();
 	}
 	

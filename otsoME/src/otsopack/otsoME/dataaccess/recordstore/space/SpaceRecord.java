@@ -34,9 +34,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.uuid.UUIDFactory;
 
 public class SpaceRecord implements ILayer {
@@ -189,7 +191,39 @@ public class SpaceRecord implements ILayer {
 		return (ret.isEmpty())? null: ret.write(outputFormat);
 	}
 	
+	public Graph query(Template template, SemanticFormat outputFormat) throws UnsupportedTemplateException {
+		//Graph ret = new Graph("", format);
+		IModel ret = new ModelImpl();
+		for(int i=0; i<graphs.size(); i++) {
+			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
+			try {
+				ModelImpl graph = (ModelImpl) gm.query(template);
+				if( graph!=null ) {
+					ret.addTriples( graph );
+				}
+			} catch (RecordStoreException e) {
+				e.printStackTrace();
+			}
+		}
+		return (ret.isEmpty())? null: ret.write(outputFormat);
+	}
+	
 	public Graph read(ITemplate template, SemanticFormat outputFormat) {
+		Graph ret = null;
+		for(int i=0; i<graphs.size() && ret==null; i++) {
+			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
+			try {
+				if(gm.contains(template)) {
+					ret = gm.getModel().write(outputFormat);
+				}
+			} catch (RecordStoreException e) {
+				e.printStackTrace();
+			}
+		}
+		return ret;
+	}
+
+	public Graph read(Template template, SemanticFormat outputFormat) throws UnsupportedTemplateException {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
@@ -220,6 +254,22 @@ public class SpaceRecord implements ILayer {
 	}
 
 	public Graph take(ITemplate template, SemanticFormat outputFormat) {
+		Graph ret = null;
+		for(int i=0; i<graphs.size() && ret==null; i++) {
+			GraphRecord gm = (GraphRecord) graphs.elementAt(i);
+			try {
+				if(gm.contains(template)) {
+					remove(gm);
+					ret = gm.getModel().write(outputFormat); // we hold the first graph which contains a triple like that
+				}
+			} catch (RecordStoreException e) {
+				e.printStackTrace();
+			}
+		}
+		return ret;
+	}
+
+	public Graph take(Template template, SemanticFormat outputFormat) throws UnsupportedTemplateException {
 		Graph ret = null;
 		for(int i=0; i<graphs.size() && ret==null; i++) {
 			GraphRecord gm = (GraphRecord) graphs.elementAt(i);

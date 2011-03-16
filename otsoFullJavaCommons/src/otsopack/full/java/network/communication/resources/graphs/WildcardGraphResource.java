@@ -21,8 +21,8 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -38,7 +38,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final String object    = getArgument("object");
 		
 		try {
-			ITemplate tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
+			Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
 			
 			final IController controller = getController();
 			return controller.getDataAccessService().read(space, tpl, semanticFormat);

@@ -30,10 +30,12 @@ import org.apache.log4j.Logger;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
 import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
 
@@ -224,7 +226,23 @@ public class RecordStoreDataAccess implements IDataAccess {
 		return ret;
 	}
 
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
+		final long start = System.currentTimeMillis();
+		final SpaceRecord sr = getJoinedSpace(spaceURI);
+		final Graph ret = sr.query(template,outputFormat);
+		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return ret;
+	}
+
 	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		final long start = System.currentTimeMillis();
+		final SpaceRecord sr = getJoinedSpace(spaceURI);
+		final Graph ret = sr.read(template,outputFormat);
+		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return ret;
+	}
+
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.read(template,outputFormat);
@@ -241,6 +259,14 @@ public class RecordStoreDataAccess implements IDataAccess {
 	}
 
 	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		final long start = System.currentTimeMillis();
+		final SpaceRecord sr = getJoinedSpace(spaceURI);
+		final Graph ret = sr.take(template,outputFormat);
+		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
+		return ret;
+	}
+
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.take(template,outputFormat);

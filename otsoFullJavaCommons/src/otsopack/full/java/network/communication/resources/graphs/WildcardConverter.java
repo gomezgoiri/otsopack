@@ -14,19 +14,17 @@
 
 package otsopack.full.java.network.communication.resources.graphs;
 
-import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.Template;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public class WildcardConverter {
 	
-	public static ITemplate createTemplateFromURL(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
-		ISemanticFactory sf = new SemanticFactory();
-		return sf.createTemplate(
-					adaptFieldFormat(subject,'s', prefixes) + " " +
-					adaptFieldFormat(predicate,'p', prefixes) + " " +
-					adaptFieldFormat(object,'o', prefixes) +" ."
+	public static Template createTemplateFromURL(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
+		return new WildcardTemplate(
+					adaptFieldFormat(subject,'s', prefixes),
+					adaptFieldFormat(predicate,'p', prefixes),
+					adaptFieldFormat(object,'o', prefixes)
 				);
 	}
 	
