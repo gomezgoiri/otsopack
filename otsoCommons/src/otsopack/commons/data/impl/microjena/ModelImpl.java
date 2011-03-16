@@ -26,6 +26,8 @@ import otsopack.commons.data.IModel;
 import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.data.TripleLiteralObject;
+import otsopack.commons.data.TripleURIObject;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -58,7 +60,7 @@ public class ModelImpl implements IModel {
 		final StringBuffer buff = new StringBuffer();
 		if(tpl.getSubject() == null)
 			buff.append("?");
-		else{
+		else {
 			buff.append("<");
 			buff.append(tpl.getSubject());
 			buff.append(">");
@@ -66,7 +68,7 @@ public class ModelImpl implements IModel {
 		buff.append(" ");
 		if(tpl.getPredicate() == null)
 			buff.append("?");
-		else{
+		else {
 			buff.append("<");
 			buff.append(tpl.getPredicate());
 			buff.append(">");
@@ -78,8 +80,13 @@ public class ModelImpl implements IModel {
 			final Object obj = tpl.getObject();
 			if(obj == null)
 				buff.append("?");
-			else{
-				buff.append(ResourceFactory.createTypedLiteral(obj).toString());
+			else if( obj instanceof TripleLiteralObject ) {
+				Object lit = ((TripleLiteralObject)obj).getValue();
+				buff.append(ResourceFactory.createTypedLiteral(lit).toString());
+			} else if( obj instanceof TripleLiteralObject ) {
+				buff.append("<");
+				buff.append( ((TripleURIObject)tpl.getObject()).getURI() );
+				buff.append(">");
 			}
 		}
 		return buff.toString();

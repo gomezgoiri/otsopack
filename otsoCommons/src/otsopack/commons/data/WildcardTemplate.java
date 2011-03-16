@@ -17,9 +17,9 @@ package otsopack.commons.data;
 public class WildcardTemplate extends Template {
 	private final String subject;
 	private final String predicate;
-	private final Object object;
+	private final ITripleObject object;
 	
-	public WildcardTemplate(String subject, String predicate, String object){
+	protected WildcardTemplate(String subject, String predicate, ITripleObject object){
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;
@@ -33,7 +33,7 @@ public class WildcardTemplate extends Template {
 		return predicate;
 	}
 
-	public Object getObject() {
+	public ITripleObject getObject() {
 		return object;
 	}
 }
