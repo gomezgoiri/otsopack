@@ -13,6 +13,7 @@
  */
 package otsopack.otsoME;
 
+import jmunit.framework.cldc11.TestSuite;
 import otsopack.otsoME.network.communication.demand.DemandRecordTest;
 import otsopack.otsoME.network.communication.demand.local.LocalDemandManagerTest;
 import otsopack.otsoME.network.communication.demand.remote.GarbageCollectorTest;
@@ -24,7 +25,6 @@ import otsopack.otsoME.network.communication.incoming.response.URIResponseTest;
 import otsopack.otsoME.network.communication.notifications.AdvertisementTest;
 import otsopack.otsoME.network.communication.notifications.NotificationContainerTest;
 import otsopack.otsoME.network.communication.notifications.SubscriptionTest;
-import jmunit.framework.cldc11.TestSuite;
 
 public class MicroemuTscMeSuite extends TestSuite {
 	

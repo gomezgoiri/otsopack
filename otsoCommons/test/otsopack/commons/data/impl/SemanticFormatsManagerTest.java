@@ -14,9 +14,9 @@
 
 package otsopack.commons.data.impl;
 
+import junit.framework.TestCase;
 import otsopack.commons.data.ISemanticFormatConversor;
 import otsopack.commons.data.SemanticFormat;
-import junit.framework.TestCase;
 
 public class SemanticFormatsManagerTest extends TestCase {
 	

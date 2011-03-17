@@ -35,6 +35,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.exceptions.MalformedMessageException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.log.Printer;
 import otsopack.commons.util.Util;
 import otsopack.droid.network.communication.incoming.ITSCallback;
@@ -176,6 +177,8 @@ public class JxmeSpace implements PipeMsgListener, IMessageSender {
 				            	MessageParser.parseMessage(msg, listeners);
 							} 
 			            	catch (MalformedMessageException e) {
+								Printer.err_println("Poll, Error processing message: " + e.getMessage());
+							} catch (UnsupportedTemplateException e) {
 								Printer.err_println("Poll, Error processing message: " + e.getMessage());
 							}
 			            }

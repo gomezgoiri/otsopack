@@ -13,12 +13,11 @@
  */
 package otsopack.otsoME.network.communication.incoming.response;
 
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.otsoME.network.communication.incoming.response.URIResponse;
-import jmunit.framework.cldc11.TestCase;
 
 public class URIResponseTest extends TestCase {
 	

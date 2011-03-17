@@ -33,8 +33,8 @@ import net.jxta.util.java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
 
-import otsopack.otsoME.configuration.JxmeConfiguration;
 import otsopack.commons.exceptions.TSException;
+import otsopack.otsoME.configuration.JxmeConfiguration;
 
 public class JxmePeerBase {
 	private final static Logger LOG = Logger.getInstance(JxmePeerBase.class.getName());

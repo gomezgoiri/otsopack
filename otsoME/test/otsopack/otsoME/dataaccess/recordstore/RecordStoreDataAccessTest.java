@@ -16,8 +16,8 @@ package otsopack.otsoME.dataaccess.recordstore;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -215,7 +215,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		}
 		memo.joinSpace(spaceURI);
 		
-		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
+		final Template sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
 		final ModelImpl model = new ModelImpl();
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
@@ -257,7 +257,7 @@ public class RecordStoreDataAccessTest extends TestCase {
 		}
 		memo.joinSpace(spaceURI);
 		
-		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj2+"> <"+ExampleME.prop1+"> ?o .");
+		final Template sel = sf.createTemplate("<"+ExampleME.subj2+"> <"+ExampleME.prop1+"> ?o .");
 		ModelImpl model = new ModelImpl();
 		model.addTriple( trips[0] = new TripleImpl(ExampleME.subj1, ExampleME.prop1, ExampleME.obj1) );
 		model.addTriple( trips[1] = new TripleImpl(ExampleME.subj2, ExampleME.prop2, ExampleME.obj2) );
@@ -296,8 +296,8 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
-		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
-		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
+		final Template sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
 		final Graph ret = memo.read(spaceURI, sel, SemanticFormat.NTRIPLES);
 		final Graph ret2 = memo.read(spaceURI, sel2, SemanticFormat.NTRIPLES);
 		final Graph ret3 = memo.read(spaceURI, sel, SemanticFormat.NTRIPLES);
@@ -430,8 +430,8 @@ public class RecordStoreDataAccessTest extends TestCase {
 		model.addTriple( trips[5] = new TripleImpl(ExampleME.subj6, ExampleME.prop3, ExampleME.obj3) );
 		memo.write(spaceURI, model.write(SemanticFormat.NTRIPLES));
 		
-		final ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
-		final ITemplate sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
+		final Template sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template sel2 = sf.createTemplate("<"+ExampleME.subj5+"> <"+ExampleME.prop2+"> ?o .");
 		final Graph ret = memo.take(spaceURI, sel, SemanticFormat.NTRIPLES);
 		final Graph ret2 = memo.take(spaceURI, sel2, SemanticFormat.NTRIPLES);
 		final Graph ret3 = memo.take(spaceURI, sel, SemanticFormat.NTRIPLES);

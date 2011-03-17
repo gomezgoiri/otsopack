@@ -13,8 +13,8 @@
  */
 package otsopack.otsoME.kernel;
 
-import otsopack.otsoME.network.jxme.JxmeNetwork;
 import otsopack.commons.kernel.AbstractKernel;
+import otsopack.otsoME.network.jxme.JxmeNetwork;
 
 public class Kernel extends AbstractKernel {
 

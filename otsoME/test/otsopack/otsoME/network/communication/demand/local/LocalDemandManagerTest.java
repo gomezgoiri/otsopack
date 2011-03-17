@@ -15,8 +15,8 @@ package otsopack.otsoME.network.communication.demand.local;
 
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
@@ -51,7 +51,7 @@ public class LocalDemandManagerTest extends TestCase {
 	}
 	
 	private CallbackClass addLocalEntry(LocalDemandManager mngr, String selector) throws MalformedTemplateException {
-		ITemplate sel = new SemanticFactory().createTemplate(selector);
+		Template sel = new SemanticFactory().createTemplate(selector);
 		CallbackClass ret = new CallbackClass();
 		mngr.demand(sel, 2000, ret);
 		return ret;
@@ -60,7 +60,7 @@ public class LocalDemandManagerTest extends TestCase {
 	public void testCallbackForMatchingTemplates() throws Exception {
 		final LocalDemandManager mngr = new LocalDemandManager();
 		mngr.setDemandSender(new IDemandSender() {
-			public void demand(ITemplate template, long leaseTime) {
+			public void demand(Template template, long leaseTime) {
 				// fake
 			}
 		});

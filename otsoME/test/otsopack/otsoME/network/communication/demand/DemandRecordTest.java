@@ -13,14 +13,12 @@
  */
 package otsopack.otsoME.network.communication.demand;
 
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.otsoME.network.communication.demand.DemandRecord;
-import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import jmunit.framework.cldc11.TestCase;
 
 public class DemandRecordTest extends TestCase {
 	
@@ -49,7 +47,7 @@ public class DemandRecordTest extends TestCase {
 	
 	public void testAddDemand() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
-		final ITemplate[] s = new ITemplate[5];
+		final Template[] s = new Template[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
 		s[1] = sf.createTemplate("<http://s2> ?p2 ?o2 .");
 		s[2] = sf.createTemplate("<http://s3> ?p3 ?o3 .");
@@ -84,7 +82,7 @@ public class DemandRecordTest extends TestCase {
 
 	public void testRemoveExpiredTil() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
-		final ITemplate[] s = new ITemplate[5];
+		final Template[] s = new Template[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
 		s[1] = sf.createTemplate("<http://s2> ?p2 ?o2 .");
 		s[2] = sf.createTemplate("<http://s3> ?p3 ?o3 .");
@@ -106,15 +104,15 @@ public class DemandRecordTest extends TestCase {
 }
 
 class FakeDemandEntry implements IDemandEntry {
-	ITemplate template;
+	Template template;
 	long expires;
 	
-	public FakeDemandEntry(ITemplate tpl, long leaseTime) {
+	public FakeDemandEntry(Template tpl, long leaseTime) {
 		this.template = tpl;
 		this.expires = leaseTime + System.currentTimeMillis();
 	}
 	
-	public ITemplate getTemplate() {
+	public Template getTemplate() {
 		return template;
 	}
 	

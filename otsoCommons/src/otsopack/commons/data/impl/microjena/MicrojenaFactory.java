@@ -17,8 +17,8 @@ package otsopack.commons.data.impl.microjena;
 import java.util.Hashtable;
 
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
 import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
@@ -40,7 +40,7 @@ public class MicrojenaFactory implements ISemanticFactory {
 		return microjenaFormat;
 	}
 	
-	public ITemplate createTemplate(String template) throws MalformedTemplateException {
+	public Template createTemplate(String template) throws MalformedTemplateException {
 		try {
 			return new TemplateImpl( SelectorFactory.createSelector(template) );
 		} catch (InvalidTemplateException e) {

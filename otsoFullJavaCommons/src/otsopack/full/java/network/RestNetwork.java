@@ -16,8 +16,9 @@ package otsopack.full.java.network;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -65,7 +66,7 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat,long timeout)
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat,long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
@@ -79,21 +80,21 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String subscribe(String spaceURI, ITemplate template,
+	public String subscribe(String spaceURI, NotificableTemplate template,
 			INotificationListener listener) throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
@@ -107,7 +108,7 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public String advertise(String spaceURI, ITemplate template)
+	public String advertise(String spaceURI, NotificableTemplate template)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
 		return null;
@@ -121,7 +122,7 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public void demand(String spaceURI, ITemplate template, long leaseTime,
+	public void demand(String spaceURI, Template template, long leaseTime,
 			ISuggestionCallback callback) throws TSException {
 		// TODO Auto-generated method stub
 

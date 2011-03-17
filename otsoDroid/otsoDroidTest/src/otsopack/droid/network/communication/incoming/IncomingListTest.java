@@ -18,7 +18,6 @@ import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.droid.network.communication.incoming.IncomingList;
 import otsopack.droid.network.communication.incoming.response.ModelResponse;
 import otsopack.droid.network.communication.incoming.response.Response;
 import otsopack.droid.network.communication.incoming.response.URIResponse;

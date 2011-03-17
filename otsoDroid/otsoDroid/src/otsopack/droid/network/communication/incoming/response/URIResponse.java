@@ -13,14 +13,14 @@
  */
 package otsopack.droid.network.communication.incoming.response;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 
 //for responses to Subscribe and Advertise
 public class URIResponse extends Response {
 	String uri;
 	final Object lock;
 	
-	public URIResponse(ITemplate tpl, Object lock) {
+	public URIResponse(Template tpl, Object lock) {
 		super(tpl);
 		this.lock = lock;
 		this.uri = null;

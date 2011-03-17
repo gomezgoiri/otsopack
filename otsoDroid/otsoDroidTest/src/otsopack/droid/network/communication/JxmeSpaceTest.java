@@ -16,8 +16,6 @@ package otsopack.droid.network.communication;
 import java.io.IOException;
 import java.util.Iterator;
 
-import otsopack.droid.network.communication.JxmeSpace;
-
 import junit.framework.TestCase;
 import net.jxta.access.AccessService;
 import net.jxta.discovery.DiscoveryService;

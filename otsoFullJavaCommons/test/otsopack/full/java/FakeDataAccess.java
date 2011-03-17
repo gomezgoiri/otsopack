@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.IDataAccess;
@@ -103,21 +102,9 @@ public class FakeDataAccess implements IDataAccess {
 	}
 	
 	@Override
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat)
-			throws SpaceNotExistsException {
-		return this.nextQuery;
-	}
-
-	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextQuery;
-	}
-
-	@Override
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat)
-			throws SpaceNotExistsException {
-		return this.nextRead;
 	}
 
 	@Override
@@ -130,12 +117,6 @@ public class FakeDataAccess implements IDataAccess {
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
 		return this.nextRead;
-	}
-
-	@Override
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat)
-			throws SpaceNotExistsException {
-		return this.nextTake;
 	}
 
 	@Override

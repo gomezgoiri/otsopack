@@ -14,7 +14,6 @@
 
 package otsopack.commons.log;
 
-import otsopack.commons.log.Printer;
 import junit.framework.TestCase;
 
 public class PrinterTest extends TestCase {

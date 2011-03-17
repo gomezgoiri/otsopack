@@ -13,16 +13,12 @@
  */
 package otsopack.otsoME.dataaccess.recordstore.space;
 
-import javax.microedition.rms.RecordStoreException;
-
-import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
-import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.sampledata.ExampleME;
 
@@ -67,9 +63,9 @@ public class GraphRecordTest extends TestCase {
 		}
 	}
 
-	public void testContains() throws AssertionFailedException, RecordStoreException, MalformedTemplateException {
+	public void testContains() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
-		ITemplate sel = sf.createTemplate(
+		Template sel = sf.createTemplate(
 						"<"+ExampleME.subj1+"> <"+ExampleME.prop2+"> <"+ExampleME.obj4+"> .");
 		assertTrue( record.contains(sel) );
 		sel = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");

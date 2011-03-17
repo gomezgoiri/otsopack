@@ -16,8 +16,10 @@ package otsopack.otsoME.log;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
+
 import otsopack.commons.log.IPrintOut;
 
 public class FileWriter implements IPrintOut {

@@ -13,10 +13,10 @@
  */
 package otsopack.droid.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 
 public interface INotificationElement extends Cloneable {
 	String getURI();
-	ITemplate getTemplate();
+	NotificableTemplate getTemplate();
 	Object clone();
 }

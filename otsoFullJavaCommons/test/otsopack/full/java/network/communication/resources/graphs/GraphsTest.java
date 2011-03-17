@@ -23,12 +23,9 @@ import java.util.List;
 import org.junit.Test;
 import org.restlet.engine.Engine;
 import org.restlet.engine.converter.ConverterHelper;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
-import otsopack.full.java.network.communication.representations.NTriplesRepresentation;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
 public class GraphsTest extends AbstractRestServerTesting {

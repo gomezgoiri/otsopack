@@ -13,10 +13,10 @@
  */
 package otsopack.droid.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public interface ISubscription extends INotificationElement {
 	INotificationListener getListener();
-	boolean matches(ITemplate selector);
+	boolean matches(NotificableTemplate selector);
 }

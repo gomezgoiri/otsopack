@@ -15,8 +15,9 @@ package otsopack.droid.network.communication.demand.local;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.droid.network.communication.demand.DemandRecord;
 import otsopack.droid.network.communication.demand.IDemandEntry;
@@ -43,20 +44,20 @@ public class LocalDemandManager implements ISuggestionCallbackManager {
 		daemon.setStop(true);
 	}
 	
-	public void demand(ITemplate template, long leaseTime, ISuggestionCallback callback) {
+	public void demand(Template template, long leaseTime, ISuggestionCallback callback) {
 		final IDemandEntry entry = new LocalDemandEntry(template,leaseTime,callback);
 		record.addDemand(entry);
 		daemon.wakeUp(); // agent advertises all peers
 	}
 	
-	public void undemand(ITemplate template) {
+	public void undemand(Template template) {
 		final IDemandEntry entry = new LocalDemandEntry(template,0,null);
 		record.removeDemand(entry);
 		// I must warn other peers, but if another peers have demanded
 		// the same template and I'm undemanding it
 	}
 	
-	public boolean callbackForMatchingTemplates(final Graph triples) {
+	public boolean callbackForMatchingTemplates(final Graph triples) throws UnsupportedTemplateException {
 		boolean anyCallback = false;
 		final IModel model = new ModelImpl(triples);
 		synchronized( record.getUseLock() ) {//error, more than one could be reading it

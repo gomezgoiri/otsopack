@@ -13,20 +13,18 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.NotificableTemplate;
 
 public class Advertisement implements IAdvertisement {
 	String uri;
-	ITemplate template;
+	NotificableTemplate template;
 
-	protected Advertisement(String uri, ITemplate template) {
+	protected Advertisement(String uri, NotificableTemplate template) {
 		this.uri = uri;
 		this.template = template;
 	}
 	
-	public ITemplate getTemplate() {
+	public NotificableTemplate getTemplate() {
 		return template;
 	}
 
@@ -45,13 +43,8 @@ public class Advertisement implements IAdvertisement {
 	}
 	
 	public Object clone() {
-		try {
-			ITemplate clonedTemplate = new SemanticFactory().createTemplate(template.toString());
-			String clonedURI = new String(uri);
-			return NotificationsFactory.createAdvertisement(clonedURI, clonedTemplate);
-		} catch (MalformedTemplateException e) {
-			//bad treatment, but it should never happen
-			throw new RuntimeException(e.getMessage());
-		}
+		final NotificableTemplate clonedTemplate = template.duplicate();
+		String clonedURI = new String(uri);
+		return NotificationsFactory.createAdvertisement(clonedURI, clonedTemplate);
 	}
 }

@@ -15,17 +15,15 @@ package otsopack.otsoME.network.communication.notifications;
 
 import java.util.Enumeration;
 
+import jmunit.framework.cldc11.AssertionFailedException;
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.otsoME.network.communication.notifications.INotificationElement;
-import otsopack.otsoME.network.communication.notifications.NotificationContainer;
-import otsopack.otsoME.network.communication.notifications.NotificationsFactory;
 import otsopack.commons.util.collections.HashSet;
 import otsopack.commons.util.collections.Vector;
-import jmunit.framework.cldc11.AssertionFailedException;
-import jmunit.framework.cldc11.TestCase;
 
 public class NotificationContainerTest extends TestCase {
 	NotificationContainer container;
@@ -99,23 +97,23 @@ public class NotificationContainerTest extends TestCase {
 	public void testAdd1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		boolean added = container.add(NotificationsFactory.createAdvertisement("http://uri1", sf.createTemplate("?s1 ?p1 ?o1 .")));
+		boolean added = container.add(NotificationsFactory.createAdvertisement("http://uri1", new WildcardTemplate("?s1 ?p1 ?o1 .")));
 		assertTrue(added);
 		assertEquals(container.size(),1);
 		
-		added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."), null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."), null));
 		assertFalse(added);
 		assertEquals(container.size(),1);
 		
-		added = container.add(NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s2 ?p2 ?o2 ."), null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s2 ?p2 ?o2 ."), null));
 		assertFalse(added);
 		assertEquals(container.size(),1);
 		
-		added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("<http://s1> ?p ?o ."), null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("<http://s1> ?p ?o ."), null));
 		assertFalse(added);
 		assertEquals(container.size(),1);
 		
-		added = container.add(NotificationsFactory.createSubscription("http://uri2",sf.createTemplate("<http://s1> ?p ?o ."), null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri2",new WildcardTemplate("<http://s1> ?p ?o ."), null));
 		assertTrue(added);
 		assertEquals(container.size(),2);
 
@@ -144,14 +142,14 @@ public class NotificationContainerTest extends TestCase {
 		
 		Vector collection = new Vector();
 		final Object[] elements = new Object[10];
-		collection.addElement( elements[0] = NotificationsFactory.createAdvertisement("http://uri1", sf.createTemplate("?s1 ?p1 ?o1 .")) );
-		collection.addElement( elements[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s ?p <http://o1> ."),null) );
-		collection.addElement( elements[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p1> <http://o1> ."),null) );
-		collection.addElement( elements[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p1> ?o ."),null) );
-		collection.addElement( elements[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s1> ?p ?o ."),null) );
-		collection.addElement( elements[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("<http://s1> <http://p1> ?o ."),null) );
-		collection.addElement( elements[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("<http://s1> <http://p1> <http://o1> ."),null) );
-		collection.addElement( elements[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("<http://s1> <http://p1> <http://o1> ."),null) ); //repe
+		collection.addElement( elements[0] = NotificationsFactory.createAdvertisement("http://uri1", new WildcardTemplate("?s1 ?p1 ?o1 .")) );
+		collection.addElement( elements[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s ?p <http://o1> ."),null) );
+		collection.addElement( elements[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p1> <http://o1> ."),null) );
+		collection.addElement( elements[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p1> ?o ."),null) );
+		collection.addElement( elements[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s1> ?p ?o ."),null) );
+		collection.addElement( elements[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("<http://s1> <http://p1> ?o ."),null) );
+		collection.addElement( elements[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("<http://s1> <http://p1> <http://o1> ."),null) );
+		collection.addElement( elements[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("<http://s1> <http://p1> <http://o1> ."),null) ); //repe
 		collection.addElement( elements[8] = new Integer(1) );
 		collection.addElement( elements[9] = null );
 				
@@ -191,8 +189,8 @@ public class NotificationContainerTest extends TestCase {
 		Object[] elements2 = new Object[4];
 		collection.add( elements2[0] = elements[0] );
 		collection.add( elements2[1] = elements[1] );
-		collection.add( elements2[2] = NotificationsFactory.createSubscription("http://uri9", sf.createTemplate("?s <http://p9> <http://o9> ."),null) );
-		collection.add( elements2[3] = NotificationsFactory.createSubscription("http://uri10", sf.createTemplate("?s <http://p10> ?o ."),null) );
+		collection.add( elements2[2] = NotificationsFactory.createSubscription("http://uri9", new WildcardTemplate("?s <http://p9> <http://o9> ."),null) );
+		collection.add( elements2[3] = NotificationsFactory.createSubscription("http://uri10", new WildcardTemplate("?s <http://p10> ?o ."),null) );
 		assertTrue( container.addAll(collection) );
 		assertEquals( container.size(), 9 );
 	}
@@ -200,13 +198,13 @@ public class NotificationContainerTest extends TestCase {
 	public void testClear1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
+		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null));
 		assertTrue(added);
 		assertEquals(container.size(),4);
 		
@@ -222,13 +220,13 @@ public class NotificationContainerTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final INotificationElement[] elements = new INotificationElement[4];
-		boolean added = container.add(elements[0]=NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
+		boolean added = container.add(elements[0]=NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null));
 		assertTrue(added);
-		added = container.add(elements[1]=NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null));
+		added = container.add(elements[1]=NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null));
 		assertTrue(added);
-		added = container.add(elements[2]=NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null));
+		added = container.add(elements[2]=NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null));
 		assertTrue(added);
-		added = container.add(elements[3]=NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null));
+		added = container.add(elements[3]=NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null));
 		assertTrue(added);
 		assertEquals(container.size(),elements.length);
 		
@@ -236,30 +234,30 @@ public class NotificationContainerTest extends TestCase {
 		assertTrue( container.contains(elements[1]) );
 		assertTrue( container.contains(elements[2]) );
 		assertTrue( container.contains(elements[3]) );
-		assertFalse( container.contains(NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("?s <http://p5> ?o ."),null)) );
+		assertFalse( container.contains(NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("?s <http://p5> ?o ."),null)) );
 	}
 
 	public void testContainsAll1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		HashSet elements = new HashSet(4);
-		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
 		boolean added = container.addAll(elements);
 		assertTrue(added);
 		assertEquals(container.size(),elements.size());
 		assertTrue( container.containsAll(elements) );
 
 		elements = new HashSet(2);
-		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
 		assertTrue( container.containsAll(elements) );
 		
 		elements = new HashSet(2);
-		elements.add( NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
 		assertFalse( container.containsAll(elements) );
 	}
 
@@ -267,13 +265,13 @@ public class NotificationContainerTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		assertTrue(container.isEmpty());
 		
-		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
+		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null));
 		assertTrue(added);
 		assertEquals(container.size(),4);
 		assertFalse(container.isEmpty());
@@ -285,13 +283,13 @@ public class NotificationContainerTest extends TestCase {
 	public void testIterator1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null));
+		boolean added = container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null));
 		assertTrue(added);
-		added = container.add(NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null));
+		added = container.add(NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null));
 		assertTrue(added);
 		assertEquals(container.size(),4);
 		assertFalse(container.isEmpty());
@@ -309,10 +307,10 @@ public class NotificationContainerTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		
 		final INotificationElement[] elements = new INotificationElement[4];
-		assertTrue( container.add(elements[0]=NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null)) );
-		assertTrue( container.add(elements[1]=NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null)) );
-		assertTrue( container.add(elements[2]=NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null)) );
-		assertTrue( container.add(elements[3]=NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null)) );
+		assertTrue( container.add(elements[0]=NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null)) );
+		assertTrue( container.add(elements[1]=NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null)) );
+		assertTrue( container.add(elements[2]=NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null)) );
+		assertTrue( container.add(elements[3]=NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null)) );
 		
 		assertEquals(container.size(),elements.length);
 		assertTrue(container.contains(elements[0]));
@@ -354,19 +352,19 @@ public class NotificationContainerTest extends TestCase {
 		final INotificationElement[] els = new INotificationElement[8];
 		
 		HashSet elements = new HashSet(4);
-		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
 		
 		final HashSet elements2 = new HashSet(4);
-		elements2.add( els[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements2.add( els[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements2.add( els[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements2.add( els[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements2.add( els[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements2.add( els[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements2.add( els[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements2.add( els[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements2) );
 		assertEquals(container.size(),elements.size()+elements2.size());
 		
@@ -392,7 +390,7 @@ public class NotificationContainerTest extends TestCase {
 		
 		elements = new HashSet(2);
 		elements.add( els[6] );
-		elements.add( NotificationsFactory.createSubscription("http://uri9", sf.createTemplate("?s <http://p9> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri9", new WildcardTemplate("?s <http://p9> ?o ."),null) );
 		assertTrue( container.removeAll(elements) );
 		assertEquals(container.size(),elements2.size()-1);
 		assertFalse(container.contains(els[0]));
@@ -421,14 +419,14 @@ public class NotificationContainerTest extends TestCase {
 		final INotificationElement[] els = new INotificationElement[8];
 		
 		final HashSet elements = new HashSet(8);
-		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
-		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
@@ -512,27 +510,27 @@ public class NotificationContainerTest extends TestCase {
 	public void testSize1() throws AssertionFailedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		assertEquals(container.size(),0);
-		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null)) );
+		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null)) );
 		assertEquals(container.size(),1);
-		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null)) );
+		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null)) );
 		assertEquals(container.size(),2);
-		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null)) );
+		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null)) );
 		assertEquals(container.size(),3);
-		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null)) );
+		assertTrue( container.add(NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null)) );
 		assertEquals(container.size(),4);
 	}
 
 	public void testToArray1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final Vector elements = new Vector(8);
-		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
@@ -546,14 +544,14 @@ public class NotificationContainerTest extends TestCase {
 	public void testToArray2() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final Vector elements = new Vector(8);
-		elements.add( NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
@@ -574,14 +572,14 @@ public class NotificationContainerTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);
-		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
-		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
@@ -600,44 +598,44 @@ public class NotificationContainerTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);
-		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("?s <http://p3> ?o ."),null) );
-		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p4> ?o ."),null) );
-		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("?s <http://p3> ?o ."),null) );
+		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p4> ?o ."),null) );
+		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
-		assertEquals(container.get(sf.createTemplate("?s ?p ?o .")),els[0]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p8> ?o .")),els[7]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p7> ?o .")),els[6]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p2> ?o .")),els[1]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p3> ?o .")),els[2]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p4> ?o .")),els[3]);
-		assertEquals(container.get(sf.createTemplate("?s <http://p6> ?o .")),els[5]);
-		assertEquals(container.get(sf.createTemplate("<http://s5> ?p ?o .")),els[4]);
-		assertNull(container.get(sf.createTemplate("<http://imposible> <http://is> <http://nothing> .")));
+		assertEquals(container.get(new WildcardTemplate("?s ?p ?o .")),els[0]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p8> ?o .")),els[7]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p7> ?o .")),els[6]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p2> ?o .")),els[1]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p3> ?o .")),els[2]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p4> ?o .")),els[3]);
+		assertEquals(container.get(new WildcardTemplate("?s <http://p6> ?o .")),els[5]);
+		assertEquals(container.get(new WildcardTemplate("<http://s5> ?p ?o .")),els[4]);
+		assertNull(container.get(new WildcardTemplate("<http://imposible> <http://is> <http://nothing> .")));
 	}
 
 	public void testGetThoseWhichMatch1() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
 		final INotificationElement[] els = new INotificationElement[8];
 		final HashSet elements = new HashSet(8);
-		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", sf.createTemplate("?s ?p ?o ."),null) );
-		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", sf.createTemplate("?s <http://p2> ?o ."),null) );
-		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", sf.createTemplate("<http://s2> <http://p2> ?o ."),null) );
-		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", sf.createTemplate("?s <http://p2> <http://o2> ."),null) );
-		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", sf.createTemplate("<http://s5> ?p ?o ."),null) );
-		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", sf.createTemplate("?s <http://p6> ?o ."),null) );
-		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", sf.createTemplate("?s <http://p7> ?o ."),null) );
-		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", sf.createTemplate("?s <http://p8> ?o ."),null) );
+		elements.add( els[0] = NotificationsFactory.createSubscription("http://uri1", new WildcardTemplate("?s ?p ?o ."),null) );
+		elements.add( els[1] = NotificationsFactory.createSubscription("http://uri2", new WildcardTemplate("?s <http://p2> ?o ."),null) );
+		elements.add( els[2] = NotificationsFactory.createSubscription("http://uri3", new WildcardTemplate("<http://s2> <http://p2> ?o ."),null) );
+		elements.add( els[3] = NotificationsFactory.createSubscription("http://uri4", new WildcardTemplate("?s <http://p2> <http://o2> ."),null) );
+		elements.add( els[4] = NotificationsFactory.createSubscription("http://uri5", new WildcardTemplate("<http://s5> ?p ?o ."),null) );
+		elements.add( els[5] = NotificationsFactory.createSubscription("http://uri6", new WildcardTemplate("?s <http://p6> ?o ."),null) );
+		elements.add( els[6] = NotificationsFactory.createSubscription("http://uri7", new WildcardTemplate("?s <http://p7> ?o ."),null) );
+		elements.add( els[7] = NotificationsFactory.createSubscription("http://uri8", new WildcardTemplate("?s <http://p8> ?o ."),null) );
 		assertTrue( container.addAll(elements) );
 		assertEquals(container.size(),elements.size());
 		
-		HashSet those = container.getThoseWhichMatch(sf.createTemplate("?s ?p ?o ."));
+		HashSet those = container.getThoseWhichMatch(new WildcardTemplate("?s ?p ?o ."));
 		assertEquals(those.size(),elements.size());
 		assertTrue( those.contains(els[0]) );
 		assertTrue( those.contains(els[1]) );
@@ -648,7 +646,7 @@ public class NotificationContainerTest extends TestCase {
 		assertTrue( those.contains(els[6]) );
 		assertTrue( those.contains(els[7]) );
 		
-		those = container.getThoseWhichMatch(sf.createTemplate("?s <http://p2> ?o ."));
+		those = container.getThoseWhichMatch(new WildcardTemplate("?s <http://p2> ?o ."));
 		assertEquals(those.size(),3);
 		assertFalse( those.contains(els[0]) );
 		assertTrue( those.contains(els[1]) );
@@ -659,7 +657,7 @@ public class NotificationContainerTest extends TestCase {
 		assertFalse( those.contains(els[6]) );
 		assertFalse( those.contains(els[7]) );
 		
-		those = container.getThoseWhichMatch(sf.createTemplate("<http://imposible> <http://is> <http://nothing> ."));
+		those = container.getThoseWhichMatch(new WildcardTemplate("<http://imposible> <http://is> <http://nothing> ."));
 		assertEquals(those.size(),0);
 	}
 }

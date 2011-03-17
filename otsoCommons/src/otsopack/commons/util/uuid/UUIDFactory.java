@@ -56,8 +56,8 @@
 
 package otsopack.commons.util.uuid;
 
-import java.util.Random;
 import java.util.Calendar;
+import java.util.Random;
 import java.util.TimeZone;
 
 

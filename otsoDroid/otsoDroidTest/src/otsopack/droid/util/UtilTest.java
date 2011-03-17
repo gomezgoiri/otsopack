@@ -16,12 +16,11 @@ package otsopack.droid.util;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
 
-import otsopack.commons.util.Util;
-
 import junit.framework.TestCase;
 import net.jxta.id.IDFactory;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.pipe.PipeID;
+import otsopack.commons.util.Util;
 
 //TODO a lot of untested utility methods in Util class
 public class UtilTest extends TestCase {

@@ -18,13 +18,12 @@ import java.util.Vector;
 import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.sampledata.ExampleME;
 
 public class RemoteDemandManagerTest extends TestCase {
@@ -64,7 +63,7 @@ public class RemoteDemandManagerTest extends TestCase {
 
 	public void testGetNonExpiredTemplates() throws InterruptedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
-		final ITemplate[] s = new ITemplate[5];
+		final Template[] s = new Template[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
 		s[1] = sf.createTemplate("<http://s2> ?p2 ?o2 .");
 		s[2] = sf.createTemplate("<http://s3> ?p3 ?o3 .");
@@ -85,9 +84,9 @@ public class RemoteDemandManagerTest extends TestCase {
 		assertTrue( tpls.contains(s[2]) );
 	}
 	
-	public void testHasAnyPeerResponsabilityOverThisKnowledge() throws TripleParseException, MalformedTemplateException {
+	public void testHasAnyPeerResponsabilityOverThisKnowledge() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
-		final ITemplate[] s = new ITemplate[6];
+		final Template[] s = new Template[6];
 		s[0] = sf.createTemplate("<"+ExampleME.subj1+"> ?p1 <"+ExampleME.obj3+"> .");
 		s[1] = sf.createTemplate("<"+ExampleME.subj1+"> ?p2 <"+ExampleME.obj1+"> .");
 		s[2] = sf.createTemplate("<"+ExampleME.subj2+"> ?p3 ?o3 .");

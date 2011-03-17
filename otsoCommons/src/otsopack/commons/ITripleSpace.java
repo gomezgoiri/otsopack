@@ -15,8 +15,9 @@
 package otsopack.commons;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
@@ -101,7 +102,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
 
 	/**
 	 * Take ITriples by using a template. Wait the specified timeout or until a response is received.
@@ -125,7 +126,7 @@ public interface ITripleSpace extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph/*List<ITriple>*/ take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
 
 	/**
 	 * query ITriples by using a template wait maximum timeout
@@ -137,7 +138,7 @@ public interface ITripleSpace extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of ITriples or set of ITriples with size 0 if nothing found
 	 */
-	public Graph/*List<ITriple>*/ query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph/*List<ITriple>*/ query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * write ITriples into specified space
@@ -158,7 +159,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param listener
 	 * @return subscription uri
 	 */
-	public String subscribe(String spaceURI, ITemplate template, INotificationListener listener) throws TSException;
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws TSException;
 
 	/**
 	 * unsubscribe a certain subscription
@@ -175,7 +176,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param template
 	 * @return advertisement uri
 	 */
-	public String advertise(String spaceURI, ITemplate template) throws TSException;
+	public String advertise(String spaceURI, NotificableTemplate template) throws TSException;
 
 	/**
 	 * unadvertise a certain advertisement
@@ -194,5 +195,5 @@ public interface ITripleSpace extends ILayer {
 	 * @param callback
 	 * 		A method to call back when a IGraph which matches the template is suggested.
 	 */
-	public void demand(String spaceURI, ITemplate template, long leaseTime, ISuggestionCallback callback) throws TSException;
+	public void demand(String spaceURI, Template template, long leaseTime, ISuggestionCallback callback) throws TSException;
 }

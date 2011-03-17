@@ -15,8 +15,9 @@ package otsopack.otsoME.network.communication;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -50,7 +51,7 @@ public class JxmeCommunication implements ICommunication {
 		return getSpace(spaceURI).read(graphURI, timeout);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		checkFormat(outputFormat);
 		return getSpace(spaceURI).read(template, timeout);
@@ -62,19 +63,19 @@ public class JxmeCommunication implements ICommunication {
 		return getSpace(spaceURI).take(graphURI, timeout);
 	}
 
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		checkFormat(outputFormat);
 		return getSpace(spaceURI).take(template, timeout);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout)
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		checkFormat(outputFormat);
 		return getSpace(spaceURI).query(template, timeout);
 	}
 
-	public String subscribe(String spaceURI, ITemplate template,
+	public String subscribe(String spaceURI, NotificableTemplate template,
 			INotificationListener listener) throws SpaceNotExistsException {
 		return getSpace(spaceURI).subscribe(template,listener);
 	}
@@ -84,7 +85,7 @@ public class JxmeCommunication implements ICommunication {
 		getSpace(spaceURI).unsubscribe(subscriptionURI);
 	}
 
-	public String advertise(String spaceURI, ITemplate template)
+	public String advertise(String spaceURI, NotificableTemplate template)
 			throws SpaceNotExistsException {
 		return getSpace(spaceURI).advertise(template);
 	}
@@ -94,7 +95,7 @@ public class JxmeCommunication implements ICommunication {
 		getSpace(spaceURI).unadvertise(advertisementURI);
 	}
 	
-	public void demand(String spaceURI, ITemplate template, long leaseTime,
+	public void demand(String spaceURI, Template template, long leaseTime,
 			ISuggestionCallback callback) throws TSException {
 		getSpace(spaceURI).demand(template, leaseTime, callback);
 	}

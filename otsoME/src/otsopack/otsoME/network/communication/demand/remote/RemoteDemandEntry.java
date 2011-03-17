@@ -13,14 +13,14 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
+import otsopack.commons.data.Template;
 import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.commons.data.ITemplate;
 
 public class RemoteDemandEntry implements IDemandEntry { //java.util.Comparable ???
-	ITemplate template;
+	Template template;
 	long expires;
 	
-	public RemoteDemandEntry(ITemplate tpl, long expiryTime) {
+	public RemoteDemandEntry(Template tpl, long expiryTime) {
 		this.template = tpl;
 		this.expires = expiryTime;
 	}
@@ -28,7 +28,7 @@ public class RemoteDemandEntry implements IDemandEntry { //java.util.Comparable 
 	/* (non-Javadoc)
 	 * @see es.deusto.tecnologico.tscME.network.communication.demand.IDemandEntry#getTemplate()
 	 */
-	public ITemplate getTemplate() {
+	public Template getTemplate() {
 		return template;
 	}
 	

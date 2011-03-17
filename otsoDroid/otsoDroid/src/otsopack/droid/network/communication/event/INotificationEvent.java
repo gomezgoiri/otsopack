@@ -41,7 +41,7 @@ public interface INotificationEvent {
 	 * get advertisedTemplates
 	 * @return set of uris
 	 */
-	//public Set<ITemplate> getAdvertisedTemplates();
+	//public Set<Template> getAdvertisedTemplates();
 	
 	/**
 	 * get the type

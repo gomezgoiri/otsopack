@@ -20,7 +20,6 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
-import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.sampledata.Example;
 
 public class GraphMemTest extends TestCase {
@@ -58,7 +57,7 @@ public class GraphMemTest extends TestCase {
 		mem3.write(graph);
 	}
 
-	public void testContains() throws MalformedTemplateException {
+	public void testContains() throws Exception {
 		final SemanticFactory sf = new SemanticFactory();
 		final String triples =	"<"+Example.subj1+"> <"+Example.prop1+"> <"+Example.obj3+"> .\n" +
 								"<"+Example.subj2+"> <"+Example.prop2+"> <"+Example.obj4+"> .\n" +

@@ -13,9 +13,9 @@
  */
 package otsopack.droid.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.util.collections.HashSet;
 
 public interface INotificationChooser {
-	HashSet getThoseWhichMatch(ITemplate selector);
+	HashSet getThoseWhichMatch(NotificableTemplate selector);
 }

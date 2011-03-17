@@ -14,10 +14,10 @@
 package otsopack.otsoME.network.communication.outcoming;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 
 public interface IResponseSender {
-	void response(ITemplate responseTo, Graph triples);
+	void response(Template responseTo, Graph triples);
 	void response(String responseToGraphURI, Graph triples);
 	void responseToObtainDemands(byte[] recordsExported);
 }

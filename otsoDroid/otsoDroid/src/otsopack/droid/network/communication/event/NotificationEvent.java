@@ -18,7 +18,7 @@ public class NotificationEvent implements INotificationEvent {
 	private String subscription = null;
 	private Integer type = null;
 	/*private Set<URI> advertisers = null;
-	private Set<ITemplate> advertisedTemplates = null;*/
+	private Set<Template> advertisedTemplates = null;*/
 	private String srcID = null;
 	private Integer eventID = null;
 	
@@ -34,7 +34,7 @@ public class NotificationEvent implements INotificationEvent {
 	 * @param srcID
 	 * @param eventID
 	 */
-	public NotificationEvent(Object source, String spaceURI, String subscription, /*Set<URI> advertisers, Set<ITemplate> advertisedTemplates,*/ Integer type, String srcID, Integer eventID) {
+	public NotificationEvent(Object source, String spaceURI, String subscription, /*Set<URI> advertisers, Set<Template> advertisedTemplates,*/ Integer type, String srcID, Integer eventID) {
 		this.spaceURI = spaceURI;
 		this.subscription = subscription;
 		//this.advertisers = advertisers;
@@ -68,7 +68,7 @@ public class NotificationEvent implements INotificationEvent {
 	/**
 	 * @see INotificationEvent#getAdvertisedTemplates()
 	 */
-	//public Set<ITemplate> getAdvertisedTemplates() {
+	//public Set<Template> getAdvertisedTemplates() {
 	//	return advertisedTemplates;
 	//}
 	

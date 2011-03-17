@@ -17,5 +17,5 @@ package otsopack.commons.data;
 import otsopack.commons.exceptions.MalformedTemplateException;
 
 public interface ISemanticFactory extends ISemanticFormatExchangeable, ISemanticFormatSupportable {
-	public ITemplate createTemplate(String template) throws MalformedTemplateException;
+	public Template createTemplate(String template) throws MalformedTemplateException;
 }

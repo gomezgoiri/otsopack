@@ -34,12 +34,13 @@ import net.jxta.protocol.PipeAdvertisement;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+import otsopack.commons.exceptions.MalformedMessageException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
+import otsopack.commons.log.Printer;
+import otsopack.commons.util.Util;
 import otsopack.otsoME.network.communication.incoming.ITSCallback;
 import otsopack.otsoME.network.communication.util.MessageParser;
 import otsopack.otsoME.network.communication.util.MessageParser.Properties;
-import otsopack.commons.exceptions.MalformedMessageException;
-import otsopack.commons.log.Printer;
-import otsopack.commons.util.Util;
 
 public class JxmeSpace implements PipeMsgListener, IMessageSender {	
 	private final static Logger log = Logger.getInstance(JxmeSpace.class.getName());
@@ -176,6 +177,8 @@ public class JxmeSpace implements PipeMsgListener, IMessageSender {
 				            	MessageParser.parseMessage(msg, listeners);
 							} 
 			            	catch (MalformedMessageException e) {
+								Printer.err_println("Poll, Error processing message: " + e.getMessage());
+							} catch (UnsupportedTemplateException e) {
 								Printer.err_println("Poll, Error processing message: " + e.getMessage());
 							}
 			            }

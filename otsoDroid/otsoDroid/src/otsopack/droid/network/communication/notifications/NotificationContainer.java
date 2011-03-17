@@ -16,17 +16,18 @@ package otsopack.droid.network.communication.notifications;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.util.collections.Collection;
 import otsopack.commons.util.collections.HashSet;
 
 public class NotificationContainer implements Collection, INotificationChooser {
-	Hashtable<ITemplate, INotificationElement> notificationsBySelector;
+	Hashtable<Template, INotificationElement> notificationsBySelector;
 	Hashtable<String, INotificationElement> notificationsByURI;
 	
 	public NotificationContainer() {
 		notificationsByURI = new Hashtable<String, INotificationElement>();
-		notificationsBySelector = new Hashtable<ITemplate, INotificationElement>();
+		notificationsBySelector = new Hashtable<Template, INotificationElement>();
 	}
 
 	public boolean add(Object obj) {
@@ -157,11 +158,11 @@ public class NotificationContainer implements Collection, INotificationChooser {
 		return (INotificationElement) notificationsByURI.get(uri);
 	}
 	
-	public INotificationElement get(ITemplate selector) {
+	public INotificationElement get(NotificableTemplate selector) {
 		return (INotificationElement) notificationsBySelector.get(selector);
 	}
 	
-	public HashSet getThoseWhichMatch(ITemplate template) {
+	public HashSet getThoseWhichMatch(NotificableTemplate template) {
 		HashSet ret = new HashSet();
 		Enumeration<?> elements = notificationsBySelector.elements();
 		while( elements.hasMoreElements() ) {

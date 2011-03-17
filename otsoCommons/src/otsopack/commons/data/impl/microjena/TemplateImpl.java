@@ -19,16 +19,19 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.RDFNode;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Resource;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 
-public class TemplateImpl implements ITemplate, Selector {
+/**
+ * @deprecated
+ */
+public class TemplateImpl extends Template implements Selector {
 	final Selector selector;
 	
 	protected TemplateImpl(Selector selector) {
 		this.selector = selector;
 	}
 	
-	public boolean match(ITemplate tpl) {
+	public boolean match(Template tpl) {
 		boolean ret = false;
 		if(tpl instanceof TemplateImpl) {
 			Selector compareWith = ((TemplateImpl) tpl).selector;

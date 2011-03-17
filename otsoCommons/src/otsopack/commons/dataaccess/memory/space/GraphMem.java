@@ -14,7 +14,6 @@
 
 package otsopack.commons.dataaccess.memory.space;
 
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -30,10 +29,6 @@ public class GraphMem {
 	
 	public void write(ModelImpl model) {
 		this.model = model;
-	}
-	
-	public boolean contains(ITemplate template) {
-		return !model.query(template).isEmpty();
 	}
 	
 	public boolean contains(Template template) throws UnsupportedTemplateException {

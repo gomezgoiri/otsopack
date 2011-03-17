@@ -14,7 +14,6 @@
 
 package otsopack.commons.util.uuid;
 
-import otsopack.commons.util.uuid.UUIDFactory;
 import junit.framework.TestCase;
 
 

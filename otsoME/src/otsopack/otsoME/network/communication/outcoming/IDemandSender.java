@@ -13,10 +13,10 @@
  */
 package otsopack.otsoME.network.communication.outcoming;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 
 public interface IDemandSender {
 
-	public abstract void demand(ITemplate template, long leaseTime);
+	public abstract void demand(Template template, long leaseTime);
 
 }

@@ -16,7 +16,6 @@ package otsopack.otsoME.dataaccess.recordstore.space;
 import javax.microedition.rms.RecordStoreException;
 
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -67,23 +66,11 @@ public class GraphRecord {
 		return graph;
 	}
 	
-	public IModel query(ITemplate sel) throws RecordStoreException {
-		final IModel model = getModel();
-		if( model==null )
-			return null;
-		return model.query(sel);
-	}
-	
 	public IModel query(Template sel) throws RecordStoreException, UnsupportedTemplateException {
 		final IModel model = getModel();
 		if( model==null )
 			return null;
 		return model.query(sel);
-	}
-	
-	public boolean contains(ITemplate sel) throws RecordStoreException {
-		final IModel result = query(sel);
-		return !result.isEmpty();
 	}
 	
 	public boolean contains(Template sel) throws RecordStoreException, UnsupportedTemplateException {

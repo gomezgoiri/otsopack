@@ -9,14 +9,12 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * Author: FILLME
+ *
  */
-package otsopack.droid.network.communication.outcoming;
+package otsopack.commons.data;
 
-import otsopack.commons.data.Template;
-
-public interface IDemandSender {
-
-	public abstract void demand(Template template, long leaseTime);
-
+public abstract class NotificableTemplate extends Template {
+	public abstract boolean match(NotificableTemplate template);
+	public abstract NotificableTemplate duplicate();
 }

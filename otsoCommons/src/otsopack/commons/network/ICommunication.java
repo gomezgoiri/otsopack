@@ -16,8 +16,9 @@ package otsopack.commons.network;
 
 import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
@@ -83,7 +84,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * Take triples by using a template. Wait the specified timeout or until a response is received.
@@ -107,7 +108,7 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * query triples by using a template wait maximum timeout
@@ -119,7 +120,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * subscribe to one template
@@ -128,7 +129,7 @@ public interface ICommunication extends ILayer {
 	 * @param listener
 	 * @return subscription uri
 	 */
-	public String subscribe(String spaceURI, ITemplate template, INotificationListener listener)  throws SpaceNotExistsException;
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener)  throws SpaceNotExistsException;
 
 	/**
 	 * unsubscribe to subscription
@@ -143,7 +144,7 @@ public interface ICommunication extends ILayer {
 	 * @param template
 	 * @return advertisement uri
 	 */
-	public String advertise(String spaceURI, ITemplate template) throws SpaceNotExistsException;
+	public String advertise(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
 
 	/**
 	 * unadvertise one advertisement
@@ -162,7 +163,7 @@ public interface ICommunication extends ILayer {
 	 * 		The class that knows what to do to change the knowledge.
 	 * @throws TSException
 	 */
-	public void demand(String spaceURI, ITemplate template, long leaseTime, ISuggestionCallback callback) throws TSException;
+	public void demand(String spaceURI, Template template, long leaseTime, ISuggestionCallback callback) throws TSException;
 	
 	/**
 	 * Suggest to other peers that this knowledge should be like that.

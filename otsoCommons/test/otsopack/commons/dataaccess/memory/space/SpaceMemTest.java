@@ -18,12 +18,11 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
 import junit.framework.TestCase;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
-import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.sampledata.Example;
 
 public class SpaceMemTest extends TestCase {
@@ -83,7 +82,7 @@ public class SpaceMemTest extends TestCase {
 		}
 	}
 
-	public void testQuery() throws MalformedTemplateException {
+	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/query1/");
 		
@@ -104,7 +103,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph3 );
 	}
 
-	public void testRead1() throws MalformedTemplateException {
+	public void testRead1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/read1/");
 		
@@ -181,7 +180,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph4 );
 	}
 
-	public void testTake1() throws MalformedTemplateException {
+	public void testTake1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take1/");
 		
@@ -189,9 +188,9 @@ public class SpaceMemTest extends TestCase {
 			space.write(models[i]);
 		}
 		
-		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
-		final ITemplate sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
-		final ITemplate sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
+		final Template sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
+		final Template sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
+		final Template sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
 		final ModelImpl retGraph1 = space.take( sel1 );
 		final ModelImpl retGraph2 = space.take( sel1 );
 		final ModelImpl retGraph3 = space.take( sel1 );

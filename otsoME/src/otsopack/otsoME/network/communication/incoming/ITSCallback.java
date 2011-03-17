@@ -14,23 +14,25 @@
 package otsopack.otsoME.network.communication.incoming;
 
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public interface ITSCallback {
 	/**
 	 * @param template
 	 */
-	public void query(ITemplate template);
+	public void query(Template template) throws UnsupportedTemplateException ;
 	
 	/**
 	 * @param templates
 	 */
-	public void queryMultiple(ITemplate[] templates);
+	public void queryMultiple(Template[] templates) throws UnsupportedTemplateException ;
 	
 	/**
 	 * @param template
 	 */
-	public void read(ITemplate template);
+	public void read(Template template) throws UnsupportedTemplateException ;
 	
 	/**
 	 * @param graphuri
@@ -40,7 +42,7 @@ public interface ITSCallback {
 	/**
 	 * @param template
 	 */
-	public void take(ITemplate template);
+	public void take(Template template) throws UnsupportedTemplateException ;
 	
 	/**
 	 * @param graphuri
@@ -53,7 +55,7 @@ public interface ITSCallback {
 	 * @param listener
 	 * @return subscription uri
 	 */
-	public void subscribe(ITemplate template);
+	public void subscribe(NotificableTemplate template) throws UnsupportedTemplateException ;
 
 	/**
 	 * unsubscribe to subscription
@@ -65,7 +67,7 @@ public interface ITSCallback {
 	 * Reception of a notification from the ProxyME peer.
 	 * @param template
 	 */
-	public void notify(ITemplate template);
+	public void notify(NotificableTemplate template);
 	
 	/**
 	 * Advertise one template.
@@ -73,7 +75,7 @@ public interface ITSCallback {
 	 * It can also be used to communicate to mobile peers listening to the same semantic pipe.
 	 * @param template
 	 */
-	public void advertise(ITemplate template);
+	public void advertise(NotificableTemplate template) throws UnsupportedTemplateException ;
 
 	/**
 	 * unadvertise an advertisement
@@ -87,7 +89,7 @@ public interface ITSCallback {
 	 * 		The template that identify that query.
 	 * @param model
 	 */
-	public void response(ITemplate inResponseTo, IModel model);
+	public void response(Template inResponseTo, IModel model) throws UnsupportedTemplateException ;
 	
 	/**
 	 * Called when a response message to another one is received.
@@ -105,7 +107,7 @@ public interface ITSCallback {
 	 * @param advSubsURI
 	 * 		The advertise or subscribe URI.
 	 */
-	public void response(ITemplate inResponseToAdvSubs, String advSubsURI);
+	public void response(Template inResponseToAdvSubs, String advSubsURI) throws UnsupportedTemplateException ;
 	
 	/**
 	 * Called when a demand is received.
@@ -114,7 +116,7 @@ public interface ITSCallback {
 	 * @param leaseTime
 	 * 		After this time the demand expires.
 	 */
-	public void demand(ITemplate template, long leaseTime);
+	public void demand(Template template, long leaseTime) throws UnsupportedTemplateException ;
 	
 	
 	/**
@@ -123,8 +125,9 @@ public interface ITSCallback {
 	 * 		Template to claim responsibility over matching triples.
 	 * @param leaseTime
 	 * 		After this time the demand expires.
+	 * @throws UnsupportedTemplateException 
 	 */
-	public void suggest(IModel triples);
+	public void suggest(IModel triples) throws UnsupportedTemplateException;
 	
 	/**
 	 * Call to obtain all the demands of this peer

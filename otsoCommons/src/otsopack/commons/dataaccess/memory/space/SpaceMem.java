@@ -17,7 +17,6 @@ package otsopack.commons.dataaccess.memory.space;
 import java.util.Vector;
 
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -61,24 +60,9 @@ public class SpaceMem {
 		return gm.getUri();
 	}
 	
-	public ModelImpl query(ITemplate template) {
-		IModel ret = model.query(template);
-		return (ret.isEmpty())?null:ret.getModelImpl();
-	}
-
 	public ModelImpl query(Template template) throws UnsupportedTemplateException {
 		IModel ret = model.query(template);
 		return (ret.isEmpty())?null:ret.getModelImpl();
-	}
-
-	public ModelImpl read(ITemplate template) {
-		ModelImpl graph = null;
-		for(int i=0; i<graphs.size() && graph==null; i++) {
-			GraphMem gm = (GraphMem) graphs.elementAt(i);
-			if( gm.contains(template) )
-				graph = gm.getModel(); // we hold the first graph which contains a triple like that
-		}
-		return graph;
 	}
 
 	public ModelImpl read(Template template) throws UnsupportedTemplateException {
@@ -101,19 +85,6 @@ public class SpaceMem {
 		return mod;
 	}
 	
-	public ModelImpl take(ITemplate template) {		
-		ModelImpl graph = null;
-		for(int i=0; i<graphs.size() && graph==null; i++) {
-			GraphMem gm = (GraphMem) graphs.elementAt(i);
-			if( gm.contains(template) ) { 
-				graph = gm.getModel(); // we hold the first graph which contains a triple like that
-				model.removeTriples(graph);
-				graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
-			}
-		}
-		return graph;
-	}
-
 	public ModelImpl take(Template template) throws UnsupportedTemplateException {		
 		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {

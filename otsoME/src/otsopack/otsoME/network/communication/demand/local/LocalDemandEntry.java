@@ -13,17 +13,17 @@
  */
 package otsopack.otsoME.network.communication.demand.local;
 
-import otsopack.otsoME.network.communication.demand.IDemandEntry;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
+import otsopack.otsoME.network.communication.demand.IDemandEntry;
 
 public class LocalDemandEntry implements IDemandEntry { //java.util.Comparable ???
-	final ITemplate template;
+	final Template template;
 	long expiryTime;
 	long leaseTime;
 	ISuggestionCallback callback;
 	
-	public LocalDemandEntry(ITemplate tpl, long leaseTime, ISuggestionCallback callback) {
+	public LocalDemandEntry(Template tpl, long leaseTime, ISuggestionCallback callback) {
 		this.template = tpl;
 		this.leaseTime = leaseTime;
 		this.callback = callback;
@@ -35,7 +35,7 @@ public class LocalDemandEntry implements IDemandEntry { //java.util.Comparable ?
 	/* (non-Javadoc)
 	 * @see es.deusto.tecnologico.tscME.network.communication.demand.IDemandEntry#getTemplate()
 	 */
-	public ITemplate getTemplate() {
+	public Template getTemplate() {
 		return template;
 	}
 	

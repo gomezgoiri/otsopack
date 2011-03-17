@@ -13,17 +13,15 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
-import otsopack.commons.data.impl.SemanticFactory;
-import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class Subscription implements ISubscription {
 	String uri;
-	ITemplate template;
+	NotificableTemplate template;
 	INotificationListener listener = null;
 		
-	protected Subscription(String uri, ITemplate template, INotificationListener listener) {
+	protected Subscription(String uri, NotificableTemplate template, INotificationListener listener) {
 		this.uri = uri;
 		this.template = template;
 		this.listener = listener;
@@ -33,7 +31,7 @@ public class Subscription implements ISubscription {
 		return uri;
 	}
 	
-	public ITemplate getTemplate() {
+	public NotificableTemplate getTemplate() {
 		return template;
 	}
 	
@@ -56,17 +54,12 @@ public class Subscription implements ISubscription {
 	}
 	
 	public Object clone() {
-		try {
-			ITemplate clonedTemplate = new SemanticFactory().createTemplate(template.toString());
-			String clonedURI = new String(uri);
-			return NotificationsFactory.createSubscription(clonedURI, clonedTemplate, listener);
-		} catch (MalformedTemplateException e) {
-			//bad treatment, but it should never happen
-			throw new RuntimeException(e.getMessage());
-		}
+		final NotificableTemplate clonedTemplate = template.duplicate();
+		final String clonedURI = new String(uri);
+		return NotificationsFactory.createSubscription(clonedURI, clonedTemplate, listener);
 	}
 	
-	public boolean matches(ITemplate selector) {
+	public boolean matches(NotificableTemplate selector) {
 		return 	template.match(selector);
 	}
 }

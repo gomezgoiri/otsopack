@@ -13,15 +13,13 @@
  */
 package otsopack.otsoME.network.communication.demand.remote;
 
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.otsoME.network.communication.demand.DemandRecord;
-import otsopack.otsoME.network.communication.demand.remote.GarbageCollector;
-import otsopack.otsoME.network.communication.demand.remote.RemoteDemandEntry;
-import jmunit.framework.cldc11.TestCase;
 
 public class GarbageCollectorTest extends TestCase {
 	
@@ -47,7 +45,7 @@ public class GarbageCollectorTest extends TestCase {
 	
 	public void testRemoveExpired() throws InterruptedException, MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory(); 
-		final ITemplate[] s = new ITemplate[5];
+		final Template[] s = new Template[5];
 		s[0] = sf.createTemplate("?s1 ?p1 ?o1 .");
 		s[1] = sf.createTemplate("<http://s2> ?p2 ?o2 .");
 		s[2] = sf.createTemplate("<http://s3> ?p3 ?o3 .");

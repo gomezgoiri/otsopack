@@ -21,7 +21,9 @@ import org.apache.log4j.Logger;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.otsoME.network.communication.demand.local.LocalDemandManager;
@@ -110,7 +112,7 @@ public class SpaceManager implements ISpaceInformationHolder {
 		return ret;
 	}
 
-	public Graph read(ITemplate template, long timeout) {
+	public Graph read(Template template, long timeout) {
 		log.debug("BEGIN read.");
 		Graph ret = outcoming.read(template, timeout);
 		log.debug("END read.");
@@ -124,21 +126,21 @@ public class SpaceManager implements ISpaceInformationHolder {
 		return ret;
 	}
 
-	public Graph take(ITemplate template, long timeout) {
+	public Graph take(Template template, long timeout) {
 		log.debug("BEGIN take.");
 		Graph ret = outcoming.take(template, timeout);
 		log.debug("END take.");
 		return ret;
 	}
 
-	public Graph query(ITemplate template, long timeout) {
+	public Graph query(Template template, long timeout) {
 		log.debug("BEGIN query.");
 		Graph ret = outcoming.query(template, timeout);
 		log.debug("END query.");
 		return ret;
 	}
 
-	public String subscribe(ITemplate template, INotificationListener listener) {
+	public String subscribe(NotificableTemplate template, INotificationListener listener) {
 		log.debug("BEGIN subscribe.");
 		String uri = outcoming.subscribe(template, listener);
 		addSubscription(NotificationsFactory.createSubscription(uri, template, listener));
@@ -153,7 +155,7 @@ public class SpaceManager implements ISpaceInformationHolder {
 		log.debug("END unsubscribe.");
 	}
 
-	public String advertise(ITemplate template) {
+	public String advertise(NotificableTemplate template) {
 		log.debug("BEGIN advertise.");
 		String uri = outcoming.advertise(template);
 		addAdvertisement(NotificationsFactory.createAdvertisement(uri, template)); //TODO
@@ -168,7 +170,7 @@ public class SpaceManager implements ISpaceInformationHolder {
 		log.debug("END unadvertise.");
 	}
 	
-	public void demand(ITemplate template, long leaseTime,
+	public void demand(Template template, long leaseTime,
 			ISuggestionCallback callback) {
 		log.debug("BEGIN demand.");
 		localDemandMngr.demand(template, leaseTime, callback);
@@ -182,11 +184,11 @@ public class SpaceManager implements ISpaceInformationHolder {
 		log.debug("END suggest.");
 	}
 	
-	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(Graph triples) {
+	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(Graph triples) throws UnsupportedTemplateException {
 		return localDemandMngr.callbackForMatchingTemplates(triples);
 	}
 	
-	public boolean hasAnyPeerResponsabilityOverThisKnowlege(Graph triples) {
+	public boolean hasAnyPeerResponsabilityOverThisKnowlege(Graph triples) throws UnsupportedTemplateException {
 		return remoteDemandMngr.hasAnyPeerResponsabilityOverThisKnowledge(triples);
 	}
 	
@@ -194,7 +196,7 @@ public class SpaceManager implements ISpaceInformationHolder {
 		subscriptions.add(subscription);
 	}
 	
-	protected Subscription getSubscription(ITemplate template) {
+	protected Subscription getSubscription(Template template) {
 		return (Subscription) subscriptions.get(template);
 	}
 	

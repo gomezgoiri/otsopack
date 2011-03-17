@@ -15,8 +15,6 @@ package otsopack.otsoME.network.communication;
 
 import java.io.IOException;
 
-import otsopack.otsoME.network.communication.JxmeSpace;
-
 import jmunit.framework.cldc11.TestCase;
 import net.jxta.access.AccessService;
 import net.jxta.discovery.DiscoveryService;

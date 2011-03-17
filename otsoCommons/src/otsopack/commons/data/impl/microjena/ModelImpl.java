@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.WildcardTemplate;
@@ -47,11 +46,6 @@ public class ModelImpl implements IModel {
 	public ModelImpl(Graph graph){
 		this();
 		this.read(graph);
-	}
-	
-	public IModel query(ITemplate template) {
-		//must be a TemplateImpl since there is no other implementation
-		return new ModelImpl(model.query((TemplateImpl)template));
 	}
 	
 	private String wildcard2str(WildcardTemplate tpl){

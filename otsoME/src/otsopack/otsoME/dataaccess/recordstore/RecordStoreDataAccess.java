@@ -28,7 +28,6 @@ import javax.microedition.rms.RecordStoreException;
 import org.apache.log4j.Logger;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.IDataAccess;
@@ -218,27 +217,11 @@ public class RecordStoreDataAccess implements IDataAccess {
 		updater.closeSpace(sr);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		final long start = System.currentTimeMillis();
-		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final Graph ret = sr.query(template,outputFormat);
-		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
-	}
-
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
 		final long start = System.currentTimeMillis();
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.query(template,outputFormat);
 		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
-	}
-
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		final long start = System.currentTimeMillis();
-		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final Graph ret = sr.read(template,outputFormat);
-		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 
@@ -255,14 +238,6 @@ public class RecordStoreDataAccess implements IDataAccess {
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		final Graph ret = sr.read(graphURI,outputFormat);
 		log.debug("Read with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
-	}
-
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		final long start = System.currentTimeMillis();
-		final SpaceRecord sr = getJoinedSpace(spaceURI);
-		final Graph ret = sr.take(template,outputFormat);
-		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
 		return ret;
 	}
 

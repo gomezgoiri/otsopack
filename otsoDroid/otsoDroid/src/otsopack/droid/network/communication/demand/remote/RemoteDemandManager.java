@@ -18,10 +18,11 @@ import java.util.Vector;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.droid.network.communication.demand.DemandRecord;
 import otsopack.droid.network.communication.demand.IDemandEntry;
 
@@ -43,7 +44,7 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 	public void shutdown() {
 	}
 	
-	public void demandReceived(ITemplate template, long leaseTime) {
+	public void demandReceived(Template template, long leaseTime) {
 		IDemandEntry entry = new RemoteDemandEntry(
 									template,
 									System.currentTimeMillis()+leaseTime
@@ -53,10 +54,10 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 		}
 	}
 	
-	public boolean hasAnyPeerResponsabilityOverThisKnowledge(Graph triples) {
+	public boolean hasAnyPeerResponsabilityOverThisKnowledge(Graph triples) throws UnsupportedTemplateException {
 		final Enumeration<?> it = getNonExpiredTemplates().elements();
 		while( it.hasMoreElements() ) {
-			ITemplate sel = (ITemplate) it.nextElement();
+			Template sel = (Template) it.nextElement();
 			IModel model = new ModelImpl(triples);
 			if( !model.query(sel).isEmpty() )
 				return true;
@@ -64,8 +65,8 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 		return false;
 	}
 	
-	protected Vector<ITemplate> getNonExpiredTemplates() {
-		final Vector<ITemplate> list = new Vector<ITemplate>();
+	protected Vector<Template> getNonExpiredTemplates() {
+		final Vector<Template> list = new Vector<Template>();
 		synchronized( lock ) {
 			for(int i=record.size()-1; i>=0; i--) {
 				IDemandEntry entry = record.get(i);
@@ -132,7 +133,7 @@ public class RemoteDemandManager implements IRemoteDemandManager {
 			initialized = false;
 	}
 	
-		private void demandImported(ITemplate template, long expiryTime) {
+		private void demandImported(Template template, long expiryTime) {
 			IDemandEntry entry = new RemoteDemandEntry( template, expiryTime );
 			synchronized( lock ) {
 				record.addDemand(entry);

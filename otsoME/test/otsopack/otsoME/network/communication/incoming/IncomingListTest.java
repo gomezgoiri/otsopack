@@ -13,15 +13,14 @@
  */
 package otsopack.otsoME.network.communication.incoming;
 
+import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-import otsopack.otsoME.network.communication.incoming.IncomingList;
 import otsopack.otsoME.network.communication.incoming.response.ModelResponse;
 import otsopack.otsoME.network.communication.incoming.response.Response;
 import otsopack.otsoME.network.communication.incoming.response.URIResponse;
-import jmunit.framework.cldc11.TestCase;
 
 public class IncomingListTest extends TestCase {
 	

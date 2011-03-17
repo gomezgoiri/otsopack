@@ -14,7 +14,8 @@
 package otsopack.droid.network.communication.util;
 
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.data.Template;
 import otsopack.droid.network.communication.incoming.ITSCallback;
 
 public class FakeCallback implements ITSCallback {
@@ -32,14 +33,14 @@ public class FakeCallback implements ITSCallback {
 	private boolean suggestReceived = false;
 	private boolean obtainDemandsReceived = false;
 	private IModel model = null;
-	private ITemplate selector = null;
-	private ITemplate[] selectors = null;
+	private Template selector = null;
+	private Template[] selectors = null;
 	private String graphURI = null;
 	private String advsubsURI = null;
 	private long leaseTime = -1;
 	private byte[] bytes = null;
 	
-	public void response(ITemplate inResponseTo, IModel model) {
+	public void response(Template inResponseTo, IModel model) {
 		if(inResponseTo != null) {
 			selector = inResponseTo;
 			this.model = model;
@@ -53,22 +54,22 @@ public class FakeCallback implements ITSCallback {
 		responseReceived = true;
 	}
 
-	public void response(ITemplate inResponseToAdvSubs, String advSubsURI) {
+	public void response(Template inResponseToAdvSubs, String advSubsURI) {
 		selector = inResponseToAdvSubs;
 		this.advsubsURI = advSubsURI; 
 	}
 	
-	public void query(ITemplate template) {
+	public void query(Template template) {
 		selector = template;
 		queryReceived = true;
 	}
 	
-	public void queryMultiple(ITemplate[] selectors) {
+	public void queryMultiple(Template[] selectors) {
 		this.selectors = selectors;
 		queryMultipleReceived = true;
 	}
 	
-	public void read(ITemplate template) {
+	public void read(Template template) {
 		selector = template;
 		readReceived = true;		
 	}
@@ -83,17 +84,17 @@ public class FakeCallback implements ITSCallback {
 		takeReceived = true;
 	}
 
-	public void take(ITemplate template) {
+	public void take(Template template) {
 		selector = template;
 		takeReceived = true;
 	}
 	
-	public void notify(ITemplate template) {
+	public void notify(NotificableTemplate template) {
 		notifyReceived = true;
 		selector = template;
 	}
 	
-	public void advertise(ITemplate template) {
+	public void advertise(NotificableTemplate template) {
 		advertiseReceived = true;
 		selector = template;
 	}
@@ -103,7 +104,7 @@ public class FakeCallback implements ITSCallback {
 		advsubsURI = advertisementURI;
 	}
 
-	public void subscribe(ITemplate template) {
+	public void subscribe(NotificableTemplate template) {
 		subscribeReceived = true;
 		selector = template;
 	}
@@ -113,7 +114,7 @@ public class FakeCallback implements ITSCallback {
 		advsubsURI = subscriptionURI;		
 	}
 
-	public void demand(ITemplate template, long leaseTime) {
+	public void demand(Template template, long leaseTime) {
 		demandReceived = true;
 		selector = template;
 		this.leaseTime  = leaseTime;
@@ -189,11 +190,11 @@ public class FakeCallback implements ITSCallback {
 		return obtainDemandsReceived;
 	}
 
-	public ITemplate getSelector() {
+	public Template getSelector() {
 		return selector;
 	}
 	
-	public ITemplate[] getSelectors() {
+	public Template[] getSelectors() {
 		return selectors;
 	}
 	

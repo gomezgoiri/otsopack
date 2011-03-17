@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 import otsopack.commons.configuration.TscMEConfiguration;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IPeerInformationHolder;
@@ -90,7 +90,7 @@ public class OutcomingManager implements IDemandSender {
 	 * @param sel
 	 * @return the uri of the un/advertised / un/subscribed template.
 	 */
-	private String sendMessageWaitingToURI(Message m, ITemplate sel) {
+	private String sendMessageWaitingToURI(Message m, Template sel) {
 		space.send(m);
 		
 		URIResponse ru = null;
@@ -138,7 +138,7 @@ public class OutcomingManager implements IDemandSender {
 		return ru.getGraph();
 	}
 	
-	public Graph query(ITemplate template, long timeout) {
+	public Graph query(Template template, long timeout) {
 		Message m = MessageParser.createQueryMessage(peerInfo.getPeerName(), template);
 		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
@@ -158,7 +158,7 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public Graph read(ITemplate template, long timeout) {
+	public Graph read(Template template, long timeout) {
 		Message m = MessageParser.createReadMessage(peerInfo.getPeerName(), template);
 		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
@@ -198,7 +198,7 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public Graph take(ITemplate template, long timeout) {
+	public Graph take(Template template, long timeout) {
 		Message m = MessageParser.createTakeMessage(peerInfo.getPeerName(), template);
 		Graph ret = null;
 		if(TscMEConfiguration.getConfiguration().isEvaluationMode()) {
@@ -238,7 +238,7 @@ public class OutcomingManager implements IDemandSender {
 		return ret;
 	}
 	
-	public String advertise(ITemplate template) {
+	public String advertise(Template template) {
 		Message m = MessageParser.createAdvertiseMessage(peerInfo.getPeerName(), template);
 		return sendMessageWaitingToURI(m, template);
 	}
@@ -248,7 +248,7 @@ public class OutcomingManager implements IDemandSender {
 		space.send(m);
 	}
 	
-	public String subscribe(ITemplate template, INotificationListener listener) {
+	public String subscribe(Template template, INotificationListener listener) {
 		Message m = MessageParser.createSubscribeMessage(peerInfo.getPeerName(), template);
 		return sendMessageWaitingToURI(m, template);
 	}
@@ -258,7 +258,7 @@ public class OutcomingManager implements IDemandSender {
 		space.send(m);
 	}
 	
-	public void demand(ITemplate template,long leaseTime) {
+	public void demand(Template template,long leaseTime) {
 		Message m = MessageParser.createDemandMessage(peerInfo.getPeerName(),template,leaseTime);
 		space.send(m);
 	}

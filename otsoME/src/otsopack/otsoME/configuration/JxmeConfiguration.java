@@ -13,11 +13,10 @@
  */
 package otsopack.otsoME.configuration;
 
-import net.jxta.util.java.net.URI;
-
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroupID;
+import net.jxta.util.java.net.URI;
 
 public class JxmeConfiguration 
 {

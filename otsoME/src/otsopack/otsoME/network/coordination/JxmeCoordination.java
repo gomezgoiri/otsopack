@@ -21,10 +21,6 @@ import net.jxta.exception.PeerGroupException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
-import otsopack.otsoME.configuration.JxmeConfiguration;
-import otsopack.otsoME.network.communication.ISpaceInformationHolder;
-import otsopack.otsoME.network.communication.SpaceManager;
-import otsopack.otsoME.network.jxme.JxmePeerBase;
 import otsopack.commons.IController;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -33,6 +29,10 @@ import otsopack.commons.util.Util;
 import otsopack.commons.util.collections.HashMap;
 import otsopack.commons.util.collections.Map;
 import otsopack.commons.util.collections.Set;
+import otsopack.otsoME.configuration.JxmeConfiguration;
+import otsopack.otsoME.network.communication.ISpaceInformationHolder;
+import otsopack.otsoME.network.communication.SpaceManager;
+import otsopack.otsoME.network.jxme.JxmePeerBase;
 
 
 public class JxmeCoordination implements ICoordination {

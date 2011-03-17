@@ -23,12 +23,11 @@ import net.jxta.endpoint.MessageElement;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
-import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.droid.network.communication.incoming.ITSCallback;
@@ -80,7 +79,7 @@ public class MessageParserTest extends TestCase {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = sf.createTemplate("?s <http://predicado> ?o .");
+		final Template template = sf.createTemplate("?s <http://predicado> ?o .");
 		final ModelImpl triples = new ModelImpl();
 		triples.addTriple("http://subject1","http://predicate1","http://object1");
 		triples.addTriple("http://subject2","http://predicate1","http://object1");
@@ -109,7 +108,7 @@ public class MessageParserTest extends TestCase {
 	}
 
 	public void testQueryCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createQueryMessage(null,template);
 		
 		checkSender(msg);
@@ -120,11 +119,11 @@ public class MessageParserTest extends TestCase {
 		checkSelector(msg, "<"+ExampleME.subj1+"> ?p ?o .");
 	}
 	
-	public void testQueryParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testQueryParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createQueryMessage(null,template);
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isQueryReceived() );
@@ -132,7 +131,7 @@ public class MessageParserTest extends TestCase {
 	}
 	
 	public void testReadTemplateCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
+		final Template template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createReadMessage(null,template);
 		
 		checkSender(msg);
@@ -143,11 +142,11 @@ public class MessageParserTest extends TestCase {
 		checkSelector(msg, "?s ?p <"+ExampleME.subj1+"> .");
 	}
 	
-	public void testReadTemplateParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testReadTemplateParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
+		final Template template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createReadMessage(null,template);
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isReadReceived() );
@@ -167,7 +166,7 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), uri.toString());
 	}
 	
-	public void testReadURIParser() throws MalformedMessageException {
+	public void testReadURIParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -179,7 +178,7 @@ public class MessageParserTest extends TestCase {
 	}
 	
 	public void testTakeTemplateCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
+		final Template template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createTakeMessage(null,template);
 		
 		checkSender(msg);
@@ -190,11 +189,11 @@ public class MessageParserTest extends TestCase {
 		checkSelector(msg, "?s ?p <"+ExampleME.subj1+"> .");
 	}
 	
-	public void testTakeTemplateParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testTakeTemplateParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createTakeMessage(null,template);
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isTakeReceived() );
@@ -214,7 +213,7 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), uri.toString());
 	}
 	
-	public void testTakeURIParser() throws MalformedMessageException {
+	public void testTakeURIParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -227,7 +226,7 @@ public class MessageParserTest extends TestCase {
 	
 	
 	public void testAdvertiseCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 		final Message msg = MessageParser.createAdvertiseMessage(null,template);
 		
 		checkSender(msg);
@@ -238,11 +237,11 @@ public class MessageParserTest extends TestCase {
 		checkSelector(msg, "<"+ExampleME.subj1+"> ?p ?o .");
 	}
 	
-	public void testAdvertiseParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testAdvertiseParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj2+"> .");
+		final Template template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj2+"> .");
 		final Message msg = MessageParser.createAdvertiseMessage(null,template);
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isAdvertiseReceived() );
@@ -262,7 +261,7 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), uri.toString());
 	}
 	
-	public void testUnadvertiseParser() throws MalformedMessageException {
+	public void testUnadvertiseParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -274,7 +273,7 @@ public class MessageParserTest extends TestCase {
 	}
 	
 	public void testSubscribeCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p <"+ExampleME.subj2+"> .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj1+"> ?p <"+ExampleME.subj2+"> .");
 		final Message msg = MessageParser.createSubscribeMessage(null,template);
 		
 		checkSender(msg);
@@ -285,11 +284,11 @@ public class MessageParserTest extends TestCase {
 		checkSelector(msg, "<"+ExampleME.subj1+"> ?p <"+ExampleME.subj2+"> .");
 	}
 	
-	public void testSubscribeParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testSubscribeParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj3+"> <"+ExampleME.prop1+"> ?o .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj3+"> <"+ExampleME.prop1+"> ?o .");
 		final Message msg = MessageParser.createSubscribeMessage(null,template);
 		MessageParser.parseMessage(msg, listeners);
 		assertTrue( fl.isSubscribeReceived() );
@@ -309,7 +308,7 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), uri.toString());
 	}
 	
-	public void testUnsubscribeParser() throws MalformedMessageException {
+	public void testUnsubscribeParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -322,7 +321,7 @@ public class MessageParserTest extends TestCase {
 	
 	public void testQueryMultipleCreator() throws MalformedTemplateException {
 		final ISemanticFactory sf = new SemanticFactory();
-		final ITemplate[] templates = new ITemplate[4];
+		final Template[] templates = new Template[4];
 			templates[0] = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 			templates[1] = sf.createTemplate("?s ?p ?o .");
 			templates[2] = sf.createTemplate("<"+ExampleME.subj1+"> ?p <"+ExampleME.subj4+"> .");
@@ -341,12 +340,12 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), templatesStr);
 	}
 	
-	public void testQueryMultipleParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testQueryMultipleParser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate[] templates = new ITemplate[4];
+		final Template[] templates = new Template[4];
 			templates[0] = sf.createTemplate("<"+ExampleME.subj1+"> ?p ?o .");
 			templates[1] = sf.createTemplate("?s ?p ?o .");
 			templates[2] = sf.createTemplate("<"+ExampleME.subj1+"> ?p <"+ExampleME.subj4+"> .");
@@ -354,7 +353,7 @@ public class MessageParserTest extends TestCase {
 		MessageParser.parseMessage(msg,listeners);
 		assertTrue( fl.isQueryMultipleReceived() );
 		
-		final ITemplate[] retSelectors = fl.getSelectors();
+		final Template[] retSelectors = fl.getSelectors();
 		for(int i=0; i<retSelectors.length; i++) {
 			boolean found = false; // just in case I will use a set which "disorders" its elements
 			for(int j=0; j<templates.length; j++) {
@@ -368,7 +367,7 @@ public class MessageParserTest extends TestCase {
 	}
 
 	public void testDemandCreator() throws MalformedTemplateException {
-		final ITemplate template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
+		final Template template = new SemanticFactory().createTemplate("?s ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createDemandMessage(null, template, 2000);
 		
 		checkSender(msg);
@@ -381,11 +380,11 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), "2000" );
 	}
 	
-	public void testDemandParser() throws MalformedMessageException, MalformedTemplateException {
+	public void testDemandParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
-		final ITemplate template = new SemanticFactory().createTemplate("<"+ExampleME.subj2+"> ?p <"+ExampleME.subj1+"> .");
+		final Template template = new SemanticFactory().createTemplate("<"+ExampleME.subj2+"> ?p <"+ExampleME.subj1+"> .");
 		final Message msg = MessageParser.createDemandMessage(null,template, 2000);
 		MessageParser.parseMessage(msg,listeners);
 		assertTrue( fl.isDemandReceived() );
@@ -407,7 +406,7 @@ public class MessageParserTest extends TestCase {
 
 	}
 
-	public void testSuggestParser() throws MalformedMessageException, TripleParseException {
+	public void testSuggestParser() throws Exception, TripleParseException {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -431,7 +430,7 @@ public class MessageParserTest extends TestCase {
 		assertEquals( msgElement.toString(), MessageParser.TypeRequest.OBTAIN_DMNDS );
 	}
 	
-	public void testObtainDemandsParser() throws MalformedMessageException {
+	public void testObtainDemandsParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);
@@ -458,7 +457,7 @@ public class MessageParserTest extends TestCase {
 		}
 	}
 	
-	public void testResponseDemandsParser() throws MalformedMessageException {
+	public void testResponseDemandsParser() throws Exception {
 		final FakeCallback fl = new FakeCallback();
 		final Vector<ITSCallback> listeners = new Vector<ITSCallback>();
 		listeners.addElement(fl);

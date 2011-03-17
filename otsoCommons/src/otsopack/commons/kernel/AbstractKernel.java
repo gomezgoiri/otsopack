@@ -18,8 +18,9 @@ import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
 import otsopack.commons.converters.UnionUtility;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -171,12 +172,12 @@ public abstract class AbstractKernel implements ITripleSpace {
 		networkService.unsubscribe(spaceURI, subscriptionURI);
 	}	
 
-	public String subscribe(String spaceURI, ITemplate template, INotificationListener listener) throws TSException {
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		return networkService.subscribe(spaceURI, template, listener);
 	}
 	
-	public String advertise(String spaceURI, ITemplate template) throws TSException {
+	public String advertise(String spaceURI, NotificableTemplate template) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		return networkService.advertise(spaceURI, template);
 	}
@@ -186,7 +187,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		networkService.unadvertise(spaceURI, advertisementURI);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		Graph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		try {
@@ -206,7 +207,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return ret;
 	}
 
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		Graph ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
 		if(ret==null) 
@@ -223,7 +224,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return ret;
 	}
 
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		Graph ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, timeout); 
 		if(ret==null) 
@@ -297,7 +298,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return controller;
 	}
 
-	public void demand(String spaceURI, ITemplate template, long leaseTime,
+	public void demand(String spaceURI, Template template, long leaseTime,
 			ISuggestionCallback callback) throws TSException {
 		networkService.demand(spaceURI, template, leaseTime, callback);
 	}	

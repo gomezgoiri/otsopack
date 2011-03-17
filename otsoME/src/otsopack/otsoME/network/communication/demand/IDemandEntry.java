@@ -13,7 +13,7 @@
  */
 package otsopack.otsoME.network.communication.demand;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
 import otsopack.commons.util.collections.Comparable;
 
 public interface IDemandEntry extends Comparable {
@@ -22,7 +22,7 @@ public interface IDemandEntry extends Comparable {
 	 * 		Demanded template (which basically means somebody
 	 * 	has responsibility over the graphs which match this template).
 	 */
-	public abstract ITemplate getTemplate();
+	public abstract Template getTemplate();
 	
 	/**
 	 * @return

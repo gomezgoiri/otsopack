@@ -14,20 +14,16 @@
 package otsopack.otsoME.dataaccess.recordstore.space;
 
 import it.polimi.elet.contextaddict.microjena.rdf.model.StmtIterator;
-
-import javax.microedition.rms.RecordStoreException;
-
 import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
-import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.otsoME.sampledata.ExampleME;
 
@@ -131,7 +127,7 @@ public class SpaceRecordTest extends TestCase {
 		space.write(triples.write(SemanticFormat.NTRIPLES));
 	}
 	
-	protected void testGetGraphFromStore() throws RecordStoreException, MalformedTemplateException {
+	protected void testGetGraphFromStore() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final ModelImpl graph = space.getGraphFromStore(anyStoredRecord.recordId);
 		assertEquals( anyStoredRecord.getModel().getModelImpl().getModel().size(), graph.getModel().size() );
@@ -142,10 +138,10 @@ public class SpaceRecordTest extends TestCase {
 		}
 	}
 		
-	protected void testQuery1() throws MalformedTemplateException {
+	protected void testQuery1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 
-		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
+		Template sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop1+"> ?o .");
 		Graph ret = space.query( sel, SemanticFormat.NTRIPLES );
 		assertEquals( new ModelImpl(ret).getModel().size(), 1 );
 		
@@ -154,10 +150,10 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void testRead1() throws MalformedTemplateException {
+	protected void testRead1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
+		Template sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
 		Graph ret = space.read( sel, SemanticFormat.NTRIPLES );
 		assertEquals( new ModelImpl(ret).getModel().size(), 5 );
 		
@@ -174,10 +170,10 @@ public class SpaceRecordTest extends TestCase {
 		assertNull(ret);
 	}
 
-	protected void testTake1() throws MalformedTemplateException {
+	protected void testTake1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		
-		ITemplate sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
+		Template sel = sf.createTemplate("<"+ExampleME.subj1+"> <"+ExampleME.prop4+"> <"+ExampleME.obj4+"> .");
 		Graph ret = space.take( sel, SemanticFormat.NTRIPLES );
 		assertEquals( new ModelImpl(ret).getModel().size(), 5 );
 		

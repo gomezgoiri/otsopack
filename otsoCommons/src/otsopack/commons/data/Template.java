@@ -15,5 +15,9 @@
 package otsopack.commons.data;
 
 public abstract class Template {
-
+	public NotificableTemplate asNotificableTemplate(){
+		if(this instanceof NotificableTemplate)
+			return (NotificableTemplate)this;
+		throw new IllegalStateException("Requesting a not notificable template to be a " + NotificableTemplate.class.getName());
+	}
 }

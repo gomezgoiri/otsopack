@@ -16,8 +16,6 @@ package otsopack.commons.data.impl;
 
 import java.util.Vector;
 
-import otsopack.commons.data.impl.AbstractTriple;
-
 import junit.framework.TestCase;
 
 public class AbstractTripleTest extends TestCase {

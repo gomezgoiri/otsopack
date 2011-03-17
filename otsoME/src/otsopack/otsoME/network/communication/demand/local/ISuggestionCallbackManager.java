@@ -14,6 +14,7 @@
 package otsopack.otsoME.network.communication.demand.local;
 
 import otsopack.commons.data.Graph;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public interface ISuggestionCallbackManager {
 	/**
@@ -24,6 +25,7 @@ public interface ISuggestionCallbackManager {
 	 * 		has any of the registered demands' template match the triples?
 	 * 		or (the same)
 	 * 		has any class be called back?
+	 * @throws UnsupportedTemplateException 
 	 */
-	public abstract boolean callbackForMatchingTemplates(final Graph triples);
+	public abstract boolean callbackForMatchingTemplates(final Graph triples) throws UnsupportedTemplateException;
 }

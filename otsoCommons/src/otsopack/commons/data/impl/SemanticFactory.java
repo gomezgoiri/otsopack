@@ -15,8 +15,8 @@
 package otsopack.commons.data.impl;
 
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
 
 public class SemanticFactory implements ISemanticFactory {
@@ -29,7 +29,7 @@ public class SemanticFactory implements ISemanticFactory {
 		SemanticFactory.dataFactory = factory;
 	}
 
-	public ITemplate createTemplate(String template) throws MalformedTemplateException {
+	public Template createTemplate(String template) throws MalformedTemplateException {
 		return SemanticFactory.dataFactory.createTemplate(template);
 	}
 	

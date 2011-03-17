@@ -14,7 +14,8 @@
 package otsopack.droid.network.communication.demand.remote;
 
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public interface IRemoteDemandManager extends IRemoteDemandIOManager {
 
@@ -22,15 +23,15 @@ public interface IRemoteDemandManager extends IRemoteDemandIOManager {
 	public abstract void shutdown();
 	
 	public abstract boolean hasAnyPeerResponsabilityOverThisKnowledge(
-			Graph triples);
+			Graph triples) throws UnsupportedTemplateException;
 
 	public abstract byte[] exportRecords();
 	
 	/*
 	 * (non-Javadoc)
-	 * @see es.deusto.tecnologico.tscME.network.communication.demand.remote.IRemoteDemandIOManager#demandReceived(es.deusto.tecnologico.tscME.data.ITemplate, long)
+	 * @see es.deusto.tecnologico.tscME.network.communication.demand.remote.IRemoteDemandIOManager#demandReceived(es.deusto.tecnologico.tscME.data.Template, long)
 	 */
-	public abstract void demandReceived(ITemplate template, long leaseTime);
+	public abstract void demandReceived(Template template, long leaseTime);
 	
 	/* (non-Javadoc)
 	 * @see es.deusto.tecnologico.tscME.network.communication.demand.remote.IRemoteDemandInputManager#importRecords(byte[])

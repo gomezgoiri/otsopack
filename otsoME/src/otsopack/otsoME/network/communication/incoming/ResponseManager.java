@@ -24,12 +24,14 @@ import org.apache.log4j.Logger;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.otsoME.network.communication.ISpaceInformationHolder;
 import otsopack.otsoME.network.communication.demand.local.ISuggestionCallbackManager;
 import otsopack.otsoME.network.communication.demand.remote.IRemoteDemandIOManager;
@@ -66,7 +68,7 @@ public class ResponseManager implements ITSCallback {
     	this.outcoming = sender;
 	}
 	
-	public void query(ITemplate template) {
+	public void query(Template template) throws UnsupportedTemplateException {
     	log.debug("Query received");
     	try {
 			Graph graph = controller.getDataAccessService().query(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
@@ -80,7 +82,7 @@ public class ResponseManager implements ITSCallback {
 		}
 	}
 	
-	public void queryMultiple(ITemplate[] templates) {
+	public void queryMultiple(Template[] templates) throws UnsupportedTemplateException {
 		log.debug("QueryMultiple received");
 		try {
 			if( templates!=null ) {
@@ -98,7 +100,7 @@ public class ResponseManager implements ITSCallback {
 		}
 	}
 
-	public void read(ITemplate template) {
+	public void read(Template template) throws UnsupportedTemplateException {
     	log.debug("Read received.");
 		try {
 			Graph graph = controller.getDataAccessService().read(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
@@ -126,7 +128,7 @@ public class ResponseManager implements ITSCallback {
 		}
 	}
 	
-	public void take(ITemplate template) {
+	public void take(Template template) throws UnsupportedTemplateException {
 		log.debug("Take received.");
 		try {
 			Graph graph = controller.getDataAccessService().take(spaceInfo.getSpaceURI(), template, SemanticFormat.NTRIPLES);
@@ -161,7 +163,7 @@ public class ResponseManager implements ITSCallback {
 		if(subsc != null) subsc.getListener().notifyEvent();*/
 	}
 	
-	public void notify(ITemplate template) {
+	public void notify(NotificableTemplate template) {
     	log.debug("Notify received");
 		Enumeration enumeration = subscriberList.getThoseWhichMatch(template).elements();
 		while( enumeration.hasMoreElements() ) {
@@ -170,7 +172,7 @@ public class ResponseManager implements ITSCallback {
 		}
 	}
 	
-	public void advertise(ITemplate template) {
+	public void advertise(NotificableTemplate template) {
 		log.debug("Advertise received/done");
 		//if we want to made mobile peers less dependent it is useful to handle this message
 		//addressed to ProxyME peers
@@ -182,7 +184,7 @@ public class ResponseManager implements ITSCallback {
 		//the mobile peer does nothing, this is a message for the ProxyME peer
 	}
 	
-	public void subscribe(ITemplate template) {
+	public void subscribe(NotificableTemplate template) {
 		log.debug("Subscribe received");
 		//the mobile peer does nothing, this is a message for the ProxyME peer 
 	}
@@ -192,7 +194,7 @@ public class ResponseManager implements ITSCallback {
 		//the mobile peer does nothing, this is a message for the ProxyME peer
 	}
 	
-	public void response(ITemplate inResponseTo, IModel model) {
+	public void response(Template inResponseTo, IModel model) {
 		log.debug("Response received to template "+inResponseTo);
 		try {
 			responseReceived(inResponseTo, model);
@@ -210,7 +212,7 @@ public class ResponseManager implements ITSCallback {
     	}
 	}
 
-	public void response(ITemplate inResponseToAdvSubs, String advSubsURI) {
+	public void response(Template inResponseToAdvSubs, String advSubsURI) {
 		log.debug("Response received to advert or to a subscription "+inResponseToAdvSubs);
 		try {
 			responseReceived(inResponseToAdvSubs, advSubsURI);
@@ -219,7 +221,7 @@ public class ResponseManager implements ITSCallback {
 		}
 	}
 
-	protected void responseReceived(ITemplate inResponseTo, IModel model)
+	protected void responseReceived(Template inResponseTo, IModel model)
 			throws ResponseNotExpected {
 		Response resp = inbox.get(inResponseTo,false);
 		if( resp == null ) 
@@ -236,7 +238,7 @@ public class ResponseManager implements ITSCallback {
         ((ModelResponse)resp).addTriples(model);
 	}
 
-	protected void responseReceived(ITemplate inResponseToAdvSubs, String advSubsURI)
+	protected void responseReceived(Template inResponseToAdvSubs, String advSubsURI)
 			throws ResponseNotExpected {
 		URIResponse resp = (URIResponse) inbox.get(inResponseToAdvSubs,true);
         if( resp == null ) 
@@ -245,7 +247,7 @@ public class ResponseManager implements ITSCallback {
         resp.setURI(advSubsURI);
 	}
 
-	public void demand(ITemplate template, long leaseTime) {
+	public void demand(Template template, long leaseTime) {
 		//log();
 		demandInput.demandReceived(template, leaseTime);
 	}
@@ -261,7 +263,7 @@ public class ResponseManager implements ITSCallback {
 		log2.debug("Demand received on: "+System.currentTimeMillis());
 	}
 
-	public void suggest(IModel triples) {
+	public void suggest(IModel triples) throws UnsupportedTemplateException {
 		suggestionCallback.callbackForMatchingTemplates( ((ModelImpl)triples).write(SemanticFormat.NTRIPLES) );
 	}
 

@@ -26,13 +26,15 @@ import net.jxta.util.java.io.BufferedReader;
 import net.jxta.util.java.io.StringReader;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.IModel;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.exceptions.MalformedMessageException;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.UnrecognizedFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.collections.HashSet;
 import otsopack.otsoME.network.communication.incoming.ITSCallback;
 
@@ -75,7 +77,7 @@ public class MessageParser {
 		static public final String BYTES = "TSCBytes"; //for obtain demands
 	}
 	
-    static public void parseMessage(Message msg, Vector listeners) throws MalformedMessageException {
+    static public void parseMessage(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
     	if(msg != null) {
     		MessageElement msgElement = msg.getMessageElement(null,Properties.REQUESTYPE);
 			if( msgElement!=null ) {
@@ -124,7 +126,7 @@ public class MessageParser {
     	} else throw new MalformedMessageException();
 	}
     
-   	static private ITemplate parseSelector(Message msg) throws MalformedMessageException {
+   	static private Template parseSelector(Message msg) throws MalformedMessageException {
     	final MessageElement msgElement = msg.getMessageElement(null,Properties.TEMPLATE);
     	if( msgElement!=null ) {
     		try {
@@ -148,9 +150,9 @@ public class MessageParser {
     	return ret;
    	}
     
-    static private void parseResponse(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseResponse(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
     	final IModel mod;
-    	ITemplate sel;
+    	Template sel;
     	String templateuri = null;
     	String graphuri = null;
     	
@@ -180,13 +182,13 @@ public class MessageParser {
         } else throw new MalformedMessageException();
     }
     
-    static private void parseQuery(Message msg, Vector listeners) throws MalformedMessageException {    	
-   		final ITemplate selector = parseSelector(msg);
+    static private void parseQuery(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {    	
+   		final Template selector = parseSelector(msg);
    		for(int i=0; i<listeners.size(); i++)
 			((ITSCallback)listeners.elementAt(i)).query(selector);
     }
     
-    static private void parseQueryMultiple(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseQueryMultiple(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
     	try {
     		HashSet templates = new HashSet();
     		
@@ -196,7 +198,7 @@ public class MessageParser {
 			try {
 				while ((line = br.readLine()) != null) { 
 					if(line.trim().compareTo("") != 0){
-						ITemplate sel = null;
+						Template sel = null;
 						try {
 							sel = new SemanticFactory().createTemplate(line);
 						} catch (MalformedTemplateException e) {
@@ -211,10 +213,10 @@ public class MessageParser {
 				throw new MalformedMessageException(e.getMessage());
 			}
 			
-			ITemplate[] sels = new ITemplate[templates.size()];
+			Template[] sels = new Template[templates.size()];
 			Enumeration it = templates.elements();
 			for( int i=0; it.hasMoreElements(); i++ ) {
-				sels[i] = (ITemplate) it.nextElement();
+				sels[i] = (Template) it.nextElement();
 			}
 			for(int i=0; i<listeners.size(); i++)
     			((ITSCallback)listeners.elementAt(i)).queryMultiple(sels);
@@ -223,37 +225,37 @@ public class MessageParser {
 		}
     }
     
-    static private void parseRead(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseRead(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.GRAPHURI);
     	if( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
     			((ITSCallback)listeners.elementAt(i)).read( msgElement.toString() );
     	} else {
-        	ITemplate selector = parseSelector(msg);
+        	Template selector = parseSelector(msg);
         	for(int i=0; i<listeners.size(); i++)
     			((ITSCallback)listeners.elementAt(i)).read(selector);
         }
     }
     
-    static private void parseTake(Message msg, Vector listeners) throws MalformedMessageException {
+    static private void parseTake(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
     	MessageElement msgElement = msg.getMessageElement(null,Properties.GRAPHURI);
     	if( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
     			((ITSCallback)listeners.elementAt(i)).take( msgElement.toString() );
         } else {
-        	ITemplate selector = parseSelector(msg);
+        	Template selector = parseSelector(msg);
         	for(int i=0; i<listeners.size(); i++)
     			((ITSCallback)listeners.elementAt(i)).take(selector);
         }
     }
     
     /*static private void parseNotify(Message msg, ITSCallback l) throws MalformedMessageException {
-    	ITemplate selector = parseSelector(msg);
+    	Template selector = parseSelector(msg);
     	l.notify(selector);
     }*/    
     
-    static private void parseAdvertise(Message msg, Vector listeners) throws MalformedMessageException {
-    	final ITemplate selector = parseSelector(msg);
+    static private void parseAdvertise(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
+    	final NotificableTemplate selector = parseSelector(msg).asNotificableTemplate();
     	for(int i=0; i<listeners.size(); i++)
 			((ITSCallback)listeners.elementAt(i)).advertise(selector);
     }
@@ -266,8 +268,8 @@ public class MessageParser {
         }
     }
     
-    static private void parseSubscribe(Message msg, Vector listeners) throws MalformedMessageException {
-        final ITemplate selector = parseSelector(msg);
+    static private void parseSubscribe(Message msg, Vector listeners) throws MalformedMessageException, UnsupportedTemplateException {
+        final NotificableTemplate selector = parseSelector(msg).asNotificableTemplate();
         for(int i=0; i<listeners.size(); i++)
 			((ITSCallback)listeners.elementAt(i)).subscribe(selector);
     }
@@ -280,8 +282,8 @@ public class MessageParser {
         }
     }
     
-    static private void parseDemand(Message msg, Vector listeners) throws MalformedMessageException {
-    	final ITemplate selector = parseSelector(msg);
+    static private void parseDemand(Message msg, Vector listeners) throws MalformedMessageException, NumberFormatException, UnsupportedTemplateException {
+    	final Template selector = parseSelector(msg);
     	final MessageElement msgElement = msg.getMessageElement(null,Properties.LEASE_TIME);
     	if ( msgElement!=null ) {
     		for(int i=0; i<listeners.size(); i++)
@@ -289,7 +291,7 @@ public class MessageParser {
         }
     }
     
-    static private void parseSuggest(Message msg, Vector listeners) {
+    static private void parseSuggest(Message msg, Vector listeners) throws UnsupportedTemplateException {
     	final IModel model = parseModel(msg);
 		for(int i=0; i<listeners.size(); i++)
 			((ITSCallback)listeners.elementAt(i)).suggest(model);
@@ -311,7 +313,7 @@ public class MessageParser {
     	return ret;
 	}
     
-    static public Message createResponseMessage(String peername, ITemplate tpl, IModel triples) {
+    static public Message createResponseMessage(String peername, Template tpl, IModel triples) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.RESPONSE, null));
 		ret = addSelector(ret, tpl);
@@ -319,7 +321,7 @@ public class MessageParser {
     	return ret;
 	}
     
-    static public Message createResponseMessage(String peername, ITemplate tpl, String advertiseSubscribeURI) {
+    static public Message createResponseMessage(String peername, Template tpl, String advertiseSubscribeURI) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.RESPONSE, null));
 		ret = addSelector(ret, tpl);
@@ -327,33 +329,33 @@ public class MessageParser {
     	return ret;
 	}
     
-    static public Message createQueryMessage(String peername, ITemplate template) {
+    static public Message createQueryMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.QUERY, null));
 		ret = addSelector(ret, template);
     	return ret;
 	}
 	
-    static public Message createQueryMultipleMessage(String peername, ITemplate[] selectors) {
+    static public Message createQueryMultipleMessage(String peername, Template[] selectors) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.QUERYMULTIPLE, null));
 		String tplsMsg = ""; 
 		for(int i=0; i<selectors.length; i++) {
-			ITemplate selector = selectors[i];
+			Template selector = selectors[i];
 			tplsMsg += selector.toString()+"\n";
 		}
 		ret.addMessageElement(null, new StringMessageElement(Properties.TEMPLATE_MULTIPLE, tplsMsg, null));
 		return ret;
 	}
 	
-    static public Message createReadMessage(String peername, ITemplate template) {
+    static public Message createReadMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.READ, null));
 		ret = addSelector(ret, template);
     	return ret;
 	}
     
-    static public Message createTakeMessage(String peername, ITemplate template) {
+    static public Message createTakeMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.TAKE, null));
 		ret = addSelector(ret, template);
@@ -374,7 +376,7 @@ public class MessageParser {
     	return ret;
 	}
     
-    static public Message createNotifyMessage(String peername, ITemplate template) {
+    static public Message createNotifyMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.NOTIFY, null));
 		ret = addSelector(ret, template);
@@ -382,7 +384,7 @@ public class MessageParser {
 	}
     
     //it is a non-sense to call to this method in  the ProxyME, except for testing purposes
-    static public Message createAdvertiseMessage(String peername, ITemplate template) {
+    static public Message createAdvertiseMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.ADVERTISE, null));
 		ret = addSelector(ret, template);
@@ -406,7 +408,7 @@ public class MessageParser {
 	}
     
     //it is a non-sense to call to this method in  the ProxyME, except for testing purposes
-    static public Message createSubscribeMessage(String peername, ITemplate template) {
+    static public Message createSubscribeMessage(String peername, Template template) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.SUBSCRIBE, null));
 		ret = addSelector(ret, template);
@@ -421,7 +423,7 @@ public class MessageParser {
     	return ret;
 	}
     
-    static public Message createDemandMessage(String peername, ITemplate template, long leaseTime) {
+    static public Message createDemandMessage(String peername, Template template, long leaseTime) {
 		Message ret = createHeader(peername);
 		ret.addMessageElement(null, new StringMessageElement(Properties.REQUESTYPE, TypeRequest.DEMAND, null));
 		ret = addSelector(ret, template);
@@ -456,7 +458,7 @@ public class MessageParser {
 	    	return ret;
 	    }
 	    
-		static private Message addSelector(Message msg, ITemplate template) {
+		static private Message addSelector(Message msg, Template template) {
 			msg.addMessageElement(null, new StringMessageElement(Properties.TEMPLATE, template.toString(), null));
 			return msg;
 		}

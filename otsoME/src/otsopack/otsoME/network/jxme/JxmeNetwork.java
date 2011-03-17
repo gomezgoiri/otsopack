@@ -15,8 +15,9 @@ package otsopack.otsoME.network.jxme;
 
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -61,7 +62,7 @@ public class JxmeNetwork implements INetwork {
 		return coordination;
 	}
 
-	public String advertise(String spaceURI, ITemplate template) throws SpaceNotExistsException {
+	public String advertise(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
 		return communication.advertise(spaceURI, template);
 	}
 	
@@ -69,7 +70,7 @@ public class JxmeNetwork implements INetwork {
 		communication.unadvertise(spaceURI, advertisementURI);
 	}
 	
-	public String subscribe(String spaceURI, ITemplate template, INotificationListener listener) throws SpaceNotExistsException {
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException {
 		return communication.subscribe(spaceURI, template, listener);
 	}
 
@@ -77,7 +78,7 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public Graph query(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
         return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
@@ -85,11 +86,11 @@ public class JxmeNetwork implements INetwork {
 		return communication.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
-	public Graph read(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.read(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, ITemplate template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
 		return communication.take(spaceURI,template, outputFormat, timeout);
 	}
 	
@@ -125,7 +126,7 @@ public class JxmeNetwork implements INetwork {
 		return coordination.getPeerName();
 	}
 
-	public void demand(String spaceURI, ITemplate template, long leaseTime,
+	public void demand(String spaceURI, Template template, long leaseTime,
 			ISuggestionCallback callback) throws TSException {
 		communication.demand(spaceURI, template, leaseTime, callback);
 	}

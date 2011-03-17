@@ -13,18 +13,18 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import otsopack.commons.data.ITemplate;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class NotificationsFactory {
 	private NotificationsFactory() {
 	}
 	
-	public static ISubscription createSubscription(String uri, ITemplate template, INotificationListener listener) {
+	public static ISubscription createSubscription(String uri, NotificableTemplate template, INotificationListener listener) {
 		return new Subscription(uri, template, listener);
 	}
 	
-	public static IAdvertisement createAdvertisement(String uri, ITemplate template) {
+	public static IAdvertisement createAdvertisement(String uri, NotificableTemplate template) {
 		return new Advertisement(uri, template);
 	}
 }

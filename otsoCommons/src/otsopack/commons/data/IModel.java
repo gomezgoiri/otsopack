@@ -20,7 +20,6 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public interface IModel {
 	static final String ntriple = "N-TRIPLE";
-	IModel query(ITemplate template);
 	IModel query(Template template) throws UnsupportedTemplateException;
 	IModel union(IModel model);	
 	ModelImpl getModelImpl();

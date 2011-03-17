@@ -17,11 +17,10 @@ package otsopack.commons.dataaccess.memory;
 import junit.framework.TestCase;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
-import otsopack.commons.data.ITemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
@@ -132,7 +131,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	public void testQuery() throws SpaceNotExistsException, SpaceAlreadyExistsException, MalformedTemplateException {
+	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
 		final String spaceuri2 = "ts://spaceQuery2";
@@ -163,7 +162,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	public void testReadTemplate() throws SpaceAlreadyExistsException, SpaceNotExistsException, MalformedTemplateException {
+	public void testReadTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceRead1";
 		final String spaceuri2 = "ts://spaceRead2";
@@ -248,7 +247,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	public void testTakeTemplate() throws SpaceAlreadyExistsException, SpaceNotExistsException, MalformedTemplateException {
+	public void testTakeTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceTake1";
 		final String spaceuri2 = "ts://spaceTake2";
@@ -263,9 +262,9 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.write(spaceuri1, models[1]);
 		memo.write(spaceuri2, models[2]);
 		
-		final ITemplate sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
-		final ITemplate sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
-		final ITemplate sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
+		final Template sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
+		final Template sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
+		final Template sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
 		final Graph retGraph1 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
 		final Graph retGraph2 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
 		final Graph retGraph3 = memo.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
