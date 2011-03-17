@@ -14,11 +14,9 @@
 package otsopack.otsoME.network.communication.notifications;
 
 import jmunit.framework.cldc11.TestCase;
-import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.exceptions.MalformedTemplateException;
 
 public class AdvertisementTest extends TestCase {
 	
@@ -49,30 +47,28 @@ public class AdvertisementTest extends TestCase {
 	}
 
 
-	public void testHashCode1() throws MalformedTemplateException {
-		final ISemanticFactory sf = new SemanticFactory();
+	public void testHashCode1() throws Exception {
 		
-		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."));
-		final IAdvertisement adv2 = NotificationsFactory.createAdvertisement("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."));
-		final IAdvertisement adv3 = NotificationsFactory.createAdvertisement("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."));
-		final IAdvertisement adv4 = NotificationsFactory.createAdvertisement("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."));
-		final IAdvertisement adv5 = NotificationsFactory.createAdvertisement("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."));
-		final IAdvertisement adv6 = NotificationsFactory.createAdvertisement("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."));
+		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak",    "http://es", "http://caballo"));
+		final IAdvertisement adv2 = NotificationsFactory.createAdvertisement("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak",    "http://es", "http://caballo"));
+		final IAdvertisement adv3 = NotificationsFactory.createAdvertisement("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield", null,        "http://gato"));
+		final IAdvertisement adv4 = NotificationsFactory.createAdvertisement("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield", null,        "http://gato"));
+		final IAdvertisement adv5 = NotificationsFactory.createAdvertisement("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie",  null));
+		final IAdvertisement adv6 = NotificationsFactory.createAdvertisement("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie",  null));
 		
 		assertEquals(adv1.hashCode(),adv2.hashCode());
 		assertEquals(adv3.hashCode(),adv4.hashCode());
 		assertEquals(adv5.hashCode(),adv6.hashCode());
 	}
 	
-	public void testEquals1() throws MalformedTemplateException {
-		final ISemanticFactory sf = new SemanticFactory();
+	public void testEquals1() throws Exception {
 		
-		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."));
-		final IAdvertisement adv2 = NotificationsFactory.createAdvertisement("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."));
-		final IAdvertisement adv3 = NotificationsFactory.createAdvertisement("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."));
-		final IAdvertisement adv4 = NotificationsFactory.createAdvertisement("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."));
-		final IAdvertisement adv5 = NotificationsFactory.createAdvertisement("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."));
-		final IAdvertisement adv6 = NotificationsFactory.createAdvertisement("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."));
+		final IAdvertisement adv1 = NotificationsFactory.createAdvertisement("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak",    "http://es", "http://caballo"));
+		final IAdvertisement adv2 = NotificationsFactory.createAdvertisement("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak",    "http://es", "http://caballo"));
+		final IAdvertisement adv3 = NotificationsFactory.createAdvertisement("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield", null,        "http://gato"));
+		final IAdvertisement adv4 = NotificationsFactory.createAdvertisement("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield", null,        "http://gato"));
+		final IAdvertisement adv5 = NotificationsFactory.createAdvertisement("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie",  null));
+		final IAdvertisement adv6 = NotificationsFactory.createAdvertisement("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie",  null));
 		
 		assertEquals(adv1,adv2);
 		assertEquals(adv1,adv2);
@@ -112,8 +108,8 @@ public class AdvertisementTest extends TestCase {
 		assertNotEquals(adv6,adv4);
 	}
 	
-	public void testClone1() throws MalformedTemplateException {
-		final IAdvertisement adv = NotificationsFactory.createAdvertisement("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."));
+	public void testClone1() throws Exception {
+		final IAdvertisement adv = NotificationsFactory.createAdvertisement("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak", "http://es","http://caballo"));
 		final IAdvertisement clonedAdv = (IAdvertisement) adv.clone();
 		
 		assertFalse( adv==clonedAdv );

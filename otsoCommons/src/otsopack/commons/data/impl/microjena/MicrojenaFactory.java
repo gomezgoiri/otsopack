@@ -14,11 +14,15 @@
 
 package otsopack.commons.data.impl.microjena;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
+import it.polimi.elet.contextaddict.microjena.rdf.model.RDFNode;
+
 import java.util.Hashtable;
 
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import es.deustotech.microjena.rdf.model.impl.InvalidTemplateException;
 import es.deustotech.microjena.rdf.model.impl.SelectorFactory;
@@ -42,7 +46,30 @@ public class MicrojenaFactory implements ISemanticFactory {
 	
 	public Template createTemplate(String template) throws MalformedTemplateException {
 		try {
-			return new TemplateImpl( SelectorFactory.createSelector(template) );
+			final TemplateImpl tpl = new TemplateImpl( SelectorFactory.createSelector(template) );
+			
+			final String subject;
+			if(tpl.getSubject() != null)
+				subject = tpl.getSubject().toString();
+			else
+				subject = null;
+			
+			final String predicate;
+			if(tpl.getPredicate() != null)
+				predicate = tpl.getPredicate().toString();
+			else
+				predicate = null;
+
+			final RDFNode obj = tpl.getObject();
+			if(obj == null)
+				return WildcardTemplate.createWithNull(subject, predicate);
+			
+			if(obj.isLiteral()){
+				Literal lit = (Literal)obj;
+				return WildcardTemplate.createWithLiteral(subject, predicate, lit.getValue());
+			}
+			
+			return WildcardTemplate.createWithURI(subject, predicate, obj.toString());
 		} catch (InvalidTemplateException e) {
 			throw new MalformedTemplateException(e.getMessage());
 		}

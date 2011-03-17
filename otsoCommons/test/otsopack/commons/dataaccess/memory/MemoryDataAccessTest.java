@@ -179,7 +179,7 @@ public class MemoryDataAccessTest extends TestCase {
 		
 		final Graph retGraph1 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
 		final Graph retGraph2 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+" ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = memo.read( spaceuri2, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.getData().contains(triples[0]) ) {

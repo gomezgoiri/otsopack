@@ -13,13 +13,10 @@
  */
 package otsopack.otsoME.network.communication.notifications;
 
-import jmunit.framework.cldc11.AssertionFailedException;
 import jmunit.framework.cldc11.TestCase;
-import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.exceptions.MalformedTemplateException;
 
 public class SubscriptionTest extends TestCase {
 	public SubscriptionTest() {
@@ -51,30 +48,26 @@ public class SubscriptionTest extends TestCase {
 		}
 	}
 	
-	public void testHashCode1() throws MalformedTemplateException {
-		final ISemanticFactory sf = new SemanticFactory();
-		
-		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("http://arvak <http://es> <http://caballo> ."),null);
-		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
-		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."),null);
-		final ISubscription adv4 = NotificationsFactory.createSubscription("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."),null);
-		final ISubscription adv5 = NotificationsFactory.createSubscription("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."),null);
-		final ISubscription adv6 = NotificationsFactory.createSubscription("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."),null);
+	public void testHashCode1() throws Exception {
+		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
+		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
+		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield",null,"http://gato"),null);
+		final ISubscription adv4 = NotificationsFactory.createSubscription("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield",null,"http://gato"),null);
+		final ISubscription adv5 = NotificationsFactory.createSubscription("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie", null),null);
+		final ISubscription adv6 = NotificationsFactory.createSubscription("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie", null),null);
 		
 		assertEquals(adv1.hashCode(),adv2.hashCode());
 		assertEquals(adv3.hashCode(),adv4.hashCode());
 		assertEquals(adv5.hashCode(),adv6.hashCode());
 	}
 	
-	public void testEquals1() throws MalformedTemplateException {
-		final ISemanticFactory sf = new SemanticFactory();
-		
-		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
-		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
-		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."),null);
-		final ISubscription adv4 = NotificationsFactory.createSubscription("http://spaceuri2", new WildcardTemplate("<http://garfield> ?p <http://gato> ."),null);
-		final ISubscription adv5 = NotificationsFactory.createSubscription("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."),null);
-		final ISubscription adv6 = NotificationsFactory.createSubscription("http://spaceuri3", new WildcardTemplate("<http://lassie> ?p ?o ."),null);
+	public void testEquals1() throws Exception {
+		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
+		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
+		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield",null,"http://gato"),null);
+		final ISubscription adv4 = NotificationsFactory.createSubscription("http://spaceuri2", WildcardTemplate.createWithURI("http://garfield",null,"http://gato"),null);
+		final ISubscription adv5 = NotificationsFactory.createSubscription("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie", null),null);
+		final ISubscription adv6 = NotificationsFactory.createSubscription("http://spaceuri3", WildcardTemplate.createWithNull("http://lassie", null),null);
 		
 		assertEquals(adv1,adv2);
 		assertEquals(adv1,adv2);
@@ -114,8 +107,8 @@ public class SubscriptionTest extends TestCase {
 		assertNotEquals(adv6,adv4);
 	}
 	
-	public void testClone1() throws MalformedTemplateException {
-		final ISubscription subs = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
+	public void testClone1() throws Exception {
+		final ISubscription subs = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
 		final ISubscription clonedSubs = (ISubscription) subs.clone();
 		
 		assertFalse( subs==clonedSubs );
@@ -127,38 +120,36 @@ public class SubscriptionTest extends TestCase {
 		assertTrue( subs.getListener()==clonedSubs.getListener() );
 	}
 
-	public void testMatches1() throws AssertionFailedException, MalformedTemplateException {
-		final ISemanticFactory sf = new SemanticFactory();
+	public void testMatches1() throws Exception {
+		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo"),null);
+		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithURI("http://garfield",null,"http://gato"),null);
+		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri1", WildcardTemplate.createWithNull("http://lassie", null),null);
 		
-		final ISubscription adv1 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://arvak> <http://es> <http://caballo> ."),null);
-		final ISubscription adv2 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://garfield> ?p <http://gato> ."),null);
-		final ISubscription adv3 = NotificationsFactory.createSubscription("http://spaceuri1", new WildcardTemplate("<http://lassie> ?p ?o ."),null);
+		assertTrue( adv1.matches(WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithURI("http://arvak", null, "http://caballo")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithNull("http://arvak", "http://es")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithNull("http://arvak", null)) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithURI(null, "http://es", "http://caballo")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithURI(null, null, "http://caballo")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithNull(null, "http://es")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithURI("http://garfield",null,"http://gato")) );
+		assertFalse( adv1.matches(WildcardTemplate.createWithNull("http://lassie", null)) );
 		
-		assertTrue( adv1.matches(new WildcardTemplate("<http://arvak> <http://es> <http://caballo> .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("<http://arvak> ?p <http://caballo> .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("<http://arvak> <http://es> ?o .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("<http://arvak> ?p ?o .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("?s <http://es> <http://caballo> .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("?s ?p <http://caballo> .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("?s <http://es> ?o .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("<http://garfield> ?p <http://gato> .")) );
-		assertFalse( adv1.matches(new WildcardTemplate("<http://lassie> ?p ?o .")) );
+		assertTrue( adv2.matches(WildcardTemplate.createWithURI("http://garfield", "http://es", "http://gato")) );
+		assertTrue( adv2.matches(WildcardTemplate.createWithURI("http://garfield",null,"http://gato")) );
+		assertFalse( adv2.matches(WildcardTemplate.createWithNull("http://garfield", null)) );
+		assertFalse( adv2.matches(WildcardTemplate.createWithURI(null, null, "http://gato")) );
+		assertFalse( adv2.matches(WildcardTemplate.createWithNull(null, null)) );
+		assertFalse( adv2.matches(WildcardTemplate.createWithNull("http://lassie", null)) );
+		assertFalse( adv2.matches(WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo")) );
 		
-		assertTrue( adv2.matches(new WildcardTemplate("<http://garfield> <http://es> <http://gato> .")) );
-		assertTrue( adv2.matches(new WildcardTemplate("<http://garfield> ?p <http://gato> .")) );
-		assertFalse( adv2.matches(new WildcardTemplate("<http://garfield> ?p ?o .")) );
-		assertFalse( adv2.matches(new WildcardTemplate("?s ?p <http://gato> .")) );
-		assertFalse( adv2.matches(new WildcardTemplate("?s ?p ?o .")) );
-		assertFalse( adv2.matches(new WildcardTemplate("<http://lassie> ?p ?o .")) );
-		assertFalse( adv2.matches(new WildcardTemplate("<http://arvak> <http://es> <http://caballo> .")) );
-		
-		assertTrue( adv3.matches(new WildcardTemplate("<http://lassie> <http://es> <http://perro> .")) );
-		assertTrue( adv3.matches(new WildcardTemplate("<http://lassie> <http://es> ?o .")) );
-		assertTrue( adv3.matches(new WildcardTemplate("<http://lassie> ?p <http://perro> .")) );
-		assertTrue( adv3.matches(new WildcardTemplate("<http://lassie> ?p ?o .")) );
-		assertFalse( adv3.matches(new WildcardTemplate("?s ?p ?o .")) );
-		assertFalse( adv3.matches(new WildcardTemplate("?s <http://es> ?o .")) );
-		assertFalse( adv3.matches(new WildcardTemplate("<http://garfield> ?p <http://gato> .")) );
-		assertFalse( adv3.matches(new WildcardTemplate("<http://arvak> <http://es> <http://caballo> .")) );
+		assertTrue( adv3.matches(WildcardTemplate.createWithURI("http://lassie", "http://es", "http://perro")) );
+		assertTrue( adv3.matches(WildcardTemplate.createWithNull("http://lassie", "http://es")) );
+		assertTrue( adv3.matches(WildcardTemplate.createWithURI("http://lassie", null, "http://perro")) );
+		assertTrue( adv3.matches(WildcardTemplate.createWithNull("http://lassie", null)) );
+		assertFalse( adv3.matches(WildcardTemplate.createWithNull(null, null)) );
+		assertFalse( adv3.matches(WildcardTemplate.createWithNull(null, "http://es")) );
+		assertFalse( adv3.matches(WildcardTemplate.createWithURI("http://garfield",null,"http://gato")) );
+		assertFalse( adv3.matches(WildcardTemplate.createWithURI("http://arvak","http://es","http://caballo")) );
 	}
 }

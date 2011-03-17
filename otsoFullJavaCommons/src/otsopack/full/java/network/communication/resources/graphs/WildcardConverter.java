@@ -21,7 +21,7 @@ import otsopack.full.java.network.communication.resources.prefixes.PrefixesStora
 public class WildcardConverter {
 	
 	public static Template createTemplateFromURL(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
-		return new WildcardTemplate(
+		return WildcardTemplate.createWithLiteral(
 					adaptFieldFormat(subject,'s', prefixes),
 					adaptFieldFormat(predicate,'p', prefixes),
 					adaptFieldFormat(object,'o', prefixes)

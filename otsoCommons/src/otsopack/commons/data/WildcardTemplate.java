@@ -14,6 +14,9 @@
  */
 package otsopack.commons.data;
 
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.exceptions.MalformedTemplateException;
+
 
 public class WildcardTemplate extends NotificableTemplate {
 	private final String subject;
@@ -21,13 +24,29 @@ public class WildcardTemplate extends NotificableTemplate {
 	private final ITripleObject object;
 	
 	/**
+	 * @throws MalformedTemplateException 
 	 * @deprecated
 	 */
-	public WildcardTemplate(String msg){
-		throw new IllegalStateException("Constructor not supported");
+	public WildcardTemplate(String tpl) throws MalformedTemplateException{
+		WildcardTemplate wildcard = (WildcardTemplate)new SemanticFactory().createTemplate(tpl);
+		this.subject = wildcard.getSubject();
+		this.predicate = wildcard.getPredicate();
+		this.object = wildcard.getObject();
 	}
 	
-	public WildcardTemplate(String subject, String predicate, ITripleObject object){
+	public static WildcardTemplate createWithLiteral(String subject, String predicate, Object object) {
+		return new WildcardTemplate(subject, predicate, new TripleLiteralObject(object));
+	}
+	
+	public static WildcardTemplate createWithURI(String subject, String predicate, String object) {
+		return new WildcardTemplate(subject, predicate, new TripleURIObject(object));
+	}	
+	
+	public static WildcardTemplate createWithNull(String subject, String predicate) {
+		return new WildcardTemplate(subject, predicate, null);
+	}	
+	
+	protected WildcardTemplate(String subject, String predicate, ITripleObject object){
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;

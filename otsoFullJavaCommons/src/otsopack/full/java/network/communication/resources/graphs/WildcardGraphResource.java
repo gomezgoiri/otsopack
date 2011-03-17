@@ -32,7 +32,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
 
 	protected Graph getGraphByWildcard(SemanticFormat semanticFormat) {
-		final String space    = getArgument("space");
+		final String space     = getArgument("space");
 		final String subject   = getArgument("subject");
 		final String predicate = getArgument("predicate");
 		final String object    = getArgument("object");

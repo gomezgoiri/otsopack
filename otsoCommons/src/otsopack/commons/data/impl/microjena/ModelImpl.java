@@ -14,6 +14,7 @@
 
 package otsopack.commons.data.impl.microjena;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Selector;
@@ -53,7 +54,7 @@ public class ModelImpl implements IModel {
 	private String wildcard2str(WildcardTemplate tpl){
 		final StringBuffer buff = new StringBuffer();
 		if(tpl.getSubject() == null)
-			buff.append("?");
+			buff.append("?s");
 		else {
 			buff.append("<");
 			buff.append(tpl.getSubject());
@@ -61,7 +62,7 @@ public class ModelImpl implements IModel {
 		}
 		buff.append(" ");
 		if(tpl.getPredicate() == null)
-			buff.append("?");
+			buff.append("?p");
 		else {
 			buff.append("<");
 			buff.append(tpl.getPredicate());
@@ -69,20 +70,24 @@ public class ModelImpl implements IModel {
 		}
 		buff.append(" ");
 		if(tpl.getObject() == null)
-			buff.append("?");
+			buff.append("?o");
 		else{
 			final Object obj = tpl.getObject();
 			if(obj == null)
-				buff.append("?");
+				buff.append("?o");
 			else if( obj instanceof TripleLiteralObject ) {
 				Object lit = ((TripleLiteralObject)obj).getValue();
-				buff.append(ResourceFactory.createTypedLiteral(lit).toString());
-			} else if( obj instanceof TripleLiteralObject ) {
+				Literal literal = ResourceFactory.createTypedLiteral(lit);
+				// TODO: change the implementation of SelectorImpl at microjena to support "28"^^http://... and not only "28"^^<http//...>
+				final String ntripleLiteral = "\"" + literal.getValue() + "\"^^<" + literal.getDatatype().getURI() + ">";
+				buff.append(ntripleLiteral);
+			} else if( obj instanceof TripleURIObject ) {
 				buff.append("<");
 				buff.append( ((TripleURIObject)tpl.getObject()).getURI() );
 				buff.append(">");
 			}
 		}
+		buff.append(" .");
 		return buff.toString();
 	}
 	
