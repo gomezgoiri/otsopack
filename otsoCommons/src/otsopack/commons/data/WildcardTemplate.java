@@ -18,7 +18,7 @@ package otsopack.commons.data;
 public class WildcardTemplate extends NotificableTemplate {
 	private final String subject;
 	private final String predicate;
-	private final Object object;
+	private final ITripleObject object;
 	
 	/**
 	 * @deprecated
@@ -27,7 +27,7 @@ public class WildcardTemplate extends NotificableTemplate {
 		throw new IllegalStateException("Constructor not supported");
 	}
 	
-	public WildcardTemplate(String subject, String predicate, Object object){
+	public WildcardTemplate(String subject, String predicate, ITripleObject object){
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;
@@ -41,7 +41,7 @@ public class WildcardTemplate extends NotificableTemplate {
 		return predicate;
 	}
 
-	public Object getObject() {
+	public ITripleObject getObject() {
 		return object;
 	}
 
