@@ -20,4 +20,12 @@ public abstract class Template {
 			return (NotificableTemplate)this;
 		throw new IllegalStateException("Requesting a not notificable template to be a " + NotificableTemplate.class.getName());
 	}
+	
+	// These methods are used in the project, and therefore must be implemented by all the subclasses
+	
+	public abstract String toString();
+	
+	public abstract int hashCode();
+	
+	public abstract boolean equals(Object other);
 }
