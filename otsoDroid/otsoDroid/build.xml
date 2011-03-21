@@ -51,10 +51,12 @@
 	    		<fileset dir="../../otsoCommons/lib">
 	    			<include name="*.jar"/>
 	    			<exclude name="junit*.jar"/>
+	    			<exclude name="*-src.jar"/>
 	    		</fileset>
 	    		<fileset dir="../../otsoFullJavaCommons/lib">
 	    			<include name="*.jar"/>
 	    			<exclude name="junit*.jar"/>
+	    			<exclude name="*-src.jar"/>
 	    		</fileset>
 	    	</copy>
     	</target>
