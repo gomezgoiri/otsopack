@@ -14,6 +14,8 @@
  */
 package otsopack.commons.data;
 
+import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
+import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 
@@ -67,14 +69,97 @@ public class WildcardTemplate extends NotificableTemplate {
 	public boolean match(NotificableTemplate tpl) {
 		if(tpl instanceof WildcardTemplate) {
 			final WildcardTemplate compareWith = (WildcardTemplate) tpl;
-			return ( getSubject()==null   || compareWith.getSubject().equals(compareWith.getSubject()) ) 
-				&& ( getPredicate()==null || compareWith.getPredicate().equals(compareWith.getPredicate()) ) 
-				&& ( getObject()==null    || compareWith.getObject().equals(compareWith.getObject()) );
+			return ( this.subject   == null   || this.subject.equals(compareWith.getSubject()) ) 
+				&& ( this.predicate == null   || this.predicate.equals(compareWith.getPredicate()) ) 
+				&& ( this.object    == null   || this.object.equals(compareWith.getObject()) );
 		}
 		return false;
 	}
-
+	
 	public NotificableTemplate duplicate() {
 		return new WildcardTemplate(getSubject(), getPredicate(), getObject());
+	}
+	
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((object == null) ? 0 : object.hashCode());
+		result = prime * result
+				+ ((predicate == null) ? 0 : predicate.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WildcardTemplate other = (WildcardTemplate) obj;
+		if (object == null) {
+			if (other.object != null)
+				return false;
+		} else if (!object.equals(other.object))
+			return false;
+		if (predicate == null) {
+			if (other.predicate != null)
+				return false;
+		} else if (!predicate.equals(other.predicate))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
+			return false;
+		return true;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	private String wildcard2str(WildcardTemplate tpl){
+		final StringBuffer buff = new StringBuffer();
+		if(tpl.getSubject() == null)
+			buff.append("?s");
+		else {
+			buff.append("<");
+			buff.append(tpl.getSubject());
+			buff.append(">");
+		}
+		buff.append(" ");
+		if(tpl.getPredicate() == null)
+			buff.append("?p");
+		else {
+			buff.append("<");
+			buff.append(tpl.getPredicate());
+			buff.append(">");
+		}
+		buff.append(" ");
+		if(tpl.getObject() == null)
+			buff.append("?o");
+		else{
+			final Object obj = tpl.getObject();
+			if(obj == null)
+				buff.append("?o");
+			else if( obj instanceof TripleLiteralObject ) {
+				Object lit = ((TripleLiteralObject)obj).getValue();
+				Literal literal = ResourceFactory.createTypedLiteral(lit);
+				// TODO: change the implementation of SelectorImpl at microjena to support "28"^^http://... and not only "28"^^<http//...>
+				final String ntripleLiteral = "\"" + literal.getValue() + "\"^^<" + literal.getDatatype().getURI() + ">";
+				buff.append(ntripleLiteral);
+			} else if( obj instanceof TripleURIObject ) {
+				buff.append("<");
+				buff.append( ((TripleURIObject)tpl.getObject()).getURI() );
+				buff.append(">");
+			}
+		}
+		buff.append(" .");
+		return buff.toString();
+	}
+	
+	public String toString(){
+		return wildcard2str(this);
 	}
 }
