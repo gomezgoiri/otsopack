@@ -35,6 +35,7 @@ import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 
 public class GraphResourceTest extends AbstractRestServerTesting {
 	private String spaceURI;
@@ -82,7 +83,7 @@ public class GraphResourceTest extends AbstractRestServerTesting {
 		final String space = URLEncoder.encode(this.spaceURI, "utf-8");
 		final String graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);
-		final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+		final Representation rep = cr.get(SemanticFormatRepresentation.class);
 		
 		assertEquals( rep.getMediaType(), MediaType.TEXT_RDF_NTRIPLES );
 		assertTrue( rep.getText().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );

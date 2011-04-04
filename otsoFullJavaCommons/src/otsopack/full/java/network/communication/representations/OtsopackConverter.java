@@ -71,6 +71,7 @@ public class OtsopackConverter extends ConverterHelper {
         	if(variantInfo.isCompatible(source)){
         		result = addObjectClass(result, Object.class);
                 result = addObjectClass(result, VARIANT2CLASS.get(variantInfo));
+                break;
         	}
         }
 
@@ -94,6 +95,8 @@ public class OtsopackConverter extends ConverterHelper {
     }
     
     private boolean isAssignable(Class<?> target){
+    	if(target.equals(SemanticFormatRepresentation.class))
+    		return true;
     	for(Class<? extends SemanticFormatRepresentation> klass : CLASS2VARIANTS.keySet())
     		if(klass.isAssignableFrom(target))
     			return true;
