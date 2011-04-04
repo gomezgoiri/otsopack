@@ -28,7 +28,7 @@ import org.restlet.resource.ClientResource;
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 
-public class GraphsTest extends AbstractRestServerTesting {
+public class GraphsResourceTest extends AbstractRestServerTesting {
 	@Test
 	public void testReadGraph() throws Exception {
 		// TODO: this.fakeDataAccess.setNextRead();

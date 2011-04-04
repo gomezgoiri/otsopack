@@ -14,8 +14,8 @@
  */
 package otsopack.full.java;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import otsopack.commons.data.Graph;
@@ -28,14 +28,14 @@ import otsopack.commons.exceptions.TSException;
 
 public class FakeDataAccess implements IDataAccess {
 	final AtomicInteger graphnum;
-	final Set<String> graphsStored;
+	final Map<String,Graph> graphsStored;
 	private Graph nextQuery;
 	private Graph nextRead;
 	private Graph nextTake;
 	
 	public FakeDataAccess() {
 		this.graphnum = new AtomicInteger(0);
-		this.graphsStored = new HashSet<String>();
+		this.graphsStored = new HashMap<String,Graph>();
 	}
 	
 	@Override
@@ -69,10 +69,9 @@ public class FakeDataAccess implements IDataAccess {
 	}
 	
 	@Override
-	public String[] getLocalGraphs(String spaceURI)
-			throws SpaceNotExistsException {
+	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
 		final String [] ret = new String[this.graphsStored.size()];
-		return this.graphsStored.toArray(ret);
+		return this.graphsStored.keySet().toArray(ret);
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public class FakeDataAccess implements IDataAccess {
 			if( !spaceURI.endsWith("/") ) graphURI += "/";
 			if( !spaceURI.startsWith("http://") ) graphURI += "http://";
 			graphURI += "graph"+this.graphnum.incrementAndGet();
-			this.graphsStored.add(graphURI);
+			this.graphsStored.put(graphURI,triples);
 			return graphURI;
 		}
 		return null;
@@ -110,13 +109,16 @@ public class FakeDataAccess implements IDataAccess {
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
+		/*Collection<Graph> graphs = graphsStored.values();
+		for( Graph graph: graphs ) {
+			 
+		}*/
 		return this.nextRead;
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat)
-			throws SpaceNotExistsException {
-		return this.nextRead;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		return this.graphsStored.get(graphURI);
 	}
 
 	@Override
@@ -128,6 +130,8 @@ public class FakeDataAccess implements IDataAccess {
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat)
 			throws SpaceNotExistsException {
-		return this.nextTake;
+		Graph ret = this.graphsStored.get(graphURI);
+		this.graphsStored.remove(graphURI);
+		return ret;
 	}
 }
