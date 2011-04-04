@@ -35,7 +35,9 @@ import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
+import otsopack.full.java.network.communication.representations.OtsopackConverter;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 
 public class GraphResourceTest extends AbstractRestServerTesting {
 	private String spaceURI;
@@ -80,6 +82,11 @@ public class GraphResourceTest extends AbstractRestServerTesting {
 	
 	@Test
 	public void testRead() throws Exception {
+		// TODO: this should be done in the client code (Unicast...)
+		
+		final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
+		OtsopackConverter.setEnabledVariants(clientMediaTypes);
+		
 		final String space = URLEncoder.encode(this.spaceURI, "utf-8");
 		final String graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);

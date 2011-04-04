@@ -51,7 +51,19 @@ public class SemanticFormatRepresentationRegistry {
 		return mediaTypes2SemanticFormats.get(mediaType.getName());
 	}
 	
-	public static String getMediaType(String semanticFormat){
+	public static String getMediaTypeName(SemanticFormat semanticFormat){
 		return semanticFormat2mediaType.get(semanticFormat);
+	}
+	
+	public static MediaType getMediaType(SemanticFormat semanticFormat){
+		return MediaType.valueOf(semanticFormat2mediaType.get(semanticFormat));
+	}
+	
+	public static MediaType [] getMediaTypes(SemanticFormat ... semanticFormats){
+		final MediaType [] mediaTypes = new MediaType[semanticFormats.length];
+		for(int i = 0; i < semanticFormats.length; ++i){
+			mediaTypes[i] = MediaType.valueOf(semanticFormat2mediaType.get(semanticFormats[i]));
+		}
+		return mediaTypes;
 	}
 }

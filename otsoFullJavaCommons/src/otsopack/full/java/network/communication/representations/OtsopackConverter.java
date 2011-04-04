@@ -31,6 +31,8 @@ public class OtsopackConverter extends ConverterHelper {
     private static final Map<VariantInfo, Class<? extends SemanticFormatRepresentation>> VARIANT2CLASS = new HashMap<VariantInfo, Class<? extends SemanticFormatRepresentation>>();
     private static final Map<Class<? extends SemanticFormatRepresentation>, VariantInfo> CLASS2VARIANTS = new HashMap<Class<? extends SemanticFormatRepresentation>, VariantInfo>();
     
+    private final static ThreadLocal<MediaType []> ENABLED_VARIANTS = new ThreadLocal<MediaType []>();
+    
     static{
     	VARIANT2CLASS.put(VARIANT_TURTLE,   TurtleRepresentation.class);
     	VARIANT2CLASS.put(VARIANT_NTRIPLES, NTriplesRepresentation.class);
@@ -189,12 +191,25 @@ public class OtsopackConverter extends ConverterHelper {
 
         return result;
     }
-
-    @Override
-    public <T> void updatePreferences(List<Preference<MediaType>> preferences,
-            Class<T> entity) {
-    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
-    		updatePreferences(preferences, variantInfo.getMediaType(), 1.0F);
+    
+    public static void setEnabledVariants(MediaType ... mediaTypes){
+    	ENABLED_VARIANTS.set(mediaTypes);
     }
 
+    @Override
+    public <T> void updatePreferences(List<Preference<MediaType>> preferences, Class<T> entity) {
+    	for(VariantInfo variantInfo : VARIANT2CLASS.keySet()){
+    		final MediaType [] mediaTypes = ENABLED_VARIANTS.get();
+    		if(mediaTypes == null)
+    			updatePreferences(preferences, variantInfo.getMediaType(), 1.0F);
+    		else{
+    			for(MediaType enabledMediaType : mediaTypes)
+    				if(variantInfo.getMediaType().equals(enabledMediaType)){
+    					updatePreferences(preferences, variantInfo.getMediaType(), 1.0F);
+    					break;
+    				}
+    		}
+    	}
+    }
+    
 }
