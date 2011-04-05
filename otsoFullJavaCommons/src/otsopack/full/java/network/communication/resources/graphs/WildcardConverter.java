@@ -53,7 +53,9 @@ public class WildcardConverter {
 	
 	/**
 	 * @return
-	 * 		\/*\/*\/* or /subjecturi/predicateuri/objectvalueoruri
+	 * 		\/*\/*\/*
+	 * 		/{subjecturi}/{predicateuri}/uri/{objecturi}
+	 * 		/{subjecturi}/{predicateuri}/value/{objectvalue}
 	 * 		And it uses HTMLEncode...
 	 * @throws UnsupportedEncodingException 
 	 */
@@ -71,9 +73,9 @@ public class WildcardConverter {
 		
 		if( wtpl.getObject()==null ) ret += "*";
 		else if( wtpl.getObject() instanceof TripleURIObject)
-			ret += URLEncoder.encode( ((TripleURIObject)wtpl.getObject()).getURI(), "UTF-8" );
+			ret += "uri/" + URLEncoder.encode( ((TripleURIObject)wtpl.getObject()).getURI(), "UTF-8" );
 		else if( wtpl.getObject() instanceof TripleLiteralObject)
-			ret += URLEncoder.encode( ((TripleLiteralObject)wtpl.getObject()).getValue().toString(), "UTF-8" );
+			ret += "value/"+ URLEncoder.encode( ((TripleLiteralObject)wtpl.getObject()).getValue().toString(), "UTF-8" );
 	
 		return ret;
 	}
