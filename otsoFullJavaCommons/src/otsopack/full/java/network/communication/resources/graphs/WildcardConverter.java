@@ -16,6 +16,8 @@ package otsopack.full.java.network.communication.resources.graphs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import otsopack.commons.data.Template;
 import otsopack.commons.data.TripleLiteralObject;
@@ -24,6 +26,16 @@ import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public class WildcardConverter {
+	
+	final static Map<Class<?>, String> datatypes = new HashMap<Class<?>, String>();
+	static {
+		datatypes.put(Float.class,	"xsd:float");
+		datatypes.put(Double.class,	"xsd:double");
+		datatypes.put(Integer.class,"xsd:int");
+		datatypes.put(Long.class,	"xsd:long");
+		datatypes.put(Boolean.class,"xsd:boolean");
+		datatypes.put(String.class,	"xsd:string");
+	}
 	
 	public static Template createTemplateFromURL(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
 		return WildcardTemplate.createWithLiteral(
@@ -53,9 +65,10 @@ public class WildcardConverter {
 	
 	/**
 	 * @return
-	 * 		\/*\/*\/*
-	 * 		/{subjecturi}/{predicateuri}/uri/{objecturi}
-	 * 		/{subjecturi}/{predicateuri}/value/{objectvalue}
+	 * 		/{subjecturi}/{predicateuri}/* <br/>
+	 * 		/{subjecturi}/{predicateuri}/{object-uri} <br />
+	 *		/{subjecturi}/{predicateuri}/{object-literal-type}/{object-literal-value} <br />
+	 * 		e.g.: /{subjecturi}/{predicateuri}/xsd:int/5<br />
 	 * 		And it uses HTMLEncode...
 	 * @throws UnsupportedEncodingException 
 	 */
@@ -72,11 +85,34 @@ public class WildcardConverter {
 		ret += "/";
 		
 		if( wtpl.getObject()==null ) ret += "*";
-		else if( wtpl.getObject() instanceof TripleURIObject)
+		else if( wtpl.getObject() instanceof TripleURIObject )
 			ret += "uri/" + URLEncoder.encode( ((TripleURIObject)wtpl.getObject()).getURI(), "UTF-8" );
-		else if( wtpl.getObject() instanceof TripleLiteralObject)
-			ret += "value/"+ URLEncoder.encode( ((TripleLiteralObject)wtpl.getObject()).getValue().toString(), "UTF-8" );
+		else if( wtpl.getObject() instanceof TripleLiteralObject ) {
+			ret += getLastPart( ((TripleLiteralObject)wtpl.getObject()).getValue() );
+		}
 	
 		return ret;
+	}
+	
+	private static String getLastPart(Object obj) throws UnsupportedEncodingException {
+		return getDataType(obj) + "/" + URLEncoder.encode( obj.toString(), "UTF-8"  );
+	}
+	
+	/**
+	 * @return
+	 * 		Float.class => xsd:float
+     *		Double.class => xsd:double
+     *		Integer.class => xsd:int
+     *			(xsd:integer also exists, but we are not going to use it)
+     *		Long.class => xsd:long
+     *		Boolean.class => xsd:boolean
+     * 		String.class => xsd:string
+     */
+	protected static String getDataType(Object obj) {
+		for(Class<?> klass : datatypes.keySet())
+			if(klass.isInstance(obj))
+				return datatypes.get(klass);
+		
+		throw new IllegalArgumentException("Object type " + obj.getClass().getName() + " not supported");
 	}
 }
