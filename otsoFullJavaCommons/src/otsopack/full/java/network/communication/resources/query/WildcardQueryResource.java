@@ -14,6 +14,10 @@
 
 package otsopack.full.java.network.communication.resources.query;
 
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
@@ -69,8 +73,12 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		bodyHtml.append("\t\t</textarea>\n");
 		bodyHtml.append("\t</fieldset>\n");
 		
+		final Set<Entry<String, String>> keys = new HashSet<Entry<String, String>>();
+		for(String root : ROOTS)
+			keys.addAll(this.getArguments(root).entrySet());
+		
 		return HTMLEncoder.encodeURIs(
-					super.getArguments(ROOTS[0]).entrySet(),
+					keys,
 					null,
 					bodyHtml.toString()); // TODO print NTriples
 	}
