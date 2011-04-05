@@ -15,9 +15,13 @@
 package otsopack.full.java.network.communication.resources.spaces;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.restlet.resource.ClientResource;
 
@@ -36,9 +40,13 @@ public class QueryTest extends AbstractRestServerTesting {
 		
 		final String [] results = JSONDecoder.decode(prefixes, String[].class);
 		
-		assertEquals(3, results.length);
-		assertEquals("/spaces/{space}/query", results[0]);
-		assertEquals("/spaces/{space}/query/wildcards", results[1]);
-		assertEquals("/spaces/{space}/query/wildcards/{subject}/{predicate}/{object}", results[2]);
+		assertEquals(5, results.length);
+		
+		final List<String> resultsList = Arrays.asList(results);
+		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query"));
+		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards"));
+		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/*"));
+		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/{object-type}/{object-value}"));
+		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/{object-uri}"));
 	}
 }
