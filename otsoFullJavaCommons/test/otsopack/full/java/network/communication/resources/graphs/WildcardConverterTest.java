@@ -17,8 +17,14 @@ package otsopack.full.java.network.communication.resources.graphs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.junit.Test;
 
+import otsopack.commons.data.TripleLiteralObject;
+import otsopack.commons.data.TripleURIObject;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public class WildcardConverterTest {
@@ -56,4 +62,25 @@ public class WildcardConverterTest {
 		}
 	}
 
+	/*
+	 * 	/{subjecturi}/{predicateuri}/* <br/>
+	 * 	/{subjecturi}/{predicateuri}/{object-uri} <br />
+	 *	/{subjecturi}/{predicateuri}/{object-literal-type}/{object-literal-value} <br />
+	 * 	e.g.: /{subjecturi}/{predicateuri}/xsd:int/5<br />
+	 */
+	@Test
+	public void testCreateURLFromTemplate() throws Exception {
+		checkReturns(WildcardTemplate.createWithNull(null,null), "*/*/*");
+		checkReturns(WildcardTemplate.createWithNull("http://s","http://p"),
+				URLEncoder.encode("http://s","UTF-8")+"/"+URLEncoder.encode("http://p","UTF-8")+"/*");
+		checkReturns(WildcardTemplate.createWithURI(null,null,"http://o"),
+				"*/*/"+URLEncoder.encode("http://o","UTF-8"));
+		checkReturns(WildcardTemplate.createWithLiteral(null,null,9), "*/*/xsd:int/9");
+		checkReturns(WildcardTemplate.createWithLiteral(null,null,true), "*/*/xsd:boolean/true");
+
+	}
+	
+	private void checkReturns(WildcardTemplate givingTpl, String expected) throws Exception {
+		assertEquals( WildcardConverter.createURLFromTemplate(givingTpl), expected );
+	}
 }
