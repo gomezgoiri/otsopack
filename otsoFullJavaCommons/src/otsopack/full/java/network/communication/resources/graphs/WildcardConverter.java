@@ -37,8 +37,52 @@ public class WildcardConverter {
 		datatypes.put(String.class,	"xsd:string");
 	}
 	
-	public static Template createTemplateFromURL(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
+	public static Template createTemplateFromURL(String subject, String predicate, String objectUri, String objectValue, String objectType, PrefixesStorage prefixes) throws Exception {
+		if(objectUri != null && objectValue != null)
+			throw new IllegalArgumentException("objectUri or objectValue (or both) must be null");
+		
+		if(objectUri != null)
+			return createTemplateFromURLwithURI(subject, predicate, objectUri, prefixes);
+		
+		if(objectValue != null){
+			if(objectType != null)
+				throw new IllegalArgumentException("if objectValue is provided, then objectType must be provided!");
+
+			for(Class<?> klass : datatypes.keySet()){
+			
+				if(datatypes.get(klass).equals(objectType)){
+					final Object o;
+					try {
+						o = klass.getConstructor(String.class).newInstance(objectValue);
+					} catch (Exception e) {
+						throw new IllegalArgumentException("Could not build object value " + objectValue + " for datatype: " + objectType, e);
+					}
+					return createTemplateFromURLwithValue(subject, predicate, o, prefixes);
+				}
+			}
+			throw new IllegalArgumentException("Datatype: " + objectType + " not supported");
+		}
+		
+		return createTemplateFromURLwithNull(subject, predicate, prefixes);
+	}
+	
+	public static Template createTemplateFromURLwithNull(String subject, String predicate, PrefixesStorage prefixes) throws Exception {
+		return WildcardTemplate.createWithNull(
+					adaptFieldFormat(subject,'s', prefixes),
+					adaptFieldFormat(predicate,'p', prefixes)
+				);
+	}
+	
+	public static Template createTemplateFromURLwithValue(String subject, String predicate, Object object, PrefixesStorage prefixes) throws Exception {
 		return WildcardTemplate.createWithLiteral(
+					adaptFieldFormat(subject,'s', prefixes),
+					adaptFieldFormat(predicate,'p', prefixes),
+					object
+				);
+	}
+	
+	public static Template createTemplateFromURLwithURI(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
+		return WildcardTemplate.createWithURI(
 					adaptFieldFormat(subject,'s', prefixes),
 					adaptFieldFormat(predicate,'p', prefixes),
 					adaptFieldFormat(object,'o', prefixes)
@@ -86,7 +130,7 @@ public class WildcardConverter {
 		
 		if( wtpl.getObject()==null ) ret += "*";
 		else if( wtpl.getObject() instanceof TripleURIObject )
-			ret += "uri/" + URLEncoder.encode( ((TripleURIObject)wtpl.getObject()).getURI(), "UTF-8" );
+			ret += URLEncoder.encode( ((TripleURIObject)wtpl.getObject()).getURI(), "UTF-8" );
 		else if( wtpl.getObject() instanceof TripleLiteralObject ) {
 			ret += getLastPart( ((TripleLiteralObject)wtpl.getObject()).getValue() );
 		}

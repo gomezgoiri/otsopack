@@ -29,17 +29,23 @@ import otsopack.full.java.network.communication.util.HTMLEncoder;
 
 public class WildcardQueryResource extends AbstractServerResource implements IWildcardQueryResource {
 
-	public static final String ROOT = WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object}";
+	public static final String [] ROOTS = {
+		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}",
+		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/*",
+		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-uri}"
+	};
 	
 	protected Graph getWildcard(SemanticFormat semanticFormat) {
-		final String space    = getArgument("space");
-		final String subject   = getArgument("subject");
-		final String predicate = getArgument("predicate");
-		final String object    = getArgument("object");
+		final String space       = getArgument("space");
+		final String subject     = getArgument("subject");
+		final String predicate   = getArgument("predicate");
+		final String objectUri   = getArgument("object-uri");
+		final String objectValue = getArgument("object-value");
+		final String objectType  = getArgument("object-type");
 		final Graph ret;
 		
 		try {
-			final Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
+			final Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 			final IController controller = getController();
 			ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
 		} catch (SpaceNotExistsException e) {
@@ -64,7 +70,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		bodyHtml.append("\t</fieldset>\n");
 		
 		return HTMLEncoder.encodeURIs(
-					super.getArguments(ROOT).entrySet(),
+					super.getArguments(ROOTS[0]).entrySet(),
 					null,
 					bodyHtml.toString()); // TODO print NTriples
 	}

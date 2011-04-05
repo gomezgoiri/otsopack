@@ -29,7 +29,8 @@ public class WildcardsQueryResource extends ServerResource implements IWildcards
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, WildcardsQueryResource.class);
-		graphsRoots.put(WildcardQueryResource.ROOT, WildcardQueryResource.class);
+		for(String root : WildcardQueryResource.ROOTS)
+			graphsRoots.put(root, WildcardQueryResource.class);
 		return graphsRoots;
 	}
 	

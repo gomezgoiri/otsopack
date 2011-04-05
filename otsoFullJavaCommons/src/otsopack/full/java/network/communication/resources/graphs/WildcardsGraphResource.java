@@ -29,7 +29,8 @@ public class WildcardsGraphResource extends ServerResource implements IWildcards
 	static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, WildcardsGraphResource.class);
-		graphsRoots.put(WildcardGraphResource.ROOT, WildcardGraphResource.class);
+		for(String root : WildcardGraphResource.ROOTS)
+			graphsRoots.put(root, WildcardGraphResource.class);
 		return graphsRoots;
 	}
 	

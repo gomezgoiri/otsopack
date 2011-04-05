@@ -29,16 +29,22 @@ import otsopack.full.java.network.communication.resources.AbstractServerResource
 
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
 
-	public static final String ROOT = WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object}";
+	public static final String [] ROOTS = {
+		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-uri}",
+		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}",
+		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/*",
+	};
 
 	protected Graph getGraphByWildcard(SemanticFormat semanticFormat) {
-		final String space     = getArgument("space");
-		final String subject   = getArgument("subject");
-		final String predicate = getArgument("predicate");
-		final String object    = getArgument("object");
+		final String space       = getArgument("space");
+		final String subject     = getArgument("subject");
+		final String predicate   = getArgument("predicate");
+		final String objectUri   = getArgument("object-uri");
+		final String objectValue = getArgument("object-value");
+		final String objectType  = getArgument("object-type");
 		
 		try {
-			Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate,object, getOtsopackApplication().getPrefixesStorage());
+			Template tpl = WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 			
 			final IController controller = getController();
 			return controller.getDataAccessService().read(space, tpl, semanticFormat);
