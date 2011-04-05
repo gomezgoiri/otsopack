@@ -89,7 +89,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+URLEncoder.encode(relativeURI, "utf-8") );
+				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
 				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
 			} catch (UnsupportedEncodingException e) {
@@ -126,7 +126,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+URLEncoder.encode(relativeURI, "utf-8") );
+				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
 				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
 			} catch (UnsupportedEncodingException e) {
@@ -141,7 +141,18 @@ public class RestUnicastCommunication implements ICommunication {
 	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		if( template instanceof WildcardTemplate ) {
+			try {
+				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
+				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
+				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
