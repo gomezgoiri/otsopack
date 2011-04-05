@@ -32,20 +32,24 @@ import otsopack.full.java.network.communication.resources.graphs.IGraphResource;
 
 
 public class RestUnicastCommunication implements ICommunication {
+	private String baseRESTServer;
 	
 	public RestUnicastCommunication() {
-		/*Router router = new Router(svr.getContext());
-		router.attach("/user", UserResource.class);*/
+		this("http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/");
+	}
+	
+	public RestUnicastCommunication(String restserver) {
+		this.baseRESTServer = restserver;
 	}
 	
 	String getBaseURI(String spaceuri) {
-		String ret = "http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/";
+		String ret = "";
 		try {
 			ret = URLEncoder.encode(spaceuri, "utf-8")+"/";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return ret;
+		return this.baseRESTServer + ret;
 	}
 
 	@Override
@@ -65,6 +69,7 @@ public class RestUnicastCommunication implements ICommunication {
 			ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			IGraphResource res = cr.wrap(IGraphResource.class);
 			res.read();
+			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
