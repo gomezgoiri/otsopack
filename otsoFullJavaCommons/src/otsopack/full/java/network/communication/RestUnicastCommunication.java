@@ -14,22 +14,25 @@
 
 package otsopack.full.java.network.communication;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.restlet.data.MediaType;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
-import otsopack.full.java.network.communication.resources.graphs.IGraphResource;
-
+import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
 public class RestUnicastCommunication implements ICommunication {
 	private String baseRESTServer;
@@ -64,37 +67,74 @@ public class RestUnicastCommunication implements ICommunication {
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		Graph ret = null;
+		/*
+		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
+		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
+		 */
 		try {
-			ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
-			IGraphResource res = cr.wrap(IGraphResource.class);
-			res.read();
-			
+			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
+			final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+			return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		//final IGraphResource prefrsc = cr.wrap(IGraphResource.class);
 		return null;
 	}
 
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		if( template instanceof WildcardTemplate ) {
+			try {
+				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
+				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+URLEncoder.encode(relativeURI, "utf-8") );
+				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		/*
+		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
+		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
+		 */
+		try {
+			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
+			final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
+			return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		if( template instanceof WildcardTemplate ) {
+			try {
+				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
+				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+URLEncoder.encode(relativeURI, "utf-8") );
+				final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
+				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
