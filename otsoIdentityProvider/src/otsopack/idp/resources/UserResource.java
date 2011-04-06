@@ -3,6 +3,7 @@ package otsopack.idp.resources;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 
 public class UserResource extends AbstractOtsoServerResource implements IUserResource {
@@ -17,8 +18,14 @@ public class UserResource extends AbstractOtsoServerResource implements IUserRes
 
 	
 	@Override
-	public Representation post(Representation representation) {
-		// TODO Auto-generated method stub
+	public Representation post(Representation entity) {
+		final Form form = new Form(entity);
+		final String secret          = form.getFirstValue("secret");
+		final String dataProviderURI = form.getFirstValue("dataProviderURI");
+		final String expiration      = form.getFirstValue("expiration");
+		
+		
+		
 		return null;
 	}
 

@@ -20,7 +20,7 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 	@Override
 	public Representation post(Representation entity) {
 		final Form form = new Form(entity);
-		
+		// TODO: use HTTP authentication instead	
 		final String username = form.getFirstValue("username");
 		final String password = form.getFirstValue("password");
 		
