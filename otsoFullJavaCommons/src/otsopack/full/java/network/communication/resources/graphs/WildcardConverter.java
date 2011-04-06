@@ -41,7 +41,7 @@ public class WildcardConverter {
 		if(objectUri != null && objectValue != null)
 			throw new IllegalArgumentException("objectUri or objectValue (or both) must be null");
 		
-		if(objectUri != null)
+		if(objectUri != null && !objectUri.equals("*"))
 			return createTemplateFromURLwithURI(subject, predicate, objectUri, prefixes);
 		
 		if(objectValue != null){
@@ -68,32 +68,32 @@ public class WildcardConverter {
 	
 	public static Template createTemplateFromURLwithNull(String subject, String predicate, PrefixesStorage prefixes) throws Exception {
 		return WildcardTemplate.createWithNull(
-					adaptFieldFormat(subject,'s', prefixes),
-					adaptFieldFormat(predicate,'p', prefixes)
+					adaptFieldFormat(subject,prefixes),
+					adaptFieldFormat(predicate,prefixes)
 				);
 	}
 	
 	public static Template createTemplateFromURLwithValue(String subject, String predicate, Object object, PrefixesStorage prefixes) throws Exception {
 		return WildcardTemplate.createWithLiteral(
-					adaptFieldFormat(subject,'s', prefixes),
-					adaptFieldFormat(predicate,'p', prefixes),
+					adaptFieldFormat(subject,prefixes),
+					adaptFieldFormat(predicate,prefixes),
 					object
 				);
 	}
 	
 	public static Template createTemplateFromURLwithURI(String subject, String predicate, String object, PrefixesStorage prefixes) throws Exception {
 		return WildcardTemplate.createWithURI(
-					adaptFieldFormat(subject,'s', prefixes),
-					adaptFieldFormat(predicate,'p', prefixes),
-					adaptFieldFormat(object,'o', prefixes)
+					adaptFieldFormat(subject,prefixes),
+					adaptFieldFormat(predicate,prefixes),
+					adaptFieldFormat(object,prefixes)
 				);
 	}
 	
-	protected static String adaptFieldFormat(String field, char c, PrefixesStorage prefixesStorage) throws Exception {
+	protected static String adaptFieldFormat(String field, PrefixesStorage prefixesStorage) throws Exception {
 		if( field.equals("*") ) {
-			return "?"+c;
+			return null;
 		} else if( field.startsWith("http://") ) {
-			return "<" + field + ">";
+			return field;
 		} else {
 			final String[] split = field.split(":");
 			String uri = prefixesStorage.getPrefixByName(split[0]);
@@ -103,7 +103,7 @@ public class WildcardConverter {
 			if( split.length>1 ) {
 				uri = uri + split[1];
 			}
-			return "<" + uri + ">";
+			return uri;
 		}
 	}
 	

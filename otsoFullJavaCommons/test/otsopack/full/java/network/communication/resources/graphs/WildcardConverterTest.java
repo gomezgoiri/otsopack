@@ -15,15 +15,13 @@
 package otsopack.full.java.network.communication.resources.graphs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.junit.Test;
 
-import otsopack.commons.data.TripleLiteralObject;
-import otsopack.commons.data.TripleURIObject;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
@@ -44,18 +42,18 @@ public class WildcardConverterTest {
 		ps.create("facebook","http://facebook.com/user/");
 		ps.create("personal","http://personal.com/");
 		
-		assertEquals("<http://facebook.com/user/yoda>", WildcardConverter.adaptFieldFormat("http://facebook.com/user/yoda", 's', ps));
-		assertEquals("<http://personal.com/website>", WildcardConverter.adaptFieldFormat("http://personal.com/website", 'p', ps));
-		assertEquals("<http://yodaknowsit.com>", WildcardConverter.adaptFieldFormat("http://yodaknowsit.com", 'o', ps));
-		assertEquals("?s", WildcardConverter.adaptFieldFormat("*", 's', ps));
-		assertEquals("?p", WildcardConverter.adaptFieldFormat("*", 'p', ps));
-		assertEquals("?o", WildcardConverter.adaptFieldFormat("*", 'o', ps));
-		assertEquals("<http://facebook.com/user/yoda>", WildcardConverter.adaptFieldFormat("facebook:yoda", 's', ps));
-		assertEquals("<http://personal.com/website>", WildcardConverter.adaptFieldFormat("personal:website", 'p', ps));
-		assertEquals("<http://personal.com/>", WildcardConverter.adaptFieldFormat("personal:", 'o', ps));
+		assertEquals("http://facebook.com/user/yoda", WildcardConverter.adaptFieldFormat("http://facebook.com/user/yoda", ps));
+		assertEquals("http://personal.com/website", WildcardConverter.adaptFieldFormat("http://personal.com/website", ps));
+		assertEquals("http://yodaknowsit.com", WildcardConverter.adaptFieldFormat("http://yodaknowsit.com", ps));
+		assertNull(WildcardConverter.adaptFieldFormat("*", ps));
+		assertNull(WildcardConverter.adaptFieldFormat("*", ps));
+		assertNull(WildcardConverter.adaptFieldFormat("*", ps));
+		assertEquals("http://facebook.com/user/yoda", WildcardConverter.adaptFieldFormat("facebook:yoda", ps));
+		assertEquals("http://personal.com/website", WildcardConverter.adaptFieldFormat("personal:website", ps));
+		assertEquals("http://personal.com/", WildcardConverter.adaptFieldFormat("personal:",  ps));
 		
 		try {
-			WildcardConverter.adaptFieldFormat("doesnotexist:website", 'p', ps);
+			WildcardConverter.adaptFieldFormat("doesnotexist:website", ps);
 			fail();
 		} catch(Exception e) {
 			//Since this prefix does not exist it must fail

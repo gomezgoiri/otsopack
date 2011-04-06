@@ -14,15 +14,16 @@
 
 package otsopack.full.java.network.communication.resources.query;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
+import otsopack.full.java.network.communication.representations.OtsopackConverter;
+
 public interface IWildcardQueryResource {
+	
+	@Get(OtsopackConverter.MEDIA_TYPE_SEMANTIC_FORMATS)
+	public abstract Representation query();
+	
 	@Get("html")
 	public abstract String toHtml();
-	
-	@Get("json")
-	public abstract String toJson();
-	
-	@Get("nt")
-	public abstract String toNTriples();
 }
