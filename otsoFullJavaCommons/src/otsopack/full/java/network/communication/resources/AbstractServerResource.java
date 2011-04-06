@@ -48,6 +48,8 @@ public class AbstractServerResource extends ServerResource {
 	protected final static SemanticFormatRepresentationFactory semanticFormatRepresentationFactory = new SemanticFormatRepresentationFactory();
 	
 	protected String getArgument(String argumentName){
+		if( !this.getRequest().getAttributes().containsKey(argumentName) ) return null;
+		
 		final String prefname = this.getRequest().getAttributes().get(argumentName).toString();
 		try {
 			return URLDecoder.decode(prefname, "utf-8");
