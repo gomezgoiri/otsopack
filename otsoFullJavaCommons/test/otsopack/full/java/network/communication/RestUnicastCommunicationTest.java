@@ -12,7 +12,7 @@
  * Author: FILLME
  *
  */
-package otsopack.full.java.network.communication.resources.graphs;
+package otsopack.full.java.network.communication;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -31,24 +31,29 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.full.java.network.communication.AbstractRestServerTesting;
 import otsopack.full.java.network.communication.representations.OtsopackConverter;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 
-public class GraphResourceTest extends AbstractRestServerTesting {
-	private String spaceURI;
+public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
+	final private String spaceURI = "http://space1/";
+	private RestUnicastCommunication ruc;
 	
 	@Before
 	public void setUp() throws Exception {
+		//super.testingPort = 8183;
 		super.setUp();
 		
 		SemanticFactory.initialize( new MicrojenaFactory() );
 		
-		this.spaceURI = "http://space1/";
+		this.controller.getDataAccessService().startup();
+		this.controller.getDataAccessService().createSpace(this.spaceURI);
+		this.controller.getDataAccessService().joinSpace(this.spaceURI);
+		
 		Graph graph = new Graph(
 				"<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
 				"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/name> \"Aitor Gómez-Goiri\" . \n" +
@@ -58,32 +63,54 @@ public class GraphResourceTest extends AbstractRestServerTesting {
 				"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net> . \n" +
 				"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/depiction> <http://aitor.gomezgoiri.net/profile.jpg> . \n",
 				SemanticFormat.NTRIPLES);
-		this.fakeDataAccess.write(this.spaceURI, graph);
+		this.controller.getDataAccessService().write(this.spaceURI, graph);
 		
 		graph = new Graph(
-				"<http://facebook.com/user/yoda> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> foaf:Person . \n" +
+				"<http://facebook.com/user/yoda> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
 				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/name> \"Yoda\" . \n" +
 				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/title> \"Jedi\" . \n" +
-				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname \"Yoda\" . \n" +
+				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname> \"Yoda\" . \n" +
 				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com> . \n" +
 				"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/depiction> <http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg> . \n",
 				SemanticFormat.NTRIPLES);
-		this.fakeDataAccess.write(this.spaceURI, graph);		
+		this.controller.getDataAccessService().write(this.spaceURI, graph);
+		
+		this.ruc = new RestUnicastCommunication();
+		this.ruc.startup();
 	}
-	
+
+	/**
+	 * @throws java.lang.Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
+		this.ruc.shutdown();
 	}
 	
-	private String getRandomGraphURI() throws SpaceNotExistsException {
-		return this.fakeDataAccess.getLocalGraphs(this.spaceURI)[0];
-	}
-	
+	/**
+	 * Test method for {@link otsopack.full.java.network.communication.RestUnicastCommunication#query(java.lang.String, otsopack.commons.data.Template, otsopack.commons.data.SemanticFormat, long)}.
+	 * @throws Exception 
+	 */
 	@Test
-	public void testRead() throws Exception {
-		// TODO: this should be done in the client code (Unicast...)
+	public void testQuery() throws Exception {
+		final Graph graph = this.ruc.query(this.spaceURI,
+								WildcardTemplate.createWithNull(null,"http://xmlns.com/foaf/0.1/title"),
+								SemanticFormat.NTRIPLES,
+								3000);
+		assertTrue( graph.getData().contains("http://xmlns.com/foaf/0.1/title") );
+	}
+	
+		private String getRandomGraphURI() throws SpaceNotExistsException {
+			return this.controller.getDataAccessService().getLocalGraphs(this.spaceURI)[0];
+		}
 		
+	/**
+	 * Test method for {@link otsopack.full.java.network.communication.RestUnicastCommunication#read(java.lang.String, java.lang.String, otsopack.commons.data.SemanticFormat, long)}.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testReadStringStringSemanticFormatLong() throws Exception {			
 		final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		
@@ -96,8 +123,20 @@ public class GraphResourceTest extends AbstractRestServerTesting {
 		assertTrue( rep.getText().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 	}
 
+	/**
+	 * Test method for {@link otsopack.full.java.network.communication.RestUnicastCommunication#read(java.lang.String, otsopack.commons.data.Template, otsopack.commons.data.SemanticFormat, long)}.
+	 */
 	@Test
-	public void testTake() throws Exception {
+	public void testReadStringTemplateSemanticFormatLong() {
+		fail("Not yet implemented");
+	}
+
+	/**
+	 * Test method for {@link otsopack.full.java.network.communication.RestUnicastCommunication#take(java.lang.String, java.lang.String, otsopack.commons.data.SemanticFormat, long)}.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testTakeStringStringSemanticFormatLong() throws Exception {
 		final String space = URLEncoder.encode(this.spaceURI, "utf-8");
 		String graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
 		ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);
@@ -121,9 +160,11 @@ public class GraphResourceTest extends AbstractRestServerTesting {
 		assertTrue( rep.getText().contains("<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net>") );
 	}
 
+	/**
+	 * Test method for {@link otsopack.full.java.network.communication.RestUnicastCommunication#take(java.lang.String, otsopack.commons.data.Template, otsopack.commons.data.SemanticFormat, long)}.
+	 */
 	@Test
-	public void testToHtml() {
+	public void testTakeStringTemplateSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
-
 }

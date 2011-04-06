@@ -19,22 +19,22 @@ import org.junit.After;
 import org.junit.Before;
 
 import otsopack.commons.IController;
-import otsopack.full.java.FakeDataAccess;
+import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public abstract class AbstractRestServerTesting {
 	protected RestServer rs;
-	protected IController mock;
-	protected FakeDataAccess fakeDataAccess;
+	protected IController controller;
+	protected int testingPort = RestServer.DEFAULT_PORT;
 	
 	@Before
 	public void setUp() throws Exception {
-		this.mock = EasyMock.createMock(IController.class);
-		this.fakeDataAccess = new FakeDataAccess();
-		EasyMock.expect(this.mock.getDataAccessService()).andReturn(this.fakeDataAccess).anyTimes();
-		EasyMock.replay(this.mock);
+		this.controller = EasyMock.createMock(IController.class);
+		//EasyMock.expect(this.controller.getDataAccessService()).andReturn(new FakeDataAccess()).anyTimes();
+		EasyMock.expect(this.controller.getDataAccessService()).andReturn(new MemoryDataAccess()).anyTimes();
+		EasyMock.replay(this.controller);
 		
-		this.rs = new RestServer(RestServer.DEFAULT_PORT, this.mock);
+		this.rs = new RestServer(this.testingPort, this.controller);
 		this.rs.startup();
 	}
 	
@@ -43,7 +43,7 @@ public abstract class AbstractRestServerTesting {
 	}
 	
 	protected String getBaseURL(){
-		return "http://localhost:" + RestServer.DEFAULT_PORT + "/";
+		return "http://localhost:" + this.testingPort + "/";
 	}
 	
 	@After
