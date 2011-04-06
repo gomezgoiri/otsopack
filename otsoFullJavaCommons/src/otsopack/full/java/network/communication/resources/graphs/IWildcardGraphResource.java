@@ -15,13 +15,15 @@
 package otsopack.full.java.network.communication.resources.graphs;
 
 import org.restlet.representation.Representation;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 
 import otsopack.full.java.network.communication.representations.OtsopackConverter;
 
 public interface IWildcardGraphResource {
-	
 	@Get(OtsopackConverter.MEDIA_TYPE_SEMANTIC_FORMATS)
 	public Representation read();
 	
+	@Delete(OtsopackConverter.MEDIA_TYPE_SEMANTIC_FORMATS)
+	public Representation take();
 }

@@ -18,16 +18,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.net.URLEncoder;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.data.MediaType;
-import org.restlet.data.Status;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -35,9 +28,6 @@ import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.full.java.network.communication.representations.OtsopackConverter;
-import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
-import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 
 public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	final private String spaceURI = "http://space1/";
@@ -98,6 +88,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 								WildcardTemplate.createWithNull(null,"http://xmlns.com/foaf/0.1/title"),
 								SemanticFormat.NTRIPLES,
 								3000);
+		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("http://xmlns.com/foaf/0.1/title") );
 	}
 	
@@ -110,17 +101,13 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	 * @throws Exception 
 	 */
 	@Test
-	public void testReadStringStringSemanticFormatLong() throws Exception {			
-		final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
-		OtsopackConverter.setEnabledVariants(clientMediaTypes);
-		
-		final String space = URLEncoder.encode(this.spaceURI, "utf-8");
-		final String graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
-		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);
-		final Representation rep = cr.get(SemanticFormatRepresentation.class);
-		
-		assertEquals( rep.getMediaType(), MediaType.TEXT_RDF_NTRIPLES );
-		assertTrue( rep.getText().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
+	public void testReadStringStringSemanticFormatLong() throws Exception {
+		final Graph graph = this.ruc.read(this.spaceURI,
+											WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
+											SemanticFormat.NTRIPLES,
+											3000);
+		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
+		assertTrue( graph.getData().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 	}
 
 	/**
@@ -137,27 +124,30 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	 */
 	@Test
 	public void testTakeStringStringSemanticFormatLong() throws Exception {
-		final String space = URLEncoder.encode(this.spaceURI, "utf-8");
-		String graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
-		ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);
-		Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
+		Graph graph = this.ruc.take(this.spaceURI,
+									WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
+									SemanticFormat.NTRIPLES,
+									3000);
+		assertEquals( graph.getFormat(), SemanticFormat.NTRIPLES );
+		assertTrue( graph.getData().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 		
-		assertEquals( rep.getMediaType(), MediaType.TEXT_RDF_NTRIPLES );
-		assertTrue( rep.getText().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 		
-		try {
-			rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
-			fail();
-		} catch(ResourceException re) {
-			assertEquals( re.getStatus(), Status.SERVER_ERROR_INTERNAL);
-		}
+		//TODO decide what to do in this case
+		graph = this.ruc.take(this.spaceURI,
+									WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
+									SemanticFormat.NTRIPLES,
+									3000);
+		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
+		assertEquals( "", graph.getData() );
 		
-		graph = URLEncoder.encode( getRandomGraphURI(), "utf-8" );
-		cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs/"+graph);
-		rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
 		
-		assertEquals( rep.getMediaType(), MediaType.TEXT_RDF_NTRIPLES );
-		assertTrue( rep.getText().contains("<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net>") );
+		graph = this.ruc.take(this.spaceURI,
+				WildcardTemplate.createWithURI("http://aitor.gomezgoiri.net/me","http://xmlns.com/foaf/0.1/homepage","http://aitor.gomezgoiri.net"),
+				SemanticFormat.NTRIPLES,
+				3000);
+		
+		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
+		assertTrue( graph.getData().contains("<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net>") );
 	}
 
 	/**

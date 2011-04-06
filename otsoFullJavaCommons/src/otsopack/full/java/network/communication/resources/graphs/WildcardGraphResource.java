@@ -25,6 +25,8 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
@@ -34,9 +36,8 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-uri}",
 		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}"
 	};
-
-	protected Graph getGraphByWildcard(SemanticFormat semanticFormat) {
-		final String space       = getArgument("space");
+	
+	private Template getWildcard() {
 		final String subject     = getArgument("subject");
 		final String predicate   = getArgument("predicate");
 		final String objectUri   = getArgument("object-uri");
@@ -44,13 +45,9 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final String objectType  = getArgument("object-type");
 		
 		try {
-			final Template tpl = WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
-			
-			final IController controller = getController();
-			return controller.getDataAccessService().read(space, tpl, semanticFormat);
-		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			return WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 		} catch (MalformedTemplateException e) {
+			//TODO never thrown!
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 			//throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize retrieved data", e);
 		} catch (Exception e) {
@@ -58,11 +55,48 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
 		}
 	}
+
+	protected Graph readGraphByWildcard(SemanticFormat semanticFormat) {
+		final String space       = getArgument("space");
+		final Template tpl = getWildcard();
+		try {
+			final IController controller = getController();
+			return controller.getDataAccessService().read(space, tpl, semanticFormat);
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		}catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (UnsupportedTemplateException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		}
+	}
+	
+	protected Graph takeGraphByWildcard(SemanticFormat semanticFormat) {
+		final String space       = getArgument("space");
+		final Template tpl = getWildcard();
+		try {
+			final IController controller = getController();
+			return controller.getDataAccessService().take(space, tpl, semanticFormat);
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		}catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (UnsupportedTemplateException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		} 
+	}
 	
 	@Override
 	public Representation read(){
 		SemanticFormat semanticFormat = checkOutputSemanticFormats();
-		final Graph graph = getGraphByWildcard(semanticFormat);
+		final Graph graph = readGraphByWildcard(semanticFormat);
+		return serializeGraph(graph);
+	}
+	
+	@Override
+	public Representation take(){
+		SemanticFormat semanticFormat = checkOutputSemanticFormats();
+		final Graph graph = takeGraphByWildcard(semanticFormat);
 		return serializeGraph(graph);
 	}
 }
