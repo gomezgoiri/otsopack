@@ -30,7 +30,7 @@ public class UserResource extends AbstractOtsoServerResource implements IUserRes
 	}
 
 	@Override
-	public Representation post(Representation entity) {
+	public Representation postUserResource(Representation entity) {
 		final Form form = new Form(entity);
 		final String dataProviderURI = form.getFirstValue(DATA_PROVIDER_URI_WITH_SECRET_NAME);
 		final String expirationStr   = form.getFirstValue(EXPIRATION_NAME);

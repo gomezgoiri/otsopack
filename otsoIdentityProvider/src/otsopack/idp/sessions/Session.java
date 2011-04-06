@@ -16,7 +16,7 @@ public class Session {
 	
 	public boolean isExpired(){
 		// if the expiration date is arrived...
-		return this.expirationDate.after(Calendar.getInstance());
+		return Calendar.getInstance().after(this.expirationDate);
 	}
 
 	public String getDataProviderURIwithSecret() {

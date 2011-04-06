@@ -5,7 +5,7 @@ import org.restlet.resource.Post;
 
 public interface IUserValidationResource {
 	
-	@Post()
-	public Representation post(Representation entity);
+	@Post
+	public Representation postUserValidation(Representation entity);
 	
 }

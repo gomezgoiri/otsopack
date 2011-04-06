@@ -29,7 +29,7 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 	}
 	
 	@Override
-	public Representation post(Representation entity) {
+	public Representation postUserValidation(Representation entity) {
 		final Form form = new Form(entity);
 		// TODO: use HTTP authentication instead	
 		final String username = form.getFirstValue("username");
@@ -40,6 +40,7 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 		if(sessionid == null)
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, SESSIONID_NAME + " required!");
 		
+		System.out.println(sessionid);
 		getSessionManager().deleteExpiredSessions();
 		final Session session = getSessionManager().getSession(sessionid);
 		if(session == null)

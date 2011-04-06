@@ -1,7 +1,10 @@
 package otsopack.idp.resources;
 
 import org.restlet.representation.Representation;
+import org.restlet.resource.Post;
 
 public interface IUserResource {
-	public Representation post(Representation entity);
+	
+	@Post
+	public Representation postUserResource(Representation entity);
 }

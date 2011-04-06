@@ -39,20 +39,27 @@ public class UserValidationResourceTest  extends AbstractRestServerTesting {
 		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(credentials);
 		final IController controller = new Controller(credentialsChecker);
 		this.rs.getApplication().setController(controller);
+		
+		this.calendar = Calendar.getInstance();
+		this.calendar.set(Calendar.MILLISECOND, 0);
+		this.calendar.add(Calendar.YEAR, 1);
 	}
 	
 	@Test
 	public void testValidUser() throws Exception {
-		this.calendar = Calendar.getInstance();
-		this.calendar.set(Calendar.MILLISECOND, 0);
+		final String returned = tryWithPassword("porduna", "pablo");
+		assertEquals(dataProviderURIwithSecret, returned);
+	}
+	
+	@Test(expected=ResourceException.class)
+	public void testExpiredUser() throws Exception {
+		this.calendar.add(Calendar.YEAR, -5);
 		final String returned = tryWithPassword("porduna", "pablo");
 		assertEquals(dataProviderURIwithSecret, returned);
 	}
 	
 	@Test(expected=ResourceException.class)
 	public void testInvalidUser() throws Exception {
-		this.calendar = Calendar.getInstance();
-		this.calendar.set(Calendar.MILLISECOND, 0);
 		tryWithPassword("porduna", "invalid.password");
 	}
 	

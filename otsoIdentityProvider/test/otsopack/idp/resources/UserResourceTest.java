@@ -1,12 +1,12 @@
 package otsopack.idp.resources;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -28,20 +28,15 @@ public class UserResourceTest  extends AbstractRestServerTesting {
 	public void setUp() throws Exception{
 		super.setUp();
 		
-		final Map<String, String> credentials = new HashMap<String, String>();
-		credentials.put("porduna",  "pablo");
-		credentials.put("aigomez",  "aitor");
-		credentials.put("ecastill", "eduardo");
-		credentials.put("xlaiseca", "xabier");
-		
-		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(credentials);
+		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(null);
 		final IController controller = new Controller(credentialsChecker);
 		this.rs.getApplication().setController(controller);
 	}
 	
 	@Test
 	public void testCorrectURL() throws Exception {
-		final ClientResource cr = new ClientResource(getBaseURL() + UserResource.ROOT.replace("{user}", "porduna"));
+		final String uri = getBaseURL() + UserResource.ROOT.replace("{user}", "porduna");
+		final ClientResource cr = new ClientResource(uri);
 		final SimpleDateFormat dateFormat = new SimpleDateFormat(UserResource.DATE_FORMAT);
 		
 		final Calendar futureDate = Calendar.getInstance();
