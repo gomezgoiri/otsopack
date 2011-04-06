@@ -40,7 +40,6 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 		if(sessionid == null)
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, SESSIONID_NAME + " required!");
 		
-		System.out.println(sessionid);
 		getSessionManager().deleteExpiredSessions();
 		final Session session = getSessionManager().getSession(sessionid);
 		if(session == null)

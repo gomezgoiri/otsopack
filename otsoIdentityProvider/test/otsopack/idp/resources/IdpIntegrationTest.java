@@ -68,7 +68,6 @@ public class IdpIntegrationTest  extends AbstractRestServerTesting {
 		final Calendar futureDate = Calendar.getInstance();
 		futureDate.set(Calendar.MILLISECOND, 0);
 		futureDate.add(Calendar.YEAR, 1);
-		System.out.println(dateFormat.format(futureDate.getTime()));
 		
 		final Form dataProviderForm = new Form();
 		dataProviderForm.set(UserResource.DATA_PROVIDER_URI_WITH_SECRET_NAME, this.dataProviderURIwithSecret);
