@@ -3,32 +3,28 @@ package otsopack.idp.sessions;
 import java.util.Calendar;
 
 public class Session {
-	// bean format just in case it's later stored or retrieved in a database 
-	private String secret;
-	private String dataProviderURI;
+	private String dataProviderURIwithSecret;
 	private Calendar expirationDate;
 	
+	// bean format just in case it's later stored or retrieved in a database 
 	public Session(){}
+	
+	public Session(String dataProviderURIwithSecret, Calendar expirationDate) {
+		this.dataProviderURIwithSecret = dataProviderURIwithSecret;
+		this.expirationDate = expirationDate;
+	}
 	
 	public boolean isExpired(){
 		// if the expiration date is arrived...
 		return this.expirationDate.after(Calendar.getInstance());
 	}
 
-	public String getSecret() {
-		return this.secret;
+	public String getDataProviderURIwithSecret() {
+		return this.dataProviderURIwithSecret;
 	}
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
-
-	public String getDataProviderURI() {
-		return this.dataProviderURI;
-	}
-
-	public void setDataProviderURI(String dataProviderURI) {
-		this.dataProviderURI = dataProviderURI;
+	public void setDataProviderURIwithSecret(String dataProviderURIwithSecret) {
+		this.dataProviderURIwithSecret = dataProviderURIwithSecret;
 	}
 
 	public Calendar getExpirationDate() {

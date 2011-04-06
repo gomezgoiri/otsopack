@@ -31,7 +31,7 @@ public abstract class AbstractRestServerTesting {
 	}
 	
 	protected String getBaseURL(){
-		return "http://localhost:" + this.testingPort + "/";
+		return "http://localhost:" + this.testingPort;
 	}
 	
 	@After
