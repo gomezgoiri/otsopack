@@ -13,7 +13,7 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
-		roots.put(ROOT, UserResource.class);
+		roots.put(ROOT, UserValidationResource.class);
 		return roots;
 	}
 	
