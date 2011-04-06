@@ -43,7 +43,9 @@ public class UserResource extends AbstractOtsoServerResource implements IUserRes
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid expiration format");
 		}
 		
-		final Session session = new Session(dataProviderURI, expiration);
+		final String userIdentifier = this.getRequest().getAttributes().get("user").toString();
+		
+		final Session session = new Session(userIdentifier, dataProviderURI, expiration);
 		final String idpSessionId = getSessionManager().putSession(session);
 		
 		final String hostIdentifier = getRequest().getOriginalRef().getHostIdentifier();

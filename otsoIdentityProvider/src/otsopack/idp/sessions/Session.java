@@ -5,11 +5,13 @@ import java.util.Calendar;
 public class Session {
 	private String dataProviderURIwithSecret;
 	private Calendar expirationDate;
+	private String userIdentifier;
 	
 	// bean format just in case it's later stored or retrieved in a database 
 	public Session(){}
 	
-	public Session(String dataProviderURIwithSecret, Calendar expirationDate) {
+	public Session(String userIdentifier, String dataProviderURIwithSecret, Calendar expirationDate) {
+		this.userIdentifier = userIdentifier;
 		this.dataProviderURIwithSecret = dataProviderURIwithSecret;
 		this.expirationDate = expirationDate;
 	}
@@ -33,5 +35,13 @@ public class Session {
 
 	public void setExpirationDate(Calendar expirationDate) {
 		this.expirationDate = expirationDate;
+	}
+
+	public String getUserIdentifier() {
+		return userIdentifier;
+	}
+
+	public void setUserIdentifier(String userIdentifier) {
+		this.userIdentifier = userIdentifier;
 	}
 }

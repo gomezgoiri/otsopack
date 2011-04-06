@@ -64,7 +64,7 @@ public class UserValidationResourceTest  extends AbstractRestServerTesting {
 	}
 	
 	public String tryWithPassword(String username, String password) throws Exception {
-		final Session session  = new Session(dataProviderURIwithSecret, this.calendar);
+		final Session session  = new Session("porduna", dataProviderURIwithSecret, this.calendar);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
 		final ClientResource cr = new ClientResource(getBaseURL() + UserValidationResource.buildUrl(sessionId));

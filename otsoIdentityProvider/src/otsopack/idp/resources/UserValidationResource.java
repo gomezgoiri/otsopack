@@ -49,7 +49,10 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 		
 		final boolean authenticated = getCredentialsChecker().checkCredentials(username, password);
 		if(!authenticated)
-			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED);
+			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Invalid credentials");
+		
+		if(!username.equals(session.getUserIdentifier()))
+			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User identifier does not match requested user identifier");
 		
 		return new StringRepresentation(session.getDataProviderURIwithSecret());
 	}
