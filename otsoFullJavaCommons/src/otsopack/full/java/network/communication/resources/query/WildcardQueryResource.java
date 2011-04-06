@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
@@ -34,12 +35,12 @@ import otsopack.full.java.network.communication.util.HTMLEncoder;
 public class WildcardQueryResource extends AbstractServerResource implements IWildcardQueryResource {
 
 	public static final String [] ROOTS = {
-		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}",
-		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/*",
-		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-uri}"
+		// {object-uri} can be "*" also ( /{subject}/{predicate}/* )
+		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-uri}",
+		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}"
 	};
 	
-	protected Graph getWildcard(SemanticFormat semanticFormat) {
+	protected Graph getTriplesByWildcard(SemanticFormat semanticFormat) {
 		final String space       = getArgument("space");
 		final String subject     = getArgument("subject");
 		final String predicate   = getArgument("predicate");
@@ -65,6 +66,14 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 	}
 	
 	@Override
+	public Representation query(){
+		SemanticFormat semanticFormat = checkOutputSemanticFormats();
+		final Graph graph = getTriplesByWildcard(semanticFormat);
+		return serializeGraph(graph);
+	}
+	
+	
+	@Override
 	public String toHtml() {
 		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
 		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
@@ -81,19 +90,5 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 					keys,
 					null,
 					bodyHtml.toString()); // TODO print NTriples
-	}
-	
-	@Override
-	public String toJson(){
-		final Graph graph = getWildcard(SemanticFormat.RDF_JSON);
-		// TODO convert IGraph to Json format
-		return "JsonGraph";
-	}
-	
-	@Override
-	public String toNTriples(){
-		final Graph graph = getWildcard(SemanticFormat.NTRIPLES);
-		// TODO convert IGraph to N-Triples format
-		return "set of ntriples";
 	}
 }

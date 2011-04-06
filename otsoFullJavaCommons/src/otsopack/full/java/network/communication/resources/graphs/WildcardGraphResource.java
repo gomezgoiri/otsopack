@@ -30,9 +30,9 @@ import otsopack.full.java.network.communication.resources.AbstractServerResource
 public class WildcardGraphResource extends AbstractServerResource implements IWildcardGraphResource {
 
 	public static final String [] ROOTS = {
+		// {object-uri} can be "*" also ( /{subject}/{predicate}/* )
 		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-uri}",
-		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}",
-		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/*",
+		WildcardsGraphResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}"
 	};
 
 	protected Graph getGraphByWildcard(SemanticFormat semanticFormat) {
@@ -44,7 +44,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final String objectType  = getArgument("object-type");
 		
 		try {
-			Template tpl = WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
+			final Template tpl = WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 			
 			final IController controller = getController();
 			return controller.getDataAccessService().read(space, tpl, semanticFormat);
