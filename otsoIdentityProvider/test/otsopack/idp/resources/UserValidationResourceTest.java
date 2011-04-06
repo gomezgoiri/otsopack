@@ -2,6 +2,7 @@ package otsopack.idp.resources;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,14 +12,19 @@ import org.junit.Test;
 import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
 import otsopack.idp.IController;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
+import otsopack.idp.sessions.Session;
 
 public class UserValidationResourceTest  extends AbstractRestServerTesting {
+	
+	private final String dataProviderURIwithSecret = "http://provider/?secret=SECRET";
+	private Calendar calendar;
 
 	@Before
 	public void setUp() throws Exception{
@@ -37,24 +43,28 @@ public class UserValidationResourceTest  extends AbstractRestServerTesting {
 	
 	@Test
 	public void testValidUser() throws Exception {
-		final ClientResource cr = new ClientResource(getBaseURL() + "users/validations");
-		final Form form = new Form();
-		form.set("username", "porduna");
-		form.set("password", "pablo");
-		final Representation repr = cr.post(form);
-		final String response = IOUtils.toString(repr.getStream());
-		assertEquals("true", response);
+		this.calendar = Calendar.getInstance();
+		this.calendar.set(Calendar.MILLISECOND, 0);
+		final String returned = tryWithPassword("porduna", "pablo");
+		assertEquals(dataProviderURIwithSecret, returned);
 	}
-
-	@Test
+	
+	@Test(expected=ResourceException.class)
 	public void testInvalidUser() throws Exception {
-		final ClientResource cr = new ClientResource(getBaseURL() + "users/validations");
-		final Form form = new Form();
-		form.set("username", "porduna");
-		form.set("password", "invalid");
-		final Representation repr = cr.post(form);
-		final String response = IOUtils.toString(repr.getStream());
-		assertEquals("false", response);
+		this.calendar = Calendar.getInstance();
+		this.calendar.set(Calendar.MILLISECOND, 0);
+		tryWithPassword("porduna", "invalid.password");
 	}
+	
+	public String tryWithPassword(String username, String password) throws Exception {
+		final Session session  = new Session(dataProviderURIwithSecret, this.calendar);
+		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
+		final ClientResource cr = new ClientResource(getBaseURL() + UserValidationResource.buildUrl(sessionId));
+		final Form form = new Form();
+		form.set("username", username);
+		form.set("password", password);
+		final Representation repr = cr.post(form);
+		return IOUtils.toString(repr.getStream());
+	}
 }
