@@ -48,11 +48,11 @@ public class RestUnicastCommunication implements ICommunication {
 	String getBaseURI(String spaceuri) {
 		String ret = "";
 		try {
-			ret = URLEncoder.encode(spaceuri, "utf-8")+"/";
+			ret = URLEncoder.encode(spaceuri, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return this.baseRESTServer + ret;
+		return this.baseRESTServer + "spaces/" + ret + "/";
 	}
 
 	@Override
