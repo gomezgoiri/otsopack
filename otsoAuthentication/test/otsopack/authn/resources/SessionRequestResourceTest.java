@@ -21,6 +21,7 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
+import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.IClientResourceFactory;
 import otsopack.authn.IController;
 import otsopack.authn.sessions.Session;
@@ -35,7 +36,12 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 	public void setUp() throws Exception{
 		super.setUp();
 		
-		final IController controller = new Controller();
+		final IAuthenticatedUserHandler handler = new IAuthenticatedUserHandler() {
+			@Override
+			public void onAuthenticatedUser(String userIdentifier, String redirectURI) {
+			}
+		};
+		final IController controller = new Controller(handler);
 		this.rs.getApplication().setController(controller);
 		
 		this.factoryMock = createMock(IClientResourceFactory.class);
