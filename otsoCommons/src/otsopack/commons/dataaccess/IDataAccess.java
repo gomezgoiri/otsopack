@@ -18,6 +18,7 @@ import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.dataaccess.authz.entities.User;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
@@ -56,12 +57,22 @@ public interface IDataAccess extends ILayer {
 	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException;
 	
 	/**
-	 * write set of triples to space
+	 * write set of triples to space which will be accessible to all the users
 	 * @param spaceURI
 	 * @param triples
 	 * @return uri of written graph
 	 */
 	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
+	
+	/**
+	 * write set of triples to space
+	 * @param spaceURI
+	 * @param triples
+	 * @param authorized
+	 * 		The authorized entity to access to that information.
+	 * @return uri of written graph
+	 */
+	public String write(String spaceURI, Graph triples, User authorized) throws SpaceNotExistsException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * query form space according to template (all found triples will be returned)
