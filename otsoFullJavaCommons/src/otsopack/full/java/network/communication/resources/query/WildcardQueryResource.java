@@ -53,6 +53,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			final Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 			final IController controller = getController();
 			ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
+			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (MalformedTemplateException e) {
@@ -62,7 +63,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			//TODO is this a internal error or a bad request?
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
 		}
-		return ret;
+		return new Graph("",semanticFormat);
 	}
 	
 	@Override

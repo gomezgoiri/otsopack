@@ -20,7 +20,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
-import otsopack.commons.dataaccess.IDataAccess;
+import otsopack.commons.dataaccess.AbstractDataAccess;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
@@ -28,7 +28,7 @@ import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.Util;
 
-public class MemoryDataAccess implements IDataAccess {
+public class MemoryDataAccess extends AbstractDataAccess {
 	private static class MiniLogger{
 		public void debug(String message){
 			System.out.println(message);
