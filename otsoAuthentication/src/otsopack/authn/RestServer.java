@@ -1,31 +1,14 @@
-/*
- * Copyright (C) 2008-2011 University of Deusto
- * 
- * All rights reserved.
- *
- * This software is licensed as described in the file COPYING, which
- * you should have received as part of this distribution.
- * 
- * This software consists of contributions made by many individuals, 
- * listed below:
- *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
- * 			Pablo Orduña <pablo.orduna@deusto.es>
- */
-
-package otsopack.full.java.network.communication;
+package otsopack.authn;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-import otsopack.commons.IController;
-
 public class RestServer {
-	public static final int DEFAULT_PORT = 8182;
+	public static final int DEFAULT_PORT = 8183;
 	
 	private final int port;
 	private final Component component;
-	private final OtsopackApplication application;
+	private final OtsoAuthnApplication application;
 	
 	public RestServer(int port, IController controller) {
 		this.port = port;
@@ -33,7 +16,7 @@ public class RestServer {
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackApplication();
+	    this.application = new OtsoAuthnApplication();
 	    this.application.setController(controller);
 	    this.component.getDefaultHost().attach(this.application);
 	}
@@ -50,7 +33,7 @@ public class RestServer {
 		this(DEFAULT_PORT, null);
 	}
 	
-	public OtsopackApplication getApplication(){
+	public OtsoAuthnApplication getApplication(){
 		return this.application;
 	}
 	

@@ -1,5 +1,6 @@
 package otsopack.idp;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -8,6 +9,9 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
+import otsopack.idp.resources.UserResource;
+import otsopack.idp.resources.UserValidationResource;
+
 public class OtsoIdpApplication extends Application {
 	
 	private final Map<String, Class<?>> resources;
@@ -15,9 +19,20 @@ public class OtsoIdpApplication extends Application {
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 
+	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
-	public OtsoIdpApplication(Map<String, Class<?>> resources){
-		this.resources = resources;
+	static{
+		addPaths(UserResource.getRoots());
+		addPaths(UserValidationResource.getRoots());
+	}
+	
+	private static void addPaths(Map<String, Class<?>> roots){
+		for(String uri : roots.keySet())
+			PATHS.put(uri, roots.get(uri));
+	}
+	
+	public OtsoIdpApplication(){
+		this.resources = PATHS;
 	}
 	
 	@Override

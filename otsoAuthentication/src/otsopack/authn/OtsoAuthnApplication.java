@@ -1,5 +1,6 @@
 package otsopack.authn;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -13,10 +14,15 @@ public class OtsoAuthnApplication extends Application {
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
-
+	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
-	public OtsoAuthnApplication(Map<String, Class<?>> resources){
-		this.resources = resources;
+	private static void addPaths(Map<String, Class<?>> roots){
+		for(String uri : roots.keySet())
+			PATHS.put(uri, roots.get(uri));
+	}
+	
+	public OtsoAuthnApplication(){
+		this.resources = PATHS;
 	}
 	
 	@Override
