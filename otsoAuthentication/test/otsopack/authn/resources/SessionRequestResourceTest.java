@@ -51,7 +51,7 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 	}
 	
 	@Test
-	public void testCorrectURL() throws Exception {
+	public void testRequestSession() throws Exception {
 		// setup what the Identity Provider will reply
 		this.fakeClientResource.returnedRepresentation = new StringRepresentation("http://idp/?idpsessionid=foo");
 		
