@@ -9,6 +9,10 @@ syntax: regexp
 ^otsoFullJavaCommons/bin
 ^otsoFullJavaCommons/build
 
+^otsoIdentityProvider/bin
+
+^otsoAuthentication/bin
+
 ^otsoSE/bin
 
 ^otsoDroid/otsoDroid/gen
@@ -33,6 +37,7 @@ syntax: regexp
 ^otsoME/test_jmunit_results
 ^otsoME/dist/alltests.jad$
 ^otsoME/dist/alltests.jar$
+^otsoME/dist/otsoME.jar$
 ^otsoME/.mtj.tmp/emulation/*
 ^otsoME/.mtj.tmp/verified/*
 ^otsoME/.mtj.tmp/verified/required-classes/*
