@@ -1,5 +1,6 @@
 package otsopack.authn.resources;
 
+import org.restlet.resource.ClientResource;
 import org.restlet.resource.ServerResource;
 
 import otsopack.authn.IController;
@@ -18,5 +19,9 @@ public abstract class AbstractOtsoServerResource extends ServerResource {
 	
 	public ISessionManager getSessionManager(){
 		return getController().getSessionManager();
+	}
+	
+	public ClientResource createClientResource(String url){
+		return getOtsoApp().createResource(url);
 	}
 }

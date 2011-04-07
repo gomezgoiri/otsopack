@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.resource.ClientResource;
 import org.restlet.routing.Router;
 
 import otsopack.authn.resources.SessionRequestResource;
@@ -18,6 +19,9 @@ public class OtsoAuthnApplication extends Application {
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	private static final ClientResourceFactory defaultClientResourceFactory = new ClientResourceFactory();
+	
+	private IClientResourceFactory clientResourceFactory;
 	
 	static{
 		addPaths(SessionRequestResource.getRoots());
@@ -42,6 +46,18 @@ public class OtsoAuthnApplication extends Application {
         
         return router;
 	}
+	
+	// For testing purposes
+	private IClientResourceFactory getClientResourceFactory(){
+		if(this.clientResourceFactory == null)
+			return defaultClientResourceFactory;
+		
+		return this.clientResourceFactory;
+	}
+	
+	public ClientResource createResource(String url){
+		return getClientResourceFactory().createResource(url);
+	}
 
 	public ConcurrentMap<String, Object> getAttributes(){
 		return this.attributes;
@@ -55,4 +71,7 @@ public class OtsoAuthnApplication extends Application {
 		this.attributes.put(CONTROLLER_PROPERTY_NAME, controller);
 	}
 
+	public void setClientResourceFactory(IClientResourceFactory clientResourceFactory) {
+		this.clientResourceFactory = clientResourceFactory;
+	}
 }

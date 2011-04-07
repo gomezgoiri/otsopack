@@ -15,10 +15,11 @@ public class ValidatedSessionResource extends AbstractOtsoServerResource impleme
 		return roots;
 	}
 	
-	private static final String SESSIONID_NAME = "sessionid";
+	public static final String SESSIONID_NAME = "sessionid";
+	public static final String SECRET_NAME = "secret";
 
-	static String buildURL(String sessionId){
-		return ROOT + "?" + SESSIONID_NAME + "=" + sessionId;
+	static String buildURL(String sessionId, String secret){
+		return ROOT + "?" + SESSIONID_NAME + "=" + sessionId + "&" + SECRET_NAME + "=" + secret;
 	}
 	
 	@Override

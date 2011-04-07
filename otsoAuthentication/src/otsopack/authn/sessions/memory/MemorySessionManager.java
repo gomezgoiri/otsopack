@@ -52,4 +52,9 @@ public class MemorySessionManager implements ISessionManager {
 			this.sessions.remove(expiredSessionId);
 	}
 
+	@Override
+	public void deleteSession(String sessionId) {
+		this.sessions.remove(sessionId);
+	}
+
 }
