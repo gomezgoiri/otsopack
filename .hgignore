@@ -10,8 +10,8 @@ syntax: regexp
 ^otsoFullJavaCommons/build
 
 ^otsoIdentityProvider/bin
-
 ^otsoAuthentication/bin
+^otsoRestletCommons/bin
 
 ^otsoSE/bin
 
