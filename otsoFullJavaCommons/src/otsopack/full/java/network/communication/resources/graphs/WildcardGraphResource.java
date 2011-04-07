@@ -57,11 +57,12 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	}
 
 	protected Graph readGraphByWildcard(SemanticFormat semanticFormat) {
-		final String space       = getArgument("space");
+		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		try {
 			final IController controller = getController();
-			return controller.getDataAccessService().read(space, tpl, semanticFormat);
+			final Graph ret = controller.getDataAccessService().read(space, tpl, semanticFormat);
+			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		}catch (UnsupportedSemanticFormatException e) {
@@ -69,21 +70,24 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
+		return new Graph("",semanticFormat);
 	}
 	
 	protected Graph takeGraphByWildcard(SemanticFormat semanticFormat) {
-		final String space       = getArgument("space");
+		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		try {
 			final IController controller = getController();
-			return controller.getDataAccessService().take(space, tpl, semanticFormat);
+			Graph ret = controller.getDataAccessService().take(space, tpl, semanticFormat);
+			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		}catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
-		} 
+		}
+		return new Graph("",semanticFormat);
 	}
 	
 	@Override
