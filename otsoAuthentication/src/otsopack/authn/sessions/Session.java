@@ -2,33 +2,21 @@ package otsopack.authn.sessions;
 
 import java.util.Calendar;
 
-public class Session {
+import otsopack.restlet.commons.sessions.AbstractSession;
+
+public class Session extends AbstractSession {
 	private String redirectURL;
 	private String secret;
 	private String userIdentifier;
-	private Calendar expirationDate;
 	
 	// bean format just in case it's later stored or retrieved in a database 
 	public Session(){}
 	
 	public Session(String redirectURL, String secret, String userIdentifier, Calendar expirationDate) {
+		super(expirationDate);
 		this.redirectURL = redirectURL;
 		this.secret = secret;
 		this.userIdentifier = userIdentifier;
-		this.expirationDate = expirationDate;
-	}
-	
-	public boolean isExpired(){
-		// if the expiration date is arrived...
-		return Calendar.getInstance().after(this.expirationDate);
-	}
-
-	public Calendar getExpirationDate() {
-		return this.expirationDate;
-	}
-
-	public void setExpirationDate(Calendar expirationDate) {
-		this.expirationDate = expirationDate;
 	}
 
 	public String getRedirectURL() {

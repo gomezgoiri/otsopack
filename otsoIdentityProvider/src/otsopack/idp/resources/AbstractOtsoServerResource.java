@@ -4,8 +4,9 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.idp.IController;
 import otsopack.idp.OtsoIdpApplication;
+import otsopack.idp.Session;
 import otsopack.idp.authn.ICredentialsChecker;
-import otsopack.idp.sessions.ISessionManager;
+import otsopack.restlet.commons.sessions.ISessionManager;
 
 public abstract class AbstractOtsoServerResource extends ServerResource {
 	
@@ -21,7 +22,7 @@ public abstract class AbstractOtsoServerResource extends ServerResource {
 		return getController().getCredentialsChecker();
 	}
 	
-	public ISessionManager getSessionManager(){
+	public ISessionManager<Session> getSessionManager(){
 		return getController().getSessionManager();
 	}
 }

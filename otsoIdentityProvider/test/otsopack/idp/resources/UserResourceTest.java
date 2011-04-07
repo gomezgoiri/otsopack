@@ -18,9 +18,9 @@ import org.restlet.resource.ClientResource;
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
 import otsopack.idp.IController;
+import otsopack.idp.Session;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
-import otsopack.idp.sessions.Session;
 
 public class UserResourceTest  extends AbstractRestServerTesting {
 

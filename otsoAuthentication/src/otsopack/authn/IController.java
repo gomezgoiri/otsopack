@@ -1,8 +1,9 @@
 package otsopack.authn;
 
-import otsopack.authn.sessions.ISessionManager;
+import otsopack.authn.sessions.Session;
+import otsopack.restlet.commons.sessions.ISessionManager;
 
 public interface IController {
-	ISessionManager getSessionManager();
+	ISessionManager<Session> getSessionManager();
 	IAuthenticatedUserHandler getAuthenticatedUserHandler();
 }

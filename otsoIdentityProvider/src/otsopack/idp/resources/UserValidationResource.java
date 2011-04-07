@@ -9,7 +9,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
-import otsopack.idp.sessions.Session;
+import otsopack.idp.Session;
 
 public class UserValidationResource extends AbstractOtsoServerResource implements IUserValidationResource {
 

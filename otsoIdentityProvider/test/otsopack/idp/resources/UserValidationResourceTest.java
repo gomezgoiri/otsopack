@@ -17,9 +17,9 @@ import org.restlet.resource.ResourceException;
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
 import otsopack.idp.IController;
+import otsopack.idp.Session;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
-import otsopack.idp.sessions.Session;
 
 public class UserValidationResourceTest  extends AbstractRestServerTesting {
 	

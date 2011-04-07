@@ -1,9 +1,9 @@
 package otsopack.idp;
 
 import otsopack.idp.authn.ICredentialsChecker;
-import otsopack.idp.sessions.ISessionManager;
+import otsopack.restlet.commons.sessions.ISessionManager;
 
 public interface IController {
 	ICredentialsChecker getCredentialsChecker();
-	ISessionManager getSessionManager();
+	ISessionManager<Session> getSessionManager();
 }
