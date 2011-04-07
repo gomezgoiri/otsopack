@@ -2,22 +2,14 @@ package otsopack.authn;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-import org.restlet.Application;
-import org.restlet.Restlet;
 import org.restlet.resource.ClientResource;
-import org.restlet.routing.Router;
 
 import otsopack.authn.resources.SessionRequestResource;
 import otsopack.authn.resources.ValidatedSessionResource;
+import otsopack.restlet.commons.AbstractOtsopackApplication;
 
-public class OtsoAuthnApplication extends Application {
-	private final Map<String, Class<?>> resources;
-	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
-	
-	private static final String CONTROLLER_PROPERTY_NAME = "controller";
+public class OtsoAuthnApplication extends AbstractOtsopackApplication<IController> {
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	private static final ClientResourceFactory defaultClientResourceFactory = new ClientResourceFactory();
 	
@@ -34,17 +26,7 @@ public class OtsoAuthnApplication extends Application {
 	}
 	
 	public OtsoAuthnApplication(){
-		this.resources = PATHS;
-	}
-	
-	@Override
-	public Restlet createInboundRoot(){
-        Router router = new Router(getContext());
-        
-	    for(String pattern : this.resources.keySet())
-	    	router.attach(pattern, this.resources.get(pattern));
-        
-        return router;
+		super(PATHS);
 	}
 	
 	// For testing purposes
@@ -57,18 +39,6 @@ public class OtsoAuthnApplication extends Application {
 	
 	public ClientResource createResource(String url){
 		return getClientResourceFactory().createResource(url);
-	}
-
-	public ConcurrentMap<String, Object> getAttributes(){
-		return this.attributes;
-	}
-
-	public IController getController(){
-		return (IController)this.attributes.get(CONTROLLER_PROPERTY_NAME);
-	}
-	
-	public void setController(IController controller){
-		this.attributes.put(CONTROLLER_PROPERTY_NAME, controller);
 	}
 
 	public void setClientResourceFactory(IClientResourceFactory clientResourceFactory) {
