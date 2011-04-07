@@ -9,12 +9,20 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
+import otsopack.authn.resources.SessionRequestResource;
+import otsopack.authn.resources.ValidatedSessionResource;
+
 public class OtsoAuthnApplication extends Application {
 	private final Map<String, Class<?>> resources;
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	
+	static{
+		addPaths(SessionRequestResource.getRoots());
+		addPaths(ValidatedSessionResource.getRoots());
+	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){
 		for(String uri : roots.keySet())

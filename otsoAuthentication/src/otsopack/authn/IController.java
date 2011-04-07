@@ -1,5 +1,7 @@
 package otsopack.authn;
 
-public interface IController {
+import otsopack.authn.sessions.ISessionManager;
 
+public interface IController {
+	ISessionManager getSessionManager();
 }
