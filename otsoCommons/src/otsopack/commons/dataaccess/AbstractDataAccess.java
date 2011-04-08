@@ -34,7 +34,7 @@ public abstract class AbstractDataAccess implements IDataAccess {
 	
 	public String write(String spaceURI, Graph triples, User authorized) throws SpaceNotExistsException, UnsupportedSemanticFormatException {
 		final String graphuri = write(spaceURI,triples);
-		authz.add(graphuri, authorized);
+		authz.add(graphuri, authorized); //TODO remove graphs when they are taken
 		return graphuri;
 	}
 	
