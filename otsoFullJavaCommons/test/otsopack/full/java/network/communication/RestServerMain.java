@@ -18,7 +18,7 @@ import org.easymock.EasyMock;
 
 import otsopack.commons.IController;
 import otsopack.commons.dataaccess.IDataAccess;
-import otsopack.full.java.FakeDataAccess;
+import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 
 
 /**
@@ -29,7 +29,7 @@ import otsopack.full.java.FakeDataAccess;
 public class RestServerMain {
 	public static void main(String [] args) throws Exception {
 		final IController controller = EasyMock.createMock(IController.class);
-		final IDataAccess mockda = new FakeDataAccess();
+		final IDataAccess mockda = new MemoryDataAccess();
 		EasyMock.expect(controller.getDataAccessService()).andReturn(mockda).anyTimes();
 		EasyMock.replay(controller);
 		
