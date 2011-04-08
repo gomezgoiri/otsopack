@@ -21,7 +21,7 @@ import otsopack.authn.resources.SessionRequestResource;
 public class AuthenticationClient {
 	
 	private final LocalCredentialsManager credentialsManager;
-	private final IClientResourceFactory clientResourceFactory = new ClientResourceFactory();
+	private IClientResourceFactory clientResourceFactory = new ClientResourceFactory();
 	
 	public AuthenticationClient(LocalCredentialsManager credentialsManager){
 		this.credentialsManager = credentialsManager;
@@ -35,22 +35,33 @@ public class AuthenticationClient {
 	 * @throws AuthenticationException 
 	 */
 	public void authenticate(String dataProviderAuthenticationURL, String originalURL) throws AuthenticationException{
-		final String userIdentifierURI = this.credentialsManager.getUserIdentifierURI(dataProviderAuthenticationURL);
-		if(userIdentifierURI == null)
-			throw new NoAuthenticationUriFoundException("No authentication URI registered for domain " + dataProviderAuthenticationURL + " in " + LocalCredentialsManager.class.getName());
 		
-		final ClientResource authnClient = this.getClientResourceFactory().createResource(dataProviderAuthenticationURL);
-		final Form dpAuthnForm = new Form();
-		dpAuthnForm.set(SessionRequestResource.USER_IDENTIFIER_NAME, userIdentifierURI);
-		dpAuthnForm.set(SessionRequestResource.REDIRECT_NAME, originalURL);
-		final Representation authenticationServerUrlRepresentation = authnClient.post(dpAuthnForm);
+		final String identityProviderUrl = requestSession(dataProviderAuthenticationURL, originalURL);
 		
-		final String identityProviderUrl;
-		try {
-			identityProviderUrl = IOUtils.toString(authenticationServerUrlRepresentation.getStream());
-		} catch (IOException e) {
-			throw new UnexpectedAuthenticationException("Exception while reading the authentication url: " + e.getMessage(), e);
+		final String dataProviderUrlWithSecret = authenticateInIdentityProvider(identityProviderUrl);
+		
+		final String dataProviderFinalResponse = sendSignedValidatedSessionToDataProvider(dataProviderUrlWithSecret);
+		
+		// XXX: not sure if this makes sense :-S
+		if(!dataProviderFinalResponse.equals(originalURL)){
+			throw new WrongFinalRedirectException("Expected to redirect to: " + originalURL + "; got: " + dataProviderFinalResponse );
 		}
+	}
+
+	private String sendSignedValidatedSessionToDataProvider(final String dataProviderUrlWithSecret) throws UnexpectedAuthenticationException {
+		final ClientResource dataProviderClient = this.getClientResourceFactory().createResource(dataProviderUrlWithSecret);
+		final Representation dataProviderFinalResponseRepresentation = dataProviderClient.get();
+		
+		final String dataProviderFinalResponse;
+		try {
+			dataProviderFinalResponse = IOUtils.toString(dataProviderFinalResponseRepresentation.getStream());
+		} catch (IOException e) {
+			throw new UnexpectedAuthenticationException("Could not parse the response from the data provider: " + e.getMessage(), e);
+		}
+		return dataProviderFinalResponse;
+	}
+
+	private String authenticateInIdentityProvider( final String identityProviderUrl ) throws RedirectedToWrongIdentityProviderException, UnexpectedAuthenticationException {
 		
 		final Credentials credentials = this.credentialsManager.getCredentials(identityProviderUrl);
 		if(credentials == null)
@@ -71,24 +82,36 @@ public class AuthenticationClient {
 		} catch (IOException e) {
 			throw new UnexpectedAuthenticationException("Could not parse the response from the Identity Provider server: " + e.getMessage(), e);
 		}
+		return dataProviderUrlWithSecret;
+	}
+
+	private String requestSession(String dataProviderAuthenticationURL, String originalURL) throws NoAuthenticationUriFoundException, UnexpectedAuthenticationException {
 		
-		final ClientResource dataProviderClient = this.getClientResourceFactory().createResource(dataProviderUrlWithSecret);
-		final Representation dataProviderFinalResponseRepresentation = dataProviderClient.get();
+		final String userIdentifierURI = this.credentialsManager.getUserIdentifierURI(dataProviderAuthenticationURL);
+		if(userIdentifierURI == null)
+			throw new NoAuthenticationUriFoundException("No authentication URI registered for domain " + dataProviderAuthenticationURL + " in " + LocalCredentialsManager.class.getName());
 		
-		final String dataProviderFinalResponse;
+		final ClientResource authnClient = this.getClientResourceFactory().createResource(dataProviderAuthenticationURL);
+		final Form dpAuthnForm = new Form();
+		dpAuthnForm.set(SessionRequestResource.USER_IDENTIFIER_NAME, userIdentifierURI);
+		dpAuthnForm.set(SessionRequestResource.REDIRECT_NAME, originalURL);
+		final Representation authenticationServerUrlRepresentation = authnClient.post(dpAuthnForm);
+		
+		final String identityProviderUrl;
 		try {
-			dataProviderFinalResponse = IOUtils.toString(dataProviderFinalResponseRepresentation.getStream());
+			identityProviderUrl = IOUtils.toString(authenticationServerUrlRepresentation.getStream());
 		} catch (IOException e) {
-			throw new UnexpectedAuthenticationException("Could not parse the response from the data provider: " + e.getMessage(), e);
+			throw new UnexpectedAuthenticationException("Exception while reading the authentication url: " + e.getMessage(), e);
 		}
-		
-		// XXX: not sure if this makes sense :-S
-		if(!dataProviderFinalResponse.equals(originalURL)){
-			throw new WrongFinalRedirectException("Expected to redirect to: " + originalURL + "; got: " + dataProviderFinalResponse );
-		}
+		return identityProviderUrl;
 	}
 
 	protected IClientResourceFactory getClientResourceFactory(){
 		return this.clientResourceFactory;
+	}
+
+	// For testing purposes
+	void setClientResourceFactory(IClientResourceFactory clientResourceFactory){
+		this.clientResourceFactory = clientResourceFactory;
 	}
 }

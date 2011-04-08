@@ -1,4 +1,4 @@
-package otsopack.authn.resources;
+package otsopack.authn;
 
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
