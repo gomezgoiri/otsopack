@@ -81,7 +81,7 @@ public class LocalCredentialsManager {
 		}
 	}
 			
-	public <T> T getT(Vector<Map.Entry<String, T>> vector, String domain){
+	private <T> T getT(Vector<Map.Entry<String, T>> vector, String domain){
 		String bestCoincidence = "";
 		int bestCoincidencePos = -1;
 		
