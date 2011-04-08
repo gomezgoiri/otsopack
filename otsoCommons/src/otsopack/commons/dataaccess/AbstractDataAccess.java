@@ -50,7 +50,7 @@ public abstract class AbstractDataAccess implements IDataAccess {
 	public abstract Graph concreteQuery(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException;
 	
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
-		return concreteRead(spaceURI,template,outputFormat,null);
+		return read(spaceURI,template,outputFormat,null);
 	}
 	
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedTemplateException {

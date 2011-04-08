@@ -23,6 +23,7 @@ import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.data.impl.microjena.TripleImpl;
+import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.sampledata.Example;
 
 public class SpaceMemTest extends TestCase {
@@ -90,9 +91,9 @@ public class SpaceMemTest extends TestCase {
 			space.write(models[i]);
 		}
 		
-		final ModelImpl retGraph1 = space.query( sf.createTemplate("<"+Example.subj1+"> ?p ?o .") );
-		final ModelImpl retGraph2 = space.query( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .") );
-		final ModelImpl retGraph3 = space.query( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .") );
+		final ModelImpl retGraph1 = space.query( sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), new AlwaysAuthorized() );
+		final ModelImpl retGraph2 = space.query( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), new AlwaysAuthorized());
+		final ModelImpl retGraph3 = space.query( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), new AlwaysAuthorized());
 		
 		assertEquals( retGraph1.getModel().size(), 2 );
 		
@@ -111,9 +112,9 @@ public class SpaceMemTest extends TestCase {
 			space.write(models[i]);
 		}
 		
-		final ModelImpl retGraph1 = space.read( sf.createTemplate("<"+Example.subj1+"> ?p ?o .") );
-		final ModelImpl retGraph2 = space.read( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .") );
-		final ModelImpl retGraph3 = space.read( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .") );
+		final ModelImpl retGraph1 = space.read( sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), new AlwaysAuthorized() );
+		final ModelImpl retGraph2 = space.read( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), new AlwaysAuthorized() );
+		final ModelImpl retGraph3 = space.read( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), new AlwaysAuthorized() );
 		
 		assertEquals( retGraph1.getModel().size(), 3 );
 		if( retGraph1.getModel().contains(triples[0].asStatement()) ) {
@@ -191,12 +192,12 @@ public class SpaceMemTest extends TestCase {
 		final Template sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final Template sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
 		final Template sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
-		final ModelImpl retGraph1 = space.take( sel1 );
-		final ModelImpl retGraph2 = space.take( sel1 );
-		final ModelImpl retGraph3 = space.take( sel1 );
-		final ModelImpl retGraph4 = space.take( sel2 );
-		final ModelImpl retGraph5 = space.take( sel2 );
-		final ModelImpl retGraph6 = space.take( sel3 );
+		final ModelImpl retGraph1 = space.take( sel1, new AlwaysAuthorized() );
+		final ModelImpl retGraph2 = space.take( sel1, new AlwaysAuthorized() );
+		final ModelImpl retGraph3 = space.take( sel1, new AlwaysAuthorized() );
+		final ModelImpl retGraph4 = space.take( sel2, new AlwaysAuthorized() );
+		final ModelImpl retGraph5 = space.take( sel2, new AlwaysAuthorized() );
+		final ModelImpl retGraph6 = space.take( sel3, new AlwaysAuthorized() );
 		
 		hasCheckRightTriples( retGraph1.getModel() );
 		hasCheckRightTriples( retGraph2.getModel() );
@@ -264,5 +265,11 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph5 );
 		assertNull( retGraph6 );
 		assertNull( retGraph7 );
+	}
+}
+
+class AlwaysAuthorized implements IAuthorizationChecker {
+	public boolean isAuthorized(String resourceuri) {
+		return true;
 	}
 }
