@@ -39,7 +39,7 @@ public abstract class AbstractDataAccess implements IDataAccess {
 	}
 	
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
-		return concreteQuery(spaceURI, template, outputFormat, null);
+		return query(spaceURI, template, outputFormat, null);
 	}
 	
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedTemplateException {

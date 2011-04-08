@@ -28,17 +28,11 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
 public class SpaceMem {	
 	String spaceURI = null;
 	Vector/*<GraphMem>*/ graphs = null;
-	ModelImpl model = null;
 	
 	
 	protected SpaceMem(String spaceURI) {
 		this.spaceURI = spaceURI;
-		model = new ModelImpl();
 		graphs = new Vector();
-	}
-
-	public IModel getModel() {
-		return model;
 	}
 	
 	protected boolean containsGraph(String graphuri) {
@@ -57,11 +51,17 @@ public class SpaceMem {
 		GraphMem gm = MemoryFactory.createGraph(spaceURI);
 		gm.write(triples);
 		graphs.addElement(gm);
-		model.addTriples(triples);
 		return gm.getUri();
 	}
 	
 	public ModelImpl query(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {
+		// TODO far away from being optimal, but is the easiest implementation 
+		final ModelImpl model = new ModelImpl();
+		for(int i=0; i<graphs.size(); i++) {
+			GraphMem gm = (GraphMem) graphs.elementAt(i);
+			if( checker.isAuthorized(gm.getUri()) )
+				model.addTriples( gm.getModel() ); // we hold the first graph which contains a triple like that
+		}
 		IModel ret = model.query(template);
 		return (ret.isEmpty())?null:ret.getModelImpl();
 	}
@@ -94,7 +94,6 @@ public class SpaceMem {
 			if( checker.isAuthorized(gm.getUri()) )
 				if( gm.contains(template) ) {
 					graph = gm.getModel(); // we hold the first graph which contains a triple like that
-					model.removeTriples(graph);
 					graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
 				}
 		}
@@ -113,7 +112,6 @@ public class SpaceMem {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.getUri().equals(graphURI) ) {
 				graph = gm.getModel(); // we hold the first graph which contains a triple like that
-				model.removeTriples(graph);
 				graphs.removeElement(gm);
 			}
 		}

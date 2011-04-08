@@ -28,5 +28,4 @@ public class UserAuthorizationChecker implements IAuthorizationChecker {
 	public boolean isAuthorized(String resourceuri) {
 		return this.authorizedGraphs.isUserAuthorized(resourceuri, user);
 	}
-
 }
