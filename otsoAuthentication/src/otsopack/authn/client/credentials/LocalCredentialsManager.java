@@ -13,30 +13,50 @@ public class LocalCredentialsManager {
 	private final Lock readLock  = lock.readLock();
 	private final Lock writeLock = lock.writeLock();
 	
-	private final Vector<Map.Entry<String, Credentials>> credentials = new Vector<Map.Entry<String, Credentials>>();
+	private final Vector<Map.Entry<String, Credentials>> credentials   = new Vector<Map.Entry<String, Credentials>>();
+	private final Vector<Map.Entry<String, String>> userIdentifiersURIs = new Vector<Map.Entry<String, String>>();
 	
-	public LocalCredentialsManager(Map<String, Credentials> originalCredentials){
+	public LocalCredentialsManager(Map<String, Credentials> originalCredentials, Map<String, String> originalUserIdentifierURIs){
 		for(String domain : originalCredentials.keySet())
 			setCredentials(domain, originalCredentials.get(domain));
+		
+		for(String domain : originalUserIdentifierURIs.keySet())
+			setUserIdentifierURI(domain, originalUserIdentifierURIs.get(domain));
 	}
 	
 	public LocalCredentialsManager(){}
 	
-	public synchronized void setCredentials(String newDomain, Credentials newCredentials){
+	public void setCredentials(String newDomain, Credentials newCredentials){
+		setT(this.credentials, newDomain, newCredentials);
+	}
+	
+	public Credentials getCredentials(String domain){
+		return getT(this.credentials, domain);
+	}
+	
+	public void setUserIdentifierURI(String newDomain, String newCredentials){
+		setT(this.userIdentifiersURIs, newDomain, newCredentials);
+	}
+	
+	public String getUserIdentifierURI(String domain){
+		return getT(this.userIdentifiersURIs, domain);
+	}
+	
+	private <T> void setT(Vector<Map.Entry<String, T>> vector, String newDomain, T newCredentials){
 		String bestCoincidence = "";
 		int bestCoincidencePos = -1;
 		
-		final Map.Entry<String, Credentials> newElement = new AbstractMap.SimpleEntry<String, Credentials>(newDomain, newCredentials);
+		final Map.Entry<String, T> newElement = new AbstractMap.SimpleEntry<String, T>(newDomain, newCredentials);
 
 		writeLock.lock();
 		try{
-			for(int i = 0; i < this.credentials.size(); ++i){
-				final Map.Entry<String, Credentials> element = this.credentials.get(i);
+			for(int i = 0; i < vector.size(); ++i){
+				final Map.Entry<String, T> element = vector.get(i);
 				final String elementDomain = element.getKey();
 				
 				// If the domain already exists, just replace it
 				if(elementDomain.equals(newDomain)){
-					this.credentials.set(i, newElement);
+					vector.set(i, newElement);
 					return;
 				}
 				
@@ -53,23 +73,23 @@ public class LocalCredentialsManager {
 			}
 			
 			if(bestCoincidencePos == -1)
-				this.credentials.add(newElement);
+				vector.add(newElement);
 			else
-				this.credentials.insertElementAt(newElement, bestCoincidencePos);
+				vector.insertElementAt(newElement, bestCoincidencePos);
 		}finally{
 			writeLock.unlock();
 		}
 	}
-	
-	public synchronized Credentials getCredentials(String domain){
+			
+	public <T> T getT(Vector<Map.Entry<String, T>> vector, String domain){
 		String bestCoincidence = "";
 		int bestCoincidencePos = -1;
 		
 		readLock.lock();
 		try{
 			
-			for(int i = 0; i < this.credentials.size(); ++i){
-				final Map.Entry<String, Credentials> element = this.credentials.get(i);
+			for(int i = 0; i < vector.size(); ++i){
+				final Map.Entry<String, T> element = vector.get(i);
 				final String elementDomain = element.getKey();
 				if(elementDomain.equals(domain))
 					return element.getValue();
@@ -89,10 +109,9 @@ public class LocalCredentialsManager {
 			if(bestCoincidencePos == -1)
 				return null;
 			
-			return this.credentials.get(bestCoincidencePos).getValue();
+			return vector.get(bestCoincidencePos).getValue();
 		}finally{
 			readLock.unlock();
 		}
 	}
-	
 }

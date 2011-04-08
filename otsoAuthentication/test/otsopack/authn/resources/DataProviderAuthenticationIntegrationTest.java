@@ -18,6 +18,7 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
+import otsopack.authn.FakeClientResource;
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.IClientResourceFactory;
 import otsopack.authn.IController;
