@@ -195,20 +195,23 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph2 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user1 );
 		final Graph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		//assertEquals( retGraph1.size(), 1 );
-		assertTrue( retGraph1.getData().contains(triples[0]) );
-		assertFalse( retGraph1.getData().contains(triples[3]) );
-		assertFalse( retGraph1.getData().contains(triples[6]) );
+		{
+			int[] contains = {0};
+			int[] notContains = {1,2,3,4,5,6,7,8};
+			assertGraphContains(retGraph1, contains, notContains);
+		}
 		
-		//assertEquals( retGraph2.size(), 2 );
-		assertTrue( retGraph2.getData().contains(triples[0]) );
-		assertTrue( retGraph2.getData().contains(triples[3]) );
-		assertFalse( retGraph2.getData().contains(triples[6]) );
+		{
+			int[] contains = {0,3};
+			int[] notContains = {1,2,4,5,6,7,8};
+			assertGraphContains(retGraph2, contains, notContains);
+		}
 		
-		//assertEquals( retGraph2.size(), 2 );
-		assertTrue( retGraph3.getData().contains(triples[0]) );
-		assertTrue( retGraph3.getData().contains(triples[6]) );
-		assertFalse( retGraph3.getData().contains(triples[3]) );
+		{
+			int[] contains = {0,6};
+			int[] notContains = {1,2,3,4,5,7,8};
+			assertGraphContains(retGraph3, contains, notContains);
+		}
 		
 		memo.shutdown();
 	}
@@ -319,8 +322,8 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
-		String[] graphuris = new String[models.length];
-		graphuris[0] = memo.write( spaceuri1, models[0]);
+		final String[] graphuris = new String[models.length];
+		graphuris[0] = memo.write(spaceuri1, models[0]);
 		graphuris[1] = memo.write(spaceuri1, models[1]);
 		graphuris[2] = memo.write(spaceuri2, models[2]);
 		
@@ -358,6 +361,65 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	public void testReadURIUser() throws Exception {
+		final String spaceuri1 = "ts://spaceRead5";
+		final User user1 = new User("http://aitor.myopenid.com");
+		final User user2 = new User("http://pablo.myopenid.com");
+		
+		final MemoryDataAccess memo = new MemoryDataAccess();
+		memo.startup();
+		memo.createSpace(spaceuri1);
+		memo.joinSpace(spaceuri1);
+		
+		final String[] graphuris = new String[models.length];
+		graphuris[0] = memo.write(spaceuri1,models[0]);
+		graphuris[1] = memo.write(spaceuri1,models[1],user1);
+		graphuris[2] = memo.write(spaceuri1,models[2],user2);
+		
+		assertNotAuthorizedRead(memo,spaceuri1,graphuris[1],null);
+		assertNotAuthorizedRead(memo,spaceuri1,graphuris[2],null);
+		assertNotAuthorizedRead(memo,spaceuri1,graphuris[2],user1);
+		assertNotAuthorizedRead(memo,spaceuri1,graphuris[1],user2);
+		
+		final Graph retGraph1 = memo.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = memo.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = memo.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph5 = memo.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		
+		{
+			int[] contains = {0,1,2};
+			int[] notContains = {3,4,5,6,7,8};
+			assertGraphContains(retGraph1, contains, notContains);
+			assertGraphContains(retGraph2, contains, notContains);
+			assertGraphContains(retGraph3, contains, notContains);
+		}
+		
+		{
+			int[] contains = {3,4,5};
+			int[] notContains = {0,1,2,6,7,8};
+			assertGraphContains(retGraph4, contains, notContains);
+		}
+		
+		{
+			int[] contains = {6,7,8};
+			int[] notContains = {0,1,2,3,4,5};
+			assertGraphContains(retGraph5, contains, notContains);
+		}
+		
+		memo.leaveSpace(spaceuri1);
+		memo.shutdown();
+	}
+	
+	private void assertNotAuthorizedRead(MemoryDataAccess memo, String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
+		try {
+			memo.read(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
+			fail();
+		} catch(AuthorizationException ae) {
+			//always thrown
+		}
+	}
+
 	public void testTakeTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceTake1";
@@ -530,5 +592,70 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.leaveSpace(spaceuri1);
 		memo.leaveSpace(spaceuri2);
 		memo.shutdown();
+	}
+	
+	public void testTakeURIUser() throws Exception {
+		final String spaceuri1 = "ts://spaceRead5";
+		final User user1 = new User("http://aitor.myopenid.com");
+		final User user2 = new User("http://pablo.myopenid.com");
+		
+		final MemoryDataAccess memo = new MemoryDataAccess();
+		memo.startup();
+		memo.createSpace(spaceuri1);
+		memo.joinSpace(spaceuri1);
+		
+		final String[] graphuris = new String[models.length];
+		graphuris[0] = memo.write(spaceuri1,models[0]);
+		graphuris[1] = memo.write(spaceuri1,models[1],user1);
+		graphuris[2] = memo.write(spaceuri1,models[2],user2);
+		
+		assertNotAuthorizedTake(memo,spaceuri1,graphuris[1],null);
+		assertNotAuthorizedTake(memo,spaceuri1,graphuris[2],null);
+		assertNotAuthorizedTake(memo,spaceuri1,graphuris[2],user1);
+		assertNotAuthorizedTake(memo,spaceuri1,graphuris[1],user2);
+		
+		final Graph retGraph1 = memo.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = memo.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = memo.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = memo.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph5 = memo.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph6 = memo.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph7 = memo.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		
+		{
+			int[] contains = {0,1,2};
+			int[] notContains = {3,4,5,6,7,8};
+			assertGraphContains(retGraph1, contains, notContains);
+		}
+		
+		{
+			int[] contains = {3,4,5};
+			int[] notContains = {0,1,2,6,7,8};
+			assertGraphContains(retGraph4, contains, notContains);
+		}
+		
+		{
+			int[] contains = {6,7,8};
+			int[] notContains = {0,1,2,3,4,5};
+			assertGraphContains(retGraph6, contains, notContains);
+		}
+		
+		// those graphs were taken before
+		assertNull(retGraph2);
+		assertNull(retGraph3);
+		assertNull(retGraph5);
+		assertNull(retGraph7);
+		
+		memo.leaveSpace(spaceuri1);
+		memo.shutdown();
+	}
+	
+	private void assertNotAuthorizedTake(MemoryDataAccess memo, String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
+		try {
+			memo.take(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
+			fail();
+		} catch(AuthorizationException ae) {
+			//always thrown
+		}
 	}
 }
