@@ -29,4 +29,22 @@ public class User {
 	public String getId() {
 		return id;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(Object)
+	 */
+	public boolean equals(Object o) {
+		if( this==o ) return true;
+		if( o!=null && o instanceof User ) {
+			return this.id==((User)o).id;
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return this.id.hashCode();
+	}
 }

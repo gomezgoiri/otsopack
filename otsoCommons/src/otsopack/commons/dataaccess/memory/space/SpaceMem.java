@@ -19,6 +19,7 @@ import java.util.Vector;
 import otsopack.commons.data.IModel;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 /**
@@ -60,15 +61,16 @@ public class SpaceMem {
 		return gm.getUri();
 	}
 	
-	public ModelImpl query(Template template) throws UnsupportedTemplateException {
+	public ModelImpl query(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {
 		IModel ret = model.query(template);
 		return (ret.isEmpty())?null:ret.getModelImpl();
 	}
 
-	public ModelImpl read(Template template) throws UnsupportedTemplateException {
+	public ModelImpl read(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {
 		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
+			if( checker.isAuthorized(gm.getUri()) )
 			if( gm.contains(template) )
 				graph = gm.getModel(); // we hold the first graph which contains a triple like that
 		}
@@ -85,19 +87,26 @@ public class SpaceMem {
 		return mod;
 	}
 	
-	public ModelImpl take(Template template) throws UnsupportedTemplateException {		
+	public ModelImpl take(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {		
 		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
-			if( gm.contains(template) ) { 
-				graph = gm.getModel(); // we hold the first graph which contains a triple like that
-				model.removeTriples(graph);
-				graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
-			}
+			if( checker.isAuthorized(gm.getUri()) )
+				if( gm.contains(template) ) {
+					graph = gm.getModel(); // we hold the first graph which contains a triple like that
+					model.removeTriples(graph);
+					graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
+				}
 		}
 		return graph;
 	}
 
+	/**
+	 * Already authenticated.
+	 * @param graphURI
+	 * @return
+	 * 		The graph if it has access.
+	 */
 	public ModelImpl take(String graphURI) {
 		ModelImpl graph = null;
 		for(int i=0; i<graphs.size() && graph==null; i++) {
