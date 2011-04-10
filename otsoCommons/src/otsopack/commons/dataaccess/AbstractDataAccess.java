@@ -14,13 +14,13 @@
  */
 package otsopack.commons.dataaccess;
 
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.authz.AuthorizedGraphs;
 import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.dataaccess.authz.UserAuthorizationChecker;
-import otsopack.commons.dataaccess.authz.entities.User;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;

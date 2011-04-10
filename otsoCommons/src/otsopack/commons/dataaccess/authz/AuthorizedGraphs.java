@@ -14,7 +14,7 @@
  */
 package otsopack.commons.dataaccess.authz;
 
-import otsopack.commons.dataaccess.authz.entities.User;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.util.collections.HashMap;
 
 public class AuthorizedGraphs {

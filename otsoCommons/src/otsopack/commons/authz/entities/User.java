@@ -12,7 +12,7 @@
  * Author: FILLME
  *
  */
-package otsopack.commons.dataaccess.authz.entities;
+package otsopack.commons.authz.entities;
 
 /**
  * This class represents an authorisation entity to a certain graph.
