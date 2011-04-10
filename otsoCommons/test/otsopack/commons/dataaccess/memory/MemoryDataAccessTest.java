@@ -134,15 +134,24 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	private void assertGraphContains(Graph checkedGraph, int[] contains, int[] notContains) {
+	private boolean contains(int[] contains, int num) {
+		for(int i=0; i<contains.length; i++)
+			if( contains[i]==num ) return true;
+		return false;
+	}
+	
+	private void assertGraphContains(Graph checkedGraph, int[] contains) {
+		//contains
 		for( int i=0; i<contains.length; i++ ) {
 			assertTrue( checkedGraph.getData().contains(triples[contains[i]]) );
 		}
-		for( int i=0; i<notContains.length; i++ ) {
-			assertFalse( checkedGraph.getData().contains(triples[notContains[i]]) );
+		//not contains
+		for( int i=0; i<triples.length; i++ ) {
+			if( !contains(contains,i) )
+				assertFalse( checkedGraph.getData().contains(triples[i]) );
 		}
 	}
-	
+
 	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
@@ -195,23 +204,9 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph2 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user1 );
 		final Graph retGraph3 = memo.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		{
-			int[] contains = {0};
-			int[] notContains = {1,2,3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-		}
-		
-		{
-			int[] contains = {0,3};
-			int[] notContains = {1,2,4,5,6,7,8};
-			assertGraphContains(retGraph2, contains, notContains);
-		}
-		
-		{
-			int[] contains = {0,6};
-			int[] notContains = {1,2,3,4,5,7,8};
-			assertGraphContains(retGraph3, contains, notContains);
-		}
+		assertGraphContains(retGraph1, new int[] {0});
+		assertGraphContains(retGraph2, new int[] {0,3});
+		assertGraphContains(retGraph3, new int[] {0,6});
 		
 		memo.shutdown();
 	}
@@ -284,25 +279,13 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph8 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
 		final Graph retGraph9 = memo.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		{
-			int[] contains = {0,1,2};
-			int[] notContains = {3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-			assertGraphContains(retGraph2, contains, notContains);
-			assertGraphContains(retGraph3, contains, notContains);
-		}
+		int[] contains = {0,1,2};
+		assertGraphContains(retGraph1, contains);
+		assertGraphContains(retGraph2, contains);
+		assertGraphContains(retGraph3, contains);
 		
-		{
-			int[] contains = {3,4,5};
-			int[] notContains = {0,1,2,6,7,8};
-			assertGraphContains(retGraph5, contains, notContains);
-		}
-		
-		{
-			int[] contains = {6,7,8};
-			int[] notContains = {0,1,2,3,4,5};
-			assertGraphContains(retGraph9, contains, notContains);
-		}
+		assertGraphContains(retGraph5, new int[] {3,4,5});
+		assertGraphContains(retGraph9, new int[] {6,7,8});
 		
 		assertNull(retGraph4);
 		assertNull(retGraph6);
@@ -334,27 +317,14 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph5 = memo.read( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
 		final Graph retGraph6 = memo.read( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );		
 		
-		{
-			int[] contains = {0,1,2};
-			int[] notContains = {3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-		}
-		
-		{
-			int[] contains = {3,4,5};
-			int[] notContains = {0,1,2,6,7,8};
-			assertGraphContains(retGraph2, contains, notContains);
-		}
+		assertGraphContains(retGraph1, new int[] {0,1,2});
+		assertGraphContains(retGraph2, new int[] {3,4,5});
 		
 		assertNull( retGraph3 );
 		assertNull( retGraph4 );
 		assertNull( retGraph5 );
 		
-		{
-			int[] contains = {6,7,8};
-			int[] notContains = {0,1,2,3,4,5};
-			assertGraphContains(retGraph6, contains, notContains);
-		}
+		assertGraphContains(retGraph6, new int[] {6,7,8});
 		
 		memo.leaveSpace(spaceuri1);
 		memo.leaveSpace(spaceuri2);
@@ -387,25 +357,13 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph4 = memo.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
 		final Graph retGraph5 = memo.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
 		
-		{
-			int[] contains = {0,1,2};
-			int[] notContains = {3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-			assertGraphContains(retGraph2, contains, notContains);
-			assertGraphContains(retGraph3, contains, notContains);
-		}
-		
-		{
-			int[] contains = {3,4,5};
-			int[] notContains = {0,1,2,6,7,8};
-			assertGraphContains(retGraph4, contains, notContains);
-		}
-		
-		{
-			int[] contains = {6,7,8};
-			int[] notContains = {0,1,2,3,4,5};
-			assertGraphContains(retGraph5, contains, notContains);
-		}
+		int[] contains = {0,1,2};
+		assertGraphContains(retGraph1, contains);
+		assertGraphContains(retGraph2, contains);
+		assertGraphContains(retGraph3, contains);
+
+		assertGraphContains(retGraph4, new int[] {3,4,5});
+		assertGraphContains(retGraph5, new int[] {6,7,8});
 		
 		memo.leaveSpace(spaceuri1);
 		memo.shutdown();
@@ -511,23 +469,9 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph8 = memo.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
 		final Graph retGraph9 = memo.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		{
-			int[] contains = {0,1,2};
-			int[] notContains = {3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-		}
-		
-		{
-			int[] contains = {3,4,5};
-			int[] notContains = {0,1,2,6,7,8};
-			assertGraphContains(retGraph6, contains, notContains);
-		}
-		
-		{
-			int[] contains = {6,7,8};
-			int[] notContains = {0,1,2,3,4,5};
-			assertGraphContains(retGraph9, contains, notContains);
-		}
+		assertGraphContains(retGraph1, new int[] {0,1,2});
+		assertGraphContains(retGraph6, new int[] {3,4,5});
+		assertGraphContains(retGraph9, new int[] {6,7,8});
 		
 		// were taken before reading
 		assertNull(retGraph2);
@@ -622,23 +566,9 @@ public class MemoryDataAccessTest extends TestCase {
 		final Graph retGraph6 = memo.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
 		final Graph retGraph7 = memo.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
 		
-		{
-			int[] contains = {0,1,2};
-			int[] notContains = {3,4,5,6,7,8};
-			assertGraphContains(retGraph1, contains, notContains);
-		}
-		
-		{
-			int[] contains = {3,4,5};
-			int[] notContains = {0,1,2,6,7,8};
-			assertGraphContains(retGraph4, contains, notContains);
-		}
-		
-		{
-			int[] contains = {6,7,8};
-			int[] notContains = {0,1,2,3,4,5};
-			assertGraphContains(retGraph6, contains, notContains);
-		}
+		assertGraphContains(retGraph1, new int[] {0,1,2});
+		assertGraphContains(retGraph4, new int[] {3,4,5});
+		assertGraphContains(retGraph6, new int[] {6,7,8});
 		
 		// those graphs were taken before
 		assertNull(retGraph2);
