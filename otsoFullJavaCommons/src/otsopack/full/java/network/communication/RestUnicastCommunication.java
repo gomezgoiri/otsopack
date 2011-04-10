@@ -22,6 +22,8 @@ import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import otsopack.commons.authz.Filter;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -36,6 +38,7 @@ import otsopack.full.java.network.communication.resources.graphs.WildcardConvert
 
 public class RestUnicastCommunication implements ICommunication {
 	private String baseRESTServer;
+	private User entity; // TODO it should be obtained from the RESTServer
 	
 	public RestUnicastCommunication() {
 		this("http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/");
@@ -43,6 +46,7 @@ public class RestUnicastCommunication implements ICommunication {
 	
 	public RestUnicastCommunication(String restserver) {
 		this.baseRESTServer = restserver;
+		this.entity = new User("http://myid.com/aitor");
 	}
 	
 	String getBaseURI(String spaceuri) {
@@ -136,6 +140,19 @@ public class RestUnicastCommunication implements ICommunication {
 			}
 		}
 		return null;
+	}
+	
+	// TODO test and put into ITripleSpace
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		final Graph graph = query(spaceURI, template, outputFormat, timeout);
+		for(Filter filter: filters) {
+			if( filter.getAssert().evaluate(graph) ) {
+				if( !filter.getEntity().equals(this.entity) )
+					return null;
+			}
+		}
+		return graph;
 	}
 
 	@Override
