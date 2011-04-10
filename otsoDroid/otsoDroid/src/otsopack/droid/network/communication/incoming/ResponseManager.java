@@ -121,8 +121,6 @@ public class ResponseManager implements ITSCallback {
 			e.printStackTrace();
 		} catch (UnsupportedSemanticFormatException e) {
 			e.printStackTrace();
-		} catch (UnsupportedTemplateException e) {
-			e.printStackTrace();
 		} catch (AuthorizationException e) {
 			e.printStackTrace();
 		}
@@ -150,8 +148,6 @@ public class ResponseManager implements ITSCallback {
 		} catch (SpaceNotExistsException e) {
 			e.printStackTrace();
 		} catch (UnsupportedSemanticFormatException e) {
-			e.printStackTrace();
-		} catch (UnsupportedTemplateException e) {
 			e.printStackTrace();
 		} catch (AuthorizationException e) {
 			e.printStackTrace();
