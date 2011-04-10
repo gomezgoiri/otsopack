@@ -123,7 +123,7 @@ public interface IDataAccess extends ILayer {
 	 * @throws UnsupportedTemplateException 
 	 * @throws AuthorizationException 
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException, AuthorizationException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, AuthorizationException;
 
 	/**
 	 * read graph from space
@@ -135,7 +135,7 @@ public interface IDataAccess extends ILayer {
 	 * @throws UnsupportedTemplateException 
 	 * @throws AuthorizationException 
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException, AuthorizationException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedSemanticFormatException, AuthorizationException;
 
 	/**
 	 * read and remove a graph from the space.
@@ -154,5 +154,5 @@ public interface IDataAccess extends ILayer {
 	 * @throws AuthorizationException 
 	 * @throws UnsupportedTemplateException 
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException, AuthorizationException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, AuthorizationException;
 }

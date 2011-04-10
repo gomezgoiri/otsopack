@@ -20,7 +20,7 @@ public interface IDataAssert {
 	// TODO method to serialize
 	
 	/**
-	 * When is this graph included?
+	 * When should be this graph considered candidate for a filtering process?
 	 */
 	public boolean evaluate(Graph graph);
 }

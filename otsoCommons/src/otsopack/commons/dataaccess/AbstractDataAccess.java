@@ -60,7 +60,7 @@ public abstract class AbstractDataAccess implements IDataAccess {
 
 	public abstract Graph concreteRead(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException;
 
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException, AuthorizationException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, AuthorizationException {
 		return read(spaceURI,graphURI,outputFormat,null);
 	}
 	
@@ -86,7 +86,7 @@ public abstract class AbstractDataAccess implements IDataAccess {
 
 	public abstract Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException;
 
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException, AuthorizationException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, AuthorizationException {
 		return take(spaceURI,graphURI,outputFormat,null);
 	}
 	

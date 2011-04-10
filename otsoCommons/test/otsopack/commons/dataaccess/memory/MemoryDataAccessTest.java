@@ -15,13 +15,13 @@
 package otsopack.commons.dataaccess.memory;
 
 import junit.framework.TestCase;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.dataaccess.authz.entities.User;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
