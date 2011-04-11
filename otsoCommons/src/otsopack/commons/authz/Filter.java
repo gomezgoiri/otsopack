@@ -15,22 +15,22 @@
 package otsopack.commons.authz;
 
 import otsopack.commons.authz.asserts.IDataAssert;
-import otsopack.commons.authz.entities.User;
+import otsopack.commons.authz.entities.IEntity;
 
 /**
  * A filter establishes which information (asserted one) should belongs to who (entity).
  */
 public class Filter {
-	private final User entity;
+	private final IEntity entity;
 	private final IDataAssert dataAssert;
 	
-	public Filter(User entity, IDataAssert dataAssert) {
+	public Filter(IEntity entity, IDataAssert dataAssert) {
 		this.entity = entity;
 		this.dataAssert = dataAssert;
 	}
 	
 	//TODO change from User to Entity
-	public User getEntity() {
+	public IEntity getEntity() {
 		return entity;
 	}
 	

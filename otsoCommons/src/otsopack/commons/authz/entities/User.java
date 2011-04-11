@@ -19,7 +19,7 @@ package otsopack.commons.authz.entities;
  * 
  * More specifically: individual users.
  */
-public class User {
+public class User implements IEntity {
 	final String id;
 	
 	public User(String id) {
@@ -46,5 +46,12 @@ public class User {
 	 */
 	public int hashCode() {
 		return this.id.hashCode();
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.authz.entities.IEntity#check(java.lang.Object)
+	 */
+	public boolean check(Object o) {
+		return equals(o);
 	}
 }
