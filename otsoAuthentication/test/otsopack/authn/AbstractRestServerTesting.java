@@ -9,9 +9,8 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-
 package otsopack.authn;
 
 import org.easymock.EasyMock;

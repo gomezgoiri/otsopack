@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
 package otsopack.full.java.network.communication.representations;
 
@@ -34,12 +33,12 @@ public class SemanticFormatRepresentationFactoryTest {
 	public void testFactoryNTriples(){
 		checkSemanticFormat(SemanticFormat.NTRIPLES, NTriplesRepresentation.class);
 	}
-
+	
 	@Test
 	public void testFactoryTurtle(){
 		checkSemanticFormat(SemanticFormat.TURTLE, TurtleRepresentation.class);
 	}
-
+	
 	private void checkSemanticFormat(final SemanticFormat format,
 			final Class<? extends SemanticFormatRepresentation> formatClass) {
 		final SemanticFormatRepresentationFactory factory = new SemanticFormatRepresentationFactory();
@@ -49,5 +48,4 @@ public class SemanticFormatRepresentationFactoryTest {
 		assertTrue(repr.getClass().isAssignableFrom(formatClass));
 		assertEquals(data, repr.getData());
 	}
-	
 }
