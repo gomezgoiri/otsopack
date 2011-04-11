@@ -14,6 +14,7 @@
 package otsopack.otsoME.network.jxme;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -144,5 +145,35 @@ public class JxmeNetwork implements INetwork {
 	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI,
 			Graph triples) throws TSException {
 		return communication.hasAnyPeerResponsabilityOverThisKnowlege(spaceURI, triples);
+	}
+	
+	public Graph read(String spaceURI, String graphURI,
+			SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+	
+	public Graph read(String spaceURI, Template template,
+			SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+	
+	public Graph take(String spaceURI, String graphURI,
+			SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+	
+	public Graph take(String spaceURI, Template template,
+			SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+	
+	public Graph query(String spaceURI, Template template,
+			SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		throw new RuntimeException("Not yet implemented"); //TODO
 	}
 }

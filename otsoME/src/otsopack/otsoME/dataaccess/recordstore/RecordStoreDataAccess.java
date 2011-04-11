@@ -284,20 +284,14 @@ public class RecordStoreDataAccess implements IDataAccess {
 			UnsupportedTemplateException {
 		throw new RuntimeException("Not yet implemented"); //TODO
 	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.dataaccess.IDataAccess#read(java.lang.String, otsopack.commons.data.Template, otsopack.commons.data.SemanticFormat, otsopack.commons.authz.entities.User)
-	 */
+	
 	public Graph read(String spaceURI, Template template,
 			SemanticFormat outputFormat, User user)
 			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
 			UnsupportedTemplateException {
 		throw new RuntimeException("Not yet implemented"); //TODO
 	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.dataaccess.IDataAccess#read(java.lang.String, java.lang.String, otsopack.commons.data.SemanticFormat, otsopack.commons.authz.entities.User)
-	 */
+	
 	public Graph read(String spaceURI, String graphURI,
 			SemanticFormat outputFormat, User user)
 			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
