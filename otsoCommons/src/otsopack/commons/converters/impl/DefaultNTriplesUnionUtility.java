@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
 package otsopack.commons.converters.impl;
 
@@ -20,7 +19,7 @@ import otsopack.commons.data.SemanticFormat;
 
 public class DefaultNTriplesUnionUtility implements IUnionUtility {
 
-	private final static SemanticFormat [] SUPPORTED_FORMATS = new SemanticFormat[]{ SemanticFormat.NTRIPLES }; 
+	private final static SemanticFormat[] SUPPORTED_FORMATS = new SemanticFormat[]{ SemanticFormat.NTRIPLES }; 
 	
 	public boolean isOutputSupported(SemanticFormat outputFormat) {
 		return outputFormat == SemanticFormat.NTRIPLES;
