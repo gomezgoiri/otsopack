@@ -35,9 +35,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	protected Graph readGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
+		final Graph ret;
 		try {			
 			final IController controller = getController();
-			return controller.getDataAccessService().read(space, graphuri, outputFormat);
+			ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
@@ -45,14 +47,17 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
+		return new Graph("",outputFormat);
 	}
 	
 	protected Graph takeGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
+		final Graph ret;
 		try {			
 			final IController controller = getController();
-			return controller.getDataAccessService().take(space, graphuri, outputFormat);
+			ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
+			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
@@ -60,6 +65,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
+		return new Graph("",outputFormat);
 	}
 	
 	@Override

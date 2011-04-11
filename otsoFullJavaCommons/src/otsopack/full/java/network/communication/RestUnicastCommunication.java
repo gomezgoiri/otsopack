@@ -38,7 +38,7 @@ import otsopack.full.java.network.communication.resources.graphs.WildcardConvert
 
 public class RestUnicastCommunication implements ICommunication {
 	private String baseRESTServer;
-	private User entity; // TODO it should be obtained from the RESTServer, probably a public key from this user
+	protected User entity; // TODO it should be obtained from the RESTServer, probably a public key from this user
 	
 	public RestUnicastCommunication() {
 		this("http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/");
