@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.authz.entities;
 
@@ -27,5 +26,4 @@ public interface IEntity {
 	 * 		is this entity authentic?
 	 */
 	public boolean check(Object o);
-
 }

@@ -38,7 +38,7 @@ import otsopack.full.java.network.communication.resources.graphs.WildcardConvert
 
 public class RestUnicastCommunication implements ICommunication {
 	private String baseRESTServer;
-	private User entity; // TODO it should be obtained from the RESTServer
+	private User entity; // TODO it should be obtained from the RESTServer, probably a public key from this user
 	
 	public RestUnicastCommunication() {
 		this("http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/");
@@ -67,6 +67,23 @@ public class RestUnicastCommunication implements ICommunication {
 	@Override
 	public void shutdown() throws TSException {
 	}
+	
+	protected Graph filterResults(Graph graph, Filter[] filters) {
+		if( graph!=null )
+			for(Filter filter: filters) {
+				if( filter.getAssert().evaluate(graph) ) {
+					if( !filter.getEntity().check(this.entity) )
+						return null;
+				}
+			}
+		return graph;
+	}
+	
+	@Override
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+		final Graph graph = read(spaceURI, graphURI, outputFormat, timeout);
+		return filterResults(graph, filters);
+	}
 
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
@@ -85,6 +102,12 @@ public class RestUnicastCommunication implements ICommunication {
 			e.printStackTrace();
 		}
 		return null;
+	}	
+	
+	@Override
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+		final Graph graph = read(spaceURI, template, outputFormat, timeout);
+		return filterResults(graph, filters);
 	}
 
 	@Override
@@ -103,6 +126,12 @@ public class RestUnicastCommunication implements ICommunication {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+		final Graph graph = take(spaceURI, graphURI, outputFormat, timeout);
+		return filterResults(graph, filters);
 	}
 
 	@Override
@@ -123,6 +152,12 @@ public class RestUnicastCommunication implements ICommunication {
 		}
 		return null;
 	}
+	
+	@Override
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+		final Graph graph = read(spaceURI, template, outputFormat, timeout);
+		return filterResults(graph, filters);
+	}
 
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
@@ -142,17 +177,11 @@ public class RestUnicastCommunication implements ICommunication {
 		return null;
 	}
 	
-	// TODO test and put into ITripleSpace
+	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException {
 		final Graph graph = query(spaceURI, template, outputFormat, timeout);
-		for(Filter filter: filters) {
-			if( filter.getAssert().evaluate(graph) ) {
-				if( !filter.getEntity().equals(this.entity) )
-					return null;
-			}
-		}
-		return graph;
+		return filterResults(graph, filters);
 	}
 
 	@Override

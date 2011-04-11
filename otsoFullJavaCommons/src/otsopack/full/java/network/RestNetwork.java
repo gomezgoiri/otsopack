@@ -15,6 +15,7 @@
 package otsopack.full.java.network;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -60,37 +61,63 @@ public class RestNetwork implements INetwork {
 	}
 	
 	@Override
+	public Graph read(String spaceURI, String graphURI,	SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		return this.comm.read(spaceURI, graphURI, outputFormat, filters, timeout);
+	}
+	
+	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, timeout);
 	}
-
+	
+	@Override
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		return this.comm.read(spaceURI, template, outputFormat, filters, timeout);
+	}
+	
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat,long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm.read(spaceURI, template, outputFormat, timeout);
+	}
+	
+	@Override
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		return this.comm.take(spaceURI, graphURI, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm.take(spaceURI, graphURI, outputFormat, timeout);
+	}
+	
+	@Override
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		return this.comm.take(spaceURI, template, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm.take(spaceURI, template, outputFormat, timeout);
+	}
+	
+	@Override
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException {
+		return this.comm.query(spaceURI, template, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm.query(spaceURI, template, outputFormat, timeout);
 	}
 
 	@Override
@@ -201,5 +228,4 @@ public class RestNetwork implements INetwork {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

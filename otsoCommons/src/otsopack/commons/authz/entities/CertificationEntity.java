@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.authz.entities;
 
@@ -19,6 +18,9 @@ package otsopack.commons.authz.entities;
  * 
  * More specifically: Certification entities.
  */
-public class CertificationEntity {
-
+public class CertificationEntity implements IEntity {
+	public boolean check(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

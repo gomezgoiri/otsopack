@@ -16,6 +16,7 @@ package otsopack.commons.kernel;
 
 import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
+import otsopack.commons.authz.Filter;
 import otsopack.commons.converters.UnionUtility;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
@@ -32,7 +33,7 @@ import otsopack.commons.stats.Statistics;
 import otsopack.commons.util.Util;
 
 /**
- * triple space implemetation | main class
+ * triple space implementation | main class
  * @author Aitor Gómez Goiri
  */
 public abstract class AbstractKernel implements ITripleSpace {
@@ -186,17 +187,27 @@ public abstract class AbstractKernel implements ITripleSpace {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		networkService.unadvertise(spaceURI, advertisementURI);
 	}
-
+	
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
+		return query(spaceURI, template, outputFormat, null, timeout);
+	}
+	
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		Graph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		try {
 			Graph localmodel = dataAccessService.query(spaceURI, template, outputFormat); 
-			if(localmodel!=null) 
+			if( localmodel!=null ) 
 				ret = localmodel;
-			Graph netmodel = networkService.query(spaceURI, template, outputFormat, timeout);
-			if(netmodel != null) {
-				if(ret == null) 
+			
+			Graph netmodel;
+			if( filters==null )
+				netmodel = networkService.query(spaceURI, template, outputFormat, timeout);
+			else
+				netmodel = networkService.query(spaceURI, template, outputFormat, filters, timeout);
+
+			if( netmodel != null ) {
+				if( ret==null ) 
 					ret = netmodel; 
 				else 
 					ret = UnionUtility.union(ret, netmodel, outputFormat);
@@ -206,38 +217,74 @@ public abstract class AbstractKernel implements ITripleSpace {
 		}
 		return ret;
 	}
-
+	
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
+		return read(spaceURI,template,outputFormat,null,timeout);
+	}
+	
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		Graph ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
-		if(ret==null) 
+		Graph ret;
+		if( filters==null )
+			ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
+		else
+			ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
+		
+		if( ret==null ) 
 			return dataAccessService.read(spaceURI, template, outputFormat);
 		return ret;
 	}
 	
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+		return read(spaceURI,graphURI,outputFormat,null,timeout);
+	}
+	
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		Graph ret = networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout); 
+		Graph ret;
+		if( filters==null )
+			ret = networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
+		else
+			ret = networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
+		
 		if(ret==null) 
 			return dataAccessService.read(spaceURI, graphURI, outputFormat);
 		return ret;
 	}
-
+	
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
+		return take(spaceURI,template,outputFormat,null,timeout);
+	}
+
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		Graph ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, timeout); 
-		if(ret==null) 
+		Graph ret;
+		if( filters==null )
+			ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
+		else
+			ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
+		
+		if( ret==null )
 			return dataAccessService.take(spaceURI, template, outputFormat);
 		
 		return ret;
 	}
 	
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+		return take(spaceURI,graphURI,outputFormat,null,timeout);
+	}
+	
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		Graph ret = networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
-		if(ret==null) 
+		Graph ret;
+		if( filters==null )
+			ret = networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
+		else
+			ret = networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
+		
+		if( ret==null )
 			return dataAccessService.take(spaceURI, graphURI, outputFormat);
 		
 		return ret;

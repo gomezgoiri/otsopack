@@ -15,6 +15,7 @@
 package otsopack.commons.network;
 
 import otsopack.commons.ILayer;
+import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -63,10 +64,28 @@ public interface ICommunication extends ILayer {
 	//public Set<URI> getIDs(URI spaceURI);
 	
 	/**
-	 * read one graph by using a template. Wait the specified timeout or until a response is received.
+	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
-	 * @param template
+	 * @param graphURI
+	 * @param outputFormat
+	 * 		Preferred output format.
+	 * @param filters
+	 * 		It applies these filters to the result.
+	 * @param timeout
+	 *  	If the timeout is greater than 0, it waits the specified timeout.
+	 *  	It the timeout is 0, it waits until a response is received.
+	 * @return set of triples or null if nothing found
+	 */
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	
+	/**
+	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
+	 * @throws SpaceNotExistsException
+	 * @param spaceURI
+	 * @param graphURI
+	 * @param outputFormat
+	 * 		Preferred output format.
 	 * @param timeout
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
@@ -79,6 +98,24 @@ public interface ICommunication extends ILayer {
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
+	 * @param filters
+	 * 		It applies these filters to the result.
+	 * @param timeout
+	 *  	If the timeout is greater than 0, it waits the specified timeout.
+	 *  	It the timeout is 0, it waits until a response is received.
+	 * @return set of triples or null if nothing found
+	 */
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	
+	/**
+	 * read one graph by using a template. Wait the specified timeout or until a response is received.
+	 * @throws SpaceNotExistsException
+	 * @param spaceURI
+	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
 	 * @param timeout
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
@@ -87,34 +124,88 @@ public interface ICommunication extends ILayer {
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 
 	/**
-	 * Take triples by using a template. Wait the specified timeout or until a response is received.
+	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
-	 * @param template
+	 * @param graphURI
+	 * @param outputFormat
+	 * 		Preferred output format.
+	 * @param filters
+	 * 		It applies these filters to the result.
+	 * @param timeout
+	 *  	If the timeout is greater than 0, it waits the specified timeout.
+	 *  	It the timeout is 0, it waits until a response is received.
+	 * @return set of triples or null if nothing found
+	 */
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	
+	/**
+	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
+	 * @throws SpaceNotExistsException
+	 * @param spaceURI
+	 * @param graphURI
+	 * @param outputFormat
+	 * 		Preferred output format.
 	 * @param timeout
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
-	
+
 	/**
-	 * Take triples by using a template. Wait the specified timeout or until a response is received.
+	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
+	 * @param filters
+	 * 		It applies these filters to the result.
+	 * @param timeout
+	 *  	If the timeout is greater than 0, it waits the specified timeout.
+	 *  	It the timeout is 0, it waits until a response is received.
+	 * @return set of triples or null if nothing found
+	 */
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	
+	/**
+	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
+	 * @throws SpaceNotExistsException
+	 * @param spaceURI
+	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
 	 * @param timeout
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
-
+	
 	/**
-	 * query triples by using a template wait maximum timeout
+	 * query triples by using a template waiting a maximum timeout
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
+	 * @param filters
+	 * 		It applies these filters to the result.
+	 * @param timeout
+	 * 		If timeout is equals to 0, it waits until a response is received.
+	 * 		Otherwise, it wait for responses during the specified timeout.
+	 * @return set of triples or set of triples with size 0 if nothing found
+	 */
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+
+	/**
+	 * query triples by using a template waiting a maximum timeout
+	 * @throws SpaceNotExistsException
+	 * @param spaceURI
+	 * @param template
+	 * @param outputFormat
+	 * 		Preferred output format.
 	 * @param timeout
 	 * 		If timeout is equals to 0, it waits until a response is received.
 	 * 		Otherwise, it wait for responses during the specified timeout.
