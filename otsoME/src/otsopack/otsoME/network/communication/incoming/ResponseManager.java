@@ -28,6 +28,7 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
@@ -125,6 +126,8 @@ public class ResponseManager implements ITSCallback {
 			e.printStackTrace();
 		} catch (UnsupportedSemanticFormatException e) {
 			e.printStackTrace();
+		} catch (AuthorizationException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -152,6 +155,8 @@ public class ResponseManager implements ITSCallback {
 		} catch (SpaceNotExistsException e) {
 			e.printStackTrace();
 		} catch (UnsupportedSemanticFormatException e) {
+			e.printStackTrace();
+		} catch (AuthorizationException e) {
 			e.printStackTrace();
 		}
 	}

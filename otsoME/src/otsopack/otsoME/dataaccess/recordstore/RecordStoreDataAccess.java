@@ -27,13 +27,16 @@ import javax.microedition.rms.RecordStoreException;
 
 import org.apache.log4j.Logger;
 
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.dataaccess.IDataAccess;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.otsoME.dataaccess.recordstore.space.RecordFactory;
 import otsopack.otsoME.dataaccess.recordstore.space.SpaceRecord;
@@ -268,5 +271,37 @@ public class RecordStoreDataAccess implements IDataAccess {
 	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
 		final SpaceRecord sr = getJoinedSpace(spaceURI);
 		return sr.getLocalGraphs();
+	}
+
+	public String write(String spaceURI, Graph triples, User authorized)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+
+	public Graph query(String spaceURI, Template template,
+			SemanticFormat outputFormat, User user)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
+			UnsupportedTemplateException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.dataaccess.IDataAccess#read(java.lang.String, otsopack.commons.data.Template, otsopack.commons.data.SemanticFormat, otsopack.commons.authz.entities.User)
+	 */
+	public Graph read(String spaceURI, Template template,
+			SemanticFormat outputFormat, User user)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
+			UnsupportedTemplateException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.dataaccess.IDataAccess#read(java.lang.String, java.lang.String, otsopack.commons.data.SemanticFormat, otsopack.commons.authz.entities.User)
+	 */
+	public Graph read(String spaceURI, String graphURI,
+			SemanticFormat outputFormat, User user)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
+			AuthorizationException {
+		throw new RuntimeException("Not yet implemented"); //TODO
 	}
 }
