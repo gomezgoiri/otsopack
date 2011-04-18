@@ -17,7 +17,7 @@ package otsopack.commons.kernel;
 import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
 import otsopack.commons.authz.Filter;
-import otsopack.commons.converters.UnionUtility;
+import otsopack.commons.converters.UnionManager;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -210,7 +210,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 				if( ret==null ) 
 					ret = netmodel; 
 				else 
-					ret = UnionUtility.union(ret, netmodel, outputFormat);
+					ret = UnionManager.union(ret, netmodel, outputFormat);
 			}
 		} catch (SpaceNotExistsException e) {
 			e.printStackTrace();

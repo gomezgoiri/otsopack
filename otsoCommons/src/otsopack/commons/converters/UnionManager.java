@@ -9,8 +9,8 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ *  	   Pablo Orduña <pablo.orduna@deusto.es>
  */
 package otsopack.commons.converters;
 
@@ -22,7 +22,7 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
 
 // TODO: change this name
-public class UnionUtility {
+public class UnionManager {
 
 	private static final Vector unionUtilities = new Vector();
 	private static final SemanticFormatsManager formatsManager = new SemanticFormatsManager();
@@ -68,11 +68,11 @@ public class UnionUtility {
 		return null;
 	}
 	
-	private static boolean canConvertToValidInputGraph(IUnionUtility unionUtiliy, Graph graph){
-		if(unionUtiliy.isInputSupported(graph.getFormat()))
+	private static boolean canConvertToValidInputGraph(IUnionUtility unionUtility, Graph graph){
+		if(unionUtility.isInputSupported(graph.getFormat()))
 			return true;
 		
-		final SemanticFormat [] supportedInputFormats = unionUtiliy.getSupportedInputFormats();
+		final SemanticFormat [] supportedInputFormats = unionUtility.getSupportedInputFormats();
 		for(int i = 0; i < supportedInputFormats.length; ++i)
 			if(formatsManager.canConvert(graph.getFormat(), supportedInputFormats[i]))
 				return true;
@@ -89,6 +89,11 @@ public class UnionUtility {
 					&& canConvertOutputGraph(unionUtility, outputFormat)){
 				final Graph convertedGraph1 = convertToValidInputGraph(unionUtility, graph1);
 				final Graph convertedGraph2 = convertToValidInputGraph(unionUtility, graph2);
+				
+				if( unionUtility.isOutputSupported(outputFormat) ) {
+					//if it can simply return in this format, why make it complex using external converters?
+					return unionUtility.union(convertedGraph1, convertedGraph2, outputFormat);
+				}
 				final Graph resultingGraph = unionUtility.union(convertedGraph1, convertedGraph2);
 				return formatsManager.convert(resultingGraph, outputFormat);
 			}

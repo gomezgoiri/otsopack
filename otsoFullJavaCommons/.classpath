@@ -6,6 +6,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry kind="lib" path="/otsoCommons/lib/microjena.jar"/>
+	<classpathentry kind="lib" path="lib/rdf2go.api-4.7.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/otsoRestletCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

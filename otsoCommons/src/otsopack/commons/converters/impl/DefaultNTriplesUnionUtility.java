@@ -40,4 +40,8 @@ public class DefaultNTriplesUnionUtility implements IUnionUtility {
 	public Graph union(Graph graph1, Graph graph2) {
 		return new Graph(graph1.getData() + "\n" + graph2.getData(), SemanticFormat.NTRIPLES);
 	}
+	
+	public Graph union(Graph graph1, Graph graph2, SemanticFormat outputFormat) {
+		return union(graph1,graph2); // since just one output format is supported...
+	}
 }

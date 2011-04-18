@@ -17,7 +17,9 @@ package otsopack.commons.converters;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFormatExchangeable;
 import otsopack.commons.data.ISemanticFormatSupportable;
+import otsopack.commons.data.SemanticFormat;
 
 public interface IUnionUtility extends ISemanticFormatExchangeable, ISemanticFormatSupportable {
 	public Graph union(Graph graph1, Graph graph2);
+	public Graph union(Graph graph1, Graph graph2, SemanticFormat outputFormat);
 }
