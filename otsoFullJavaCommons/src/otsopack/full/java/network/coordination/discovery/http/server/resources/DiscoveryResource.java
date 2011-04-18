@@ -9,7 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
 package otsopack.full.java.network.coordination.discovery.http.server.resources;
@@ -29,7 +29,7 @@ import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
-import otsopack.full.java.network.coordination.discovery.http.server.HttpDiscoveryApplication;
+import otsopack.full.java.network.coordination.discovery.http.server.OtsopackHttpDiscoveryApplication;
 
 public class DiscoveryResource extends ServerResource implements IDiscoveryResource {
 	
@@ -56,7 +56,7 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid serialization: " + SPACEURI_ARGUMENT, e);
 		}
 		
-		final IDiscovery discovery = ((HttpDiscoveryApplication)getApplication()).getController().getDiscovery();
+		final IDiscovery discovery = ((OtsopackHttpDiscoveryApplication)getApplication()).getController().getDiscovery();
 		
 		SpaceManager[] spaceManagers;
 		try {

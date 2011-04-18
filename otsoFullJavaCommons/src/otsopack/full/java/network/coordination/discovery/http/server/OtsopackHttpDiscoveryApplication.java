@@ -9,7 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
 package otsopack.full.java.network.coordination.discovery.http.server;
@@ -20,7 +20,7 @@ import java.util.Map;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
-public class HttpDiscoveryApplication extends AbstractOtsopackApplication<IDiscoveryController> {
+public class OtsopackHttpDiscoveryApplication extends AbstractOtsopackApplication<IDiscoveryController> {
 
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
@@ -34,8 +34,8 @@ public class HttpDiscoveryApplication extends AbstractOtsopackApplication<IDisco
 	}
 
 	
-	public HttpDiscoveryApplication(Map<String, Class<?>> resources) {
-		super(resources);
+	public OtsopackHttpDiscoveryApplication() {
+		super(PATHS);
 	}
 
 }

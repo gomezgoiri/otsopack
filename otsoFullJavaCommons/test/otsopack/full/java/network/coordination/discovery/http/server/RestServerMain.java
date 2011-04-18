@@ -10,13 +10,19 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
  */
 package otsopack.full.java.network.coordination.discovery.http.server;
 
 import otsopack.full.java.network.coordination.IDiscovery;
-import otsopack.restlet.commons.ICommonsController;
+import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 
-public interface IDiscoveryController extends ICommonsController {
-	public IDiscovery getDiscovery();
+
+public class RestServerMain {
+	public static void main(String [] args) throws Exception {
+		final IDiscovery discovery = new SimpleDiscovery(new SpaceManager("http://ts.alimerka.es"));
+		final IDiscoveryController controller = new DiscoveryController(discovery);
+		final RestServer server = new RestServer(controller);
+		server.startup();
+	}
 }
