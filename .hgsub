@@ -1,4 +1,5 @@
 otsoRestletCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoRestletCommons
 otsoAuthentication/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoAuthentication
 otsoIdentityProvider/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoIdentityProvider
+otsoFullJavaCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoFullJavaCommons
 otsoSE/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoSE
