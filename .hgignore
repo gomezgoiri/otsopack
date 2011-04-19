@@ -43,3 +43,7 @@ syntax: regexp
 ^otsoME/.mtj.tmp/verified/required-classes/*
 ^otsoME/.mtj.tmp/verified/required-libs/*
 ^otsoME/.settings/org.eclipse.core.resources.prefs$
+
+^otsoRestletCommons/dist/otsoRestletCommons-sources\.jar$
+^otsoRestletCommons/bin
+^otsoRestletCommons/build
