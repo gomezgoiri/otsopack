@@ -1,2 +1,4 @@
 otsoRestletCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoRestletCommons
+otsoAuthentication/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoAuthentication
+otsoIdentityProvider/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoIdentityProvider
 otsoSE/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoSE
