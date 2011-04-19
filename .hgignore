@@ -8,10 +8,10 @@ syntax: regexp
 ^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
 ^otsoFullJavaCommons/bin
 ^otsoFullJavaCommons/build
+^otsoFullJavaCommons/libs
 
 ^otsoIdentityProvider/bin
 ^otsoAuthentication/bin
-^otsoRestletCommons/bin
 
 ^otsoSE/bin
 

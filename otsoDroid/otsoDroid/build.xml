@@ -46,6 +46,7 @@
 
 	    <target name="-pre-compile">
 	    	<copy file="../../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" todir="libs"/>
+	    	<copy file="../../otsoRestletCommons/dist/otsoRestletCommons-sources.jar" todir="libs"/>
 	    	<copy file="../../otsoCommons/dist/otsoCommons-sources.jar" todir="libs"/>
 	    	<copy todir="libs">
 	    		<fileset dir="../../otsoCommons/lib">
@@ -54,6 +55,11 @@
 	    			<exclude name="*-src.jar"/>
 	    		</fileset>
 	    		<fileset dir="../../otsoFullJavaCommons/lib">
+	    			<include name="*.jar"/>
+	    			<exclude name="junit*.jar"/>
+	    			<exclude name="*-src.jar"/>
+	    		</fileset>
+	    		<fileset dir="../../otsoRestletCommons/lib">
 	    			<include name="*.jar"/>
 	    			<exclude name="junit*.jar"/>
 	    			<exclude name="*-src.jar"/>
