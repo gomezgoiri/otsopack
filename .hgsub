@@ -1,1 +1,2 @@
-otsoSE/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsopack_0/otsoSE
+otsoRestletCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoRestletCommons
+otsoSE/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoSE
