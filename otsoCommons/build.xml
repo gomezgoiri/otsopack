@@ -7,7 +7,7 @@
     <path id="project.class.path">
         <pathelement path="lib/microjena.jar"/>
         <pathelement path="lib/junit.jar"/>
-        <pathelement path="lib/easymock/easymock.jar"/>
+        <pathelement path="lib/easymock.jar"/>
     </path>
 	
 	<target name="javac" depends="clean">
