@@ -3,7 +3,6 @@
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-	<property name="microjena" value="lib/microjena.jar" />
     <property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/"/>
     <property name="otso.restlet.commons.jar" location="../otsoRestletCommons/dist/otsoRestletCommons-sources.jar"/>
 	<property name="otso.commons.jar" location="../otsoCommons/dist/otsoCommons-sources.jar"/>
@@ -55,7 +54,8 @@
 				includes="**" debug="on" debuglevel="lines,vars,source" 
             	encoding="utf-8">
 			<classpath refid="project.class.path"/>
-		</javac>            
+		</javac>
+		<delete dir="libs" failonerror="false" />
 	</target>
 	
 	<target name="dist" depends="javac">
