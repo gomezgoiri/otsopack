@@ -12,7 +12,7 @@
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet-src.jar"/>
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.ext.json.jar"/>
-	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
+	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar" sourcepath="/otsoRestletCommons/lib/org.restlet-src.jar"/>
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/restlet-ext-jackson-src.jar"/>
 	<classpathentry kind="lib" path="lib/easymock-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>

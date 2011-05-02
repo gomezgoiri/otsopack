@@ -42,6 +42,15 @@ public class OtsoAuthnApplication extends AbstractOtsopackApplication<IControlle
 		super(PATHS);
 	}
 	
+	public OtsoAuthnApplication(IController controller){
+		this();
+		setController(controller);
+	}
+	
+	public OtsoAuthnApplication(IAuthenticatedUserHandler authenticatedUserHandler){
+		this(new Controller(authenticatedUserHandler));
+	}
+	
 	// For testing purposes
 	private IClientResourceFactory getClientResourceFactory(){
 		if(this.clientResourceFactory == null)

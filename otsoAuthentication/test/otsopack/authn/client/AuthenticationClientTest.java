@@ -86,7 +86,7 @@ public class AuthenticationClientTest extends AbstractRestServerTesting{
 		final String appURL = getBaseURL() + "/application/secure/";
 		final String dataProviderAuthenticationURL = getBaseURL() + SessionRequestResource.ROOT;
 		
-		this.authenticationUserHandlerMock.onAuthenticatedUser(this.userIdentifierURL, appURL);
+		expect(this.authenticationUserHandlerMock.onAuthenticatedUser(this.userIdentifierURL, appURL)).andReturn(appURL);
 		replay(this.authenticationUserHandlerMock);
 		
 		final String idpURL = this.idpDomain + "?idpsessionid=foo";

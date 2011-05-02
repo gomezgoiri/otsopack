@@ -22,13 +22,13 @@ public class Controller implements IController {
 	private ISessionManager<Session> sessionManager;
 	private IAuthenticatedUserHandler authenticatedUserHandler;
 
+	public Controller(IAuthenticatedUserHandler authenticatedUserHandler){
+		this(authenticatedUserHandler, new MemorySessionManager<Session>());
+	}
+	
 	public Controller(IAuthenticatedUserHandler authenticatedUserHandler, ISessionManager<Session> sessionManager){
 		this.sessionManager           = sessionManager;
 		this.authenticatedUserHandler = authenticatedUserHandler;
-	}
-	
-	public Controller(IAuthenticatedUserHandler authenticatedUserHandler){
-		this(authenticatedUserHandler, new MemorySessionManager<Session>());
 	}
 	
 	@Override

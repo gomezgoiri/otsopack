@@ -15,7 +15,6 @@ import otsopack.authn.client.exc.AuthenticationException;
 import otsopack.authn.client.exc.NoAuthenticationUriFoundException;
 import otsopack.authn.client.exc.RedirectedToWrongIdentityProviderException;
 import otsopack.authn.client.exc.UnexpectedAuthenticationException;
-import otsopack.authn.client.exc.WrongFinalRedirectException;
 import otsopack.authn.resources.SessionRequestResource;
 
 public class AuthenticationClient {
@@ -32,9 +31,10 @@ public class AuthenticationClient {
 	 * 
 	 * @param dataProviderAuthenticationURL
 	 * @param originalURL
+	 * @return redirected address
 	 * @throws AuthenticationException 
 	 */
-	public void authenticate(String dataProviderAuthenticationURL, String originalURL) throws AuthenticationException{
+	public String authenticate(String dataProviderAuthenticationURL, String originalURL) throws AuthenticationException{
 		
 		final String identityProviderUrl = requestSession(dataProviderAuthenticationURL, originalURL);
 		
@@ -42,10 +42,7 @@ public class AuthenticationClient {
 		
 		final String dataProviderFinalResponse = sendSignedValidatedSessionToDataProvider(dataProviderUrlWithSecret);
 		
-		// XXX: not sure if this makes sense :-S
-		if(!dataProviderFinalResponse.equals(originalURL)){
-			throw new WrongFinalRedirectException("Expected to redirect to: " + originalURL + "; got: " + dataProviderFinalResponse );
-		}
+		return dataProviderFinalResponse;
 	}
 
 	private String sendSignedValidatedSessionToDataProvider(final String dataProviderUrlWithSecret) throws UnexpectedAuthenticationException {
