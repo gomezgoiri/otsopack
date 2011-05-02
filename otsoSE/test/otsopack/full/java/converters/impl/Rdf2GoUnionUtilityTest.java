@@ -9,7 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  *
  */
 package otsopack.full.java.converters.impl;
@@ -137,7 +137,7 @@ public class Rdf2GoUnionUtilityTest {
 		final Graph graph3 = union.union(graph2, graph1);
 		
 		assertEquals( SemanticFormat.TURTLE, graph3.getFormat() );
-		String[] triples = {
+		final String[] triples = {
 			"@prefix dc: <http://purl.org/dc/elements/1.1/>",
 			"<http://s2>",
 			"<http://p1> <http://o1>",

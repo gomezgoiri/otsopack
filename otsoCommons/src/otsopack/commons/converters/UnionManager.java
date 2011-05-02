@@ -94,6 +94,7 @@ public class UnionManager {
 					//if it can simply return in this format, why make it complex using external converters?
 					return unionUtility.union(convertedGraph1, convertedGraph2, outputFormat);
 				}
+				// TODO check it
 				final Graph resultingGraph = unionUtility.union(convertedGraph1, convertedGraph2);
 				return formatsManager.convert(resultingGraph, outputFormat);
 			}

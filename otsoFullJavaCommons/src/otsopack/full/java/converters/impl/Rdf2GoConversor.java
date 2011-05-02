@@ -10,6 +10,7 @@
  * listed below:
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ *
  */
 package otsopack.full.java.converters.impl;
 
@@ -23,11 +24,10 @@ import org.ontoware.rdf2go.exception.ModelRuntimeException;
 import org.ontoware.rdf2go.model.Model;
 import org.ontoware.rdf2go.model.Syntax;
 
-import otsopack.commons.converters.IUnionUtility;
-import otsopack.commons.data.Graph;
+import otsopack.commons.data.ISemanticFormatConversor;
 import otsopack.commons.data.SemanticFormat;
 
-public class Rdf2GoUnionUtility implements IUnionUtility {
+public class Rdf2GoConversor implements ISemanticFormatConversor {
 	private final static SemanticFormat[] SUPPORTED_FORMATS = new SemanticFormat[]{
 																	SemanticFormat.RDF_XML,
 																	SemanticFormat.TURTLE,
@@ -37,17 +37,10 @@ public class Rdf2GoUnionUtility implements IUnionUtility {
 	
 	final public ModelFactory modelFactory;
 	
-	/**
-	 * RDF2Go.register(factory) must be called before.
-	 * 
-	 * e.g.
-	 * 		RDF2Go.register(new RepositoryModelFactory());
-	 * 		RDF2Go.register(new ModelFactoryImpl());
-	 */
-	public Rdf2GoUnionUtility() {
+	public Rdf2GoConversor() {
 		this.modelFactory = RDF2Go.getModelFactory();
 	}
-
+	
 	@Override
 	public boolean isOutputSupported(SemanticFormat outputFormat) {
 		for(SemanticFormat formatSupported: SUPPORTED_FORMATS) {
@@ -69,13 +62,8 @@ public class Rdf2GoUnionUtility implements IUnionUtility {
 	}
 
 	@Override
-	public SemanticFormat[] getSupportedInputFormats() {
-		return SUPPORTED_FORMATS;
-	}
-
-	@Override
-	public SemanticFormat[] getSupportedOutputFormats() {
-		return SUPPORTED_FORMATS;
+	public boolean canConvert(SemanticFormat inputFormat, SemanticFormat outputFormat) {
+		return isInputSupported(inputFormat) && isOutputSupported(outputFormat);
 	}
 	
 	protected Syntax getSyntax(SemanticFormat semanticFormat) {
@@ -90,18 +78,18 @@ public class Rdf2GoUnionUtility implements IUnionUtility {
 		//if( semanticFormat==SemanticFormat.N3 ) //not registered
 		return null;
 	}
-	
+
 	@Override
-	public Graph union(Graph graph1, Graph graph2, SemanticFormat outputFormat) {
+	public String convert(SemanticFormat inputFormat, String originalText,
+			SemanticFormat outputFormat) {
 		Model model = this.modelFactory.createModel();
 		model.open();
 		
 		try {
-			model.readFrom( new StringReader(graph1.getData()), getSyntax(graph1.getFormat()) );
-			model.readFrom( new StringReader(graph2.getData()), getSyntax(graph2.getFormat()) );
+			model.readFrom( new StringReader(originalText), getSyntax(inputFormat) );
 			final StringWriter sw = new StringWriter();
 			model.writeTo(sw,getSyntax(outputFormat));
-			return new Graph(sw.toString(),outputFormat);
+			return sw.toString();
 		} catch (ModelRuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,12 +100,5 @@ public class Rdf2GoUnionUtility implements IUnionUtility {
 			model.close();
 		}
 		return null;
-	}
-
-	@Override
-	public Graph union(Graph graph1, Graph graph2) {
-		//TODO the returning format if graph1's and graph2's formats
-		// are different is unclear and confusing
-		return union(graph1, graph2, graph1.getFormat());
 	}
 }
