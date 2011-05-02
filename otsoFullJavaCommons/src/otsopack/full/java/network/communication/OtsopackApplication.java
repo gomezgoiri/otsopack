@@ -12,6 +12,7 @@ import org.restlet.routing.Router;
 import org.restlet.service.MetadataService;
 
 import otsopack.commons.IController;
+import otsopack.full.java.network.communication.representations.OtsopackConverter;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 import otsopack.full.java.network.communication.resources.spaces.SpacesResource;
@@ -42,17 +43,18 @@ public class OtsopackApplication extends Application {
 	}
 	
 	public static void registerExtensions(MetadataService metadataService){
-		metadataService.addExtension("turtle", MediaType.APPLICATION_RDF_TURTLE);
-		metadataService.addExtension("rdf+xml", MediaType.APPLICATION_RDF_XML);
+		metadataService.addExtension(OtsopackConverter.MEDIA_TYPE_TURTLE, MediaType.APPLICATION_RDF_TURTLE);
+		metadataService.addExtension(OtsopackConverter.MEDIA_TYPE_RDF_XML, MediaType.APPLICATION_RDF_XML);
+		metadataService.addExtension(OtsopackConverter.MEDIA_TYPE_ACROSS_MULTIPART, OtsopackConverter.ACROSS_MULTIPART_MEDIA_TYPE);
 		// For some reason by default nt is registered in Restlet as TEXT_PLAIN
-		metadataService.addExtension("nt", MediaType.TEXT_RDF_NTRIPLES, true); 
+		metadataService.addExtension(OtsopackConverter.MEDIA_TYPE_NTRIPLES, MediaType.TEXT_RDF_NTRIPLES, true); 
 		// n3 is already registered
 	}
 	
 	@Override
 	public Restlet createInboundRoot(){
 		registerExtensions(getMetadataService());
-        Router router = new Router(getContext());
+        final Router router = new Router(getContext());
         
 	    for(String pattern : this.resources.keySet())
 	    	router.attach(pattern, this.resources.get(pattern));

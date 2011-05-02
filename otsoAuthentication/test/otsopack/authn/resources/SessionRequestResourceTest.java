@@ -52,7 +52,8 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 		
 		final IAuthenticatedUserHandler handler = new IAuthenticatedUserHandler() {
 			@Override
-			public void onAuthenticatedUser(String userIdentifier, String redirectURI) {
+			public String onAuthenticatedUser(String userIdentifier, String redirectURI) {
+				return redirectURI;
 			}
 		};
 		final IController controller = new Controller(handler);

@@ -62,7 +62,7 @@ public class DataProviderAuthenticationIntegrationTest  extends AbstractRestServ
 		// setup what the Authenticated app will perform
 		final String userIdentifier = "http://ts.across.com/users/porduna";
 		final String appURL = getBaseURL() + "/application/secure/";
-		this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL)).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// setup what the Identity Provider will reply

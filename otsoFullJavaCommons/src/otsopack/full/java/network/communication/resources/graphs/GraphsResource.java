@@ -17,7 +17,9 @@ package otsopack.full.java.network.communication.resources.graphs;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
@@ -95,8 +97,13 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	@Override
 	public String write(SemanticFormatRepresentation semanticData) {
 		final SemanticFormat outputFormat = checkInputOutputSemanticFormats();
-		final String graphURI = write(semanticData.getGraph(), outputFormat);
-		return graphURI;
+		final Graph [] graphs = semanticData.getGraphs();
+		final List<String> graphURIs = new Vector<String>();
+		for(Graph graph : graphs){
+			final String graphURI = write(graph, outputFormat);
+			graphURIs.add(graphURI);
+		}
+		return JSONEncoder.encode(graphURIs.toArray(new String[]{}));
 	}
 	
 	protected String write(Graph graph, SemanticFormat semanticFormat) {

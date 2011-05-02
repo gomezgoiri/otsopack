@@ -14,27 +14,22 @@
  */
 package otsopack.commons.data;
 
-import otsopack.commons.authz.entities.AnonymousEntity;
 import otsopack.commons.authz.entities.IEntity;
 
-public class Graph {
-	private final String data;
-	private final SemanticFormat format;
+public class SignedGraph extends Graph {
+
+	private final IEntity entity;
 	
-	public Graph(String data, SemanticFormat format){
-		this.data   = data;
-		this.format = format;
+	/**
+	 * @param data
+	 * @param format
+	 */
+	public SignedGraph(String data, SemanticFormat format, IEntity entity) {
+		super(data, format);
+		this.entity = entity;
 	}
-	
-	public String getData(){
-		return this.data;
-	}
-	
-	public SemanticFormat getFormat(){
-		return this.format;
-	}
-	
+
 	public IEntity getEntity(){
-		return AnonymousEntity.ANONYMOUS;
+		return this.entity;
 	}
 }

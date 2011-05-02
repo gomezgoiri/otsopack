@@ -17,9 +17,11 @@ public interface IAuthenticatedUserHandler {
 	/**
 	 * Handles the authentication of a user. When a user has been authenticated by the system,
 	 * this method will be called. It's up to the implementor to establish a cookie with a 
-	 * given domain and expiration date, storing the user identifier.
+	 * given domain and expiration date, storing the user identifier. The return address is
+	 * required and will be called by the client.
 	 * @param userIdentifier
 	 * @param redirectURI 
+	 * @return what address will the user call once he is authenticated. It may include a session ID or so
 	 */
-	public void onAuthenticatedUser(String userIdentifier, String redirectURI);
+	public String onAuthenticatedUser(String userIdentifier, String redirectURI);
 }

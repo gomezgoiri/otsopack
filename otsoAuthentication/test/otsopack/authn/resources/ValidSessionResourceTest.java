@@ -15,6 +15,7 @@ package otsopack.authn.resources;
 
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -68,7 +69,7 @@ public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 		final Session session = new Session(appURL, secret, userIdentifier, expiration);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
-		this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL)).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// perform the request
