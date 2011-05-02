@@ -18,15 +18,24 @@ import otsopack.commons.data.SemanticFormat;
 
 public class OtsopackConverter extends ConverterHelper {
 	
-	// Using "|" as required by RESTlet  
-	public static final String MEDIA_TYPE_SEMANTIC_FORMATS = "nt|n3|json|rdf+xml|turtle";
+	public static final String MEDIA_TYPE_RDF_XML   = "rdf+xml";
+	public static final String MEDIA_TYPE_TURTLE    = "turtle";
+	public static final String MEDIA_TYPE_NTRIPLES  = "nt";
+	public static final String MEDIA_TYPE_ACROSS_MULTIPART = "across/multipart";
+	
+	public static final MediaType ACROSS_MULTIPART_MEDIA_TYPE = MediaType.register(MEDIA_TYPE_ACROSS_MULTIPART, "Across multipart document");
+	
+	// Using "|" as required by RESTlet; n3 and json are already defined in the MetadataService 
+	public static final String MEDIA_TYPE_SEMANTIC_FORMATS = MEDIA_TYPE_NTRIPLES + "|n3|json|" + MEDIA_TYPE_RDF_XML + "|" + MEDIA_TYPE_TURTLE + "|" + MEDIA_TYPE_ACROSS_MULTIPART;
+
 	
 
-    private static final VariantInfo VARIANT_TURTLE   = new VariantInfo(MediaType.APPLICATION_RDF_TURTLE);
-    private static final VariantInfo VARIANT_NTRIPLES = new VariantInfo(MediaType.TEXT_RDF_NTRIPLES);
-    private static final VariantInfo VARIANT_N3       = new VariantInfo(MediaType.TEXT_RDF_N3);
-    private static final VariantInfo VARIANT_RDF_XML  = new VariantInfo(MediaType.APPLICATION_RDF_XML);
-    private static final VariantInfo VARIANT_RDF_JSON = new VariantInfo(MediaType.APPLICATION_JSON);
+    private static final VariantInfo VARIANT_TURTLE           = new VariantInfo(MediaType.APPLICATION_RDF_TURTLE);
+    private static final VariantInfo VARIANT_NTRIPLES         = new VariantInfo(MediaType.TEXT_RDF_NTRIPLES);
+    private static final VariantInfo VARIANT_N3               = new VariantInfo(MediaType.TEXT_RDF_N3);
+    private static final VariantInfo VARIANT_RDF_XML          = new VariantInfo(MediaType.APPLICATION_RDF_XML);
+    private static final VariantInfo VARIANT_RDF_JSON         = new VariantInfo(MediaType.APPLICATION_JSON);
+    private static final VariantInfo VARIANT_ACROSS_MULTIPART = new VariantInfo(ACROSS_MULTIPART_MEDIA_TYPE);
     
     private static final Map<VariantInfo, Class<? extends SemanticFormatRepresentation>> VARIANT2CLASS = new HashMap<VariantInfo, Class<? extends SemanticFormatRepresentation>>();
     private static final Map<Class<? extends SemanticFormatRepresentation>, VariantInfo> CLASS2VARIANTS = new HashMap<Class<? extends SemanticFormatRepresentation>, VariantInfo>();
@@ -34,11 +43,12 @@ public class OtsopackConverter extends ConverterHelper {
     private final static ThreadLocal<MediaType []> ENABLED_VARIANTS = new ThreadLocal<MediaType []>();
     
     static{
-    	VARIANT2CLASS.put(VARIANT_TURTLE,   TurtleRepresentation.class);
-    	VARIANT2CLASS.put(VARIANT_NTRIPLES, NTriplesRepresentation.class);
-    	VARIANT2CLASS.put(VARIANT_N3,       N3Representation.class);
-    	VARIANT2CLASS.put(VARIANT_RDF_XML,  RdfXmlRepresentation.class);
-    	VARIANT2CLASS.put(VARIANT_RDF_JSON, RdfJsonRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_TURTLE,           TurtleRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_NTRIPLES,         NTriplesRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_N3,               N3Representation.class);
+    	VARIANT2CLASS.put(VARIANT_RDF_XML,          RdfXmlRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_RDF_JSON,         RdfJsonRepresentation.class);
+    	VARIANT2CLASS.put(VARIANT_ACROSS_MULTIPART, RdfMultipartRepresentation.class);
     	
     	for(VariantInfo variantInfo : VARIANT2CLASS.keySet())
     		CLASS2VARIANTS.put(VARIANT2CLASS.get(variantInfo), variantInfo);

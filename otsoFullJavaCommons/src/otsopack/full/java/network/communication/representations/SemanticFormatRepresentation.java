@@ -61,7 +61,7 @@ public abstract class SemanticFormatRepresentation extends WriterRepresentation 
 		return this.data;
 	}
 	
-	public Graph getGraph(){
-		return new Graph(this.data, getSemanticFormat());
+	public Graph [] getGraphs(){
+		return new Graph[]{ new Graph(this.data, getSemanticFormat()) };
 	}
 }
