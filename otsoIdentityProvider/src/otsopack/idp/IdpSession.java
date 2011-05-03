@@ -11,41 +11,31 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.authn.sessions;
+package otsopack.idp;
 
 import java.util.Calendar;
 
 import otsopack.restlet.commons.sessions.AbstractSession;
 
-public class Session extends AbstractSession {
-	private String redirectURL;
-	private String secret;
+public class IdpSession extends AbstractSession {
+	private String dataProviderURIwithSecret;
 	private String userIdentifier;
 	
 	// bean format just in case it's later stored or retrieved in a database 
-	public Session(){}
+	public IdpSession(){}
 	
-	public Session(String redirectURL, String secret, String userIdentifier, Calendar expirationDate) {
+	public IdpSession(String userIdentifier, String dataProviderURIwithSecret, Calendar expirationDate) {
 		super(expirationDate);
-		this.redirectURL = redirectURL;
-		this.secret = secret;
 		this.userIdentifier = userIdentifier;
+		this.dataProviderURIwithSecret = dataProviderURIwithSecret;
+	}
+	
+	public String getDataProviderURIwithSecret() {
+		return this.dataProviderURIwithSecret;
 	}
 
-	public String getRedirectURL() {
-		return redirectURL;
-	}
-
-	public void setRedirectURL(String redirectURL) {
-		this.redirectURL = redirectURL;
-	}
-
-	public String getSecret() {
-		return secret;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
+	public void setDataProviderURIwithSecret(String dataProviderURIwithSecret) {
+		this.dataProviderURIwithSecret = dataProviderURIwithSecret;
 	}
 
 	public String getUserIdentifier() {

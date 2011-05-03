@@ -18,7 +18,7 @@ import org.restlet.resource.ClientResource;
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
 import otsopack.idp.IController;
-import otsopack.idp.Session;
+import otsopack.idp.IdpSession;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
 
@@ -57,7 +57,7 @@ public class UserResourceTest  extends AbstractRestServerTesting {
 		final String idpSessionId = response.substring(baseResponse.length());
 		
 		// We have that session stored
-		final Session session = this.rs.getApplication().getController().getSessionManager().getSession(idpSessionId);
+		final IdpSession session = this.rs.getApplication().getController().getSessionManager().getSession(idpSessionId);
 		assertNotNull(session);
 		
 		assertEquals(dataProviderURIwithSecret, session.getDataProviderURIwithSecret());

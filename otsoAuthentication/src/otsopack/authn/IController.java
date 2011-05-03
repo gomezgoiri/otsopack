@@ -13,11 +13,11 @@
  */
 package otsopack.authn;
 
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 import otsopack.restlet.commons.ICommonsController;
 import otsopack.restlet.commons.sessions.ISessionManager;
 
 public interface IController extends ICommonsController {
-	ISessionManager<Session> getSessionManager();
+	ISessionManager<AuthnSession> getSessionManager();
 	IAuthenticatedUserHandler getAuthenticatedUserHandler();
 }

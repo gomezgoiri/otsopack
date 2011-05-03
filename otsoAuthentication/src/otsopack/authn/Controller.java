@@ -13,26 +13,26 @@
  */
 package otsopack.authn;
 
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 import otsopack.restlet.commons.sessions.ISessionManager;
 import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
 public class Controller implements IController {
 	
-	private ISessionManager<Session> sessionManager;
+	private ISessionManager<AuthnSession> sessionManager;
 	private IAuthenticatedUserHandler authenticatedUserHandler;
 
 	public Controller(IAuthenticatedUserHandler authenticatedUserHandler){
-		this(authenticatedUserHandler, new MemorySessionManager<Session>());
+		this(authenticatedUserHandler, new MemorySessionManager<AuthnSession>());
 	}
 	
-	public Controller(IAuthenticatedUserHandler authenticatedUserHandler, ISessionManager<Session> sessionManager){
+	public Controller(IAuthenticatedUserHandler authenticatedUserHandler, ISessionManager<AuthnSession> sessionManager){
 		this.sessionManager           = sessionManager;
 		this.authenticatedUserHandler = authenticatedUserHandler;
 	}
 	
 	@Override
-	public ISessionManager<Session> getSessionManager(){
+	public ISessionManager<AuthnSession> getSessionManager(){
 		return this.sessionManager;
 	}
 	

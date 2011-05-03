@@ -20,15 +20,15 @@ import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 public class Controller implements IController {
 	
 	private ICredentialsChecker credentialsChecker;
-	private ISessionManager<Session> sessionManager;
+	private ISessionManager<IdpSession> sessionManager;
 
-	public Controller(ICredentialsChecker credentialsChecker, ISessionManager<Session> sessionManager){
+	public Controller(ICredentialsChecker credentialsChecker, ISessionManager<IdpSession> sessionManager){
 		this.credentialsChecker = credentialsChecker;
 		this.sessionManager = sessionManager;
 	}
 	
 	public Controller(ICredentialsChecker credentialsChecker){
-		this(credentialsChecker, new MemorySessionManager<Session>());
+		this(credentialsChecker, new MemorySessionManager<IdpSession>());
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class Controller implements IController {
 	}
 	
 	@Override
-	public ISessionManager<Session> getSessionManager(){
+	public ISessionManager<IdpSession> getSessionManager(){
 		return this.sessionManager;
 	}
 }

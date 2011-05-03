@@ -38,7 +38,7 @@ import otsopack.authn.FakeClientResource;
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.IClientResourceFactory;
 import otsopack.authn.IController;
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 
 public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 
@@ -108,7 +108,7 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 		final String secret = argument2[1];
 		
 		// - Checking query argument values
-		final Session session = this.rs.getApplication().getController().getSessionManager().getSession(sessionId);
+		final AuthnSession session = this.rs.getApplication().getController().getSessionManager().getSession(sessionId);
 		assertEquals(appURL, session.getRedirectURL());
 		assertEquals(secret, session.getSecret());
 

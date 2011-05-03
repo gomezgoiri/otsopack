@@ -22,7 +22,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 
 public class ValidatedSessionResource extends AbstractOtsoServerResource implements IValidatedSessionResource {
 
@@ -52,7 +52,7 @@ public class ValidatedSessionResource extends AbstractOtsoServerResource impleme
 		if(secret == null)
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, SECRET_NAME + " not found!!!");
 		
-		final Session session = getSessionManager().getSession(sessionId);
+		final AuthnSession session = getSessionManager().getSession(sessionId);
 		if(session == null)
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Did not provide a valid " + SESSIONID_NAME + " or it expired");
 		

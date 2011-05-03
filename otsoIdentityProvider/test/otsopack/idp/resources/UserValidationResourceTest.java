@@ -17,7 +17,7 @@ import org.restlet.resource.ResourceException;
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
 import otsopack.idp.IController;
-import otsopack.idp.Session;
+import otsopack.idp.IdpSession;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
 
@@ -64,7 +64,7 @@ public class UserValidationResourceTest  extends AbstractRestServerTesting {
 	}
 	
 	public String tryWithPassword(String username, String password) throws Exception {
-		final Session session  = new Session("porduna", dataProviderURIwithSecret, this.calendar);
+		final IdpSession session  = new IdpSession("porduna", dataProviderURIwithSecret, this.calendar);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
 		final ClientResource cr = new ClientResource(getBaseURL() + UserValidationResource.buildUrl(sessionId));

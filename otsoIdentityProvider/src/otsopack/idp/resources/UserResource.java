@@ -25,7 +25,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
-import otsopack.idp.Session;
+import otsopack.idp.IdpSession;
 
 public class UserResource extends AbstractOtsoServerResource implements IUserResource {
 
@@ -58,7 +58,7 @@ public class UserResource extends AbstractOtsoServerResource implements IUserRes
 		
 		final String userIdentifier = this.getRequest().getAttributes().get("user").toString();
 		
-		final Session session = new Session(userIdentifier, dataProviderURI, expiration);
+		final IdpSession session = new IdpSession(userIdentifier, dataProviderURI, expiration);
 		final String idpSessionId = getSessionManager().putSession(session);
 		
 		final String hostIdentifier = getRequest().getOriginalRef().getHostIdentifier();

@@ -19,7 +19,7 @@ import org.restlet.resource.ServerResource;
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.IController;
 import otsopack.authn.OtsoAuthnApplication;
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 import otsopack.restlet.commons.sessions.ISessionManager;
 
 public abstract class AbstractOtsoServerResource extends ServerResource {
@@ -32,7 +32,7 @@ public abstract class AbstractOtsoServerResource extends ServerResource {
 		return getOtsoApp().getController();
 	}
 	
-	public ISessionManager<Session> getSessionManager(){
+	public ISessionManager<AuthnSession> getSessionManager(){
 		return getController().getSessionManager();
 	}
 	

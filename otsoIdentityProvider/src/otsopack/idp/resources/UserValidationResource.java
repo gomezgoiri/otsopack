@@ -22,7 +22,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
-import otsopack.idp.Session;
+import otsopack.idp.IdpSession;
 
 public class UserValidationResource extends AbstractOtsoServerResource implements IUserValidationResource {
 
@@ -54,7 +54,7 @@ public class UserValidationResource extends AbstractOtsoServerResource implement
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, SESSIONID_NAME + " required!");
 		
 		getSessionManager().deleteExpiredSessions();
-		final Session session = getSessionManager().getSession(sessionid);
+		final IdpSession session = getSessionManager().getSession(sessionid);
 		if(session == null)
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "A valid " + SESSIONID_NAME + " is required!");
 		

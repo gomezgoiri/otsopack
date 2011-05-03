@@ -24,7 +24,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 
 public class SessionRequestResource extends AbstractOtsoServerResource implements ISessionRequestResource {
 
@@ -57,7 +57,7 @@ public class SessionRequestResource extends AbstractOtsoServerResource implement
 		
 		final String secret = UUID.randomUUID().toString();
 		
-		final Session session = new Session(redirectURL, secret, userIdentifier, expiration);
+		final AuthnSession session = new AuthnSession(redirectURL, secret, userIdentifier, expiration);
 		final String sessionId = getSessionManager().putSession(session);
 		
 		final String hostIdentifier = getRequest().getOriginalRef().getHostIdentifier();

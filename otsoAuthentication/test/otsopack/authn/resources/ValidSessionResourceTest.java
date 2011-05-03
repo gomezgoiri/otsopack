@@ -35,7 +35,7 @@ import otsopack.authn.Controller;
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.IClientResourceFactory;
 import otsopack.authn.IController;
-import otsopack.authn.sessions.Session;
+import otsopack.authn.sessions.AuthnSession;
 
 public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 
@@ -66,7 +66,7 @@ public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 		final Calendar expiration = Calendar.getInstance();
 		expiration.add(Calendar.YEAR, 1);
 		
-		final Session session = new Session(appURL, secret, userIdentifier, expiration);
+		final AuthnSession session = new AuthnSession(appURL, secret, userIdentifier, expiration);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
 		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL)).andReturn(appURL);
@@ -98,7 +98,7 @@ public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 		final Calendar expiration = Calendar.getInstance();
 		expiration.add(Calendar.YEAR, 1);
 		
-		final Session session = new Session(appURL, secret, userIdentifier, expiration);
+		final AuthnSession session = new AuthnSession(appURL, secret, userIdentifier, expiration);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
 		

@@ -19,5 +19,5 @@ import otsopack.restlet.commons.sessions.ISessionManager;
 
 public interface IController extends ICommonsController {
 	ICredentialsChecker getCredentialsChecker();
-	ISessionManager<Session> getSessionManager();
+	ISessionManager<IdpSession> getSessionManager();
 }
