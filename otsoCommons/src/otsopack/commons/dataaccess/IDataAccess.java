@@ -149,10 +149,33 @@ public interface IDataAccess extends ILayer {
 	/**
 	 * read and remove a graph from the space.
 	 * @param spaceURI
+	 * @param template
+	 * @param user
+	 * 		The graphs accessed will be those where the user has access.
+	 * @return set of triples or null if no triples were found
+	 * @throws UnsupportedTemplateException 
+	 */
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
+	
+	/**
+	 * read and remove a graph from the space.
+	 * @param spaceURI
 	 * @param graphURI
 	 * @return set of triples or null if no triples were found
 	 * @throws AuthorizationException 
 	 * @throws UnsupportedTemplateException 
 	 */
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedSemanticFormatException, AuthorizationException;
+	
+	/**
+	 * read and remove a graph from the space.
+	 * @param spaceURI
+	 * @param graphURI
+	 * @param user
+	 * 		The graphs accessed will be those where the user has access.
+	 * @return set of triples or null if no triples were found
+	 * @throws AuthorizationException 
+	 * @throws UnsupportedTemplateException 
+	 */
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedSemanticFormatException, AuthorizationException;
 }
