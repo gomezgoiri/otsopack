@@ -35,12 +35,14 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
 import otsopack.full.java.network.communication.OtsopackApplication;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationFactory;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
+import otsopack.full.java.network.communication.session.UserSession;
 
 public class AbstractServerResource extends ServerResource {
 	
@@ -147,5 +149,12 @@ public class AbstractServerResource extends ServerResource {
 		
 		if(semanticFormatsManager.isInputSupported(semanticFormat))
 			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Could not read " + semanticFormat + " format!");
+	}
+	
+	protected User getCurrentClient() {//throws ClientNotAuthenticatedException {
+		final String sessionId = getArgument("sessionID");
+		final UserSession us = ((OtsopackApplication)getApplication()).getSessionManager().getSession(sessionId);
+		if(us==null) return null;
+		return new User(us.getUserIdentifier());
 	}
 }
