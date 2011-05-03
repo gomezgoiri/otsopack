@@ -1,3 +1,17 @@
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ * 			Pablo Orduña <pablo.orduna@deusto.es>
+ */
 package otsopack.full.java.network.communication;
 
 import java.util.HashMap;
@@ -16,12 +30,16 @@ import otsopack.full.java.network.communication.representations.OtsopackConverte
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 import otsopack.full.java.network.communication.resources.spaces.SpacesResource;
+import otsopack.full.java.network.communication.session.UserSession;
+import otsopack.restlet.commons.sessions.ISessionManager;
+import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
 public class OtsopackApplication extends Application {
 	
 	private final Map<String, Class<?>> resources;
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	private final PrefixesStorage prefixesStorage = new PrefixesStorage();
+	private final ISessionManager<UserSession> sessionManager = new MemorySessionManager<UserSession>();
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 
@@ -76,5 +94,9 @@ public class OtsopackApplication extends Application {
 	
 	public PrefixesStorage getPrefixesStorage(){
 		return this.prefixesStorage;
+	}
+	
+	public ISessionManager<UserSession> getSessionManager() {
+		return this.sessionManager;
 	}
 }
