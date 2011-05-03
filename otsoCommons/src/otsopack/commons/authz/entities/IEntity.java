@@ -26,4 +26,11 @@ public interface IEntity {
 	 * 		is this entity authentic?
 	 */
 	public boolean check(Object o);
+	
+	/**
+	 * Is it anonymous entity?
+	 * 
+	 * @return
+	 */
+	public boolean isAnonymous();
 }

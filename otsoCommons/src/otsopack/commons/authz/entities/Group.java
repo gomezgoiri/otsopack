@@ -23,4 +23,11 @@ public class Group implements IEntity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.authz.entities.IEntity#isAnonymous()
+	 */
+	public boolean isAnonymous() {
+		return false;
+	}
 }

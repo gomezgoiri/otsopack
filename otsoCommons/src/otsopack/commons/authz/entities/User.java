@@ -53,4 +53,11 @@ public class User implements IEntity {
 	public boolean check(Object o) {
 		return equals(o);
 	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.authz.entities.IEntity#isAnonymous()
+	 */
+	public boolean isAnonymous() {
+		return false;
+	}
 }

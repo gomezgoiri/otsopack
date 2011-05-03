@@ -27,4 +27,10 @@ public class AnonymousEntity implements IEntity {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see otsopack.commons.authz.entities.IEntity#isAnonymous()
+	 */
+	public boolean isAnonymous() {
+		return true;
+	}
 }
