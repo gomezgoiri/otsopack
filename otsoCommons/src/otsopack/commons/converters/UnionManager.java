@@ -80,6 +80,20 @@ public class UnionManager {
 		return false;
 	}
 	
+	public static Graph union(Graph [] graphs1, Graph [] graphs2, SemanticFormat outputFormat){
+		return union(union(graphs1, outputFormat), union(graphs2, outputFormat), outputFormat);
+	}
+	
+	public static Graph union(Graph [] graphs, SemanticFormat outputFormat){
+		if(graphs.length == 0)
+			throw new IllegalArgumentException("union requires at least one argument!");
+		
+		Graph current = graphs[0];
+		for(int i = 1; i < graphs.length; ++i)
+			current = union(current, graphs[i], outputFormat);
+		return current;
+	}
+	
 	public static Graph union(Graph graph1, Graph graph2, SemanticFormat outputFormat){
 		for(int i = 0; i < unionUtilities.size(); ++i){
 			final IUnionUtility unionUtility = (IUnionUtility)unionUtilities.elementAt(i);

@@ -197,7 +197,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
 
 	/**
 	 * query triples by using a template waiting a maximum timeout
@@ -211,7 +211,7 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
 	
 	/**
 	 * subscribe to one template

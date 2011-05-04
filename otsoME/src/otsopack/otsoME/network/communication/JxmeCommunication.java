@@ -70,10 +70,10 @@ public class JxmeCommunication implements ICommunication {
 		return getSpace(spaceURI).take(template, timeout);
 	}
 
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		checkFormat(outputFormat);
-		return getSpace(spaceURI).query(template, timeout);
+		return new Graph[]{ getSpace(spaceURI).query(template, timeout) };
 	}
 
 	public String subscribe(String spaceURI, NotificableTemplate template,
@@ -138,7 +138,7 @@ public class JxmeCommunication implements ICommunication {
 		throw new RuntimeException("Not yet implemented"); //TODO
 	}
 	
-	public Graph query(String spaceURI, Template template,
+	public Graph [] query(String spaceURI, Template template,
 			SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException {
 		throw new RuntimeException("Not yet implemented"); //TODO

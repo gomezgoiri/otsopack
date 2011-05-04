@@ -108,13 +108,13 @@ public class RestNetwork implements INetwork {
 	}
 	
 	@Override
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException {
 		return this.comm.query(spaceURI, template, outputFormat, filters, timeout);
 	}
 
 	@Override
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		return this.comm.query(spaceURI, template, outputFormat, timeout);
 	}

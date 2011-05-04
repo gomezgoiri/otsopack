@@ -82,10 +82,12 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	 */
 	@Test
 	public void testQuery() throws Exception {
-		final Graph graph = this.ruc.query(this.spaceURI,
+		final Graph [] graphs = this.ruc.query(this.spaceURI,
 								WildcardTemplate.createWithNull(null,"http://xmlns.com/foaf/0.1/title"),
 								SemanticFormat.NTRIPLES,
 								3000);
+		assertEquals(1, graphs.length);
+		final Graph graph = graphs[0];
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("http://xmlns.com/foaf/0.1/title") );
 	}

@@ -79,7 +79,7 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
         return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
@@ -176,7 +176,7 @@ public class JxmeNetwork implements INetwork {
 	}
 
 	@Override
-	public Graph query(String spaceURI, Template template,
+	public Graph [] query(String spaceURI, Template template,
 			SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException {
 		throw new RuntimeException("Not yet implemented"); //TODO

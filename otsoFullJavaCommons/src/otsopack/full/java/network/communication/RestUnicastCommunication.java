@@ -18,6 +18,8 @@ package otsopack.full.java.network.communication;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Vector;
 
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -75,14 +77,30 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	protected Graph filterResults(Graph graph, Filter[] filters) {
-		if( graph!=null )
-			for(Filter filter: filters) {
-				if( filter.getAssert().evaluate(graph) ) {
+		if( graph !=null ){
+			for(Filter filter: filters) 
+				if( filter.getAssert().evaluate(graph) ) 
 					if( !filter.getEntity().check(graph.getEntity()) )
 						return null;
-				}
-			}
+		}
 		return graph;
+	}
+	
+	protected Graph [] filterResults(Graph [] graphs, Filter[] filters) {
+		final List<Graph> resultingGraphs = new Vector<Graph>(graphs.length);
+		for(Graph graph : graphs){
+			if( graph !=null ){
+				boolean passFilters = true;
+				for(Filter filter: filters) 
+					if( filter.getAssert().evaluate(graph) ) 
+						if( !filter.getEntity().check(graph.getEntity()) )
+							passFilters = false;
+					
+				if(passFilters)
+					resultingGraphs.add(graph);
+			}
+		}
+		return resultingGraphs.toArray(new Graph[]{});
 	}
 	
 	@Override
@@ -207,21 +225,22 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	@Override
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException {
-		final Graph graph = query(spaceURI, template, outputFormat, timeout);
-		return filterResults(graph, filters);
+		final Graph [] graphs = query(spaceURI, template, outputFormat, timeout);
+		return filterResults(graphs, filters);
 	}
 
 	@Override
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
 				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
-				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+				// TODO: NOT IMPLEMENTED!!!
+				return new Graph[]{ new Graph( rep.getText(), SemanticFormat.NTRIPLES) };
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
