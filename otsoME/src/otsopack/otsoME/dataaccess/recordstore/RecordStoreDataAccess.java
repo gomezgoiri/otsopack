@@ -298,4 +298,18 @@ public class RecordStoreDataAccess implements IDataAccess {
 			AuthorizationException {
 		throw new RuntimeException("Not yet implemented"); //TODO
 	}
+	
+	public Graph take(String spaceURI, Template template,
+			SemanticFormat outputFormat, User user)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
+			UnsupportedTemplateException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
+	
+	public Graph take(String spaceURI, String graphURI,
+			SemanticFormat outputFormat, User user)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
+			AuthorizationException {
+		throw new RuntimeException("Not yet implemented"); //TODO
+	}
 }
