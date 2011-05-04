@@ -85,7 +85,6 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 	}
 	
 	private Graph parseGraph(JSONObject obj) throws JSONException {
-		System.out.println(obj.toString());
 		final String contentType    = obj.getString(CONTENT_TYPE);
 		final String data           = obj.getString(PAYLOAD);
 		
