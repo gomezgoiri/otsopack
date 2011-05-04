@@ -77,4 +77,8 @@ public final class SemanticFormat {
 	public static void registerSemanticFormat(String format){
 		FORMATS.addElement(format);
 	}
+
+	public String toString() {
+		return "SemanticFormat [name=" + name + "]";
+	}
 }
