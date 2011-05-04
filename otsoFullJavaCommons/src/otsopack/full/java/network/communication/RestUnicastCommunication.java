@@ -10,6 +10,7 @@
  * listed below:
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
+ *         Pablo Orduña <pablo.orduna@deusto.es>
  */
 
 package otsopack.full.java.network.communication;
@@ -18,14 +19,18 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.commons.authz.Filter;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.SignedGraph;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -33,9 +38,13 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
 public class RestUnicastCommunication implements ICommunication {
+
+	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
+	
 	private String baseRESTServer;
 	
 	public RestUnicastCommunication() {
@@ -92,13 +101,36 @@ public class RestUnicastCommunication implements ICommunication {
 		try {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
-			return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+			return createGraph(cr, rep);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * Given a client resource and a representation, generate the proper graph, taking into account signatures.
+	 * 
+	 * @param clientResource
+	 * @param outputRepresentation
+	 * @return
+	 * @throws IOException
+	 */
+	private Graph createGraph(final ClientResource clientResource, final Representation outputRepresentation)
+			throws IOException {
+		// What semantic format was used for the output?
+		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(outputRepresentation.getMediaType());
+		
+		// Is it signed?
+		final Form httpAttributes = (Form)clientResource.getResponse().getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+		final String user = httpAttributes.getFirstValue(OTSOPACK_USER, null);
+		// TODO: the signature process is still missing
+		
+		if(user == null) // Not signed
+			return new Graph( outputRepresentation.getText(), semanticFormat);
+		return new SignedGraph(outputRepresentation.getText(), semanticFormat, new User(user));
 	}	
 	
 	@Override
@@ -115,7 +147,7 @@ public class RestUnicastCommunication implements ICommunication {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
-				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+				return createGraph(cr, rep);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -141,7 +173,7 @@ public class RestUnicastCommunication implements ICommunication {
 		try {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
-			return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+			return createGraph(cr, rep);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -164,7 +196,7 @@ public class RestUnicastCommunication implements ICommunication {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
-				return new Graph( rep.getText(), SemanticFormat.NTRIPLES);
+				return createGraph(cr, rep);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

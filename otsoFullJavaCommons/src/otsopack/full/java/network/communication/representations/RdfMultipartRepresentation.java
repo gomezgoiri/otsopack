@@ -26,12 +26,12 @@ import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SignedGraph;
+import otsopack.full.java.network.communication.RestUnicastCommunication;
 
 public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 
-	private static final String CONTENT_TYPE  = "Content-type";
-	private static final String OTSOPACK_USER = "X-OTSOPACK-User";
 	private static final String PAYLOAD       = "payload";
+	private static final String CONTENT_TYPE  = "Content-type";
 
 	public RdfMultipartRepresentation(String data) {
 		super(OtsopackConverter.ACROSS_MULTIPART_MEDIA_TYPE, data);
@@ -51,7 +51,7 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 				object.put(PAYLOAD, graph.getData());
 				if(graph.getEntity() instanceof User){
 					final User user = (User)graph.getEntity();
-					object.put(OTSOPACK_USER, user.getId());
+					object.put(RestUnicastCommunication.OTSOPACK_USER, user.getId());
 				} //TODO: else?
 				
 				arr.put(object);
@@ -89,7 +89,7 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 		final String data           = obj.getString(PAYLOAD);
 		
 		// Optional fields, required for SignedGraphs
-		final String userId         = obj.optString(OTSOPACK_USER, null);
+		final String userId         = obj.optString(RestUnicastCommunication.OTSOPACK_USER, null);
 		// TODO: implement a signature for user ID and check it. 
 		// When fixed say it here: http://code.google.com/p/otsopack/issues/detail?id=4
 		
