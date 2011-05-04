@@ -37,11 +37,11 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 		super(OtsopackConverter.ACROSS_MULTIPART_MEDIA_TYPE, data);
 	}
 
-	public RdfMultipartRepresentation(Graph [] graphs) {
+	public RdfMultipartRepresentation(Graph [] graphs) throws RepresentationException {
 		super(OtsopackConverter.ACROSS_MULTIPART_MEDIA_TYPE, convertData(graphs));
 	}
 	
-	private static String convertData(Graph [] graphs){
+	private static String convertData(Graph [] graphs) throws RepresentationException {
 		final JSONArray arr = new JSONArray();
 		try{
 			for(Graph graph : graphs){
@@ -53,11 +53,11 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 					final User user = (User)graph.getEntity();
 					object.put(OTSOPACK_USER, user.getId());
 				} //TODO: else?
+				
+				arr.put(object);
 			}
 		}catch(JSONException e){
-			// TODO: make tests of this part!
-			// TODO: should use a checked exception
-			throw new IllegalStateException("Could not generate JSON data: " + e.getMessage(), e);
+			throw new MalformedRepresentationException("Could not generate JSON data: " + e.getMessage(), e);
 		}
 		
 		return arr.toString();
@@ -68,7 +68,7 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 	}
 	
 	@Override
-	public Graph [] getGraphs(){
+	public Graph [] getGraphs() throws RepresentationException{
 		try {
 			final JSONArray arr = new JSONArray(getData());
 			
@@ -80,17 +80,17 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 			
 			return graphs;
 		} catch (JSONException e) {
-			// TODO: should use a checked exception
-			throw new IllegalStateException("Could not parse JSON data: " + getData(), e);
+			throw new MalformedRepresentationException("Could not parse JSON data: " + getData(), e);
 		}
 	}
 	
 	private Graph parseGraph(JSONObject obj) throws JSONException {
+		System.out.println(obj.toString());
 		final String contentType    = obj.getString(CONTENT_TYPE);
 		final String data           = obj.getString(PAYLOAD);
 		
 		// Optional fields, required for SignedGraphs
-		final String userId         = obj.optString(OTSOPACK_USER);
+		final String userId         = obj.optString(OTSOPACK_USER, null);
 		// TODO: implement a signature for user ID and check it. 
 		// When fixed say it here: http://code.google.com/p/otsopack/issues/detail?id=4
 		

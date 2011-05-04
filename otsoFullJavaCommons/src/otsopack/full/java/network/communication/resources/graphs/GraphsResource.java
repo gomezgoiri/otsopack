@@ -29,6 +29,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.full.java.network.communication.representations.RepresentationException;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
@@ -55,7 +56,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 			final String spaceEnc = URLEncoder.encode(space, "utf-8");
 			final IController controller = getController();
 			String[] graphsuris = controller.getDataAccessService().getLocalGraphs(space);
-			for(String graphuri: graphsuris){
+			 for(String graphuri: graphsuris){
 				String graphEnc = URLEncoder.encode(graphuri, "utf-8");
 				
 				bodyHtml.append("\t<li>");
@@ -97,7 +98,12 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	@Override
 	public String write(SemanticFormatRepresentation semanticData) {
 		final SemanticFormat outputFormat = checkInputOutputSemanticFormats();
-		final Graph [] graphs = semanticData.getGraphs();
+		final Graph[] graphs;
+		try {
+			graphs = semanticData.getGraphs();
+		} catch (RepresentationException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Could not deserialize information: " + e.getMessage(), e);
+		}
 		final List<String> graphURIs = new Vector<String>();
 		for(Graph graph : graphs){
 			final String graphURI = write(graph, outputFormat);

@@ -61,7 +61,8 @@ public abstract class SemanticFormatRepresentation extends WriterRepresentation 
 		return this.data;
 	}
 	
-	public Graph [] getGraphs(){
+	@SuppressWarnings("unused")
+	public Graph [] getGraphs() throws RepresentationException{
 		return new Graph[]{ new Graph(this.data, getSemanticFormat()) };
 	}
 }
