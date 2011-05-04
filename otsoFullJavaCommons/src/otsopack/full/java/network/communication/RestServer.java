@@ -19,7 +19,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.restlet.Component;
+import org.restlet.data.CookieSetting;
 import org.restlet.data.Protocol;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.OtsoAuthnApplication;
@@ -45,15 +47,20 @@ public class RestServer {
 	    
 	    this.authnApp = new OtsoAuthnApplication(
 	    	new IAuthenticatedUserHandler() {
-	    	  public String onAuthenticatedUser(String userIdentifier, String redirectURI){
-	    		  final Calendar tomorrow = new GregorianCalendar();
-	    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000));
-	    		  
-	    		  // new session created each time?
-	    		  final UserSession session = new UserSession(userIdentifier);
-	    		  final String sessionID = RestServer.this.application.getSessionManager().putSession(session);
-	    		  return redirectURI + "?sessionID=" + sessionID;
-	    	  }
+				@Override
+				public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource) {
+		    		  final Calendar tomorrow = new GregorianCalendar();
+		    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000));
+		    		  
+		    		  final UserSession session = new UserSession(userIdentifier);
+		    		  final String sessionID = RestServer.this.application.getSessionManager().putSession(session);
+		    		  
+		    		  // Set-Cookie
+		    		  final CookieSetting cookie = new CookieSetting(0,"sessionID",sessionID);
+		    		  resource.getResponse().getCookieSettings().add(cookie);
+		    		  
+		    		  return redirectURI + "?sessionID=" + sessionID;
+				}
 	    	});
 	    
 	    this.component.getDefaultHost().attach(this.application);

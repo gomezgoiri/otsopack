@@ -152,7 +152,7 @@ public class AbstractServerResource extends ServerResource {
 	}
 	
 	protected User getCurrentClient() {//throws ClientNotAuthenticatedException {
-		final String sessionId = getArgument("sessionID");
+		final String sessionId = this.getRequest().getCookies().getFirstValue("sessionID");
 		final UserSession us = ((OtsopackApplication)getApplication()).getSessionManager().getSession(sessionId);
 		if(us==null) return null;
 		return new User(us.getUserIdentifier());
