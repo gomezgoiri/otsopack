@@ -29,6 +29,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
@@ -69,7 +70,7 @@ public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 		final Session session = new Session(appURL, secret, userIdentifier, expiration);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
-		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL)).andReturn(appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// perform the request

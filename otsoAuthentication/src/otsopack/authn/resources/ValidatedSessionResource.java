@@ -60,7 +60,7 @@ public class ValidatedSessionResource extends AbstractOtsoServerResource impleme
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Invalid " + SECRET_NAME + "!");
 
 		// Tell the manager that the user has been authenticated
-		final String newURL = getAuthenticatedUserHandler().onAuthenticatedUser(session.getUserIdentifier(), session.getRedirectURL());
+		final String newURL = getAuthenticatedUserHandler().onAuthenticatedUser(session.getUserIdentifier(), session.getRedirectURL(), this);
 		
 		getSessionManager().deleteSession(sessionId);
 		

@@ -13,10 +13,12 @@
  */
 package otsopack.authn;
 
+import org.restlet.resource.ServerResource;
+
 public class DummyAuthenticatedUserHandler implements IAuthenticatedUserHandler {
 
 	@Override
-	public String onAuthenticatedUser(String userIdentifier, String redirectURI) {
+	public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource) {
 		System.out.println("Valid user: " + userIdentifier + "; redirectURI: " + redirectURI);
 		return redirectURI;
 	}
