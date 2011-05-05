@@ -289,4 +289,44 @@ public interface ITripleSpace extends ILayer {
 	 * 		A method to call back when a IGraph which matches the template is suggested.
 	 */
 	public void demand(String spaceURI, Template template, long leaseTime, ISuggestionCallback callback) throws TSException;
+
+	public abstract Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat)
+			throws TSException;
+
+	public abstract Graph take(String spaceURI, String graphURI, long timeout)
+			throws TSException;
+
+	public abstract Graph take(String spaceURI, String graphURI) throws TSException;
+
+	public abstract Graph take(String spaceURI, Template template, SemanticFormat outputFormat)
+			throws TSException;
+
+	public abstract Graph take(String spaceURI, Template template, long timeout)
+			throws TSException;
+
+	public abstract Graph take(String spaceURI, Template template) throws TSException;
+
+	public abstract Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat)
+			throws TSException;
+
+	public abstract Graph read(String spaceURI, String graphURI, long timeout)
+			throws TSException;
+
+	public abstract Graph read(String spaceURI, String graphURI) throws TSException;
+
+	public abstract Graph read(String spaceURI, Template template, SemanticFormat outputFormat)
+			throws TSException;
+
+	public abstract Graph read(String spaceURI, Template template, long timeout)
+			throws TSException;
+
+	public abstract Graph read(String spaceURI, Template template) throws TSException;
+
+	public abstract Graph query(String spaceURI, Template template, SemanticFormat outputFormat)
+			throws TSException;
+
+	public abstract Graph query(String spaceURI, Template template, long timeout)
+			throws TSException;
+
+	public abstract Graph query(String spaceURI, Template template) throws TSException;
 }

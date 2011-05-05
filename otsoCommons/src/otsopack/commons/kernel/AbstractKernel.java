@@ -42,6 +42,8 @@ public abstract class AbstractKernel implements ITripleSpace {
 	protected INetwork networkService = null;
 	
 	private boolean connected = false;
+	protected int defaultTimeout = 5000;
+	protected SemanticFormat defaultSemanticFormat = SemanticFormat.NTRIPLES;
 
 	
 	/**
@@ -60,6 +62,22 @@ public abstract class AbstractKernel implements ITripleSpace {
 		if (this.dataAccessService == null) {
 			this.setDataAccessService(new MemoryDataAccess());
 		}
+	}
+	
+	public int getDefaultTimeout(){
+		return this.defaultTimeout;
+	}
+	
+	public SemanticFormat getDefaultSemanticFormat(){
+		return this.defaultSemanticFormat;
+	}
+	
+	public void setDefaultTimeout(int timeout){
+		this.defaultTimeout = timeout;
+	}
+	
+	public void setDefaultSemanticFormat(SemanticFormat format){
+		this.defaultSemanticFormat = format;
 	}
 	
 //	/**
@@ -187,6 +205,18 @@ public abstract class AbstractKernel implements ITripleSpace {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		networkService.unadvertise(spaceURI, advertisementURI);
 	}
+
+	public Graph query(String spaceURI, Template template) throws TSException {
+		return query(spaceURI, template, this.defaultSemanticFormat, this.defaultTimeout);
+	}
+
+	public Graph query(String spaceURI, Template template, long timeout) throws TSException {
+		return query(spaceURI, template, this.defaultSemanticFormat, timeout);
+	}
+	
+	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
+		return query(spaceURI, template, outputFormat, this.defaultTimeout);
+	}
 	
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return query(spaceURI, template, outputFormat, null, timeout);
@@ -217,6 +247,18 @@ public abstract class AbstractKernel implements ITripleSpace {
 		}
 		return ret;
 	}
+
+	public Graph read(String spaceURI, Template template) throws TSException {
+		return read(spaceURI,template, this.defaultSemanticFormat, this.defaultTimeout);
+	}
+	
+	public Graph read(String spaceURI, Template template, long timeout) throws TSException {
+		return read(spaceURI,template, this.defaultSemanticFormat, timeout);
+	}
+
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
+		return read(spaceURI,template,outputFormat, this.defaultTimeout);
+	}
 	
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return read(spaceURI,template,outputFormat,null,timeout);
@@ -234,7 +276,20 @@ public abstract class AbstractKernel implements ITripleSpace {
 			return dataAccessService.read(spaceURI, template, outputFormat);
 		return ret;
 	}
+
+
+	public Graph read(String spaceURI, String graphURI) throws TSException {
+		return read(spaceURI,graphURI, this.defaultSemanticFormat);
+	}
 	
+	public Graph read(String spaceURI, String graphURI, long timeout) throws TSException {
+		return read(spaceURI,graphURI, this.defaultSemanticFormat,timeout);
+	}
+
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws TSException {
+		return read(spaceURI,graphURI,outputFormat,this.defaultTimeout);
+	}
+
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return read(spaceURI,graphURI,outputFormat,null,timeout);
 	}
@@ -252,7 +307,19 @@ public abstract class AbstractKernel implements ITripleSpace {
 			return dataAccessService.read(spaceURI, graphURI, outputFormat);
 		return ret;
 	}
-	
+
+	public Graph take(String spaceURI, Template template) throws TSException {
+		return take(spaceURI,template,this.defaultSemanticFormat);
+	}
+
+	public Graph take(String spaceURI, Template template, long timeout) throws TSException {
+		return take(spaceURI,template,this.defaultSemanticFormat,timeout);
+	}
+
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
+		return take(spaceURI,template,outputFormat,this.defaultTimeout);
+	}
+
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return take(spaceURI,template,outputFormat,null,timeout);
 	}
@@ -270,7 +337,19 @@ public abstract class AbstractKernel implements ITripleSpace {
 		
 		return ret;
 	}
-	
+
+	public Graph take(String spaceURI, String graphURI) throws TSException {
+		return take(spaceURI,graphURI,this.defaultSemanticFormat, this.defaultTimeout);
+	}
+
+	public Graph take(String spaceURI, String graphURI, long timeout) throws TSException {
+		return take(spaceURI,graphURI,this.defaultSemanticFormat,timeout);
+	}
+
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws TSException {
+		return take(spaceURI,graphURI,outputFormat,this.defaultTimeout);
+	}
+
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return take(spaceURI,graphURI,outputFormat,null,timeout);
 	}
