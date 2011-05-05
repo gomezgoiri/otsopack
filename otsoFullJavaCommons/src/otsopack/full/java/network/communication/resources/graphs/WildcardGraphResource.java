@@ -70,7 +70,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
-		return new Graph("",semanticFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	protected Graph takeGraphByWildcard(SemanticFormat semanticFormat) {
@@ -87,7 +87,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
-		return new Graph("",semanticFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	@Override

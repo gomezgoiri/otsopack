@@ -19,7 +19,6 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
-import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.AuthorizationException;
@@ -35,16 +34,10 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	protected Graph readGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
-		final User currentClient = getCurrentClient();
 		final Graph ret;
 		try {			
 			final IController controller = getController();
-			
-			if( currentClient==null )
-				ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
-			else
-				ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
-			
+			ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
@@ -53,22 +46,16 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
-		return new Graph("",outputFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	protected Graph takeGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
-		final User currentClient = getCurrentClient();
 		final Graph ret;
 		try {			
 			final IController controller = getController();
-			
-			if( currentClient==null )
-				ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
-			else
-				ret = controller.getDataAccessService().take(space, graphuri, outputFormat, currentClient);
-			
+			ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
@@ -77,7 +64,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
-		return new Graph("",outputFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	@Override

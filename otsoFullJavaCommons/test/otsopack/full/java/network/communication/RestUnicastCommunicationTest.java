@@ -14,6 +14,7 @@
 package otsopack.full.java.network.communication;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -138,9 +139,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 									WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
 									SemanticFormat.NTRIPLES,
 									3000);
-		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
-		assertEquals( "", graph.getData() );
-		
+		assertNull( graph );
 		
 		graph = this.ruc.take(this.spaceURI,
 				WildcardTemplate.createWithURI("http://aitor.gomezgoiri.net/me","http://xmlns.com/foaf/0.1/homepage","http://aitor.gomezgoiri.net"),
@@ -170,8 +169,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 								this.graphuri[1],
 								SemanticFormat.NTRIPLES,
 								3000);
-		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
-		assertEquals( "", graph.getData() );
+		assertNull( graph );
 		
 		
 		graph = this.ruc.take(this.spaceURI,
