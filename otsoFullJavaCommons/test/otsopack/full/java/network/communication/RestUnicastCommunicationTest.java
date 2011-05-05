@@ -64,7 +64,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 				SemanticFormat.NTRIPLES);
 		this.graphuri[1] = this.controller.getDataAccessService().write(this.spaceURI, graph);
 		
-		this.ruc = new RestUnicastCommunication();
+		this.ruc = new RestUnicastCommunication(getBaseURL());
 		this.ruc.startup();
 	}
 

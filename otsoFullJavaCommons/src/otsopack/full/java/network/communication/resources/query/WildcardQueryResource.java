@@ -63,7 +63,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			//TODO is this a internal error or a bad request?
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
 		}
-		return new Graph("",semanticFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No graph found with the requested arguments");
 	}
 	
 	@Override

@@ -51,11 +51,7 @@ public class RestUnicastCommunication implements ICommunication {
 
 	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
 	
-	private String baseRESTServer;
-	
-	public RestUnicastCommunication() {
-		this("http://127.0.0.1:"+RestServer.DEFAULT_PORT+"/");
-	}
+	private final String baseRESTServer;
 	
 	public RestUnicastCommunication(String restserver) {
 		this.baseRESTServer = restserver;

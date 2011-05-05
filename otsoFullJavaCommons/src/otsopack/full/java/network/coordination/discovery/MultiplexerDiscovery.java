@@ -60,7 +60,7 @@ public class MultiplexerDiscovery implements IDiscovery {
 	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
 		final IDiscovery [] discoveries = getDiscoveries(spaceURI);
 		if(discoveries == null)
-			throw new IllegalArgumentException("No " + IDiscovery.class.getName() + " found for " + spaceURI);
+			return new SpaceManager[]{};
 		
 		final List<SpaceManager> spaceManagers = new Vector<SpaceManager>();
 		for(IDiscovery discovery : discoveries)
