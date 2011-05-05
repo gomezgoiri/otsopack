@@ -26,6 +26,7 @@ import org.restlet.data.MediaType;
 import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.User;
@@ -89,16 +90,9 @@ public class RestUnicastCommunication implements ICommunication {
 	protected Graph [] filterResults(Graph [] graphs, Filter[] filters) {
 		final List<Graph> resultingGraphs = new Vector<Graph>(graphs.length);
 		for(Graph graph : graphs){
-			if( graph !=null ){
-				boolean passFilters = true;
-				for(Filter filter: filters) 
-					if( filter.getAssert().evaluate(graph) ) 
-						if( !filter.getEntity().check(graph.getEntity()) )
-							passFilters = false;
-					
-				if(passFilters)
-					resultingGraphs.add(graph);
-			}
+			final Graph filtered = filterResults(graph, filters);
+			if(filtered != null)
+				resultingGraphs.add(graph);
 		}
 		return resultingGraphs.toArray(new Graph[]{});
 	}
@@ -120,6 +114,8 @@ public class RestUnicastCommunication implements ICommunication {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
 			return createGraph(cr, rep);
+		} catch (ResourceException e) {
+			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -138,6 +134,9 @@ public class RestUnicastCommunication implements ICommunication {
 	 */
 	private Graph createGraph(final ClientResource clientResource, final Representation outputRepresentation)
 			throws IOException {
+		if(outputRepresentation == null)
+			return null;
+		
 		// What semantic format was used for the output?
 		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(outputRepresentation.getMediaType());
 		
@@ -166,6 +165,8 @@ public class RestUnicastCommunication implements ICommunication {
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
 				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -192,6 +193,8 @@ public class RestUnicastCommunication implements ICommunication {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
 			return createGraph(cr, rep);
+		} catch (ResourceException e) {
+			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -215,6 +218,8 @@ public class RestUnicastCommunication implements ICommunication {
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
 				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -241,6 +246,8 @@ public class RestUnicastCommunication implements ICommunication {
 				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
 				// TODO: NOT IMPLEMENTED!!!
 				return new Graph[]{ new Graph( rep.getText(), SemanticFormat.NTRIPLES) };
+			} catch (ResourceException e) {
+				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

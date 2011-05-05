@@ -40,12 +40,11 @@ public class QueryTest extends AbstractRestServerTesting {
 		
 		final String [] results = JSONDecoder.decode(prefixes, String[].class);
 		
-		assertEquals(5, results.length);
+		assertEquals(4, results.length);
 		
 		final List<String> resultsList = Arrays.asList(results);
 		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query"));
 		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards"));
-		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/*"));
 		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/{object-type}/{object-value}"));
 		Assert.assertThat(resultsList, hasItem("/spaces/{space}/query/wildcards/{subject}/{predicate}/{object-uri}"));
 	}

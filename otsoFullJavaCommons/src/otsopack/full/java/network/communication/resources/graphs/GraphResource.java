@@ -46,7 +46,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
-		return new Graph("",outputFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	protected Graph takeGraph(SemanticFormat outputFormat) {
@@ -64,7 +64,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (AuthorizationException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
-		return new Graph("",outputFormat);
+		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
 	@Override
