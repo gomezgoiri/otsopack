@@ -13,6 +13,8 @@
  */
 package otsopack.authn;
 
+import org.restlet.resource.ServerResource;
+
 public interface IAuthenticatedUserHandler {
 	/**
 	 * Handles the authentication of a user. When a user has been authenticated by the system,
@@ -23,5 +25,5 @@ public interface IAuthenticatedUserHandler {
 	 * @param redirectURI 
 	 * @return what address will the user call once he is authenticated. It may include a session ID or so
 	 */
-	public String onAuthenticatedUser(String userIdentifier, String redirectURI);
+	public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource);
 }

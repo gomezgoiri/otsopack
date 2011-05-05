@@ -31,6 +31,7 @@ import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
@@ -52,7 +53,7 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 		
 		final IAuthenticatedUserHandler handler = new IAuthenticatedUserHandler() {
 			@Override
-			public String onAuthenticatedUser(String userIdentifier, String redirectURI) {
+			public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource) {
 				return redirectURI;
 			}
 		};

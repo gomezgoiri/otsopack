@@ -15,10 +15,18 @@
 
 package otsopack.full.java.network.communication;
 
-import org.restlet.Component;
-import org.restlet.data.Protocol;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
+import org.restlet.Component;
+import org.restlet.data.CookieSetting;
+import org.restlet.data.Protocol;
+import org.restlet.resource.ServerResource;
+
+import otsopack.authn.IAuthenticatedUserHandler;
+import otsopack.authn.OtsoAuthnApplication;
 import otsopack.commons.IController;
+import otsopack.full.java.network.communication.session.UserSession;
 
 public class RestServer {
 	public static final int DEFAULT_PORT = 8182;
@@ -26,6 +34,7 @@ public class RestServer {
 	private final int port;
 	private final Component component;
 	private final OtsopackApplication application;
+	private final OtsoAuthnApplication authnApp;
 	
 	public RestServer(int port, IController controller) {
 		this.port = port;
@@ -35,7 +44,27 @@ public class RestServer {
 	    
 	    this.application = new OtsopackApplication();
 	    this.application.setController(controller);
+	    
+	    this.authnApp = new OtsoAuthnApplication(
+	    	new IAuthenticatedUserHandler() {
+				@Override
+				public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource) {
+		    		  final Calendar tomorrow = new GregorianCalendar();
+		    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000));
+		    		  
+		    		  final UserSession session = new UserSession(userIdentifier);
+		    		  final String sessionID = RestServer.this.application.getSessionManager().putSession(session);
+		    		  
+		    		  // Set-Cookie
+		    		  final CookieSetting cookie = new CookieSetting(0,"sessionID",sessionID);
+		    		  resource.getResponse().getCookieSettings().add(cookie);
+		    		  
+		    		  return redirectURI + "?sessionID=" + sessionID;
+				}
+	    	});
+	    
 	    this.component.getDefaultHost().attach(this.application);
+	    this.component.getDefaultHost().attach(this.authnApp);
 	}
 	
 	public RestServer(IController controller){

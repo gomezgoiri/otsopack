@@ -27,7 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import org.restlet.data.Parameter;
 import org.restlet.data.Preference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -35,12 +37,14 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
 import otsopack.full.java.network.communication.OtsopackApplication;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationFactory;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
+import otsopack.full.java.network.communication.session.UserSession;
 
 public class AbstractServerResource extends ServerResource {
 	
@@ -147,5 +151,22 @@ public class AbstractServerResource extends ServerResource {
 		
 		if(semanticFormatsManager.isInputSupported(semanticFormat))
 			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Could not read " + semanticFormat + " format!");
+	}
+	
+	private String obtainSessionIdFromCookies() {
+		return this.getRequest().getCookies().getFirstValue("sessionID");
+	}
+	
+	private String obtainSessionIdFromGETParameter() {
+		return this.getRequest().getResourceRef().getQueryAsForm().getFirstValue("sessionID");
+	}
+	
+	//XXX test!
+	protected User getCurrentClient() {//throws ClientNotAuthenticatedException {
+		String sessionId = obtainSessionIdFromCookies();
+		if( sessionId==null ) sessionId = obtainSessionIdFromGETParameter();
+		final UserSession us = ((OtsopackApplication)getApplication()).getSessionManager().getSession(sessionId);
+		if(us==null) return null;
+		return new User(us.getUserIdentifier());
 	}
 }

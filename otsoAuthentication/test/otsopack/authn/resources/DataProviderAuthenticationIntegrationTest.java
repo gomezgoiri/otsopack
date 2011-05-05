@@ -28,6 +28,7 @@ import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
@@ -62,7 +63,7 @@ public class DataProviderAuthenticationIntegrationTest  extends AbstractRestServ
 		// setup what the Authenticated app will perform
 		final String userIdentifier = "http://ts.across.com/users/porduna";
 		final String appURL = getBaseURL() + "/application/secure/";
-		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL)).andReturn(appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// setup what the Identity Provider will reply

@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.restlet.data.Form;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.AbstractRestServerTesting;
 import otsopack.authn.Controller;
@@ -86,7 +87,7 @@ public class AuthenticationClientTest extends AbstractRestServerTesting{
 		final String appURL = getBaseURL() + "/application/secure/";
 		final String dataProviderAuthenticationURL = getBaseURL() + SessionRequestResource.ROOT;
 		
-		expect(this.authenticationUserHandlerMock.onAuthenticatedUser(this.userIdentifierURL, appURL)).andReturn(appURL);
+		expect(this.authenticationUserHandlerMock.onAuthenticatedUser(this.userIdentifierURL, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandlerMock);
 		
 		final String idpURL = this.idpDomain + "?idpsessionid=foo";
