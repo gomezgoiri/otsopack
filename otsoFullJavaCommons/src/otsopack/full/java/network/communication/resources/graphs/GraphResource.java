@@ -19,6 +19,7 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.AuthorizationException;
@@ -34,10 +35,16 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	protected Graph readGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
+		final User currentClient = getCurrentClient();
 		final Graph ret;
 		try {			
 			final IController controller = getController();
-			ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+			
+			if( currentClient==null )
+				ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+			else
+				ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
+			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
@@ -52,10 +59,16 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	protected Graph takeGraph(SemanticFormat outputFormat) {
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
+		final User currentClient = getCurrentClient();
 		final Graph ret;
 		try {			
 			final IController controller = getController();
-			ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
+			
+			if( currentClient==null )
+				ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
+			else
+				ret = controller.getDataAccessService().take(space, graphuri, outputFormat, currentClient);
+			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
