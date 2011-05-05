@@ -14,7 +14,9 @@
  */
 package otsopack.full.java.network.communication.representations;
 
-public class RepresentationException extends Exception {
+import otsopack.full.java.network.OtsoFullJavaNetworkException;
+
+public class RepresentationException extends OtsoFullJavaNetworkException {
 
 	private static final long serialVersionUID = 4455654575013001441L;
 

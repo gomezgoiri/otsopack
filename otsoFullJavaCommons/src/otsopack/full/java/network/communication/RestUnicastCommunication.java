@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
@@ -41,6 +40,10 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.full.java.network.OtsoFullJavaNetworkException;
+import otsopack.full.java.network.communication.representations.NTriplesRepresentation;
+import otsopack.full.java.network.communication.representations.RdfMultipartRepresentation;
+import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
@@ -112,7 +115,7 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
-			final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+			final Representation rep = cr.get(NTriplesRepresentation.class);
 			return createGraph(cr, rep);
 		} catch (ResourceException e) {
 			e.printStackTrace();
@@ -120,36 +123,13 @@ public class RestUnicastCommunication implements ICommunication {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (OtsoFullJavaNetworkException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	/**
-	 * Given a client resource and a representation, generate the proper graph, taking into account signatures.
-	 * 
-	 * @param clientResource
-	 * @param outputRepresentation
-	 * @return
-	 * @throws IOException
-	 */
-	private Graph createGraph(final ClientResource clientResource, final Representation outputRepresentation)
-			throws IOException {
-		if(outputRepresentation == null)
-			return null;
-		
-		// What semantic format was used for the output?
-		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(outputRepresentation.getMediaType());
-		
-		// Is it signed?
-		final Form httpAttributes = (Form)clientResource.getResponse().getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-		final String user = httpAttributes.getFirstValue(OTSOPACK_USER, null);
-		// TODO: the signature process is still missing
-		
-		if(user == null) // Not signed
-			return new Graph( outputRepresentation.getText(), semanticFormat);
-		return new SignedGraph(outputRepresentation.getText(), semanticFormat, new User(user));
-	}	
-	
+
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
 		final Graph graph = read(spaceURI, template, outputFormat, timeout);
@@ -163,13 +143,15 @@ public class RestUnicastCommunication implements ICommunication {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
-				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
+				final Representation rep = cr.get(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (OtsoFullJavaNetworkException e) {
 				e.printStackTrace();
 			}
 		}
@@ -191,13 +173,15 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
-			final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
+			final Representation rep = cr.delete(NTriplesRepresentation.class);
 			return createGraph(cr, rep);
 		} catch (ResourceException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (OtsoFullJavaNetworkException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -216,13 +200,15 @@ public class RestUnicastCommunication implements ICommunication {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
-				final Representation rep = cr.delete(MediaType.TEXT_RDF_NTRIPLES);
+				final Representation rep = cr.delete(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (OtsoFullJavaNetworkException e) {
 				e.printStackTrace();
 			}
 		}
@@ -243,18 +229,64 @@ public class RestUnicastCommunication implements ICommunication {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = new ClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
-				final Representation rep = cr.get(MediaType.TEXT_RDF_NTRIPLES);
-				// TODO: NOT IMPLEMENTED!!!
-				return new Graph[]{ new Graph( rep.getText(), SemanticFormat.NTRIPLES) };
+				final Representation rep = cr.get(NTriplesRepresentation.class);
+				
+				return createGraphs(cr, rep);
 			} catch (ResourceException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (OtsoFullJavaNetworkException e) {
+				e.printStackTrace();
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Given a client resource and a representation, generate the proper graph, taking into account signatures.
+	 * 
+	 * @param clientResource
+	 * @param outputRepresentation
+	 * @return the graph or null, if the response was some kind of error
+	 * @throws IOException
+	 */
+	private Graph createGraph(final ClientResource clientResource, final Representation outputRepresentation)
+			throws IOException, OtsoFullJavaNetworkException {
+		if(outputRepresentation == null)
+			return null;
+		
+		if(!(outputRepresentation instanceof SemanticFormatRepresentation))
+			throw new OtsoFullJavaNetworkException("Unexpected returned representation (semantic representation expected): " + outputRepresentation.getClass().getName());
+		
+		// What semantic format was used for the output?
+		final SemanticFormat semanticFormat = SemanticFormatRepresentationRegistry.getSemanticFormat(outputRepresentation.getMediaType());
+		
+		// Is it signed?
+		final Form httpAttributes = (Form)clientResource.getResponse().getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+		final String user = httpAttributes.getFirstValue(OTSOPACK_USER, null);
+		// TODO: the signature process is still missing
+		
+		if(user == null) // Not signed
+			return new Graph( outputRepresentation.getText(), semanticFormat);
+		return new SignedGraph(outputRepresentation.getText(), semanticFormat, new User(user));
+	}	
+	
+	private Graph [] createGraphs(final ClientResource clientResource, final Representation outputRepresentation) throws IOException, OtsoFullJavaNetworkException {
+		if(outputRepresentation == null)
+			return null;
+		
+		if(!(outputRepresentation instanceof SemanticFormatRepresentation))
+			throw new OtsoFullJavaNetworkException("Unexpected returned representation (semantic representation expected): " + outputRepresentation.getClass().getName());
+		
+		if(outputRepresentation instanceof RdfMultipartRepresentation)
+			return ((RdfMultipartRepresentation) outputRepresentation).getGraphs();
+			
+		return new Graph[]{ 
+			createGraph(clientResource, outputRepresentation)	
+		};
 	}
 
 	@Override
