@@ -27,9 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
-import org.restlet.data.Parameter;
 import org.restlet.data.Preference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -164,9 +162,13 @@ public class AbstractServerResource extends ServerResource {
 	//XXX test!
 	protected User getCurrentClient() {//throws ClientNotAuthenticatedException {
 		String sessionId = obtainSessionIdFromCookies();
-		if( sessionId==null ) sessionId = obtainSessionIdFromGETParameter();
+		if( sessionId==null ) 
+			sessionId = obtainSessionIdFromGETParameter();
+		if ( sessionId == null)
+			return null;
 		final UserSession us = ((OtsopackApplication)getApplication()).getSessionManager().getSession(sessionId);
-		if(us==null) return null;
+		if(us==null) 
+			return null;
 		return new User(us.getUserIdentifier());
 	}
 }
