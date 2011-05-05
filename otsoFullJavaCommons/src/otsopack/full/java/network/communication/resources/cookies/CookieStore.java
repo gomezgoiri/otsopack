@@ -11,10 +11,11 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.communication.resources;
+package otsopack.full.java.network.communication.resources.cookies;
 
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.restlet.data.Cookie;
@@ -27,19 +28,22 @@ public class CookieStore implements ICookieAdder {
 		this.cookies = new CopyOnWriteArrayList<ExpirableCookie>();
 	}
 	
-	public Iterator<ExpirableCookie> getCookies() {
-		deleteExpired();
-		return this.cookies.iterator();
+	public Set<Cookie> getCookies() {
+		return getUnexpiredAndDeleteExpired();
 	}
 	
-	private void deleteExpired() {
+	private Set<Cookie> getUnexpiredAndDeleteExpired() {
+		final Set<Cookie> ret = new HashSet<Cookie>();
 		for(ExpirableCookie cookie: this.cookies) {
 			synchronized(this) {
 				if( cookie.hasExpired() ) {
 					this.cookies.remove(cookie);
+				} else {
+					ret.add(cookie.getCookie());
 				}
 			}
 		}
+		return ret;
 	}
 	
 	/* (non-Javadoc)
