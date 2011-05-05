@@ -13,15 +13,18 @@
  */
 package otsopack.full.java.network.communication.resources;
 
-import java.util.Iterator;
+import java.util.Set;
 
+import org.restlet.data.Cookie;
 import org.restlet.resource.ClientResource;
 
+import otsopack.full.java.network.communication.resources.cookies.CookieStore;
+
 public class ClientResourceFactory {
-	private final CookieStore cookies;
+	private final CookieStore cookieStore;
 
 	public ClientResourceFactory() {
-		this.cookies = new CookieStore();
+		this.cookieStore = new CookieStore();
 	}
 	
 	/**
@@ -33,11 +36,9 @@ public class ClientResourceFactory {
 	 * 		The ClientResource with the needed cookies.
 	 */
 	public ClientResource createStatefullClientResource(String uri) {
-		final CustomClientResource acr = new CustomClientResource(uri, this.cookies);
-		final Iterator<ExpirableCookie> it = this.cookies.getCookies();
-		while( it.hasNext() ) {
-			acr.getRequest().getCookies().add(it.next().getCookie());
-		}
+		final CustomClientResource acr = new CustomClientResource(uri, this.cookieStore);
+		final Set<Cookie> cookies = this.cookieStore.getCookies();
+		acr.getRequest().getCookies().addAll(cookies);
 		return acr;
 	}
 }

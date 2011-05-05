@@ -19,8 +19,10 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
+import otsopack.full.java.network.communication.resources.cookies.ICookieAdder;
+
 public class CustomClientResource extends ClientResource {
-	ICookieAdder adder;
+	final private ICookieAdder adder;
 	
 	public CustomClientResource(String uri, ICookieAdder adder) {
 		super(uri);
@@ -34,6 +36,9 @@ public class CustomClientResource extends ClientResource {
 		}
 	}
 	
+	/**
+	 * Method called when GET, POST, DELETE or PUT HTTP verbs are used.
+	 */
     @Override
     protected <T> T toObject(Representation source, Class<T> target) throws ResourceException {
     	T object = super.toObject(source, target);

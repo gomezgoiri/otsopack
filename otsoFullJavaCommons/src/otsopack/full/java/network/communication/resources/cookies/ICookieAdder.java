@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.communication.resources;
+package otsopack.full.java.network.communication.resources.cookies;
 
 import org.restlet.data.CookieSetting;
 
