@@ -28,6 +28,8 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.resources.ClientResourceFactory;
+import otsopack.authn.client.AuthenticationClient;
+import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -53,10 +55,20 @@ public class RestUnicastCommunication implements ICommunication {
 	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
 	
 	private final String baseRESTServer;
+	private final AuthenticationClient authenticationClient;
 	private final ClientResourceFactory clientFactory = new ClientResourceFactory();
 	
 	public RestUnicastCommunication(String restserver) {
+		this(restserver, new LocalCredentialsManager()); 
+	}
+	
+	public RestUnicastCommunication(String restserver, LocalCredentialsManager credentialsManager) {
 		this.baseRESTServer = restserver;
+		this.authenticationClient = new AuthenticationClient(credentialsManager); 
+	}
+	
+	public LocalCredentialsManager getLocalCredentialsManager(){
+		return this.authenticationClient.getLocalCredentialsManager();
 	}
 	
 	String getBaseURI(String spaceuri) {
