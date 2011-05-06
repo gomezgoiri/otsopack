@@ -12,6 +12,8 @@ syntax: regexp
 
 ^otsoIdentityProvider/bin
 ^otsoAuthentication/bin
+^otsoAuthentication/libs
+^otsoAuthentication/dist
 
 ^otsoSE/bin
 

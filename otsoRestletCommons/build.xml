@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="otsoCommons" default="dist">
+<project name="otsoRestletCommons" default="dist">
 	
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />

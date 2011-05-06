@@ -329,4 +329,12 @@ public interface ITripleSpace extends ILayer {
 			throws TSException;
 
 	public abstract Graph query(String spaceURI, Template template) throws TSException;
+
+	public abstract void setDefaultSemanticFormat(SemanticFormat format);
+
+	public abstract void setDefaultTimeout(int timeout);
+
+	public abstract SemanticFormat getDefaultSemanticFormat();
+
+	public abstract int getDefaultTimeout();
 }
