@@ -61,13 +61,13 @@ public class RestNetwork implements INetwork {
 	
 	@Override
 	public Graph read(String spaceURI, String graphURI,	SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, filters, timeout);
 	}
 	
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 	
@@ -85,13 +85,13 @@ public class RestNetwork implements INetwork {
 	
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		return this.comm.take(spaceURI, graphURI, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		return this.comm.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 	

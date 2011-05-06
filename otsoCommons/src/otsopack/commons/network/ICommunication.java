@@ -65,7 +65,6 @@ public interface ICommunication extends ILayer {
 	
 	/**
 	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
 	 * @param outputFormat
@@ -76,12 +75,12 @@ public interface ICommunication extends ILayer {
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
 	
 	/**
 	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
 	 * @param outputFormat
@@ -90,8 +89,9 @@ public interface ICommunication extends ILayer {
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -125,7 +125,6 @@ public interface ICommunication extends ILayer {
 
 	/**
 	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
 	 * @param outputFormat
@@ -136,12 +135,12 @@ public interface ICommunication extends ILayer {
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
 	
 	/**
 	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
 	 * @param outputFormat
@@ -150,8 +149,9 @@ public interface ICommunication extends ILayer {
 	 *  	If the timeout is greater than 0, it waits the specified timeout.
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
 
 	/**
 	 * Takes a graph using a template. Wait the specified timeout or until a response is received.

@@ -28,12 +28,12 @@ public class OtsoAuthnApplication extends AbstractOtsopackApplication<IControlle
 	
 	private IClientResourceFactory clientResourceFactory;
 	
-	static{
+	static {
 		addPaths(SessionRequestResource.getRoots());
 		addPaths(ValidatedSessionResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots){
+	private static void addPaths(Map<String, Class<?>> roots) {
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}
@@ -42,17 +42,17 @@ public class OtsoAuthnApplication extends AbstractOtsopackApplication<IControlle
 		super(PATHS);
 	}
 	
-	public OtsoAuthnApplication(IController controller){
+	public OtsoAuthnApplication(IController controller) {
 		this();
 		setController(controller);
 	}
 	
-	public OtsoAuthnApplication(IAuthenticatedUserHandler authenticatedUserHandler){
+	public OtsoAuthnApplication(IAuthenticatedUserHandler authenticatedUserHandler) {
 		this(new Controller(authenticatedUserHandler));
 	}
 	
 	// For testing purposes
-	private IClientResourceFactory getClientResourceFactory(){
+	private IClientResourceFactory getClientResourceFactory() {
 		if(this.clientResourceFactory == null)
 			return defaultClientResourceFactory;
 		

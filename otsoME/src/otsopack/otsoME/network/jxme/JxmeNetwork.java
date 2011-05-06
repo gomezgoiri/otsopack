@@ -83,7 +83,7 @@ public class JxmeNetwork implements INetwork {
         return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return communication.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
@@ -95,7 +95,7 @@ public class JxmeNetwork implements INetwork {
 		return communication.take(spaceURI,template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return communication.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 
