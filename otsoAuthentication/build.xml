@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="otsoAuthentication" default="dist">
+	
+	<property name="junit.formatter.type" value="xml" />
+	<property name="testreportdir" value="build" />
+    <property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/"/>
+    <property name="otso.restlet.commons.jar" location="../otsoRestletCommons/dist/otsoRestletCommons-sources.jar"/>
+
+    <path id="project.class.path">
+    	<pathelement location="${otso.restlet.commons.jar}" />
+    	<fileset dir="lib">
+			<include name="*.jar"/>
+    	</fileset>
+    	<fileset dir="libs">
+			<include name="*.jar"/>
+    	</fileset>
+    </path>
+	
+	<fail message="${otso.restlet.commons.libs} not found. Can not import restlet libraries">
+		<condition>
+	        <not>
+				<available file="${otso.restlet.commons.libs}"/>
+			</not>
+	    </condition>
+	</fail>
+	
+	<fail message="${otso.restlet.commons.jar} not found. Run ant dist in that directory.">
+		<condition>
+	        <not>
+				<available file="${otso.restlet.commons.jar}"/>
+			</not>
+	    </condition>
+	</fail>
+	
+	
+	<target name="javac" depends="clean">
+        <copy todir="libs">
+            <fileset dir="${otso.restlet.commons.libs}"/>
+        </copy>
+		<mkdir dir="bin"/>
+		<javac srcdir="src" destdir="bin"
+						includes="**" debug="on" debuglevel="lines,vars,source" 
+		            	encoding="utf-8">
+					<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="javac">
+		<copy todir="bin">
+			<fileset dir="src"/>
+		</copy>
+		<javac srcdir="bin" destdir="bin" 
+				includes="**" debug="on" debuglevel="lines,vars,source" 
+            	encoding="utf-8">
+			<classpath refid="project.class.path"/>
+		</javac>
+		<mkdir dir="dist" />
+		<jar destfile="dist/otsoAuthentication-sources.jar" basedir="bin"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="bin/" failonerror="false" />
+	</target>
+</project>

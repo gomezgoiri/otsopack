@@ -5,11 +5,14 @@
 	<property name="testreportdir" value="build" />
     <property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/"/>
     <property name="otso.restlet.commons.jar" location="../otsoRestletCommons/dist/otsoRestletCommons-sources.jar"/>
+    <property name="otso.authn.libs" location="../otsoAuthentication/lib/"/>
+    <property name="otso.authn.jar" location="../otsoAuthentication/dist/otsoAuthentication-sources.jar"/>
 	<property name="otso.commons.jar" location="../otsoCommons/dist/otsoCommons-sources.jar"/>
 	
     <path id="project.class.path">
 		<pathelement location="${otso.commons.jar}"/>
 		<pathelement location="${otso.restlet.commons.jar}"/>
+    	<pathelement location="${otso.authn.jar}"/>
     	<fileset dir="../otsoCommons/lib/">
 			<include name="*.jar"/>
     		<exclude name="junit.jar"/> <!-- We need JUnit 4 -->
@@ -46,9 +49,26 @@
 	    </condition>
 	</fail>
 
+	<fail message="${otso.authn.libs} not found. Can not import restlet libraries">
+		<condition>
+	        <not>
+				<available file="${otso.authn.libs}"/>
+			</not>
+	    </condition>
+	</fail>
+	
+	<fail message="${otso.authn.jar} not found. Run ant dist in that directory.">
+		<condition>
+	        <not>
+				<available file="${otso.authn.jar}"/>
+			</not>
+	    </condition>
+	</fail>
+
 	<target name="javac" depends="clean">
         <copy todir="libs">
             <fileset dir="${otso.restlet.commons.libs}"/>
+        	<fileset dir="${otso.authn.libs}"/>
         </copy>
 		<javac srcdir="src:test" destdir="bin" 
 				includes="**" debug="on" debuglevel="lines,vars,source" 
