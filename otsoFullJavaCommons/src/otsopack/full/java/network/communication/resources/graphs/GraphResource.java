@@ -36,9 +36,9 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
 		final User currentClient = getCurrentClient();
-		final Graph ret;
 		try {			
 			final IController controller = getController();
+			final Graph ret;
 			
 			if( currentClient==null )
 				ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
@@ -60,9 +60,9 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		final String space    = getArgument("space");
 		final String graphuri = getArgument("graph");
 		final User currentClient = getCurrentClient();
-		final Graph ret;
 		try {			
 			final IController controller = getController();
+			final Graph ret;
 			
 			if( currentClient==null )
 				ret = controller.getDataAccessService().take(space, graphuri, outputFormat);

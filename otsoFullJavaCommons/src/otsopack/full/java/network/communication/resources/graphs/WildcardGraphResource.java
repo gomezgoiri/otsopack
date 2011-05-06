@@ -20,6 +20,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
@@ -59,13 +60,20 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	protected Graph readGraphByWildcard(SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
+		final IController controller = getController();
+		final User currentClient = getCurrentClient();
+		
 		try {
-			final IController controller = getController();
-			final Graph ret = controller.getDataAccessService().read(space, tpl, semanticFormat);
+			final Graph ret;
+			if( currentClient==null )
+				ret = controller.getDataAccessService().read(space, tpl, semanticFormat);
+			else
+				ret = controller.getDataAccessService().read(space, tpl, semanticFormat, currentClient);
+			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
-		}catch (UnsupportedSemanticFormatException e) {
+		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -76,13 +84,20 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 	protected Graph takeGraphByWildcard(SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
+		final IController controller = getController();
+		final User currentClient = getCurrentClient();
+		
 		try {
-			final IController controller = getController();
-			Graph ret = controller.getDataAccessService().take(space, tpl, semanticFormat);
+			final Graph ret;
+			if( currentClient==null )
+				ret = controller.getDataAccessService().take(space, tpl, semanticFormat);
+			else
+				ret = controller.getDataAccessService().take(space, tpl, semanticFormat, currentClient);
+			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
-		}catch (UnsupportedSemanticFormatException e) {
+		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);

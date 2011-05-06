@@ -23,11 +23,14 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -40,28 +43,45 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		WildcardsQueryResource.ROOT + "/{subject}/{predicate}/{object-type}/{object-value}"
 	};
 	
-	protected Graph getTriplesByWildcard(SemanticFormat semanticFormat) {
-		final String space       = getArgument("space");
+	private Template getWildcard() {
 		final String subject     = getArgument("subject");
 		final String predicate   = getArgument("predicate");
 		final String objectUri   = getArgument("object-uri");
 		final String objectValue = getArgument("object-value");
 		final String objectType  = getArgument("object-type");
-		final Graph ret;
 		
 		try {
-			final Template tpl = WildcardConverter.createTemplateFromURL(subject,predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
-			final IController controller = getController();
-			ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
-			if( ret!=null ) return ret;
-		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			return WildcardConverter.createTemplateFromURL(subject, predicate, objectUri, objectValue, objectType, getOtsopackApplication().getPrefixesStorage());
 		} catch (MalformedTemplateException e) {
+			//TODO never thrown!
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 			//throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize retrieved data", e);
 		} catch (Exception e) {
 			//TODO is this a internal error or a bad request?
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
+		}
+	}
+	
+	protected Graph getTriplesByWildcard(SemanticFormat semanticFormat) {
+		final String space = getArgument("space");
+		final Template tpl = getWildcard();
+		final IController controller = getController();
+		final User currentClient = getCurrentClient();
+		
+		try {
+			final Graph ret;
+			if( currentClient==null )
+				ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
+			else
+				ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
+			
+			if( ret!=null ) return ret;
+		} catch (SpaceNotExistsException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+		} catch (UnsupportedSemanticFormatException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (UnsupportedTemplateException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No graph found with the requested arguments");
 	}

@@ -50,7 +50,7 @@ public class RestServer {
 				@Override
 				public String onAuthenticatedUser(String userIdentifier, String redirectURI, ServerResource resource) {
 		    		  final Calendar tomorrow = new GregorianCalendar();
-		    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000));
+		    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000) );
 		    		  
 		    		  final UserSession session = new UserSession(userIdentifier);
 		    		  final String sessionID = RestServer.this.application.getSessionManager().putSession(session);
