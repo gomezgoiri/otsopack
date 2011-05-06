@@ -22,14 +22,16 @@ import java.util.List;
 import java.util.Vector;
 
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-import otsopack.full.java.network.communication.resources.ClientResourceFactory;
 import otsopack.authn.client.AuthenticationClient;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
+import otsopack.authn.client.exc.AuthenticationException;
+import otsopack.authn.resources.SessionRequestResource;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -38,6 +40,7 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SignedGraph;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
@@ -48,6 +51,7 @@ import otsopack.full.java.network.communication.representations.NTriplesRepresen
 import otsopack.full.java.network.communication.representations.RdfMultipartRepresentation;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
+import otsopack.full.java.network.communication.resources.ClientResourceFactory;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
 public class RestUnicastCommunication implements ICommunication {
@@ -111,24 +115,37 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws TSException {
 		final Graph graph = read(spaceURI, graphURI, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		 */
 		try {
-			final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
-			final Representation rep = cr.get(NTriplesRepresentation.class);
-			return createGraph(cr, rep);
-		} catch (ResourceException e) {
-			e.printStackTrace();
+			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
+			final ClientResource cr = this.clientFactory.createStatefullClientResource( originalURL );
+			try {
+				final Representation rep = cr.get(NTriplesRepresentation.class);
+				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;;
+					try {
+						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+					} catch (AuthenticationException e1) {
+						throw new AuthorizationException(e1.getMessage());
+					}
+				}
+				//TODO throw a more specific exception!
+				throw new TSException(e.getMessage()); 
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -169,24 +186,37 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws TSException {
 		final Graph graph = take(spaceURI, graphURI, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws TSException {
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		 */
 		try {
+			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
 			final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
-			final Representation rep = cr.delete(NTriplesRepresentation.class);
-			return createGraph(cr, rep);
-		} catch (ResourceException e) {
-			e.printStackTrace();
+			try {
+				final Representation rep = cr.delete(NTriplesRepresentation.class);
+				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;;
+					try {
+						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+					} catch (AuthenticationException e1) {
+						throw new AuthorizationException(e1.getMessage());
+					}
+				}
+				//TODO throw a more specific exception!
+				throw new TSException(e.getMessage()); 
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
