@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 import otsopack.authn.ClientResourceFactory;
 import otsopack.authn.IClientResourceFactory;
@@ -15,6 +17,7 @@ import otsopack.authn.client.exc.AuthenticationException;
 import otsopack.authn.client.exc.NoAuthenticationUriFoundException;
 import otsopack.authn.client.exc.RedirectedToWrongIdentityProviderException;
 import otsopack.authn.client.exc.UnexpectedAuthenticationException;
+import otsopack.authn.client.exc.InvalidCredentialsException;
 import otsopack.authn.resources.SessionRequestResource;
 
 public class AuthenticationClient {
@@ -24,6 +27,10 @@ public class AuthenticationClient {
 	
 	public AuthenticationClient(LocalCredentialsManager credentialsManager){
 		this.credentialsManager = credentialsManager;
+	}
+	
+	public LocalCredentialsManager getLocalCredentialsManager(){
+		return this.credentialsManager;
 	}
 	
 	/**
@@ -58,7 +65,7 @@ public class AuthenticationClient {
 		return dataProviderFinalResponse;
 	}
 
-	private String authenticateInIdentityProvider( final String identityProviderUrl ) throws RedirectedToWrongIdentityProviderException, UnexpectedAuthenticationException {
+	private String authenticateInIdentityProvider( final String identityProviderUrl ) throws AuthenticationException {
 		
 		final Credentials credentials = this.credentialsManager.getCredentials(identityProviderUrl);
 		if(credentials == null)
@@ -71,7 +78,14 @@ public class AuthenticationClient {
 		idpForm.set("password", credentials.getPassword());
 		// TODO: change by HTTP Auth
 		
-		final Representation dataProviderUrlWithSecretRepresentation = idpClient.post(idpForm);
+		final Representation dataProviderUrlWithSecretRepresentation;
+		try {
+			dataProviderUrlWithSecretRepresentation = idpClient.post(idpForm);
+		} catch (ResourceException e) {
+			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED))
+					throw new InvalidCredentialsException("Invalid credentials provided to the identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
+			throw new AuthenticationException("Unexpected error in identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
+		}
 		
 		final String dataProviderUrlWithSecret;
 		try {
