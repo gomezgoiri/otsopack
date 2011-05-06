@@ -40,18 +40,26 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			final IController controller = getController();
 			final Graph ret;
 			
-			if( currentClient==null )
-				ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
-			else
-				ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
+			if( currentClient==null ) {
+				try {
+					ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+				} catch (AuthorizationException e) {
+					throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+				}
+			}
+			else {
+				try {
+					ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
+				} catch (AuthorizationException e) {
+					throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+				}
+			}
 			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
-		} catch (AuthorizationException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user has not access to this information.", e);
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
