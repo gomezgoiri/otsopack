@@ -19,8 +19,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.ICoordination;
 import otsopack.commons.network.INetwork;
@@ -61,61 +64,61 @@ public class RestNetwork implements INetwork {
 	
 	@Override
 	public Graph read(String spaceURI, String graphURI,	SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, filters, timeout);
 	}
 	
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return this.comm.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 	
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.read(spaceURI, template, outputFormat, filters, timeout);
 	}
 	
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat,long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.read(spaceURI, template, outputFormat, timeout);
 	}
 	
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return this.comm.take(spaceURI, graphURI, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return this.comm.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 	
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.take(spaceURI, template, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.take(spaceURI, template, outputFormat, timeout);
 	}
 	
 	@Override
 	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.query(spaceURI, template, outputFormat, filters, timeout);
 	}
 
 	@Override
 	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return this.comm.query(spaceURI, template, outputFormat, timeout);
 	}
 

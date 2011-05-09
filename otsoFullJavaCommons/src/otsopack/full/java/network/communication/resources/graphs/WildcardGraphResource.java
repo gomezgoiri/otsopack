@@ -57,7 +57,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		}
 	}
 
-	protected Graph readGraphByWildcard(SemanticFormat semanticFormat) {
+	protected Graph readGraphByWildcard(SemanticFormat outputFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		final IController controller = getController();
@@ -66,22 +66,22 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		try {
 			final Graph ret;
 			if( currentClient==null )
-				ret = controller.getDataAccessService().read(space, tpl, semanticFormat);
+				ret = controller.getDataAccessService().read(space, tpl, outputFormat);
 			else
-				ret = controller.getDataAccessService().read(space, tpl, semanticFormat, currentClient);
+				ret = controller.getDataAccessService().read(space, tpl, outputFormat, currentClient);
 			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
 	
-	protected Graph takeGraphByWildcard(SemanticFormat semanticFormat) {
+	protected Graph takeGraphByWildcard(SemanticFormat outputFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		final IController controller = getController();
@@ -90,15 +90,15 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		try {
 			final Graph ret;
 			if( currentClient==null )
-				ret = controller.getDataAccessService().take(space, tpl, semanticFormat);
+				ret = controller.getDataAccessService().take(space, tpl, outputFormat);
 			else
-				ret = controller.getDataAccessService().take(space, tpl, semanticFormat, currentClient);
+				ret = controller.getDataAccessService().take(space, tpl, outputFormat, currentClient);
 			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}

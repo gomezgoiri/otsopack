@@ -19,8 +19,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.ICoordination;
 import otsopack.commons.network.INetwork;
@@ -79,23 +82,28 @@ public class JxmeNetwork implements INetwork {
 		communication.unsubscribe(spaceURI, subscriptionURI);
 	}
 
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedSemanticFormatException, UnsupportedTemplateException  {
         return communication.query(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException  {
 		return communication.read(spaceURI, graphURI, outputFormat, timeout);
 	}
 
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws  SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return communication.read(spaceURI, template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return communication.take(spaceURI,template, outputFormat, timeout);
 	}
 	
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return communication.take(spaceURI, graphURI, outputFormat, timeout);
 	}
 
