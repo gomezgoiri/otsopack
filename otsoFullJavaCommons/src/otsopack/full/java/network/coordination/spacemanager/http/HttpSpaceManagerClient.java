@@ -25,6 +25,7 @@ import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
+import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
 
 public class HttpSpaceManagerClient implements ISpaceManager {
 	
@@ -36,7 +37,7 @@ public class HttpSpaceManagerClient implements ISpaceManager {
 
 	@Override
 	public String[] getNodes() throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.spaceManager.getURI());
+		final ClientResource client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 		final Representation repr = client.get(MediaType.APPLICATION_JSON);
 		String serializedSpaceManagers;
 		try {

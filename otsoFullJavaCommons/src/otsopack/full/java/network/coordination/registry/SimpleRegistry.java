@@ -26,7 +26,7 @@ import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
 
-public class Registry extends Thread implements IRegistry {
+public class SimpleRegistry extends Thread implements IRegistry {
 	
 	public static final int DEFAULT_INTERVAL = 10 * 1000;
 
@@ -36,11 +36,11 @@ public class Registry extends Thread implements IRegistry {
 	private final Set<SpaceManager> spaceManagers = new CopyOnWriteArraySet<SpaceManager>();
 	private final Set<String> nodes = new CopyOnWriteArraySet<String>();
 	
-	public Registry(String spaceURI, IDiscovery discovery){
+	public SimpleRegistry(String spaceURI, IDiscovery discovery){
 		this(spaceURI, discovery, DEFAULT_INTERVAL);
 	}
 	
-	public Registry(String spaceURI, IDiscovery discovery, int interval){
+	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval){
 		this.spaceURI  = spaceURI;
 		this.discovery = discovery;
 		this.interval  = interval;
