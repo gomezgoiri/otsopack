@@ -29,11 +29,12 @@ import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
+import otsopack.full.java.network.coordination.discovery.DiscoverySpaceNotFoundException;
 import otsopack.full.java.network.coordination.discovery.http.server.OtsopackHttpDiscoveryApplication;
 
 public class DiscoveryResource extends ServerResource implements IDiscoveryResource {
 	
-	private static final String ROOT = "/discovery/";
+	public static final String ROOT = "/discovery/";
 	public static final String SPACEURI_ARGUMENT = "spaceuri";
 	
 	public static Map<String, Class<?>> getRoots() {
@@ -53,7 +54,7 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 		try {
 			decodedSpaceURI = URLDecoder.decode(spaceURI, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid serialization: " + SPACEURI_ARGUMENT, e);
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid serialization: " + spaceURI, e);
 		}
 		
 		final IDiscovery discovery = ((OtsopackHttpDiscoveryApplication)getApplication()).getController().getDiscovery();
@@ -61,6 +62,8 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 		SpaceManager[] spaceManagers;
 		try {
 			spaceManagers = discovery.getSpaceManagers(decodedSpaceURI);
+		} catch (DiscoverySpaceNotFoundException e){
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found: " + spaceURI, e);
 		} catch (DiscoveryException e) {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not find a response for the given space URI: " + e.getMessage(), e);
 		}

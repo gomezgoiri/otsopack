@@ -50,4 +50,9 @@ public class SpaceManager {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "SpaceManager [uri=" + this.uri + "]";
+	}
 }
