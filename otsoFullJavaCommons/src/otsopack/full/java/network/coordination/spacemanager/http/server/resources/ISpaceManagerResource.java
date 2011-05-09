@@ -9,15 +9,16 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.coordination;
+package otsopack.full.java.network.coordination.spacemanager.http.server.resources;
 
-import java.util.Set;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
 
-public interface IRegistry {
-	
-	public Set<SpaceManager> getSpaceManagers();
-	public Set<String> getNodesBaseURLs();
+public interface ISpaceManagerResource {
+
+	@Get("json")
+	Representation getNodes();
 }

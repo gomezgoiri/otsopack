@@ -29,7 +29,6 @@ import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.full.java.network.coordination.IRegistry;
-import otsopack.full.java.network.coordination.SpaceManager;
 
 public class RestMulticastCommunication implements ICommunication {
 
@@ -57,8 +56,8 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		// Return the first result found
 		// TODO: Use ExecutorService
-		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
+		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			final Graph graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -75,8 +74,8 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
 		// Return the first result found
 		// TODO: Use ExecutorService
-		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
+		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			final Graph graph = unicast.read(spaceURI, template, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -93,8 +92,8 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
-		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
+		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			final Graph graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -111,8 +110,8 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
-		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
+		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			final Graph graph = unicast.take(spaceURI, template, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -128,8 +127,8 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
 		final List<Graph> graphs = new Vector<Graph>();
-		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
+		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			final Graph [] retrievedGraphs = unicast.query(spaceURI, template, outputFormat, filters, timeout);
 			if(retrievedGraphs != null)
 				for(Graph newGraph : retrievedGraphs)
@@ -138,8 +137,8 @@ public class RestMulticastCommunication implements ICommunication {
 		return graphs.toArray(new Graph[]{});
 	}
 
-	private RestUnicastCommunication createUnicastCommunication(SpaceManager spaceManager) {
-		return new RestUnicastCommunication(spaceManager.getURI(), this.credentialsManager);
+	private RestUnicastCommunication createUnicastCommunication(String nodeBaseURI) {
+		return new RestUnicastCommunication(nodeBaseURI, this.credentialsManager);
 	}
 
 	@Override

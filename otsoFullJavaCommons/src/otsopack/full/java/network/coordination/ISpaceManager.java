@@ -14,10 +14,8 @@
  */
 package otsopack.full.java.network.coordination;
 
-import java.util.Set;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
-public interface IRegistry {
-	
-	public Set<SpaceManager> getSpaceManagers();
-	public Set<String> getNodesBaseURLs();
+public interface ISpaceManager {
+	public String [] getNodes() throws SpaceManagerException;
 }
