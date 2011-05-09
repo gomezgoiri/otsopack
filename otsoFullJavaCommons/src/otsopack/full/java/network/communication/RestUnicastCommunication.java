@@ -130,7 +130,7 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
-			final ClientResource cr = this.clientFactory.createStatefullClientResource( originalURL );
+			final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
 			try {
 				final Representation rep = cr.get(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
@@ -169,7 +169,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.get(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
@@ -201,7 +201,7 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
-			final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
+			final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			try {
 				final Representation rep = cr.delete(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
@@ -239,7 +239,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
 				final Representation rep = cr.delete(NTriplesRepresentation.class);
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
@@ -268,7 +268,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefullClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
 				final Representation rep = cr.get(NTriplesRepresentation.class);
 				
 				return createGraphs(cr, rep);
