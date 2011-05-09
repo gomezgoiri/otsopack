@@ -26,6 +26,7 @@ import org.restlet.routing.Router;
 import org.restlet.service.MetadataService;
 
 import otsopack.commons.IController;
+import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.representations.OtsopackConverter;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
@@ -40,6 +41,7 @@ public class OtsopackApplication extends Application {
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	private final PrefixesStorage prefixesStorage = new PrefixesStorage();
 	private final ISessionManager<UserSession> sessionManager = new MemorySessionManager<UserSession>();
+	private final ICommunication multicastProvider;
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 
@@ -56,8 +58,17 @@ public class OtsopackApplication extends Application {
 	}
 	
 	
-	public OtsopackApplication(){
+	public OtsopackApplication(ICommunication multicastProvider){
 		this.resources = PATHS;
+		this.multicastProvider = multicastProvider;
+	}
+	
+	public boolean isMulticastProvider(){
+		return this.multicastProvider != null;
+	}
+	
+	public ICommunication getMulticastProvider(){
+		return this.multicastProvider;
 	}
 	
 	public static void registerExtensions(MetadataService metadataService){

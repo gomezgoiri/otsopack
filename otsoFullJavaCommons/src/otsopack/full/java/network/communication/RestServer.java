@@ -42,7 +42,7 @@ public class RestServer {
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackApplication();
+	    this.application = new OtsopackApplication(null);
 	    this.application.setController(controller);
 	    
 	    this.authnApp = new OtsoAuthnApplication(
