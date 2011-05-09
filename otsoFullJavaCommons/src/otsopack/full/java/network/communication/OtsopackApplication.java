@@ -28,6 +28,7 @@ import org.restlet.service.MetadataService;
 import otsopack.commons.IController;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.representations.OtsopackConverter;
+import otsopack.full.java.network.communication.resources.authn.LoginResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesResource;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 import otsopack.full.java.network.communication.resources.spaces.SpacesResource;
@@ -51,6 +52,7 @@ public class OtsopackApplication extends Application {
 	
 	static{
 		addPaths(PrefixesResource.getRoots());
+		addPaths(LoginResource.getRoots());
 		addPaths(SpacesResource.getRoots());
 	}
 	
