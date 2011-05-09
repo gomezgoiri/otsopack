@@ -96,6 +96,23 @@ public class RestUnicastCommunication implements ICommunication {
 	public void shutdown() throws TSException {
 	}
 	
+	public void login() throws AuthorizationException {
+		final String originalURL = this.baseRESTServer+"login/";
+		final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
+		try {
+			cr.get(NTriplesRepresentation.class); // if no exception is thrown, the user is logged
+		} catch (ResourceException e) {
+			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
+				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;
+				try {
+					this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+				} catch (AuthenticationException e1) {
+					throw new AuthorizationException(e1.getMessage());
+				}
+			}
+		}
+	}
+	
 	protected Graph filterResults(Graph graph, Filter[] filters) {
 		if( graph !=null ){
 			for(Filter filter: filters) 
@@ -138,7 +155,7 @@ public class RestUnicastCommunication implements ICommunication {
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;;
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;
 					try {
 						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
 					} catch (AuthenticationException e1) {
