@@ -62,7 +62,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		}
 	}
 	
-	protected Graph getTriplesByWildcard(SemanticFormat semanticFormat) {
+	protected Graph getTriplesByWildcard(SemanticFormat outputFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		final IController controller = getController();
@@ -71,15 +71,15 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		try {
 			final Graph ret;
 			if( currentClient==null )
-				ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
+				ret = controller.getDataAccessService().query(space,tpl, outputFormat);
 			else
-				ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
+				ret = controller.getDataAccessService().query(space,tpl, outputFormat, currentClient);
 			
 			if( ret!=null ) return ret;
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
