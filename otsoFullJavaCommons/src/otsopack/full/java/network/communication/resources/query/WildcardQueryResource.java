@@ -63,36 +63,35 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		}
 	}
 	
-	protected Graph [] getTriplesByWildcard(SemanticFormat semanticFormat) {
+	protected Graph [] getTriplesByWildcard(SemanticFormat outputFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		final IController controller = getController();
 		final User currentClient = getCurrentClient();
 		
 		try {
-			Graph ret = null;
+			final Graph ret;
 			
 			if( controller != null ){
-				
 				if( currentClient==null )
-					ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
+					ret = controller.getDataAccessService().query(space,tpl, outputFormat);
 				else
-					ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
-			}
+					ret = controller.getDataAccessService().query(space,tpl, outputFormat, currentClient);
+			} else ret=null;
 			
 			Graph [] graphs = new Graph[]{};
 			
 			if( isMulticastProvider() ){
-				final Graph [] queried = getMulticastProvider().query(space, tpl, semanticFormat, getTimeout());
+				final Graph [] queried = getMulticastProvider().query(space, tpl, outputFormat, getTimeout());
 				if(queried != null)
 					graphs = queried;
 			}
 			
-			if( ret == null && graphs.length == 0)
+			if( ret==null && graphs.length == 0)
 				throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No graph found with the requested arguments");
 			
 			
-			if( ret == null )
+			if( ret==null )
 				return graphs;
 			
 			final Graph [] setOfGraphs = new Graph[graphs.length + 1]; // graphs + ret
@@ -102,9 +101,9 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			
 			return setOfGraphs;
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}

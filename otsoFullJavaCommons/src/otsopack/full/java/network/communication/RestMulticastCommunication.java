@@ -23,8 +23,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
@@ -53,7 +56,8 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
@@ -66,12 +70,14 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return read(spaceURI, graphURI, outputFormat, new Filter[]{}, timeout);
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
@@ -84,12 +90,14 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return read(spaceURI, template, outputFormat, new Filter[]{}, timeout);
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
@@ -102,12 +110,14 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		return take(spaceURI, graphURI, outputFormat, new Filter[]{}, timeout);
 	}
 
 	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
@@ -120,12 +130,14 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return take(spaceURI, template, outputFormat, new Filter[]{}, timeout);
 	}
 
 	@Override
-	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		final List<Graph> graphs = new Vector<Graph>();
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
@@ -142,7 +154,8 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException {
+	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return query(spaceURI, template, outputFormat, new Filter[]{}, timeout);
 	}
 

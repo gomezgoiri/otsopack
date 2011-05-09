@@ -43,6 +43,8 @@ import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
@@ -116,14 +118,14 @@ public class RestUnicastCommunication implements ICommunication {
 	
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		final Graph graph = read(spaceURI, graphURI, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
@@ -142,9 +144,16 @@ public class RestUnicastCommunication implements ICommunication {
 					} catch (AuthenticationException e1) {
 						throw new AuthorizationException(e1.getMessage());
 					}
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
+					throw new AuthorizationException(e.getMessage());
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+					if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
+						throw new SpaceNotExistsException(e.getMessage());
+					}
+					return null; // Graph not found, it returns nothing
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
+					throw new UnsupportedSemanticFormatException(e.getMessage());
 				}
-				//TODO throw a more specific exception!
-				throw new TSException(e.getMessage()); 
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -158,20 +167,36 @@ public class RestUnicastCommunication implements ICommunication {
 
 
 	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		final Graph graph = read(spaceURI, template, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
-				final Representation rep = cr.get(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				final String originalURL = getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI;
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
+				try {
+					final Representation rep = cr.get(NTriplesRepresentation.class);
+					return createGraph(cr, rep);
+				} catch (ResourceException e) {
+					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
+							throw new SpaceNotExistsException(e.getMessage());
+						}
+						return null; // Graph not found, it returns nothing
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST) ||
+							e.getStatus().equals(Status.SERVER_ERROR_INTERNAL)) {
+						throw new UnsupportedTemplateException(e.getMessage());
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
+						throw new UnsupportedSemanticFormatException(e.getMessage());
+					}
+				}
 			} catch (ResourceException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
@@ -187,14 +212,14 @@ public class RestUnicastCommunication implements ICommunication {
 	
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		final Graph graph = take(spaceURI, graphURI, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws TSException {
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
@@ -213,9 +238,16 @@ public class RestUnicastCommunication implements ICommunication {
 					} catch (AuthenticationException e1) {
 						throw new AuthorizationException(e1.getMessage());
 					}
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
+					throw new AuthorizationException(e.getMessage());
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+					if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
+						throw new SpaceNotExistsException(e.getMessage());
+					}
+					return null; // Graph not found, it returns nothing
+				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
+					throw new UnsupportedSemanticFormatException(e.getMessage());
 				}
-				//TODO throw a more specific exception!
-				throw new TSException(e.getMessage()); 
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -228,20 +260,36 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
-		final Graph graph = read(spaceURI, template, outputFormat, timeout);
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		final Graph graph = take(spaceURI, template, outputFormat, timeout);
 		return filterResults(graph, filters);
 	}
 
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
-				final Representation rep = cr.delete(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				
+				try {
+					final Representation rep = cr.delete(NTriplesRepresentation.class);
+					return createGraph(cr, rep);
+				} catch (ResourceException e) {
+					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
+							throw new SpaceNotExistsException(e.getMessage());
+						}
+						return null; // Graph not found, it returns nothing
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST) ||
+							e.getStatus().equals(Status.SERVER_ERROR_INTERNAL)) {
+						throw new UnsupportedTemplateException(e.getMessage());
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
+						throw new UnsupportedSemanticFormatException(e.getMessage());
+					}
+				}
 			} catch (ResourceException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
@@ -257,23 +305,33 @@ public class RestUnicastCommunication implements ICommunication {
 	
 	@Override
 	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		final Graph [] graphs = query(spaceURI, template, outputFormat, timeout);
 		return filterResults(graphs, filters);
 	}
 
 	@Override
 	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
-				final Representation rep = cr.get(NTriplesRepresentation.class);
-				
-				return createGraphs(cr, rep);
-			} catch (ResourceException e) {
-				e.printStackTrace();
+				try {
+					final Representation rep = cr.get(NTriplesRepresentation.class);
+					return createGraphs(cr, rep);
+				} catch (ResourceException e) {
+					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
+							throw new SpaceNotExistsException(e.getMessage());
+						}
+						return null; // Graph not found, it returns nothing
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST)) {
+						throw new UnsupportedTemplateException(e.getMessage());
+					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
+						throw new UnsupportedSemanticFormatException(e.getMessage());
+					}
+				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

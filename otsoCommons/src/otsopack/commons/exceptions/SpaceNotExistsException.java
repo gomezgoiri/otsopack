@@ -15,6 +15,8 @@
 package otsopack.commons.exceptions;
 
 public class SpaceNotExistsException extends SpaceException {
+	public static final String HTTPMSG = "Space not found";
+	
 	private static final long serialVersionUID = 1L;
 
 	public SpaceNotExistsException() {

@@ -72,7 +72,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 			bodyHtml.append("</ul>\n");
 			System.out.println(bodyHtml.toString());
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedEncodingException e) {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "URL could not be encoded", e);
 		}
@@ -90,7 +90,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 			final IController controller = getController();
 			ret = controller.getDataAccessService().getLocalGraphs(space);
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		}
 		return JSONEncoder.encode(ret);
 	}
@@ -118,7 +118,7 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 			final IController controller = getController();
 			return controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't write in format: " + semanticFormat, e);
 		}

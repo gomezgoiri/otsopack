@@ -20,8 +20,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
+import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
+import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
@@ -77,7 +80,8 @@ public interface ICommunication extends ILayer {
 	 * @return set of triples or null if nothing found
 	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
@@ -91,7 +95,8 @@ public interface ICommunication extends ILayer {
 	 * @return set of triples or null if nothing found
 	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -107,7 +112,8 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * read one graph by using a template. Wait the specified timeout or until a response is received.
@@ -121,7 +127,8 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 
 	/**
 	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
@@ -137,7 +144,8 @@ public interface ICommunication extends ILayer {
 	 * @return set of triples or null if nothing found
 	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
@@ -151,7 +159,8 @@ public interface ICommunication extends ILayer {
 	 * @return set of triples or null if nothing found
 	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
 
 	/**
 	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
@@ -167,7 +176,8 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
@@ -181,7 +191,8 @@ public interface ICommunication extends ILayer {
 	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing found
 	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * query triples by using a template waiting a maximum timeout
@@ -197,7 +208,8 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException;
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 
 	/**
 	 * query triples by using a template waiting a maximum timeout
@@ -211,7 +223,8 @@ public interface ICommunication extends ILayer {
 	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws SpaceNotExistsException;
+	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * subscribe to one template
@@ -220,14 +233,14 @@ public interface ICommunication extends ILayer {
 	 * @param listener
 	 * @return subscription uri
 	 */
-	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener)  throws SpaceNotExistsException;
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException;
 
 	/**
 	 * unsubscribe to subscription
 	 * @param spaceURI
 	 * @param subscription
 	 */
-	public void unsubscribe(String spaceURI, String subscriptionURI)  throws SpaceNotExistsException;
+	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException;
 
 	/**
 	 * advertise one template
