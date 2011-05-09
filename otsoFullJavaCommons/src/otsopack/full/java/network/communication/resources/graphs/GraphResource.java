@@ -24,6 +24,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -38,28 +39,37 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		final User currentClient = getCurrentClient();
 		try {			
 			final IController controller = getController();
-			final Graph ret;
+			Graph ret = null;
 			
-			if( currentClient==null ) {
-				try {
-					ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
-				} catch (AuthorizationException e) {
-					throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+			if(controller != null){
+				if( currentClient==null ) {
+					try {
+						ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
+					} catch (AuthorizationException e) {
+						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+					}
+				}
+				else {
+					try {
+						ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
+					} catch (AuthorizationException e) {
+						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+					}
 				}
 			}
-			else {
-				try {
-					ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
-				} catch (AuthorizationException e) {
-					throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
-				}
-			}
 			
-			if( ret!=null ) return ret;
+			if( ret != null ) 
+				return ret;
+			
+			if( isMulticastProvider() )
+				return getMulticastProvider().read(space, graphuri, outputFormat, getTimeout());
+			
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+		} catch (TSException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage(), e);
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
@@ -70,27 +80,36 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		final User currentClient = getCurrentClient();
 		try {			
 			final IController controller = getController();
-			final Graph ret;
+			Graph ret = null;
 			
-			if( currentClient==null )
-				try {
-					ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
-				} catch (AuthorizationException e) {
-					throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
-				}
-			else {
-				try {
-					ret = controller.getDataAccessService().take(space, graphuri, outputFormat, currentClient);
-				} catch (AuthorizationException e) {
-					throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+			if(controller != null){
+				if( currentClient==null )
+					try {
+						ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
+					} catch (AuthorizationException e) {
+						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+					}
+				else {
+					try {
+						ret = controller.getDataAccessService().take(space, graphuri, outputFormat, currentClient);
+					} catch (AuthorizationException e) {
+						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+					}
 				}
 			}
 			
-			if( ret!=null ) return ret;
+			if( ret!=null ) 
+				return ret;
+			
+			if( isMulticastProvider() )
+				return getMulticastProvider().take(space, graphuri, outputFormat, getTimeout());
+				
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+		} catch (TSException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage(), e);
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}

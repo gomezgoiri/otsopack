@@ -31,6 +31,7 @@ import otsopack.commons.exceptions.MalformedTemplateException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
+import otsopack.full.java.network.communication.representations.RepresentationException;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -62,21 +63,44 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		}
 	}
 	
-	protected Graph getTriplesByWildcard(SemanticFormat semanticFormat) {
+	protected Graph [] getTriplesByWildcard(SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
 		final Template tpl = getWildcard();
 		final IController controller = getController();
 		final User currentClient = getCurrentClient();
 		
 		try {
-			final Graph ret;
-			if( currentClient==null )
-				ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
-			else
-				ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
+			Graph ret = null;
 			
-			if( ret!=null ) 
-				return ret;
+			if( controller != null ){
+				
+				if( currentClient==null )
+					ret = controller.getDataAccessService().query(space,tpl, semanticFormat);
+				else
+					ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
+			}
+			
+			Graph [] graphs = new Graph[]{};
+			
+			if( isMulticastProvider() ){
+				final Graph [] queried = getMulticastProvider().query(space, tpl, semanticFormat, getTimeout());
+				if(queried != null)
+					graphs = queried;
+			}
+			
+			if( ret == null && graphs.length == 0)
+				throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No graph found with the requested arguments");
+			
+			
+			if( ret == null )
+				return graphs;
+			
+			final Graph [] setOfGraphs = new Graph[graphs.length + 1]; // graphs + ret
+			setOfGraphs[0] = ret;
+			for(int i = 0; i < graphs.length; ++i)
+				setOfGraphs[i + 1] = graphs[i];
+			
+			return setOfGraphs;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
@@ -84,14 +108,17 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
-		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No graph found with the requested arguments");
 	}
 	
 	@Override
 	public Representation query(){
-		SemanticFormat semanticFormat = checkOutputSemanticFormats();
-		final Graph graph = getTriplesByWildcard(semanticFormat);
-		return serializeGraph(graph);
+		final SemanticFormat semanticFormat = checkOutputSemanticFormats();
+		final Graph [] graph = getTriplesByWildcard(semanticFormat);
+		try {
+			return serializeGraph(graph);
+		} catch (RepresentationException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize result: " + e.getMessage(), e);
+		}
 	}
 	
 	

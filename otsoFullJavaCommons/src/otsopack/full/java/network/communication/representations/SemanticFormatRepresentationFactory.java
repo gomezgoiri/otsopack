@@ -44,6 +44,15 @@ public class SemanticFormatRepresentationFactory {
 		this.registeredClasses.put(name, representationClass);
 	}
 	
+	public SemanticFormatRepresentation create(Graph [] graphs) throws RepresentationException{
+		if(graphs.length == 0)
+			throw new IllegalArgumentException("There must be at least one graph when creating a representation");
+		if(graphs.length == 1)
+			return create(graphs[0]);
+		
+		return new RdfMultipartRepresentation(graphs);
+	}
+	
 	public SemanticFormatRepresentation create(Graph graph){
 		final Class<? extends SemanticFormatRepresentation> representationClass = this.registeredClasses.get(graph.getFormat());
 		if(representationClass == null)

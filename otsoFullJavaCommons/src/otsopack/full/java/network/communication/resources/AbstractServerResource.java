@@ -39,7 +39,9 @@ import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFormatsManager;
+import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.OtsopackApplication;
+import otsopack.full.java.network.communication.representations.RepresentationException;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationFactory;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 import otsopack.full.java.network.communication.session.UserSession;
@@ -70,6 +72,10 @@ public class AbstractServerResource extends ServerResource {
 			ret.add(argn.substring(1, argn.length()-1));
 		}
 		return ret;
+	}
+	
+	protected int getTimeout(){
+		return getOtsopackApplication().getTimeout();
 	}
 	
 	protected IController getController() {
@@ -115,6 +121,10 @@ public class AbstractServerResource extends ServerResource {
 		}
 		
 		return acceptedSemanticFormats.toArray(new SemanticFormat[]{});
+	}
+	
+	protected Representation serializeGraph(Graph [] graph) throws RepresentationException{
+		return semanticFormatRepresentationFactory.create(graph);
 	}
 	
 	protected Representation serializeGraph(Graph graph){
@@ -171,4 +181,12 @@ public class AbstractServerResource extends ServerResource {
 			return null;
 		return new User(us.getUserIdentifier());
 	}
+	
+	protected boolean isMulticastProvider(){
+		return getOtsopackApplication().isMulticastProvider();
+	}
+	
+	protected ICommunication getMulticastProvider(){
+		return getOtsopackApplication().getMulticastProvider();
+	}	
 }

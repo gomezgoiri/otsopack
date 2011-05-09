@@ -44,6 +44,8 @@ public class OtsopackApplication extends Application {
 	private final ICommunication multicastProvider;
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
+	private static final String TIMEOUT_PROPERTY_NAME    = "timeout";
+	private static final Integer DEFAULT_TIMEOUT         = Integer.valueOf(5 * 1000);
 
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
@@ -57,10 +59,14 @@ public class OtsopackApplication extends Application {
 			PATHS.put(uri, roots.get(uri));
 	}
 	
+	public OtsopackApplication(){
+		this(null);
+	}
 	
 	public OtsopackApplication(ICommunication multicastProvider){
 		this.resources = PATHS;
 		this.multicastProvider = multicastProvider;
+		this.attributes.put(TIMEOUT_PROPERTY_NAME, DEFAULT_TIMEOUT);
 	}
 	
 	public boolean isMulticastProvider(){
@@ -101,6 +107,14 @@ public class OtsopackApplication extends Application {
 	
 	public void setController(IController controller){
 		this.attributes.put(CONTROLLER_PROPERTY_NAME, controller);
+	}
+	
+	public int getTimeout(){
+		return ((Integer)this.attributes.get(TIMEOUT_PROPERTY_NAME)).intValue();
+	}
+	
+	public void setTimeout(int timeout){
+		this.attributes.put(TIMEOUT_PROPERTY_NAME, Integer.valueOf(timeout));
 	}
 	
 	public PrefixesStorage getPrefixesStorage(){

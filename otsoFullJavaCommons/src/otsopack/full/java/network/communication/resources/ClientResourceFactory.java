@@ -35,7 +35,7 @@ public class ClientResourceFactory {
 	 * @return
 	 * 		The ClientResource with the needed cookies.
 	 */
-	public ClientResource createStatefullClientResource(String uri) {
+	public ClientResource createStatefulClientResource(String uri) {
 		final CustomClientResource acr = new CustomClientResource(uri, this.cookieStore);
 		final Set<Cookie> cookies = this.cookieStore.getCookies();
 		acr.getRequest().getCookies().addAll(cookies);

@@ -17,6 +17,7 @@ package otsopack.full.java.network.communication;
 import java.util.List;
 import java.util.Vector;
 
+import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
@@ -33,9 +34,15 @@ import otsopack.full.java.network.coordination.SpaceManager;
 public class RestMulticastCommunication implements ICommunication {
 
 	private final IRegistry registry;
+	private final LocalCredentialsManager credentialsManager;
 	
 	public RestMulticastCommunication(IRegistry registry){
+		this(registry, new LocalCredentialsManager());
+	}
+	
+	public RestMulticastCommunication(IRegistry registry, LocalCredentialsManager credentialsManager){
 		this.registry = registry;
+		this.credentialsManager = credentialsManager;
 	}
 	
 	@Override
@@ -51,7 +58,7 @@ public class RestMulticastCommunication implements ICommunication {
 		// Return the first result found
 		// TODO: Use ExecutorService
 		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = new RestUnicastCommunication(spaceManager.getURI());
+			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
 			final Graph graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -69,7 +76,7 @@ public class RestMulticastCommunication implements ICommunication {
 		// Return the first result found
 		// TODO: Use ExecutorService
 		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = new RestUnicastCommunication(spaceManager.getURI());
+			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
 			final Graph graph = unicast.read(spaceURI, template, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -87,7 +94,7 @@ public class RestMulticastCommunication implements ICommunication {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = new RestUnicastCommunication(spaceManager.getURI());
+			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
 			final Graph graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -105,7 +112,7 @@ public class RestMulticastCommunication implements ICommunication {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = new RestUnicastCommunication(spaceManager.getURI());
+			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
 			final Graph graph = unicast.take(spaceURI, template, outputFormat, filters, timeout);
 			if(graph != null)
 				return graph;
@@ -122,13 +129,17 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws SpaceNotExistsException {
 		final List<Graph> graphs = new Vector<Graph>();
 		for(SpaceManager spaceManager : this.registry.getSpaceManagers()){
-			final RestUnicastCommunication unicast = new RestUnicastCommunication(spaceManager.getURI());
+			final RestUnicastCommunication unicast = createUnicastCommunication(spaceManager);
 			final Graph [] retrievedGraphs = unicast.query(spaceURI, template, outputFormat, filters, timeout);
 			if(retrievedGraphs != null)
 				for(Graph newGraph : retrievedGraphs)
 					graphs.add(newGraph);
 		}
 		return graphs.toArray(new Graph[]{});
+	}
+
+	private RestUnicastCommunication createUnicastCommunication(SpaceManager spaceManager) {
+		return new RestUnicastCommunication(spaceManager.getURI(), this.credentialsManager);
 	}
 
 	@Override
