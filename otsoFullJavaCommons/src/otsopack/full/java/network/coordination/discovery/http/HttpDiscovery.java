@@ -17,8 +17,8 @@ package otsopack.full.java.network.coordination.discovery.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.MediaType;
@@ -41,7 +41,7 @@ public class HttpDiscovery implements IDiscovery {
 	
 	@Override
 	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
-		final List<SpaceManager> spaceManagers = new Vector<SpaceManager>();
+		final Set<SpaceManager> spaceManagers = new HashSet<SpaceManager>();
 		for(String uri : this.uris){
 			String encodedSpace;
 			try {
