@@ -31,11 +31,11 @@ import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 
-public class HttpDiscovery implements IDiscovery {
+public class HttpDiscoveryClient implements IDiscovery {
 
 	private final String [] uris;
 	
-	public HttpDiscovery(String ... uris){
+	public HttpDiscoveryClient(String ... uris){
 		this.uris = uris;
 	}
 	

@@ -48,7 +48,7 @@ public class SpaceManagerServerHttpTest {
 		this.server = new RestServer(this.PORT, controller);
 		this.server.startup();
 		
-		this.client = new SpaceManagerClient(new SpaceManager("http://127.0.0.1:" + this.PORT + NodesResource.ROOT));
+		this.client = new HttpSpaceManagerClient(new SpaceManager("http://127.0.0.1:" + this.PORT + NodesResource.ROOT));
 	}
 	
 	@After

@@ -24,7 +24,7 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
-import otsopack.full.java.network.coordination.spacemanager.http.SpaceManagerClient;
+import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
 
 public class Registry extends Thread implements IRegistry {
 	
@@ -70,7 +70,7 @@ public class Registry extends Thread implements IRegistry {
 			
 			final Set<String> newNodes = new HashSet<String>();
 			for(SpaceManager spaceManager : this.spaceManagers){
-				final ISpaceManager client = new SpaceManagerClient(spaceManager);
+				final ISpaceManager client = new HttpSpaceManagerClient(spaceManager);
 				try {
 					for(String node : client.getNodes())
 						newNodes.add(node);

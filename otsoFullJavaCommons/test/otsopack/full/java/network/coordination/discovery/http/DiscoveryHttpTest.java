@@ -31,7 +31,7 @@ import org.restlet.resource.ResourceException;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
-import otsopack.full.java.network.coordination.discovery.http.HttpDiscovery;
+import otsopack.full.java.network.coordination.discovery.http.HttpDiscoveryClient;
 import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.RestServer;
@@ -72,7 +72,7 @@ public class DiscoveryHttpTest extends Object {
 		this.server = new RestServer(this.PORT, controller);
 		this.server.startup();
 		
-		this.client = new HttpDiscovery("http://127.0.0.1:" + this.PORT + DiscoveryResource.ROOT);
+		this.client = new HttpDiscoveryClient("http://127.0.0.1:" + this.PORT + DiscoveryResource.ROOT);
 	}
 	
 	@After

@@ -26,11 +26,11 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
-public class SpaceManagerClient implements ISpaceManager {
+public class HttpSpaceManagerClient implements ISpaceManager {
 	
 	private final SpaceManager spaceManager;
 	
-	public SpaceManagerClient(SpaceManager spaceManager){
+	public HttpSpaceManagerClient(SpaceManager spaceManager){
 		this.spaceManager = spaceManager;
 	}
 
