@@ -75,7 +75,8 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			else
 				ret = controller.getDataAccessService().query(space,tpl, semanticFormat, currentClient);
 			
-			if( ret!=null ) return ret;
+			if( ret!=null ) 
+				return ret;
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found", e);
 		} catch (UnsupportedSemanticFormatException e) {
