@@ -17,7 +17,7 @@ import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.restlet.commons.sessions.ISessionManager;
 import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
-public class Controller implements IController {
+public class Controller implements IIdpController {
 	
 	private ICredentialsChecker credentialsChecker;
 	private ISessionManager<IdpSession> sessionManager;

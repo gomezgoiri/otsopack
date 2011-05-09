@@ -17,7 +17,7 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.idp.AbstractRestServerTesting;
 import otsopack.idp.Controller;
-import otsopack.idp.IController;
+import otsopack.idp.IIdpController;
 import otsopack.idp.IdpSession;
 import otsopack.idp.authn.ICredentialsChecker;
 import otsopack.idp.authn.memory.MemoryCredentialsChecker;
@@ -29,7 +29,7 @@ public class UserResourceTest  extends AbstractRestServerTesting {
 		super.setUp();
 		
 		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(null);
-		final IController controller = new Controller(credentialsChecker);
+		final IIdpController controller = new Controller(credentialsChecker);
 		this.rs.getApplication().setController(controller);
 	}
 	

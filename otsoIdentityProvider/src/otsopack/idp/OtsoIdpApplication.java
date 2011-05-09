@@ -20,7 +20,7 @@ import otsopack.idp.resources.UserResource;
 import otsopack.idp.resources.UserValidationResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
-public class OtsoIdpApplication extends AbstractOtsopackApplication<IController> {
+public class OtsoIdpApplication extends AbstractOtsopackApplication<IIdpController> {
 	
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	

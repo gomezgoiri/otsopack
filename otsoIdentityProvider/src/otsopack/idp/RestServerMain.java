@@ -28,8 +28,8 @@ public class RestServerMain {
 		credentials.put("xlaiseca", "xabier");
 		
 		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(credentials);
-		final IController controller = new Controller(credentialsChecker);
-		final RestServer server = new RestServer(controller);
+		final IIdpController controller = new Controller(credentialsChecker);
+		final IdpRestServer server = new IdpRestServer(controller);
 		server.startup();
 	}
 }

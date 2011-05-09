@@ -16,14 +16,14 @@ package otsopack.idp;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-public class RestServer {
+public class IdpRestServer {
 	public static final int DEFAULT_PORT = 8184;
 	
 	private final int port;
 	private final Component component;
 	private final OtsoIdpApplication application;
 	
-	public RestServer(int port, IController controller) {
+	public IdpRestServer(int port, IIdpController controller) {
 		this.port = port;
 		
 	    this.component = new Component();
@@ -34,15 +34,15 @@ public class RestServer {
 	    this.component.getDefaultHost().attach(this.application);
 	}
 	
-	public RestServer(IController controller){
+	public IdpRestServer(IIdpController controller){
 		this(DEFAULT_PORT, controller);
 	}
 	
-	public RestServer(int port){
+	public IdpRestServer(int port){
 		this(port, null);
 	}
 	
-	public RestServer(){
+	public IdpRestServer(){
 		this(DEFAULT_PORT, null);
 	}
 	

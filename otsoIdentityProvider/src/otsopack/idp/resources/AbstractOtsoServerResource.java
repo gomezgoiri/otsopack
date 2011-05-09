@@ -15,7 +15,7 @@ package otsopack.idp.resources;
 
 import org.restlet.resource.ServerResource;
 
-import otsopack.idp.IController;
+import otsopack.idp.IIdpController;
 import otsopack.idp.OtsoIdpApplication;
 import otsopack.idp.IdpSession;
 import otsopack.idp.authn.ICredentialsChecker;
@@ -27,7 +27,7 @@ public abstract class AbstractOtsoServerResource extends ServerResource {
 		return (OtsoIdpApplication)this.getApplication();
 	}
 	
-	public IController getController(){
+	public IIdpController getController(){
 		return getOtsoApp().getController();
 	}
 	
