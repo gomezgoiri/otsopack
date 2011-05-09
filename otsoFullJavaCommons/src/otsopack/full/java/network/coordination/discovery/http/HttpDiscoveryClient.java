@@ -31,11 +31,11 @@ import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 
-public class HttpDiscovery implements IDiscovery {
+public class HttpDiscoveryClient implements IDiscovery {
 
 	private final String [] uris;
 	
-	public HttpDiscovery(String ... uris){
+	public HttpDiscoveryClient(String ... uris){
 		this.uris = uris;
 	}
 	
@@ -45,7 +45,7 @@ public class HttpDiscovery implements IDiscovery {
 		for(String uri : this.uris){
 			String encodedSpace;
 			try {
-				encodedSpace = URLEncoder.encode(uri, "UTF-8");
+				encodedSpace = URLEncoder.encode(spaceURI, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				throw new DiscoveryException("Could not encode space URI: " + e.getMessage(), e);
 			}

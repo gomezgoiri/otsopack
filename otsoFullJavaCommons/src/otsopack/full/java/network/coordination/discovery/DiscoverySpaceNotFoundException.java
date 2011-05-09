@@ -12,24 +12,25 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.coordination.spacemanager;
+package otsopack.full.java.network.coordination.discovery;
 
-public class SpaceManagerException extends Exception {
+public class DiscoverySpaceNotFoundException extends DiscoveryException {
 
-	private static final long serialVersionUID = 8706715135031325736L;
+	private static final long serialVersionUID = -5116674889584842221L;
 
-	public SpaceManagerException() {
+	public DiscoverySpaceNotFoundException() {
 	}
 
-	public SpaceManagerException(String message) {
+	public DiscoverySpaceNotFoundException(String message) {
 		super(message);
 	}
 
-	public SpaceManagerException(Throwable cause) {
+	public DiscoverySpaceNotFoundException(Throwable cause) {
 		super(cause);
 	}
 
-	public SpaceManagerException(String message, Throwable cause) {
+	public DiscoverySpaceNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

@@ -17,7 +17,7 @@ package otsopack.full.java.network.coordination.spacemanager.http.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
+import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsopackHttpSpaceManagerApplication extends AbstractOtsopackApplication<ISpaceManagerController> {
@@ -25,7 +25,7 @@ public class OtsopackHttpSpaceManagerApplication extends AbstractOtsopackApplica
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
-		addPaths(DiscoveryResource.getRoots());
+		addPaths(NodesResource.getRoots());
 	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){

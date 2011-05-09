@@ -48,10 +48,10 @@ public class SimpleDiscovery implements IDiscovery {
 	}
 	
 	@Override
-	public SpaceManager[] getSpaceManagers(String spaceURI) {
+	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
 		final String concrete = getMostConcrete(spaceURI);
 		if(concrete == null)
-			throw new IllegalArgumentException("Space: " + spaceURI + " did not match any space registered in " + SimpleDiscovery.class.getName());
+			throw new DiscoverySpaceNotFoundException("Space: " + spaceURI + " did not match any space registered in " + SimpleDiscovery.class.getName());
 		
 		return this.discoverers.get(concrete);
 	}
