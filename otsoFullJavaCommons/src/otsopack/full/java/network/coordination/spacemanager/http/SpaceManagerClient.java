@@ -9,7 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
 package otsopack.full.java.network.coordination.spacemanager.http;
@@ -42,7 +42,7 @@ public class SpaceManagerClient implements ISpaceManager {
 		try {
 			serializedSpaceManagers = IOUtils.toString(repr.getStream());
 		} catch (IOException e) {
-			throw new SpaceManagerException("Could not read stream from discovery server: " + e.getMessage(), e);
+			throw new SpaceManagerException("Could not read stream from space manager: " + e.getMessage(), e);
 		}
 		return JSONDecoder.decode(serializedSpaceManagers, String[].class);
 	}

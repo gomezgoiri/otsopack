@@ -30,7 +30,7 @@ import otsopack.full.java.network.coordination.spacemanager.http.server.Otsopack
 
 public class NodesResource extends ServerResource implements ISpaceManagerResource {
 	
-	private static final String ROOT = "/spacemanager/nodes";
+	public static final String ROOT = "/spacemanager/nodes";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();

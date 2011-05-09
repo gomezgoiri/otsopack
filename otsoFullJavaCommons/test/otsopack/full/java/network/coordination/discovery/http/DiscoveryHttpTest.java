@@ -9,10 +9,10 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.coordination.discovery.http.server;
+package otsopack.full.java.network.coordination.discovery.http;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -32,6 +32,9 @@ import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.discovery.http.HttpDiscovery;
+import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryController;
+import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
+import otsopack.full.java.network.coordination.discovery.http.server.RestServer;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 
 public class DiscoveryHttpTest extends Object {
