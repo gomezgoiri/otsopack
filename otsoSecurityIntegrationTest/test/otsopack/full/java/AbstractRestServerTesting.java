@@ -18,7 +18,6 @@ import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 
-import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.IController;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.full.java.network.communication.RestServer;

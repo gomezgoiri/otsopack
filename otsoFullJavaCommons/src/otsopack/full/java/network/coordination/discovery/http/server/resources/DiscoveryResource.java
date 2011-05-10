@@ -63,8 +63,6 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 		try {
 			spaceManagers = discovery.getSpaceManagers(decodedSpaceURI);
 		} catch (DiscoverySpaceNotFoundException e){
-			for(int i = 0; i < 100;++i)
-				System.err.println("wtf??");
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Space not found: " + spaceURI);
 		} catch (DiscoveryException e) {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not find a response for the given space URI: " + e.getMessage(), e);
