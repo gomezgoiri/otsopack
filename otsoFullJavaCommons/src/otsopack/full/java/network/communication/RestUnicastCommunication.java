@@ -153,19 +153,33 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
-			final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
 			try {
-				final Representation rep = cr.get(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				return tryGet(originalURL);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					try {
-						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+						final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
+						final String redirectionURL = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+						return tryGet(redirectionURL); //retry
 					} catch (AuthenticationException e1) {
 						throw new AuthorizationException(e1.getMessage());
 					}
-				} else if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
+				}
+				throw e;
+			}
+		} catch (UnsupportedEncodingException e2) {
+			e2.printStackTrace();
+		}
+		return null;
+	}
+	
+		private Graph tryGet(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
+			try {
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
+				final Representation rep = cr.get(NTriplesRepresentation.class);
+				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
 					throw new AuthorizationException(e.getMessage());
 				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 					if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
@@ -175,16 +189,16 @@ public class RestUnicastCommunication implements ICommunication {
 				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 					throw new UnsupportedSemanticFormatException(e.getMessage());
 				}
+				throw e;
+			}catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (OtsoFullJavaNetworkException e) {
+				e.printStackTrace();
 			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (OtsoFullJavaNetworkException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return null;
-	}
 
 
 	@Override
@@ -247,19 +261,33 @@ public class RestUnicastCommunication implements ICommunication {
 		 */
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
-			final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8") );
 			try {
-				final Representation rep = cr.delete(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				return tryDelete(originalURL);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					try {
-						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+						final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
+						final String redirectionURL = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+						return tryDelete(redirectionURL); //retry
 					} catch (AuthenticationException e1) {
 						throw new AuthorizationException(e1.getMessage());
 					}
-				} else if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
+				}
+				throw e;
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+		private Graph tryDelete(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
+			try {
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
+				final Representation rep = cr.delete(NTriplesRepresentation.class);
+				return createGraph(cr, rep);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
 					throw new AuthorizationException(e.getMessage());
 				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 					if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
@@ -269,16 +297,16 @@ public class RestUnicastCommunication implements ICommunication {
 				} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 					throw new UnsupportedSemanticFormatException(e.getMessage());
 				}
+				throw e;
+			}catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (OtsoFullJavaNetworkException e) {
+				e.printStackTrace();
 			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (OtsoFullJavaNetworkException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return null;
-	}
 	
 	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
