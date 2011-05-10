@@ -55,4 +55,20 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTestin
 			// OK
 		}
 	}
+	
+	@Test
+	public void testReadURIWithAuthorizationProcess() throws Exception {
+		
+		
+	}
+	
+	@Test
+	public void testReadURIUnauthorizated() throws Exception {
+		this.ruc.login();
+		// try to read
+	}
+	
+	public void testReadURIWithFilter() throws Exception {
+		// read and apply a filter
+	}
 }
