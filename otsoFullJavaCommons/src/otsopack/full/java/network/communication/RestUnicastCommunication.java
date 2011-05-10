@@ -104,7 +104,7 @@ public class RestUnicastCommunication implements ICommunication {
 			cr.get(NTriplesRepresentation.class); // if no exception is thrown, the user is logged
 		} catch (ResourceException e) {
 			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;
+				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 				try {
 					return this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
 				} catch (AuthenticationException e1) {
@@ -159,7 +159,7 @@ public class RestUnicastCommunication implements ICommunication {
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					try {
 						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
 					} catch (AuthenticationException e1) {
@@ -253,7 +253,7 @@ public class RestUnicastCommunication implements ICommunication {
 				return createGraph(cr, rep);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;;
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					try {
 						this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
 					} catch (AuthenticationException e1) {

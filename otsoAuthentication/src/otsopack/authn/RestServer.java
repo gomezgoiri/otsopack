@@ -31,7 +31,7 @@ public class RestServer {
 	    
 	    this.application = new OtsoAuthnApplication();
 	    this.application.setController(controller);
-	    this.component.getDefaultHost().attach(this.application);
+	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH, this.application);
 	}
 	
 	public RestServer(IController controller){

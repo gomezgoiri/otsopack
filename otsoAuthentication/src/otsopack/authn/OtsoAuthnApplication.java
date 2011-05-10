@@ -23,6 +23,9 @@ import otsopack.authn.resources.ValidatedSessionResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsoAuthnApplication extends AbstractOtsopackApplication<IController> {
+	
+	public static final String AUTHN_ROOT_PATH = "/authn";
+	
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	private static final ClientResourceFactory defaultClientResourceFactory = new ClientResourceFactory();
 	

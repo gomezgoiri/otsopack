@@ -70,7 +70,7 @@ public class ValidSessionResourceTest  extends AbstractRestServerTesting {
 		final AuthnSession session = new AuthnSession(appURL, secret, userIdentifier, expiration);
 		final String sessionId = this.rs.getApplication().getController().getSessionManager().putSession(session);
 
-		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(EasyMock.eq(userIdentifier), EasyMock.eq(appURL), EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// perform the request

@@ -1,6 +1,5 @@
 package otsopack.full.java;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.restlet.representation.Representation;
@@ -9,6 +8,7 @@ import org.restlet.resource.ClientResource;
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.full.java.network.communication.RestUnicastCommunication;
+import otsopack.idp.resources.UserResource;
 
 public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTesting {
 
@@ -25,7 +25,7 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTestin
 		super.setUp();
 		final LocalCredentialsManager credentials = new LocalCredentialsManager();
 		credentials.setCredentials(getIdpBaseURL(), new Credentials(IdpManager.VALID_USERNAME, IdpManager.VALID_PASSWORD));
-		credentials.setUserIdentifierURI(getOtsoServerBaseURL(), getIdpBaseURL() + IdpManager.VALID_USERNAME);
+		credentials.setUserIdentifierURI(getOtsoServerBaseURL(), getIdpBaseURL() + UserResource.ROOT.replace("{user}", IdpManager.VALID_USERNAME));
 		this.ruc = new RestUnicastCommunication(getOtsoServerBaseURL(), credentials);
 	}
 	

@@ -84,7 +84,7 @@ public class SessionRequestResourceTest  extends AbstractRestServerTesting {
 		form.set(SessionRequestResource.REDIRECT_NAME, appURL); 
 
 		// perform the request
-		final String uri = getBaseURL() + SessionRequestResource.ROOT;
+		final String uri = getBaseURL() + SessionRequestResource.PUBLIC_ROOT;
 		final ClientResource cr = new ClientResource(uri);
 		final Representation repr = cr.post(form);
 		

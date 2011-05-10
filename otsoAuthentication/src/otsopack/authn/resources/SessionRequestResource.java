@@ -20,10 +20,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
+import otsopack.authn.OtsoAuthnApplication;
 import otsopack.authn.sessions.AuthnSession;
 
 public class SessionRequestResource extends AbstractOtsoServerResource implements ISessionRequestResource {
@@ -37,7 +39,8 @@ public class SessionRequestResource extends AbstractOtsoServerResource implement
 	public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 	
-	public static final String ROOT = "/authn/sessions/";
+	public static final String ROOT = "/sessions/";
+	public static final String PUBLIC_ROOT = OtsoAuthnApplication.AUTHN_ROOT_PATH + ROOT;
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
@@ -73,7 +76,7 @@ public class SessionRequestResource extends AbstractOtsoServerResource implement
 			return idpRepresentation;
 		}catch(ResourceException e){
 			getSessionManager().deleteSession(sessionId);
-			throw e;
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Identity Provider returned an error: " + e.getMessage());
 		}
 	}
 }

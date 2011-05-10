@@ -85,9 +85,9 @@ public class AuthenticationClientTest extends AbstractRestServerTesting{
 	public void testAuthenticate() throws Exception {
 		// setup what the Authenticated app will perform
 		final String appURL = getBaseURL() + "/application/secure/";
-		final String dataProviderAuthenticationURL = getBaseURL() + SessionRequestResource.ROOT;
+		final String dataProviderAuthenticationURL = getBaseURL() + SessionRequestResource.PUBLIC_ROOT;
 		
-		expect(this.authenticationUserHandlerMock.onAuthenticatedUser(this.userIdentifierURL, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
+		expect(this.authenticationUserHandlerMock.onAuthenticatedUser(EasyMock.eq(this.userIdentifierURL), EasyMock.eq(appURL), EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandlerMock);
 		
 		final String idpURL = this.idpDomain + "?idpsessionid=foo";

@@ -22,11 +22,12 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.authn.OtsoAuthnApplication;
 import otsopack.authn.sessions.AuthnSession;
 
 public class ValidatedSessionResource extends AbstractOtsoServerResource implements IValidatedSessionResource {
 
-	private static final String ROOT = "/authn/sessions/valid";
+	private static final String ROOT = "/sessions/valid";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
@@ -38,7 +39,7 @@ public class ValidatedSessionResource extends AbstractOtsoServerResource impleme
 	public static final String SECRET_NAME = "secret";
 
 	static String buildURL(String sessionId, String secret){
-		return ROOT + "?" + SESSIONID_NAME + "=" + sessionId + "&" + SECRET_NAME + "=" + secret;
+		return OtsoAuthnApplication.AUTHN_ROOT_PATH + ROOT + "?" + SESSIONID_NAME + "=" + sessionId + "&" + SECRET_NAME + "=" + secret;
 	}
 	
 	@Override

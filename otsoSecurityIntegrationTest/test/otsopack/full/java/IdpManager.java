@@ -38,10 +38,6 @@ public class IdpManager {
 		this.idpRestServer.getApplication().setController(controller);
 	}
 	
-	public String getIdpBaseURL(){
-		return "http://localhost:" + this.testingPort;
-	}
-	
 	public void stop() throws Exception{
 		this.idpRestServer.shutdown();
 	}

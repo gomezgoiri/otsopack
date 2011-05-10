@@ -63,7 +63,7 @@ public class RestServer {
 	    	});
 	    
 	    this.component.getDefaultHost().attach(this.application);
-	    this.component.getDefaultHost().attach(this.authnApp);
+	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH,this.authnApp);
 	}
 	
 	public RestServer(IController controller){

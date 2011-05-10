@@ -63,7 +63,7 @@ public class DataProviderAuthenticationIntegrationTest  extends AbstractRestServ
 		// setup what the Authenticated app will perform
 		final String userIdentifier = "http://ts.across.com/users/porduna";
 		final String appURL = getBaseURL() + "/application/secure/";
-		expect(this.authenticationUserHandler.onAuthenticatedUser(userIdentifier, appURL, EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
+		expect(this.authenticationUserHandler.onAuthenticatedUser(EasyMock.eq(userIdentifier), EasyMock.eq(appURL), EasyMock.anyObject(ServerResource.class))).andReturn(appURL);
 		replay(this.authenticationUserHandler);
 		
 		// setup what the Identity Provider will reply
@@ -79,7 +79,7 @@ public class DataProviderAuthenticationIntegrationTest  extends AbstractRestServ
 		form.set(SessionRequestResource.REDIRECT_NAME, appURL); 
 
 		// perform the request
-		final String uri = getBaseURL() + SessionRequestResource.ROOT;
+		final String uri = getBaseURL() + SessionRequestResource.PUBLIC_ROOT;
 		final ClientResource cr = new ClientResource(uri);
 		final Representation repr = cr.post(form);
 		
