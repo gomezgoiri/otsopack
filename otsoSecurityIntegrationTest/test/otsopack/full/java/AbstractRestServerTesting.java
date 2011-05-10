@@ -11,7 +11,6 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-
 package otsopack.full.java;
 
 import org.easymock.EasyMock;

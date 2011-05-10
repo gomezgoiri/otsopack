@@ -1,3 +1,16 @@
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ */
 package otsopack.full.java.network.communication;
 
 import org.junit.Before;
@@ -9,8 +22,6 @@ import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.full.java.AbstractRestServerTesting;
 import otsopack.full.java.IdpManager;
-import otsopack.full.java.network.communication.RestMulticastCommunication;
-import otsopack.full.java.network.communication.RestUnicastCommunication;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.SpaceManager;
