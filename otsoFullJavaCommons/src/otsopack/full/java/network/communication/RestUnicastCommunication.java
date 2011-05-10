@@ -62,7 +62,7 @@ public class RestUnicastCommunication implements ICommunication {
 	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
 	
 	private final String baseRESTServer;
-	private final AuthenticationClient authenticationClient;
+	protected final AuthenticationClient authenticationClient;
 	private final ClientResourceFactory clientFactory = new ClientResourceFactory();
 	
 	public RestUnicastCommunication(String restserver) {
