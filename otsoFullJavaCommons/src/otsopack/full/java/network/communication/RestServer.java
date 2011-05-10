@@ -38,7 +38,6 @@ public class RestServer {
 	
 	public RestServer(int port, IController controller) {
 		this.port = port;
-		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    

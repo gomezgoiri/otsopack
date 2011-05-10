@@ -99,6 +99,7 @@ public class AuthenticationClient {
 	private String requestSession(String dataProviderAuthenticationURL, String originalURL) throws NoAuthenticationUriFoundException, UnexpectedAuthenticationException {
 		
 		final String userIdentifierURI = this.credentialsManager.getUserIdentifierURI(dataProviderAuthenticationURL);
+		System.out.println(dataProviderAuthenticationURL);
 		if(userIdentifierURI == null)
 			throw new NoAuthenticationUriFoundException("No authentication URI registered for domain " + dataProviderAuthenticationURL + " in " + LocalCredentialsManager.class.getName());
 		

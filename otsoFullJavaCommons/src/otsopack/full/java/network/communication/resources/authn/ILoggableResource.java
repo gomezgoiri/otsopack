@@ -13,9 +13,10 @@
  */
 package otsopack.full.java.network.communication.resources.authn;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 public interface ILoggableResource {
 	@Get
-	public void checkIfUserIsLogged();
+	public Representation checkIfUserIsLogged();
 }

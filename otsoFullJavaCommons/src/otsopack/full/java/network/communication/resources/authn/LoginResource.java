@@ -17,13 +17,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.authz.entities.User;
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 
 public class LoginResource extends AbstractServerResource implements ILoggableResource {
-	public static final String ROOT = "/login";
+	public static final String ROOT = "/login/";
 
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
@@ -35,9 +37,11 @@ public class LoginResource extends AbstractServerResource implements ILoggableRe
 	 * @see otsopack.full.java.network.communication.resources.authn.ILoggableResource#checkIfUserIsLogged()
 	 */
 	@Override
-	public void checkIfUserIsLogged() {
+	public Representation checkIfUserIsLogged() {
 		final User currentClient = getCurrentClient();
 		if( currentClient==null )
 			throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user is unauthenticated.");
+		
+		return new StringRepresentation(currentClient.getId());
 	}
 }

@@ -54,6 +54,7 @@ import otsopack.full.java.network.communication.representations.RdfMultipartRepr
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 import otsopack.full.java.network.communication.resources.ClientResourceFactory;
+import otsopack.full.java.network.communication.resources.authn.LoginResource;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
 public class RestUnicastCommunication implements ICommunication {
@@ -96,8 +97,8 @@ public class RestUnicastCommunication implements ICommunication {
 	public void shutdown() throws TSException {
 	}
 	
-	public void login() throws AuthorizationException {
-		final String originalURL = this.baseRESTServer+"login/";
+	public String login() throws TSException, AuthorizationException {
+		final String originalURL = this.baseRESTServer+ LoginResource.ROOT;
 		final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
 		try {
 			cr.get(NTriplesRepresentation.class); // if no exception is thrown, the user is logged
@@ -105,12 +106,15 @@ public class RestUnicastCommunication implements ICommunication {
 			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
 				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.ROOT;
 				try {
-					this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+					return this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
 				} catch (AuthenticationException e1) {
 					throw new AuthorizationException(e1.getMessage());
 				}
 			}
+			// TODO: maybe we would need a more concrete exception, such as "UnexpectedLoginException or so"
+			throw new TSException("Unexpected log-in exception: " + e.getStatus() + "; " + e.getMessage());
 		}
+		return originalURL;
 	}
 	
 	protected Graph filterResults(Graph graph, Filter[] filters) {
