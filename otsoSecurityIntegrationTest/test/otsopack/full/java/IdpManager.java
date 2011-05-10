@@ -14,15 +14,21 @@ import otsopack.idp.authn.memory.MemoryCredentialsChecker;
 public class IdpManager {
 	protected IdpRestServer idpRestServer;
 	protected IIdpController controller;
-	protected int testingPort = IdpRestServer.DEFAULT_PORT;
+	final protected int testingPort;
+	public static final String VALID_USERNAME = "porduna";
+	public static final String VALID_PASSWORD = "pablo";
 
+	public IdpManager(int testingPort) {
+		this.testingPort = testingPort;
+	}
+	
 	public void start() throws Exception {
 		this.controller = EasyMock.createMock(IIdpController.class);
 		this.idpRestServer = new IdpRestServer(this.testingPort, this.controller);
 		this.idpRestServer.startup();
 		
 		final Map<String, String> credentials = new HashMap<String, String>();
-		credentials.put("porduna",  "pablo");
+		credentials.put(VALID_USERNAME, VALID_PASSWORD);
 		credentials.put("aigomez",  "aitor");
 		credentials.put("ecastill", "eduardo");
 		credentials.put("xlaiseca", "xabier");
