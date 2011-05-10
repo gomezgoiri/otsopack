@@ -1,4 +1,4 @@
-package otsopack.full.java;
+package otsopack.full.java.network.communication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +7,8 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
+import otsopack.full.java.AbstractRestServerTesting;
+import otsopack.full.java.IdpManager;
 import otsopack.full.java.network.communication.RestMulticastCommunication;
 import otsopack.full.java.network.communication.RestUnicastCommunication;
 import otsopack.full.java.network.coordination.IDiscovery;

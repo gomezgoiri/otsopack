@@ -17,6 +17,8 @@ public class IdpManager {
 	final protected int testingPort;
 	public static final String VALID_USERNAME = "porduna";
 	public static final String VALID_PASSWORD = "pablo";
+	public static final String INVALID_USERNAME = "sdalma";
+	public static final String INVALID_PASSWORD = "debio_ganar_eurovision";
 
 	public IdpManager(int testingPort) {
 		this.testingPort = testingPort;

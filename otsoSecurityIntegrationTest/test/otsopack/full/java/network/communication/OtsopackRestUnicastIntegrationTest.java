@@ -1,4 +1,6 @@
-package otsopack.full.java;
+package otsopack.full.java.network.communication;
+
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +9,9 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
-import otsopack.full.java.network.communication.RestUnicastCommunication;
+import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.full.java.AbstractRestServerTesting;
+import otsopack.full.java.IdpManager;
 import otsopack.idp.resources.UserResource;
 
 public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTesting {
@@ -31,16 +35,24 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTestin
 	
 	@Test
 	public void testLogin() throws Exception {
-
 		final String newURL = this.ruc.login();
 		final ClientResource cr = new ClientResource(newURL);
 		final Representation rep = cr.get();
 		System.out.println(rep.getText()); // debería ser el userid
 	}
 	
+	//TODO it works as expected, but the info in the log show something disturbing
+	//127.0.0.1	-	-	18081	POST	/users/u/porduna
 	@Test
-	public void testLoginFailed(){
+	public void testLoginFailed() throws Exception {
+		this.ruc.authenticationClient.getLocalCredentialsManager().setCredentials(
+				getIdpBaseURL(), new Credentials(IdpManager.INVALID_USERNAME, IdpManager.INVALID_PASSWORD));
 		
+		try {
+			this.ruc.login();
+			fail();
+		} catch (AuthorizationException e) {
+			// OK
+		}
 	}
-	
 }
