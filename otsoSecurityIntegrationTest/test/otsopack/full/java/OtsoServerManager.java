@@ -19,6 +19,7 @@ import java.util.Vector;
 import org.easymock.EasyMock;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -77,15 +78,11 @@ public class OtsoServerManager {
 			SemanticFormat.NTRIPLES);
 	
 	
-	public OtsoServerManager(int otsoTestingPort){
-		this(otsoTestingPort, null);
+	public OtsoServerManager(int otsoTestingPort, IEntity signer){
+		this(otsoTestingPort, signer, null, true);
 	}
 	
-	public OtsoServerManager(int otsoTestingPort, ICommunication multicastProvider){
-		this(otsoTestingPort, multicastProvider, true);
-	}
-	
-	public OtsoServerManager(int otsoTestingPort, ICommunication multicastProvider, boolean provideController){
+	public OtsoServerManager(int otsoTestingPort, IEntity signer, ICommunication multicastProvider, boolean provideController){
 		this.otsoTestingPort = otsoTestingPort;
 		if(provideController){
 			this.controller = EasyMock.createMock(IController.class);
@@ -95,7 +92,7 @@ public class OtsoServerManager {
 		}else
 			this.controller = null;
 		
-		this.rs = new OtsoRestServer(otsoTestingPort, this.controller, multicastProvider);
+		this.rs = new OtsoRestServer(otsoTestingPort, this.controller, signer, multicastProvider);
 	}
 	
 	public void start() throws Exception {

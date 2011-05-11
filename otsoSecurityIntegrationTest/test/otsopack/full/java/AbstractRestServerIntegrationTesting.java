@@ -21,12 +21,17 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 
+import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
+import otsopack.idp.resources.UserResource;
 
 public abstract class AbstractRestServerIntegrationTesting {
 	final protected int idpTestingPort;
 	protected IdpManager idpManager;
 	
+	protected final User PABLO = new User(getUsernameURL("porduna"));
+	protected final User AITOR = new User(getUsernameURL("aigomez"));
+
 	public AbstractRestServerIntegrationTesting(int idpTestingPort) {
 		this.idpTestingPort = idpTestingPort;
 	}
@@ -39,6 +44,10 @@ public abstract class AbstractRestServerIntegrationTesting {
 	
 	protected String getIdpBaseURL(){
 		return "http://127.0.0.1:" + this.idpTestingPort;
+	}
+	
+	protected String getUsernameURL(String username){
+		return UserResource.createURL("http://127.0.0.1:" + this.idpTestingPort , username);
 	}
 	
 	@After

@@ -16,6 +16,7 @@ package otsopack.full.java.network.communication;
 import org.junit.After;
 import org.junit.Before;
 
+import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.network.ICommunication;
@@ -79,16 +80,28 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		super(OTSO_IDP_TESTING_PORT);
 	}
 
-	private OtsoServerManager createAndStartOtsoServer(int port) throws Exception{
-		return createAndStartOtsoServer(port, null, true);
+	private OtsoServerManager createAndStartOtsoServer(int port, IEntity signer) throws Exception{
+		return createAndStartOtsoServer(port, signer, null, true);
 	}
 	
-	private OtsoServerManager createAndStartOtsoServer(int port, ICommunication multicastProvider, boolean provideController) throws Exception{
-		final OtsoServerManager manager = new OtsoServerManager(port, multicastProvider, provideController);
+	private OtsoServerManager createAndStartOtsoServer(int port, IEntity signer, ICommunication multicastProvider, boolean provideController) throws Exception{
+		final OtsoServerManager manager = new OtsoServerManager(port, signer, multicastProvider, provideController);
 		manager.start();
 		if(provideController)
 			manager.prepareSemanticRepository();
 		return manager;
+	}
+	
+	protected IEntity getNodeASigner(){
+		return this.AITOR;
+	}
+	
+	protected IEntity getNodeBSigner(){
+		return this.PABLO;
+	}
+	
+	protected IEntity getNodeCSigner(){
+		return null;
 	}
 	
 	@Before
@@ -97,17 +110,17 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		
 		SemanticFactory.initialize(new MicrojenaFactory());
 		
-		this.nodeA = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_A);
+		this.nodeA = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_A, getNodeASigner());
 		this.nodeA.addGraph(OtsoServerManager.AITOR_GRAPH);
-		this.nodeB = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_B);
+		this.nodeB = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_B, getNodeBSigner());
 		this.nodeB.addGraph(OtsoServerManager.PABLO_GRAPH);
-		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C);
+		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C, getNodeCSigner());
 		this.nodeC.addGraph(OtsoServerManager.YODA_GRAPH);
 		
 		final IRegistry registry = new SimpleRegistry(OtsoServerManager.SPACE, getNodeAurl(), getNodeBurl(), getNodeCurl());
 		final RestMulticastCommunication multicastProvider = new RestMulticastCommunication(registry);
 		
-		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, multicastProvider, true);
+		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, null, multicastProvider, true);
 		
 		this.ruc = new RestUnicastCommunication(getProxyUrl());
 		this.ruc.startup();

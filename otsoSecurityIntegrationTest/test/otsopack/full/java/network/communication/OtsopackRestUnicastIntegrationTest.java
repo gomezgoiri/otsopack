@@ -45,7 +45,7 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 	private String[] writtenGraphURIs;
 	
 	public OtsopackRestUnicastIntegrationTest() {
-		super(OTSO_TESTING_PORT, OTSO_IDP_TESTING_PORT);
+		super(OTSO_TESTING_PORT, OTSO_IDP_TESTING_PORT, null);
 	}
 
 	@Before
