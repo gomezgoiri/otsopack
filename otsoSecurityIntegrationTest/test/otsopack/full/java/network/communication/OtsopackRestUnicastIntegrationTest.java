@@ -22,8 +22,6 @@ import org.junit.Test;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
-import otsopack.full.java.AbstractRestServerTesting;
-import otsopack.full.java.IdpManager;
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.entities.User;
@@ -31,11 +29,11 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.TSException;
-import otsopack.full.java.AbstractRestServerTesting;
+import otsopack.full.java.AbstractSingleServerRestServerIntegrationTesting;
 import otsopack.full.java.IdpManager;
 import otsopack.idp.resources.UserResource;
 
-public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTesting {
+public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRestServerIntegrationTesting {
 
 	private static final int OTSO_TESTING_PORT = 18080;
 	private static final int OTSO_IDP_TESTING_PORT = 18081;
@@ -55,7 +53,7 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractRestServerTestin
 		
 		final LocalCredentialsManager credentials = new LocalCredentialsManager();
 		credentials.setCredentials(getIdpBaseURL(), new Credentials(IdpManager.VALID_USERNAME, IdpManager.VALID_PASSWORD));
-		credentials.setUserIdentifierURI(getOtsoServerBaseURL(), getIdpBaseURL() + UserResource.ROOT.replace("{user}", IdpManager.VALID_USERNAME));
+		credentials.setUserIdentifierURI(getOtsoServerBaseURL(), UserResource.createURL(getIdpBaseURL(), IdpManager.VALID_USERNAME));
 		
 		this.ruc = new RestUnicastCommunication(getOtsoServerBaseURL(), credentials);
 		this.ruc.startup();

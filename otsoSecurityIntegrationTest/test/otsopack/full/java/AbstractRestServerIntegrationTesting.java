@@ -17,17 +17,11 @@ package otsopack.full.java;
 import org.junit.After;
 import org.junit.Before;
 
-import otsopack.commons.IController;
-
-public abstract class AbstractRestServerTesting {
-	final protected int otsoTestingPort;
+public abstract class AbstractRestServerIntegrationTesting {
 	final protected int idpTestingPort;
 	private IdpManager idpManager;
-	private OtsoServerManager otsoServerManager;
-	protected IController controller;
 	
-	public AbstractRestServerTesting(int otsoTestingPort, int idpTestingPort) {
-		this.otsoTestingPort = otsoTestingPort;
+	public AbstractRestServerIntegrationTesting(int idpTestingPort) {
 		this.idpTestingPort = idpTestingPort;
 	}
 	
@@ -35,24 +29,14 @@ public abstract class AbstractRestServerTesting {
 	public void setUp() throws Exception {
 		this.idpManager = new IdpManager(this.idpTestingPort);
 		this.idpManager.start();
-		
-		this.otsoServerManager = new OtsoServerManager(this.otsoTestingPort);
-		this.otsoServerManager.start();
-		
-		this.controller = this.otsoServerManager.controller;
 	}
 	
 	protected String getIdpBaseURL(){
 		return "http://127.0.0.1:" + this.idpTestingPort;
 	}
 	
-	protected String getOtsoServerBaseURL(){
-		return "http://127.0.0.1:" + this.otsoTestingPort;
-	}
-	
 	@After
 	public void tearDown() throws Exception {
 		this.idpManager.stop();
-		this.otsoServerManager.stop();
 	}
 }

@@ -41,6 +41,14 @@ public class UserResource extends AbstractOtsoServerResource implements IUserRes
 		roots.put(ROOT, UserResource.class);
 		return roots;
 	}
+	
+	public static String createURL(String username){
+		return UserResource.ROOT.replace("{user}", username);
+	}
+
+	public static String createURL(String hostname, String username){
+		return hostname + UserResource.ROOT.replace("{user}", username);
+	}
 
 	@Override
 	public Representation postUserResource(Representation entity) {
