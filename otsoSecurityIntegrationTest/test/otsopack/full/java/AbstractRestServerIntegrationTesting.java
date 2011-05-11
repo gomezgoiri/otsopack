@@ -29,11 +29,17 @@ public abstract class AbstractRestServerIntegrationTesting {
 	final protected int idpTestingPort;
 	protected IdpManager idpManager;
 	
-	protected final User PABLO = new User(getUsernameURL("porduna"));
-	protected final User AITOR = new User(getUsernameURL("aigomez"));
+	protected final User PABLO;
+	protected final User AITOR;
+	protected final User YODA;
 
 	public AbstractRestServerIntegrationTesting(int idpTestingPort) {
 		this.idpTestingPort = idpTestingPort;
+		
+		// we put here to ensure that the idpTestingPort has been set before...
+		this.PABLO = new User(getUsernameURL("porduna"));
+		this.AITOR = new User(getUsernameURL("aigomez"));
+		this.YODA = new User(getUsernameURL("yoda"));
 	}
 	
 	@Before

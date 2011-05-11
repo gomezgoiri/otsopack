@@ -26,7 +26,6 @@ import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.asserts.ContainsURIAssert;
-import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.AuthorizationException;
@@ -52,7 +51,6 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		prepareSemanticRepository();
 		
 		final LocalCredentialsManager credentials = new LocalCredentialsManager();
 		credentials.setCredentials(getIdpBaseURL(), new Credentials(IdpManager.VALID_USERNAME, IdpManager.VALID_PASSWORD));
@@ -60,6 +58,8 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 		
 		this.ruc = new RestUnicastCommunication(getOtsoServerBaseURL(), credentials);
 		this.ruc.startup();
+		
+		prepareSemanticRepository();
 	}
 	
 		private void prepareSemanticRepository() throws TSException {
@@ -67,9 +67,10 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 			this.controller.getDataAccessService().createSpace(this.spaceURI);
 			this.controller.getDataAccessService().joinSpace(this.spaceURI);
 			
-			this.writtenGraphURIs = new String[2];
-			this.writtenGraphURIs[0] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.AITOR_GRAPH, new User("aitor"));
-			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.YODA_GRAPH, this.idpManager.getValidUser());
+			this.writtenGraphURIs = new String[3];
+			this.writtenGraphURIs[0] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.AITOR_GRAPH, this.AITOR);
+			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.YODA_GRAPH, this.YODA);
+			this.writtenGraphURIs[2] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.PABLO_GRAPH);
 		}
 	
 	@After
@@ -77,6 +78,8 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 		this.ruc.shutdown();
 		super.tearDown();
 	}
+	
+	// LOGIN
 	
 	@Test
 	public void testLogin() throws Exception {
@@ -101,10 +104,12 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 		}
 	}
 	
+	// READ
+	
 	@Test
 	public void testReadURIWithAuthorizationProcess() throws Exception {
 		final long timeout = 2000;
-		final Filter filter = new Filter(new User("http://127.0.0.1/user/u/aigomez"), new ContainsURIAssert("http://aitor.gomezgoiri.net/me"));
+		final Filter filter = new Filter(this.AITOR, new ContainsURIAssert("http://aitor.gomezgoiri.net/me"));
 		
 		//initially unauthorized
 		final Graph ret = this.ruc.read(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, new Filter[] {filter}, timeout );
@@ -113,7 +118,15 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 	
 	@Test
 	public void testReadURIUnauthorizated() throws Exception {
-		//this.ruc.login();
-		// try to read
+		this.ruc.login();		
+		final long timeout = 2000;
+		
+		//unauthorized
+		try {
+			this.ruc.read(this.spaceURI, this.writtenGraphURIs[0], SemanticFormat.NTRIPLES, timeout );
+			fail();
+		} catch(AuthorizationException ae) {
+			// success
+		}
 	}
 }
