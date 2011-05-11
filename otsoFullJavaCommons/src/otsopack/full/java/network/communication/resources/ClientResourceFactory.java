@@ -23,8 +23,8 @@ import otsopack.full.java.network.communication.resources.cookies.CookieStore;
 public class ClientResourceFactory {
 	private final CookieStore cookieStore;
 
-	public ClientResourceFactory() {
-		this.cookieStore = new CookieStore();
+	public ClientResourceFactory(CookieStore cookieStore) {
+		this.cookieStore = cookieStore;
 	}
 	
 	/**

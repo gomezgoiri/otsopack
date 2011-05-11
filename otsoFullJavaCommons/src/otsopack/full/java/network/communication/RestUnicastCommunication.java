@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Vector;
 
+import org.restlet.data.CookieSetting;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.engine.http.header.HeaderConstants;
@@ -57,13 +58,15 @@ import otsopack.full.java.network.communication.representations.SemanticFormatRe
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentationRegistry;
 import otsopack.full.java.network.communication.resources.ClientResourceFactory;
 import otsopack.full.java.network.communication.resources.authn.LoginResource;
+import otsopack.full.java.network.communication.resources.cookies.CookieStore;
 import otsopack.full.java.network.communication.resources.graphs.WildcardConverter;
 
 public class RestUnicastCommunication implements ICommunication {
 
 	private final String baseRESTServer;
 	protected final AuthenticationClient authenticationClient;
-	private final ClientResourceFactory clientFactory = new ClientResourceFactory();
+	private final CookieStore cookieStore = new CookieStore();
+	private final ClientResourceFactory clientFactory = new ClientResourceFactory(this.cookieStore);
 	
 	public RestUnicastCommunication(String restserver) {
 		this(restserver, new LocalCredentialsManager()); 
@@ -113,7 +116,12 @@ public class RestUnicastCommunication implements ICommunication {
 			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
 				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 				try {
-					return this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+					final String ret = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+					// we register session id as a cookie
+					for(CookieSetting cookie: this.authenticationClient.getCookies()) {
+						this.cookieStore.addCookie(cookie);
+					}
+					return ret;
 				} catch (AuthenticationException e1) {
 					throw new AuthorizationException(e1.getMessage());
 				}

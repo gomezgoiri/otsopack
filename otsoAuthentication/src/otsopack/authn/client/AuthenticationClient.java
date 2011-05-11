@@ -3,27 +3,30 @@ package otsopack.authn.client;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
+import org.restlet.data.CookieSetting;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
+import org.restlet.util.Series;
 
 import otsopack.authn.ClientResourceFactory;
 import otsopack.authn.IClientResourceFactory;
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.authn.client.exc.AuthenticationException;
+import otsopack.authn.client.exc.InvalidCredentialsException;
 import otsopack.authn.client.exc.NoAuthenticationUriFoundException;
 import otsopack.authn.client.exc.RedirectedToWrongIdentityProviderException;
 import otsopack.authn.client.exc.UnexpectedAuthenticationException;
-import otsopack.authn.client.exc.InvalidCredentialsException;
 import otsopack.authn.resources.SessionRequestResource;
 
 public class AuthenticationClient {
 	
 	private final LocalCredentialsManager credentialsManager;
 	private IClientResourceFactory clientResourceFactory = new ClientResourceFactory();
+	private Series<CookieSetting> receivedCookies = null;
 	
 	public AuthenticationClient(LocalCredentialsManager credentialsManager){
 		this.credentialsManager = credentialsManager;
@@ -55,6 +58,8 @@ public class AuthenticationClient {
 	private String sendSignedValidatedSessionToDataProvider(final String dataProviderUrlWithSecret) throws UnexpectedAuthenticationException {
 		final ClientResource dataProviderClient = this.getClientResourceFactory().createResource(dataProviderUrlWithSecret);
 		final Representation dataProviderFinalResponseRepresentation = dataProviderClient.get();
+		
+		this.receivedCookies = dataProviderClient.getResponse().getCookieSettings();
 		
 		final String dataProviderFinalResponse;
 		try {
@@ -116,6 +121,14 @@ public class AuthenticationClient {
 			throw new UnexpectedAuthenticationException("Exception while reading the authentication url: " + e.getMessage(), e);
 		}
 		return identityProviderUrl;
+	}
+	
+	/**
+	 * @return
+	 * 		The cookies received from the server after performing authentication process. 
+	 */
+	public Series<CookieSetting> getCookies() {
+		return this.receivedCookies;
 	}
 
 	protected IClientResourceFactory getClientResourceFactory(){
