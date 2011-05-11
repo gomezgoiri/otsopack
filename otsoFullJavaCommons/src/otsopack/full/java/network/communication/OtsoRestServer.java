@@ -26,6 +26,7 @@ import org.restlet.resource.ServerResource;
 import otsopack.authn.IAuthenticatedUserHandler;
 import otsopack.authn.OtsoAuthnApplication;
 import otsopack.commons.IController;
+import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.session.UserSession;
 
 public class OtsoRestServer {
@@ -37,11 +38,15 @@ public class OtsoRestServer {
 	private final OtsoAuthnApplication authnApp;
 	
 	public OtsoRestServer(int port, IController controller) {
+		this(port, controller, null);
+	}
+	
+	public OtsoRestServer(int port, IController controller, ICommunication multicastProvider) {
 		this.port = port;
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackApplication(null);
+	    this.application = new OtsopackApplication(multicastProvider);
 	    this.application.setController(controller);
 	    
 	    this.authnApp = new OtsoAuthnApplication(

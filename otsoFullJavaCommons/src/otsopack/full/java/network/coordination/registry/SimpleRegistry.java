@@ -23,6 +23,7 @@ import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
+import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
 public class SimpleRegistry extends Thread implements IRegistry {
@@ -37,6 +38,10 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery){
 		this(spaceURI, discovery, DEFAULT_INTERVAL);
+	}
+	
+	public SimpleRegistry(String spaceURI, String ... nodes){
+		this(spaceURI, new SimpleDiscovery(nodes), DEFAULT_INTERVAL);
 	}
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval){
