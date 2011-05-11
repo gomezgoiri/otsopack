@@ -35,7 +35,6 @@ public class OtsopackRestMulticastWithoutSecurityIntegrationTest extends
 		assertNull(graphD);
 	}
 	
-	
 	@Test
 	public void testReadTemplate() throws Exception {
 		final Graph graphA = this.ruc.read(OtsoServerManager.SPACE, WildcardTemplate.createWithURI(null, null, OtsoServerManager.AITOR_DEPICTION), SemanticFormat.NTRIPLES, 1000);

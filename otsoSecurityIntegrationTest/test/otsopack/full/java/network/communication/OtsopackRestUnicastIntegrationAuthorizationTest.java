@@ -33,9 +33,10 @@ import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.full.java.AbstractSingleServerRestServerIntegrationTesting;
 import otsopack.full.java.IdpManager;
+import otsopack.full.java.OtsoServerManager;
 import otsopack.idp.resources.UserResource;
 
-public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRestServerIntegrationTesting {
+public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSingleServerRestServerIntegrationTesting {
 
 	private static final int OTSO_TESTING_PORT = 18080;
 	private static final int OTSO_IDP_TESTING_PORT = 18081;
@@ -44,7 +45,7 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 	final private String spaceURI = "http://testSpace.com/space/";
 	private String[] writtenGraphURIs;
 	
-	public OtsopackRestUnicastIntegrationTest() {
+	public OtsopackRestUnicastIntegrationAuthorizationTest() {
 		super(OTSO_TESTING_PORT, OTSO_IDP_TESTING_PORT, null);
 	}
 
@@ -66,27 +67,9 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 			this.controller.getDataAccessService().createSpace(this.spaceURI);
 			this.controller.getDataAccessService().joinSpace(this.spaceURI);
 			
-			this.writtenGraphURIs = new String[2];	
-			Graph graph = new Graph(
-					"<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/name> \"Aitor Gómez-Goiri\" . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/title> \"Sr\" . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/givenname> \"Aitor\" . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/family_name> \"Gómez-Goiri\" . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net> . \n" +
-					"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/depiction> <http://aitor.gomezgoiri.net/profile.jpg> . \n",
-					SemanticFormat.NTRIPLES);
-			this.writtenGraphURIs[0] = this.controller.getDataAccessService().write(this.spaceURI, graph, new User("aitor"));
-			
-			graph = new Graph(
-					"<http://facebook.com/user/yoda> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
-					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/name> \"Yoda\" . \n" +
-					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/title> \"Jedi\" . \n" +
-					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname> \"Yoda\" . \n" +
-					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com> . \n" +
-					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/depiction> <http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg> . \n",
-					SemanticFormat.NTRIPLES);
-			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, graph, this.idpManager.getValidUser());
+			this.writtenGraphURIs = new String[2];
+			this.writtenGraphURIs[0] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.AITOR_GRAPH, new User("aitor"));
+			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, OtsoServerManager.YODA_GRAPH, this.idpManager.getValidUser());
 		}
 	
 	@After
@@ -125,17 +108,12 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 		
 		//initially unauthorized
 		final Graph ret = this.ruc.read(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, new Filter[] {filter}, timeout );
-		System.out.println(ret);
-		
+		assertGraphEquals(OtsoServerManager.YODA_GRAPH, ret);	
 	}
 	
 	@Test
 	public void testReadURIUnauthorizated() throws Exception {
 		//this.ruc.login();
 		// try to read
-	}
-	
-	public void testReadURIWithFilter() throws Exception {
-		// read and apply a filter
 	}
 }
