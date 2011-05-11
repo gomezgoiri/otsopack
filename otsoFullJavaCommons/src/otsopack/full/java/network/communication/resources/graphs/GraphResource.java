@@ -53,7 +53,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 					try {
 						ret = controller.getDataAccessService().read(space, graphuri, outputFormat, currentClient);
 					} catch (AuthorizationException e) {
-						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.");
 					}
 				}
 			}
@@ -71,11 +71,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			}
 			
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (TSException e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage(), e);
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage());
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}
@@ -93,13 +93,13 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 					try {
 						ret = controller.getDataAccessService().take(space, graphuri, outputFormat);
 					} catch (AuthorizationException e) {
-						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.");
 					}
 				else {
 					try {
 						ret = controller.getDataAccessService().take(space, graphuri, outputFormat, currentClient);
 					} catch (AuthorizationException e) {
-						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.", e);
+						throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "The access for the user " + currentClient.getId() + " is forbidden.");
 					}
 				}
 			}
@@ -119,9 +119,9 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (TSException e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage(), e);
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed to propagate request: " + e.getMessage());
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}

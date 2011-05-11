@@ -53,7 +53,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			//throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize retrieved data", e);
 		} catch (Exception e) {
 			//TODO is this a internal error or a bad request?
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist");
 		}
 	}
 
@@ -82,9 +82,9 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 					return multicastGraph;
 			}
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
@@ -116,9 +116,9 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 					return multicastGraph;
 			}
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
 		}

@@ -59,7 +59,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			//throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize retrieved data", e);
 		} catch (Exception e) {
 			//TODO is this a internal error or a bad request?
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist", e);
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist");
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			
 			return setOfGraphs;
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG);
 		} catch (UnsupportedSemanticFormatException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
@@ -120,7 +120,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		try {
 			return serializeGraphs(graph);
 		} catch (RepresentationException e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize result: " + e.getMessage(), e);
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize result: " + e.getMessage());
 		}
 	}
 	
