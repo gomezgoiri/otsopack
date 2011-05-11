@@ -40,6 +40,8 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SignedGraph;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -70,8 +72,14 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	public RestUnicastCommunication(String restserver, LocalCredentialsManager credentialsManager) {
-		this.baseRESTServer = restserver;
-		this.authenticationClient = new AuthenticationClient(credentialsManager); 
+		this.baseRESTServer = uniformizeURI(restserver);
+		this.authenticationClient = new AuthenticationClient(credentialsManager);
+		SemanticFactory.initialize(new MicrojenaFactory());
+	}
+	
+	private String uniformizeURI(String restserver) {
+		if( restserver.endsWith("/")) return restserver.substring(0,restserver.length()-2); // last "/" removed
+		return restserver;
 	}
 	
 	public LocalCredentialsManager getLocalCredentialsManager(){
@@ -85,7 +93,7 @@ public class RestUnicastCommunication implements ICommunication {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return this.baseRESTServer + "spaces/" + ret + "/";
+		return this.baseRESTServer + "/spaces/" + ret;
 	}
 
 	@Override
@@ -152,7 +160,7 @@ public class RestUnicastCommunication implements ICommunication {
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		 */
 		try {
-			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
+			final String originalURL = getBaseURI(spaceURI)+"/graphs/"+URLEncoder.encode(graphURI, "utf-8");
 			try {
 				return tryGet(originalURL);
 			} catch (ResourceException e) {
@@ -214,7 +222,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final String originalURL = getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI;
+				final String originalURL = getBaseURI(spaceURI)+"/graphs/wildcards/"+relativeURI;
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
 				try {
 					final Representation rep = cr.get(NTriplesRepresentation.class);
@@ -260,7 +268,7 @@ public class RestUnicastCommunication implements ICommunication {
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		 */
 		try {
-			final String originalURL = getBaseURI(spaceURI)+"graphs/"+URLEncoder.encode(graphURI, "utf-8");
+			final String originalURL = getBaseURI(spaceURI)+"/graphs/"+URLEncoder.encode(graphURI, "utf-8");
 			try {
 				return tryDelete(originalURL);
 			} catch (ResourceException e) {
@@ -321,7 +329,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"graphs/wildcards/"+relativeURI );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/graphs/wildcards/"+relativeURI );
 				
 				try {
 					final Representation rep = cr.delete(NTriplesRepresentation.class);

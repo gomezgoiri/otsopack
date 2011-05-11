@@ -19,7 +19,7 @@ import org.junit.Before;
 
 public abstract class AbstractRestServerIntegrationTesting {
 	final protected int idpTestingPort;
-	private IdpManager idpManager;
+	protected IdpManager idpManager;
 	
 	public AbstractRestServerIntegrationTesting(int idpTestingPort) {
 		this.idpTestingPort = idpTestingPort;

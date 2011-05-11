@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 
+import otsopack.commons.authz.entities.User;
 import otsopack.idp.Controller;
 import otsopack.idp.IIdpController;
 import otsopack.idp.IdpRestServer;
@@ -28,8 +29,8 @@ public class IdpManager {
 	protected IdpRestServer idpRestServer;
 	protected IIdpController controller;
 	final protected int testingPort;
-	public static final String VALID_USERNAME = "porduna";
-	public static final String VALID_PASSWORD = "pablo";
+	public static final String VALID_USERNAME = "yoda";
+	public static final String VALID_PASSWORD = "jedi";
 	public static final String INVALID_USERNAME = "sdalma";
 	public static final String INVALID_PASSWORD = "debio_ganar_eurovision";
 
@@ -44,6 +45,7 @@ public class IdpManager {
 		
 		final Map<String, String> credentials = new HashMap<String, String>();
 		credentials.put(VALID_USERNAME, VALID_PASSWORD);
+		credentials.put("porduna",  "pablo");
 		credentials.put("aigomez",  "aitor");
 		credentials.put("ecastill", "eduardo");
 		credentials.put("xlaiseca", "xabier");
@@ -55,5 +57,9 @@ public class IdpManager {
 	
 	public void stop() throws Exception{
 		this.idpRestServer.shutdown();
+	}
+	
+	public User getValidUser() {
+		return new User("http://127.0.0.1:"+testingPort+"/users/u/"+VALID_USERNAME);
 	}
 }

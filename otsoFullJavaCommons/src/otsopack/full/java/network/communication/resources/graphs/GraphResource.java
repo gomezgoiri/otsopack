@@ -46,7 +46,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 					try {
 						ret = controller.getDataAccessService().read(space, graphuri, outputFormat);
 					} catch (AuthorizationException e) {
-						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.", e);
+						throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "The user must authenticate to access to this information.");
 					}
 				}
 				else {
