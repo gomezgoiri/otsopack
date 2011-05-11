@@ -41,29 +41,29 @@ public class OtsoServerManager {
 	
 	public static final Graph AITOR_GRAPH = new Graph(
 			"<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
-			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/name> \"Aitor Gómez-Goiri\" . \n" +
-			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/title> \"Sr\" . \n" +
-			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/givenname> \"Aitor\" . \n" +
-			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/family_name> \"Gómez-Goiri\" . \n" +
+			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/name> \"Aitor Gomez-Goiri\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/title> \"Sr\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/givenname> \"Aitor\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/family_name> \"Gomez-Goiri\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net> . \n" +
 			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/depiction> <http://aitor.gomezgoiri.net/profile.jpg> . \n",
 			SemanticFormat.NTRIPLES);
 	
 	public static final Graph PABLO_GRAPH = new Graph(
 			"<http://pablo.ordunya.com/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
-			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/name> \"Pablo Orduña\" . \n" +
-			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/title> \"Sr\" . \n" +
-			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/givenname> \"Pablo\" . \n" +
-			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/family_name> \"Orduña\" . \n" +
+			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/name> \"Pablo Orduna\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/title> \"Sr\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/givenname> \"Pablo\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/family_name> \"Orduna\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/homepage> <http://pablo.ordunya.com> . \n" +
 			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/depiction> <http://paginaspersonales.deusto.es/porduna/images/porduna.png> . \n",
 			SemanticFormat.NTRIPLES);
 	
 	public static final Graph YODA_GRAPH = new Graph(
 			"<http://facebook.com/user/yoda> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
-			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/name> \"Yoda\" . \n" +
-			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/title> \"Jedi\" . \n" +
-			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname> \"Yoda\" . \n" +
+			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/name> \"Yoda\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/title> \"Jedi\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
+			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname> \"Yoda\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com> . \n" +
 			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/depiction> <http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg> . \n",
 			SemanticFormat.NTRIPLES);

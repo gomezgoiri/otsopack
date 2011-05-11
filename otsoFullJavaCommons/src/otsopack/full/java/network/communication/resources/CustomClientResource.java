@@ -13,6 +13,9 @@
  */
 package otsopack.full.java.network.communication.resources;
 
+import org.restlet.Application;
+import org.restlet.Context;
+import org.restlet.Restlet;
 import org.restlet.data.CookieSetting;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
@@ -45,4 +48,25 @@ public class CustomClientResource extends ClientResource {
     	storeReceivedCookies();
     	return object;
     }
+    
+    /*
+     * The following two methods are here to force that the HTTP request is performed, even if the
+     * method is called in the same process. 
+     */
+    
+    
+    @Override
+	public Context getContext(){
+		return null;
+	}
+	
+	@Override
+	public Application getApplication(){
+		return new Application(Context.getCurrent()){
+			@Override
+			public Restlet getOutboundRoot(){
+				return null;
+			}
+		};
+	}
 }

@@ -16,6 +16,7 @@ package otsopack.full.java.network.communication;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertNull;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -128,11 +129,20 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	}
 	
 	@Test
-	public void testMulticast() throws Exception {
-		final Graph graph = this.ruc.read(OtsoServerManager.SPACE, this.nodeA.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
-		System.out.println(graph);
+	public void testMulticastReadWithoutSecurity() throws Exception {
+		final Graph graphA = this.ruc.read(OtsoServerManager.SPACE, this.nodeA.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
+		assertGraphEquals(OtsoServerManager.AITOR_GRAPH, graphA);
+		
+		final Graph graphB = this.ruc.read(OtsoServerManager.SPACE, this.nodeB.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
+		assertGraphEquals(OtsoServerManager.PABLO_GRAPH, graphB);
+		
+		final Graph graphC = this.ruc.read(OtsoServerManager.SPACE, this.nodeC.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
+		assertGraphEquals(OtsoServerManager.YODA_GRAPH, graphC);
+		
+		final Graph graphD = this.ruc.read(OtsoServerManager.SPACE, "http://not.existing.uri/", SemanticFormat.NTRIPLES, 1000);
+		assertNull(graphD);
 	}
-	
+
 	public String getNodeAurl(){
 		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/";
 	}

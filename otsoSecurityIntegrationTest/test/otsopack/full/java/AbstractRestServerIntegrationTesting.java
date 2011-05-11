@@ -14,8 +14,13 @@
 
 package otsopack.full.java;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.Before;
+
+import otsopack.commons.data.Graph;
 
 public abstract class AbstractRestServerIntegrationTesting {
 	final protected int idpTestingPort;
@@ -38,5 +43,19 @@ public abstract class AbstractRestServerIntegrationTesting {
 	@After
 	public void tearDown() throws Exception {
 		this.idpManager.stop();
+	}
+	
+	protected void assertGraphEquals(final Graph originalGraph, final Graph retrievedGraph) {
+		assertEquals(originalGraph.getFormat(), retrievedGraph.getFormat());
+		final String [] originalLines = originalGraph.getData().split("\n");
+		final String [] retrievedLines = retrievedGraph.getData().split("\n");
+		assertEquals(originalLines.length, retrievedLines.length);
+		for(String originalLine : originalLines){
+			boolean found = false;
+			for(String retrievedLine : retrievedLines)
+				if(originalLine.trim().equals(retrievedLine.trim()))
+					found = true;
+			assertTrue("Couldn't find " + originalLine + " among the retrieved lines: " + retrievedGraph.getData(), found);
+		}
 	}
 }
