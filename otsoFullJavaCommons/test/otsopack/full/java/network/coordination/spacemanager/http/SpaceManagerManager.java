@@ -15,11 +15,11 @@
 package otsopack.full.java.network.coordination.spacemanager.http;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
-import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.http.server.ISpaceManagerController;
-import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
 import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerController;
+import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
 
 public class SpaceManagerManager {
 	public static final String NODE1 = "http://node1/";
@@ -41,7 +41,7 @@ public class SpaceManagerManager {
 	}
 	
 	public ISpaceManager createClient(){
-		return new HttpSpaceManagerClient(new SpaceManager(createClientAddress()));
+		return new HttpSpaceManagerClient(new HttpSpaceManager(createClientAddress()));
 	}
 
 	public String createClientAddress() {

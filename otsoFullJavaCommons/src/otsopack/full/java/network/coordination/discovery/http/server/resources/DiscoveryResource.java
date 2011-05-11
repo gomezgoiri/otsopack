@@ -31,6 +31,7 @@ import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.DiscoverySpaceNotFoundException;
 import otsopack.full.java.network.coordination.discovery.http.server.OtsopackHttpDiscoveryApplication;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 public class DiscoveryResource extends ServerResource implements IDiscoveryResource {
 	
@@ -70,7 +71,8 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 		
 		final String [] spaceManagerURIs = new String[spaceManagers.length];
 		for(int i = 0; i < spaceManagerURIs.length; ++i)
-			spaceManagerURIs[i] = spaceManagers[i].getURI();
+			if(spaceManagers[i] instanceof HttpSpaceManager)
+				spaceManagerURIs[i] = ((HttpSpaceManager)spaceManagers[i]).getURI();
 		
 		return new StringRepresentation(JSONEncoder.encode(spaceManagerURIs));
 	}

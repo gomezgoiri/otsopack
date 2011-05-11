@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.restlet.data.CookieSetting;
-import java.util.concurrent.Callable;
 
 
 public class CookieStoreTest {

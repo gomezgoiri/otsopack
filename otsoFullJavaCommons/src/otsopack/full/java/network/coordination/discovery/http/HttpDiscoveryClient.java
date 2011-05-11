@@ -30,6 +30,7 @@ import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 public class HttpDiscoveryClient implements IDiscovery {
 
@@ -59,7 +60,7 @@ public class HttpDiscoveryClient implements IDiscovery {
 			}
 			final String [] spaceManagerURIs = JSONDecoder.decode(serializedSpaceManagers, String[].class);
 			for(String spaceManagerURI : spaceManagerURIs)
-				spaceManagers.add(new SpaceManager(spaceManagerURI));
+				spaceManagers.add(new HttpSpaceManager(spaceManagerURI));
 		}
 		return spaceManagers.toArray(new SpaceManager[]{});
 	}

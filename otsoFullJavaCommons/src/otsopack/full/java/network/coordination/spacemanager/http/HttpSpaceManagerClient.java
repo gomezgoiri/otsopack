@@ -23,15 +23,15 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
-import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
 
 public class HttpSpaceManagerClient implements ISpaceManager {
 	
-	private final SpaceManager spaceManager;
+	private final HttpSpaceManager spaceManager;
 	
-	public HttpSpaceManagerClient(SpaceManager spaceManager){
+	public HttpSpaceManagerClient(HttpSpaceManager spaceManager){
 		this.spaceManager = spaceManager;
 	}
 

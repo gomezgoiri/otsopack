@@ -18,19 +18,20 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 
 public class MultiplexerDiscoveryTest {
-	private final SimpleDiscovery discovery1 = new SimpleDiscovery(new SpaceManager("http://ts.alimerka.es/discovery/sample01/"), new SpaceManager("http://ts.alimerka.es/discovery/sample02/"));
-	private final SimpleDiscovery discovery2 = new SimpleDiscovery(new SpaceManager("http://sample01.morelab.deusto.es"), new SpaceManager("http://sample02.morelab.deusto.es"));
+	private final SimpleDiscovery discovery1 = new SimpleDiscovery(new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"), new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"));
+	private final SimpleDiscovery discovery2 = new SimpleDiscovery(new HttpSpaceManager("http://sample01.morelab.deusto.es"), new HttpSpaceManager("http://sample02.morelab.deusto.es"));
 	
 	@Test
 	public void testSingle() throws DiscoveryException{
 		final MultiplexerDiscovery md = new MultiplexerDiscovery(this.discovery1);
 		final SpaceManager [] managers = md.getSpaceManagers("");
 		assertArrayEquals(new SpaceManager[]{ 
-				new SpaceManager("http://ts.alimerka.es/discovery/sample01/"),
-				new SpaceManager("http://ts.alimerka.es/discovery/sample02/"),
+				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"),
+				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"),
 		}, managers);
 	}
 	
@@ -39,10 +40,10 @@ public class MultiplexerDiscoveryTest {
 		final MultiplexerDiscovery md = new MultiplexerDiscovery(this.discovery1, this.discovery2);
 		final SpaceManager [] managers = md.getSpaceManagers("");
 		assertArrayEquals(new SpaceManager[]{ 
-				new SpaceManager("http://ts.alimerka.es/discovery/sample01/"),
-				new SpaceManager("http://ts.alimerka.es/discovery/sample02/"),
-				new SpaceManager("http://sample01.morelab.deusto.es"),
-				new SpaceManager("http://sample02.morelab.deusto.es"),
+				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"),
+				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"),
+				new HttpSpaceManager("http://sample01.morelab.deusto.es"),
+				new HttpSpaceManager("http://sample02.morelab.deusto.es"),
 		}, managers);
 	}
 }

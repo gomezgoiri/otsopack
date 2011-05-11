@@ -31,11 +31,11 @@ import org.restlet.resource.ResourceException;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
-import otsopack.full.java.network.coordination.discovery.http.HttpDiscoveryClient;
 import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryController;
-import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryRestServer;
+import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 public class DiscoveryHttpTest extends Object {
 	
@@ -56,11 +56,11 @@ public class DiscoveryHttpTest extends Object {
 	private void initialize(boolean withDefault) throws Exception {
 		final Map<String, SpaceManager[]> managers = new HashMap<String, SpaceManager[]>();
 		
-		final SpaceManager sp1 = new SpaceManager(SPACE_MANAGER1);
-		final SpaceManager sp2 = new SpaceManager(SPACE_MANAGER2);
-		final SpaceManager sp3 = new SpaceManager(SPACE_MANAGER3);
-		final SpaceManager sp4 = new SpaceManager(SPACE_MANAGER4);
-		final SpaceManager sp5 = new SpaceManager(SPACE_MANAGER5);
+		final SpaceManager sp1 = new HttpSpaceManager(SPACE_MANAGER1);
+		final SpaceManager sp2 = new HttpSpaceManager(SPACE_MANAGER2);
+		final SpaceManager sp3 = new HttpSpaceManager(SPACE_MANAGER3);
+		final SpaceManager sp4 = new HttpSpaceManager(SPACE_MANAGER4);
+		final SpaceManager sp5 = new HttpSpaceManager(SPACE_MANAGER5);
 		
 		managers.put(SPACE1, new SpaceManager[]{sp1, sp2});
 		managers.put(SPACE2, new SpaceManager[]{sp3, sp4});
@@ -86,8 +86,8 @@ public class DiscoveryHttpTest extends Object {
 		
 		final List<SpaceManager> spaceManagers = Arrays.asList(this.client.getSpaceManagers(SPACE1));
 		assertEquals(2, spaceManagers.size());
-		assertThat(spaceManagers, hasItem( new SpaceManager(SPACE_MANAGER1) ));
-		assertThat(spaceManagers, hasItem( new SpaceManager(SPACE_MANAGER2) ));
+		assertThat(spaceManagers, hasItem( (SpaceManager)new HttpSpaceManager(SPACE_MANAGER1) ));
+		assertThat(spaceManagers, hasItem( (SpaceManager)new HttpSpaceManager(SPACE_MANAGER2) ));
 	}
 	
 	@Test
@@ -96,8 +96,8 @@ public class DiscoveryHttpTest extends Object {
 		
 		final List<SpaceManager> spaceManagers = Arrays.asList(this.client.getSpaceManagers(SPACE2));
 		assertEquals(2, spaceManagers.size());
-		assertThat(spaceManagers, hasItem( new SpaceManager(SPACE_MANAGER3) ));
-		assertThat(spaceManagers, hasItem( new SpaceManager(SPACE_MANAGER4) ));
+		assertThat(spaceManagers, hasItem( (SpaceManager)new HttpSpaceManager(SPACE_MANAGER3) ));
+		assertThat(spaceManagers, hasItem( (SpaceManager)new HttpSpaceManager(SPACE_MANAGER4) ));
 	}
 	
 	@Test
@@ -107,7 +107,7 @@ public class DiscoveryHttpTest extends Object {
 		final List<SpaceManager> spaceManagers = Arrays.asList(this.client.getSpaceManagers("http://foo"));
 		assertEquals(1, spaceManagers.size());
 		
-		assertThat(spaceManagers, hasItem( new SpaceManager(SPACE_MANAGER5) ));
+		assertThat(spaceManagers, hasItem( (SpaceManager)new HttpSpaceManager(SPACE_MANAGER5) ));
 	}
 	
 	@Test

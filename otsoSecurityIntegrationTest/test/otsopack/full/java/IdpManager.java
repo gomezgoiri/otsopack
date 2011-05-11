@@ -49,8 +49,8 @@ public class IdpManager {
 		credentials.put("xlaiseca", "xabier");
 		
 		final ICredentialsChecker credentialsChecker = new MemoryCredentialsChecker(credentials);
-		final IIdpController controller = new Controller(credentialsChecker);
-		this.idpRestServer.getApplication().setController(controller);
+		final IIdpController credentialsProvidedController = new Controller(credentialsChecker);
+		this.idpRestServer.getApplication().setController(credentialsProvidedController);
 	}
 	
 	public void stop() throws Exception{

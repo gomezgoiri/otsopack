@@ -24,7 +24,6 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
-import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
 
 public class SimpleRegistry extends Thread implements IRegistry {
 	
@@ -70,12 +69,12 @@ public class SimpleRegistry extends Thread implements IRegistry {
 			
 			final Set<String> newNodes = new HashSet<String>();
 			for(SpaceManager spaceManager : this.spaceManagers){
-				final ISpaceManager client = new HttpSpaceManagerClient(spaceManager);
+				final ISpaceManager client = spaceManager.createClient();
 				try {
 					for(String node : client.getNodes())
 						newNodes.add(node);
 				} catch (SpaceManagerException e) {
-					System.err.println("Getting nodes failed with space manager: " + spaceManager.getURI() + ": " + e.getMessage());
+					System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
 					e.printStackTrace();
 				}
 			}

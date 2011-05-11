@@ -14,13 +14,13 @@
 package otsopack.full.java.network.coordination.discovery.http.server;
 
 import otsopack.full.java.network.coordination.IDiscovery;
-import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 
 public class RestServerMain {
 	public static void main(String [] args) throws Exception {
-		final IDiscovery discovery = new SimpleDiscovery(new SpaceManager("http://ts.alimerka.es"));
+		final IDiscovery discovery = new SimpleDiscovery(new HttpSpaceManager("http://ts.alimerka.es"));
 		final IDiscoveryController controller = new DiscoveryController(discovery);
 		final DiscoveryRestServer server = new DiscoveryRestServer(controller);
 		server.startup();

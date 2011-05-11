@@ -14,45 +14,7 @@
  */
 package otsopack.full.java.network.coordination;
 
-public class SpaceManager {
-	private final String uri;
-	
-	public SpaceManager(String uri){
-		this.uri = uri;
-	}
-	
-	public String getURI(){
-		return this.uri;
-	}
+public abstract class SpaceManager {
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((this.uri == null) ? 0 : this.uri.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SpaceManager other = (SpaceManager) obj;
-		if (this.uri == null) {
-			if (other.uri != null)
-				return false;
-		} else if (!this.uri.equals(other.uri))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "SpaceManager [uri=" + this.uri + "]";
-	}
+	public abstract ISpaceManager createClient();
 }
