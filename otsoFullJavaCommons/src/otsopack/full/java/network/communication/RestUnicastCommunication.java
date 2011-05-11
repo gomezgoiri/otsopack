@@ -61,8 +61,6 @@ import otsopack.full.java.network.communication.resources.graphs.WildcardConvert
 
 public class RestUnicastCommunication implements ICommunication {
 
-	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
-	
 	private final String baseRESTServer;
 	protected final AuthenticationClient authenticationClient;
 	private final ClientResourceFactory clientFactory = new ClientResourceFactory();
@@ -422,7 +420,7 @@ public class RestUnicastCommunication implements ICommunication {
 		
 		// Is it signed?
 		final Form httpAttributes = (Form)clientResource.getResponse().getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-		final String user = httpAttributes.getFirstValue(OTSOPACK_USER, null);
+		final String user = httpAttributes.getFirstValue(OtsopackApplication.OTSOPACK_USER, null);
 		// TODO: the signature process is still missing
 		
 		if(user == null) // Not signed

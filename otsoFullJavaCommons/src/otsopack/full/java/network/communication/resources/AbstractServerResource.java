@@ -27,9 +27,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Preference;
 import org.restlet.data.Status;
+import org.restlet.engine.http.header.HeaderConstants;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
@@ -128,11 +130,26 @@ public class AbstractServerResource extends ServerResource {
 		return acceptedSemanticFormats.toArray(new SemanticFormat[]{});
 	}
 	
-	protected Representation serializeGraph(Graph [] graph) throws RepresentationException{
-		return semanticFormatRepresentationFactory.create(graph);
+	protected Representation serializeGraphs(Graph [] graphs) throws RepresentationException{
+		if(graphs.length == 1)
+			addSignatureHttpHeader(graphs[0]);
+		return semanticFormatRepresentationFactory.create(graphs);
+	}
+	
+	private void addSignatureHttpHeader(Graph graph){
+		if(graph.getEntity() instanceof User){
+			final User user = (User)graph.getEntity();
+			Form httpHeaders = (Form)getResponse().getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+			if(httpHeaders == null){
+				httpHeaders = new Form();
+				getResponse().getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, httpHeaders);
+			}
+			httpHeaders.add(OtsopackApplication.OTSOPACK_USER, user.getId());
+		}
 	}
 	
 	protected Representation serializeGraph(Graph graph){
+		addSignatureHttpHeader(graph);
 		return semanticFormatRepresentationFactory.create(graph);
 	}
 	

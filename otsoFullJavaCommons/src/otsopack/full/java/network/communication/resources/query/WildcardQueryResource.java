@@ -118,7 +118,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		final SemanticFormat semanticFormat = checkOutputSemanticFormats();
 		final Graph [] graph = getTriplesByWildcard(semanticFormat);
 		try {
-			return serializeGraph(graph);
+			return serializeGraphs(graph);
 		} catch (RepresentationException e) {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize result: " + e.getMessage(), e);
 		}

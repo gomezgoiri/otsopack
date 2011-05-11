@@ -39,6 +39,8 @@ import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
 public class OtsopackApplication extends Application {
 	
+	public static final String OTSOPACK_USER = "X-OTSOPACK-User";
+	
 	private final Map<String, Class<?>> resources;
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	private final PrefixesStorage prefixesStorage = new PrefixesStorage();
