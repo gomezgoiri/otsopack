@@ -14,6 +14,7 @@
  */
 package otsopack.full.java.network.communication;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.After;
@@ -28,6 +29,8 @@ import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.asserts.ContainsURIAssert;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.Template;
+import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.full.java.AbstractSingleServerRestServerIntegrationTesting;
@@ -109,16 +112,15 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 	@Test
 	public void testReadURIWithAuthorizationProcess() throws Exception {
 		final long timeout = 2000;
-		final Filter filter = new Filter(this.AITOR, new ContainsURIAssert("http://aitor.gomezgoiri.net/me"));
 		
 		//initially unauthorized
-		final Graph ret = this.ruc.read(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, new Filter[] {filter}, timeout );
+		final Graph ret = this.ruc.read(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, timeout );
 		assertGraphEquals(OtsoServerManager.YODA_GRAPH, ret);	
 	}
 	
 	@Test
 	public void testReadURIUnauthorizated() throws Exception {
-		this.ruc.login();		
+		this.ruc.login();
 		final long timeout = 2000;
 		
 		//unauthorized
@@ -128,5 +130,98 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 		} catch(AuthorizationException ae) {
 			// success
 		}
+	}
+	
+	@Test
+	public void testReadTplUnauthorizatedAndAuthorizated() throws Exception {
+		final long timeout = 2000;
+		final Template yodatpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.YODA_DEPICTION);
+		final Template aitortpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.AITOR_DEPICTION);
+		final Template pablotpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.PABLO_DEPICTION);
+		
+		// not authorized yet
+		// he can access public data
+		Graph ret = this.ruc.read(this.spaceURI, pablotpl, SemanticFormat.NTRIPLES, timeout );		
+		assertGraphEquals(OtsoServerManager.PABLO_GRAPH, ret);
+		
+		// but not to protected data
+		ret = this.ruc.read(this.spaceURI, yodatpl, SemanticFormat.NTRIPLES, timeout );
+		assertNull(ret);
+		
+		// now yoda logs in
+		this.ruc.login();
+		
+		// and it gets the graph he couldn't read before
+		ret = this.ruc.read(this.spaceURI, yodatpl, SemanticFormat.NTRIPLES, timeout );		
+		assertGraphEquals(OtsoServerManager.YODA_GRAPH, ret);
+		
+		// but he cannot access to Aitor's graph
+		ret = this.ruc.read(this.spaceURI, aitortpl, SemanticFormat.NTRIPLES, timeout );		
+		assertNull(ret);
+	}
+	
+	
+	// TAKE
+	
+	@Test
+	public void testTakeURIWithAuthorizationProcess() throws Exception {
+		final long timeout = 2000;
+		
+		//initially unauthorized
+		Graph ret = this.ruc.take(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, timeout );
+		assertGraphEquals(OtsoServerManager.YODA_GRAPH, ret);
+		
+		ret = this.ruc.take(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, timeout );
+		assertNull(ret);
+	}
+	
+	@Test
+	public void testTakeURIUnauthorizated() throws Exception {
+		this.ruc.login();
+		final long timeout = 2000;
+		
+		//unauthorized
+		try {
+			this.ruc.take(this.spaceURI, this.writtenGraphURIs[0], SemanticFormat.NTRIPLES, timeout );
+			fail();
+		} catch(AuthorizationException ae) {
+			// success
+		}
+	}
+	
+	@Test
+	public void testTakeTplUnauthorizatedAndAuthorizated() throws Exception {
+		final long timeout = 2000;
+		final Template yodatpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.YODA_DEPICTION);
+		final Template aitortpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.AITOR_DEPICTION);
+		final Template pablotpl = WildcardTemplate.createWithURI(null, null, OtsoServerManager.PABLO_DEPICTION);
+		
+		// not authorized yet
+		// he can access public data
+		Graph ret = this.ruc.take(this.spaceURI, pablotpl, SemanticFormat.NTRIPLES, timeout );		
+		assertGraphEquals(OtsoServerManager.PABLO_GRAPH, ret);
+		
+		// the second time, it is not there anymore
+		ret = this.ruc.take(this.spaceURI, pablotpl, SemanticFormat.NTRIPLES, timeout );		
+		assertNull(ret);
+		
+		// but not to protected data
+		ret = this.ruc.take(this.spaceURI, yodatpl, SemanticFormat.NTRIPLES, timeout );
+		assertNull(ret);
+		
+		// now yoda logs in
+		this.ruc.login();
+		
+		// and it gets the graph he couldn't read before
+		ret = this.ruc.take(this.spaceURI, yodatpl, SemanticFormat.NTRIPLES, timeout );		
+		assertGraphEquals(OtsoServerManager.YODA_GRAPH, ret);
+		
+		// the second time, it is not there anymore
+		ret = this.ruc.take(this.spaceURI, yodatpl, SemanticFormat.NTRIPLES, timeout );		
+		assertNull(ret);
+		
+		// but he cannot access to Aitor's graph
+		ret = this.ruc.take(this.spaceURI, aitortpl, SemanticFormat.NTRIPLES, timeout );		
+		assertNull(ret);
 	}
 }
