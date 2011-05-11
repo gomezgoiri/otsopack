@@ -24,6 +24,8 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
+import otsopack.commons.authz.Filter;
+import otsopack.commons.authz.asserts.ContainsURIAssert;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -84,8 +86,7 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com> . \n" +
 					"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/depiction> <http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg> . \n",
 					SemanticFormat.NTRIPLES);
-			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, graph, new User("pablo"));
-
+			this.writtenGraphURIs[1] = this.controller.getDataAccessService().write(this.spaceURI, graph, this.idpManager.getValidUser());
 		}
 	
 	@After
@@ -119,13 +120,18 @@ public class OtsopackRestUnicastIntegrationTest extends AbstractSingleServerRest
 	
 	@Test
 	public void testReadURIWithAuthorizationProcess() throws Exception {
+		final long timeout = 2000;
+		final Filter filter = new Filter(new User("http://127.0.0.1/user/u/aigomez"), new ContainsURIAssert("http://aitor.gomezgoiri.net/me"));
+		
 		//initially unauthorized
-		//this.ruc.read(this.spaceURI, this.graphuri[0]);
+		final Graph ret = this.ruc.read(this.spaceURI, this.writtenGraphURIs[1], SemanticFormat.NTRIPLES, new Filter[] {filter}, timeout );
+		System.out.println(ret);
+		
 	}
 	
 	@Test
 	public void testReadURIUnauthorizated() throws Exception {
-		this.ruc.login();
+		//this.ruc.login();
 		// try to read
 	}
 	
