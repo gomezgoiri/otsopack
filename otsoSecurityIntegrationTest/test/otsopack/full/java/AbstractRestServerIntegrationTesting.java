@@ -80,4 +80,24 @@ public abstract class AbstractRestServerIntegrationTesting {
 			assertTrue("Couldn't find " + originalLine + " among the retrieved lines: " + retrievedGraph.getData(), found);
 		}
 	}
+
+	protected void assertGraphContains(final Graph retrievedGraph, final Graph subGraph) {
+		// If they are both null, everything is fine
+		if(retrievedGraph == subGraph)
+			return;
+		
+		assertNotNull(subGraph);
+		assertNotNull("null graph retrieved, expected to contain at least" + subGraph, retrievedGraph);
+		assertEquals(subGraph.getFormat(), retrievedGraph.getFormat());
+		final String [] subgraphLines = subGraph.getData().split("\n");
+		final String [] retrievedLines = retrievedGraph.getData().split("\n");
+		assertTrue( subgraphLines.length<=retrievedLines.length );
+		for(String subgraphLine : subgraphLines){
+			boolean found = false;
+			for(String retrievedLine : retrievedLines)
+				if(subgraphLine.trim().equals(retrievedLine.trim()))
+					found = true;
+			assertTrue("Couldn't find " + subgraphLine + " among the retrieved lines: " + retrievedGraph.getData(), found);
+		}
+	}
 }
