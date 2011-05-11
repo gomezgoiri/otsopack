@@ -78,7 +78,8 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	private String uniformizeURI(String restserver) {
-		if( restserver.endsWith("/")) return restserver.substring(0,restserver.length()-2); // last "/" removed
+		if( restserver.endsWith("/")) 
+			return restserver.substring(0,restserver.length()-1); // last "/" removed
 		return restserver;
 	}
 	
