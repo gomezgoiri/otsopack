@@ -70,7 +70,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 		final User currentClient = getCurrentClient();
 		
 		try {
-			final Graph ret;
+			Graph ret;
 			
 			if( controller != null ){
 				if( currentClient==null )
@@ -78,6 +78,10 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 				else
 					ret = controller.getDataAccessService().query(space,tpl, outputFormat, currentClient);
 			} else ret=null;
+			
+			if(ret != null && getSigner() != null){
+				ret = ret.sign(getSigner());
+			}
 			
 			Graph [] graphs = new Graph[]{};
 			

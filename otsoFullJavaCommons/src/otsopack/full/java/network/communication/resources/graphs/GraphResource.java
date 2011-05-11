@@ -58,8 +58,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 				}
 			}
 			
-			if( ret != null ) 
-				return ret;
+			if( ret != null ) {
+				if (getSigner() != null)
+					ret = ret.sign(getSigner());
+				return ret; 
+			}
 			
 			if( isMulticastProvider() ){
 				final Graph multicastGraph = getMulticastProvider().read(space, graphuri, outputFormat, getTimeout());
@@ -101,8 +104,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 				}
 			}
 			
-			if( ret!=null ) 
+			if( ret!=null ){
+				if (getSigner() != null)
+					ret = ret.sign(getSigner());
 				return ret;
+			}
 			
 			if( isMulticastProvider() ) {
 				final Graph multicastGraph = getMulticastProvider().take(space, graphuri, outputFormat, getTimeout());

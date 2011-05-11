@@ -26,6 +26,7 @@ import org.restlet.routing.Router;
 import org.restlet.service.MetadataService;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.representations.OtsopackConverter;
 import otsopack.full.java.network.communication.resources.authn.LoginResource;
@@ -43,6 +44,7 @@ public class OtsopackApplication extends Application {
 	private final PrefixesStorage prefixesStorage = new PrefixesStorage();
 	private final ISessionManager<UserSession> sessionManager = new MemorySessionManager<UserSession>();
 	private final ICommunication multicastProvider;
+	private final IEntity signer;
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 	private static final String TIMEOUT_PROPERTY_NAME    = "timeout";
@@ -62,12 +64,21 @@ public class OtsopackApplication extends Application {
 	}
 	
 	public OtsopackApplication(){
-		this(null);
+		this(null, null);
 	}
 	
 	public OtsopackApplication(ICommunication multicastProvider){
+		this(multicastProvider, null);
+	}
+	
+	public OtsopackApplication(IEntity signer){
+		this(null, signer);
+	}
+	
+	public OtsopackApplication(ICommunication multicastProvider, IEntity signer){
 		this.resources = PATHS;
 		this.multicastProvider = multicastProvider;
+		this.signer = signer;
 		this.attributes.put(TIMEOUT_PROPERTY_NAME, DEFAULT_TIMEOUT);
 	}
 	
@@ -77,6 +88,10 @@ public class OtsopackApplication extends Application {
 	
 	public ICommunication getMulticastProvider(){
 		return this.multicastProvider;
+	}
+	
+	public IEntity getSigner(){
+		return this.signer;
 	}
 	
 	public static void registerExtensions(MetadataService metadataService){

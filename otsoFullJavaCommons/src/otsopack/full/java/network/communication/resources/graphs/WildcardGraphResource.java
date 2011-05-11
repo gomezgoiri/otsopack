@@ -64,14 +64,17 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final User currentClient = getCurrentClient();
 		
 		try {
-			final Graph ret;
+			Graph ret;
 			if( currentClient==null )
 				ret = controller.getDataAccessService().read(space, tpl, outputFormat);
 			else
 				ret = controller.getDataAccessService().read(space, tpl, outputFormat, currentClient);
 			
-			if( ret!=null ) 
+			if( ret!=null ) {
+				if (getSigner() != null)
+					ret = ret.sign(getSigner());
 				return ret;
+			}
 			
 			if(isMulticastProvider()){
 				final Graph multicastGraph = getMulticastProvider().read(space, tpl, outputFormat, getTimeout());
@@ -95,14 +98,17 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 		final User currentClient = getCurrentClient();
 		
 		try {
-			final Graph ret;
+			Graph ret;
 			if( currentClient==null )
 				ret = controller.getDataAccessService().take(space, tpl, outputFormat);
 			else
 				ret = controller.getDataAccessService().take(space, tpl, outputFormat, currentClient);
 			
-			if( ret!=null ) 
+			if( ret!=null ){
+				if (getSigner() != null)
+					ret = ret.sign(getSigner());
 				return ret;
+			}
 
 			if(isMulticastProvider()){
 				final Graph multicastGraph = getMulticastProvider().take(space, tpl, outputFormat, getTimeout());

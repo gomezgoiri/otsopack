@@ -35,6 +35,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.IController;
+import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -72,6 +73,10 @@ public class AbstractServerResource extends ServerResource {
 			ret.add(argn.substring(1, argn.length()-1));
 		}
 		return ret;
+	}
+	
+	protected IEntity getSigner(){
+		return getOtsopackApplication().getSigner();
 	}
 	
 	protected int getTimeout(){
