@@ -1,16 +1,3 @@
-/*
- * Copyright (C) 2008-2011 University of Deusto
- * 
- * All rights reserved.
- *
- * This software is licensed as described in the file COPYING, which
- * you should have received as part of this distribution.
- * 
- * This software consists of contributions made by many individuals, 
- * listed below:
- *
- * Author: Pablo Orduña <pablo.orduna@deusto.es>
- */
 package otsopack.full.java.network.communication;
 
 import org.junit.Before;
@@ -18,10 +5,12 @@ import org.junit.Test;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
-import otsopack.authn.client.credentials.Credentials;
-import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.full.java.AbstractRestServerTesting;
 import otsopack.full.java.IdpManager;
+import otsopack.authn.client.credentials.Credentials;
+import otsopack.authn.client.credentials.LocalCredentialsManager;
+import otsopack.full.java.network.communication.RestMulticastCommunication;
+import otsopack.full.java.network.communication.RestUnicastCommunication;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.SpaceManager;
@@ -48,8 +37,7 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerTest
 		this.ruc = new RestUnicastCommunication(getOtsoServerBaseURL(), credentials);
 		final IDiscovery discovery = new SimpleDiscovery(new SpaceManager("http://space1/"));
 		final IRegistry registry = new SimpleRegistry("http://space1/", discovery);
-		
-		// RestMulticastCommunication comm = new RestMulticastCommunication(registry);
+		RestMulticastCommunication comm = new RestMulticastCommunication(registry);
 	}
 	
 	@Test

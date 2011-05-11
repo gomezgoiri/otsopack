@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import otsopack.full.java.AbstractRestServerTesting;
+import otsopack.full.java.IdpManager;
 import otsopack.authn.client.credentials.Credentials;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.entities.User;
