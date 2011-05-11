@@ -33,7 +33,7 @@ public class RestServerMain {
 		EasyMock.expect(controller.getDataAccessService()).andReturn(mockda).anyTimes();
 		EasyMock.replay(controller);
 		
-		final RestServer rs = new RestServer(controller);
+		final OtsoRestServer rs = new OtsoRestServer(controller);
 		
 		rs.startup();	
 	}

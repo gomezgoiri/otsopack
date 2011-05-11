@@ -18,14 +18,14 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class AbstractRestServerTesting {
-	protected RestServer rs;
+	protected AuthenticationRestServer rs;
 	protected IController controller;
-	protected int testingPort = RestServer.DEFAULT_PORT;
+	protected int testingPort = AuthenticationRestServer.DEFAULT_PORT;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.controller = EasyMock.createMock(IController.class);
-		this.rs = new RestServer(this.testingPort, this.controller);
+		this.rs = new AuthenticationRestServer(this.testingPort, this.controller);
 		this.rs.startup();
 	}
 	

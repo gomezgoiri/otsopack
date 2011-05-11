@@ -23,9 +23,9 @@ import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public abstract class AbstractRestServerTesting {
-	protected RestServer rs;
+	protected OtsoRestServer rs;
 	protected IController controller;
-	protected int testingPort = RestServer.DEFAULT_PORT;
+	protected int testingPort = OtsoRestServer.DEFAULT_PORT;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -34,7 +34,7 @@ public abstract class AbstractRestServerTesting {
 		EasyMock.expect(this.controller.getDataAccessService()).andReturn(new MemoryDataAccess()).anyTimes();
 		EasyMock.replay(this.controller);
 		
-		this.rs = new RestServer(this.testingPort, this.controller);
+		this.rs = new OtsoRestServer(this.testingPort, this.controller);
 		this.rs.startup();
 	}
 	

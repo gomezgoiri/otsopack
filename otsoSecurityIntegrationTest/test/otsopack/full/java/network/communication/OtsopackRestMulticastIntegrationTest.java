@@ -34,6 +34,7 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 		credentials.setCredentials(getIdpBaseURL(), new Credentials(IdpManager.VALID_USERNAME, IdpManager.VALID_PASSWORD));
 		credentials.setUserIdentifierURI(getOtsoServerBaseURL(), UserResource.createURL(getIdpBaseURL(), IdpManager.VALID_USERNAME));
 		
+		
 		final IDiscovery discovery = new SimpleDiscovery(new SpaceManager("http://space1/"));
 		final IRegistry registry = new SimpleRegistry("http://space1/", discovery);
 		RestMulticastCommunication comm = new RestMulticastCommunication(registry);

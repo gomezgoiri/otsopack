@@ -11,42 +11,42 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.full.java.network.coordination.spacemanager.http.server;
+package otsopack.authn;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-public class RestServer {
-	public static final int DEFAULT_PORT = 8185;
+public class AuthenticationRestServer {
+	public static final int DEFAULT_PORT = 8183;
 	
 	private final int port;
 	private final Component component;
-	private final OtsopackHttpSpaceManagerApplication application;
+	private final OtsoAuthnApplication application;
 	
-	public RestServer(int port, ISpaceManagerController controller) {
+	public AuthenticationRestServer(int port, IController controller) {
 		this.port = port;
 		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackHttpSpaceManagerApplication();
+	    this.application = new OtsoAuthnApplication();
 	    this.application.setController(controller);
-	    this.component.getDefaultHost().attach(this.application);
+	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH, this.application);
 	}
 	
-	public RestServer(ISpaceManagerController controller){
+	public AuthenticationRestServer(IController controller){
 		this(DEFAULT_PORT, controller);
 	}
 	
-	public RestServer(int port){
+	public AuthenticationRestServer(int port){
 		this(port, null);
 	}
 	
-	public RestServer(){
+	public AuthenticationRestServer(){
 		this(DEFAULT_PORT, null);
 	}
 	
-	public OtsopackHttpSpaceManagerApplication getApplication(){
+	public OtsoAuthnApplication getApplication(){
 		return this.application;
 	}
 	

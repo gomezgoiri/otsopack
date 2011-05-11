@@ -11,42 +11,42 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.authn;
+package otsopack.full.java.network.coordination.discovery.http.server;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-public class RestServer {
-	public static final int DEFAULT_PORT = 8183;
+public class DiscoveryRestServer {
+	public static final int DEFAULT_PORT = 8185;
 	
 	private final int port;
 	private final Component component;
-	private final OtsoAuthnApplication application;
+	private final OtsopackHttpDiscoveryApplication application;
 	
-	public RestServer(int port, IController controller) {
+	public DiscoveryRestServer(int port, IDiscoveryController controller) {
 		this.port = port;
 		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsoAuthnApplication();
+	    this.application = new OtsopackHttpDiscoveryApplication();
 	    this.application.setController(controller);
-	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH, this.application);
+	    this.component.getDefaultHost().attach(this.application);
 	}
 	
-	public RestServer(IController controller){
+	public DiscoveryRestServer(IDiscoveryController controller){
 		this(DEFAULT_PORT, controller);
 	}
 	
-	public RestServer(int port){
+	public DiscoveryRestServer(int port){
 		this(port, null);
 	}
 	
-	public RestServer(){
+	public DiscoveryRestServer(){
 		this(DEFAULT_PORT, null);
 	}
 	
-	public OtsoAuthnApplication getApplication(){
+	public OtsopackHttpDiscoveryApplication getApplication(){
 		return this.application;
 	}
 	

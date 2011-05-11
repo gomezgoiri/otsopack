@@ -28,7 +28,7 @@ import otsopack.authn.OtsoAuthnApplication;
 import otsopack.commons.IController;
 import otsopack.full.java.network.communication.session.UserSession;
 
-public class RestServer {
+public class OtsoRestServer {
 	public static final int DEFAULT_PORT = 8182;
 	
 	private final int port;
@@ -36,7 +36,7 @@ public class RestServer {
 	private final OtsopackApplication application;
 	private final OtsoAuthnApplication authnApp;
 	
-	public RestServer(int port, IController controller) {
+	public OtsoRestServer(int port, IController controller) {
 		this.port = port;
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
@@ -52,7 +52,7 @@ public class RestServer {
 		    		  tomorrow.setTimeInMillis( tomorrow.getTimeInMillis()+(24*60*60*1000) );
 		    		  
 		    		  final UserSession session = new UserSession(userIdentifier);
-		    		  final String sessionID = RestServer.this.application.getSessionManager().putSession(session);
+		    		  final String sessionID = OtsoRestServer.this.application.getSessionManager().putSession(session);
 		    		  
 		    		  // Set-Cookie
 		    		  final CookieSetting cookie = new CookieSetting(0,"sessionID",sessionID);
@@ -66,15 +66,15 @@ public class RestServer {
 	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH,this.authnApp);
 	}
 	
-	public RestServer(IController controller){
+	public OtsoRestServer(IController controller){
 		this(DEFAULT_PORT, controller);
 	}
 	
-	public RestServer(int port){
+	public OtsoRestServer(int port){
 		this(port, null);
 	}
 	
-	public RestServer(){
+	public OtsoRestServer(){
 		this(DEFAULT_PORT, null);
 	}
 	

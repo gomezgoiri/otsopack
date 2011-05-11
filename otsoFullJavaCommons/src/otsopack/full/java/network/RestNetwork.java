@@ -30,16 +30,16 @@ import otsopack.commons.network.INetwork;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.util.collections.Set;
-import otsopack.full.java.network.communication.RestServer;
+import otsopack.full.java.network.communication.OtsoRestServer;
 import otsopack.full.java.network.communication.RestUnicastCommunication;
 
 public class RestNetwork implements INetwork {
 	
-	RestServer rs;
+	OtsoRestServer rs;
 	RestUnicastCommunication comm;
 	
 	public RestNetwork(IController controller) {
-		this.rs = new RestServer();
+		this.rs = new OtsoRestServer();
 		this.rs.getApplication().setController(controller);
 	}
 

@@ -11,42 +11,42 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.full.java.network.coordination.discovery.http.server;
+package otsopack.full.java.network.coordination.spacemanager.http.server;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-public class RestServer {
+public class SpaceManagerRestServer {
 	public static final int DEFAULT_PORT = 8185;
 	
 	private final int port;
 	private final Component component;
-	private final OtsopackHttpDiscoveryApplication application;
+	private final OtsopackHttpSpaceManagerApplication application;
 	
-	public RestServer(int port, IDiscoveryController controller) {
+	public SpaceManagerRestServer(int port, ISpaceManagerController controller) {
 		this.port = port;
 		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackHttpDiscoveryApplication();
+	    this.application = new OtsopackHttpSpaceManagerApplication();
 	    this.application.setController(controller);
 	    this.component.getDefaultHost().attach(this.application);
 	}
 	
-	public RestServer(IDiscoveryController controller){
+	public SpaceManagerRestServer(ISpaceManagerController controller){
 		this(DEFAULT_PORT, controller);
 	}
 	
-	public RestServer(int port){
+	public SpaceManagerRestServer(int port){
 		this(port, null);
 	}
 	
-	public RestServer(){
+	public SpaceManagerRestServer(){
 		this(DEFAULT_PORT, null);
 	}
 	
-	public OtsopackHttpDiscoveryApplication getApplication(){
+	public OtsopackHttpSpaceManagerApplication getApplication(){
 		return this.application;
 	}
 	

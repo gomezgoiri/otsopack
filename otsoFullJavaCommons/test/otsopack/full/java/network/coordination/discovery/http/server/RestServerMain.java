@@ -22,7 +22,7 @@ public class RestServerMain {
 	public static void main(String [] args) throws Exception {
 		final IDiscovery discovery = new SimpleDiscovery(new SpaceManager("http://ts.alimerka.es"));
 		final IDiscoveryController controller = new DiscoveryController(discovery);
-		final RestServer server = new RestServer(controller);
+		final DiscoveryRestServer server = new DiscoveryRestServer(controller);
 		server.startup();
 	}
 }

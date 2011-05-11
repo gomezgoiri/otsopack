@@ -18,14 +18,14 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.http.server.ISpaceManagerController;
-import otsopack.full.java.network.coordination.spacemanager.http.server.RestServer;
+import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
 import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerController;
 
 public class SpaceManagerManager {
 	public static final String NODE1 = "http://node1/";
 	public static final String NODE2 = "http://node2/";
 
-	private RestServer server;
+	private SpaceManagerRestServer server;
 	private int port;
 	
 	public SpaceManagerManager(int port){
@@ -36,7 +36,7 @@ public class SpaceManagerManager {
 		ISpaceManager spaceManager = new SimpleSpaceManager(NODE1, NODE2);
 		
 		final ISpaceManagerController controller = new SpaceManagerController(spaceManager);
-		this.server = new RestServer(this.port, controller);
+		this.server = new SpaceManagerRestServer(this.port, controller);
 		this.server.startup();
 	}
 	

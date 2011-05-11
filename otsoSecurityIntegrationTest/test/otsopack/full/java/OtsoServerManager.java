@@ -4,13 +4,13 @@ import org.easymock.EasyMock;
 
 import otsopack.commons.IController;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
-import otsopack.full.java.network.communication.RestServer;
+import otsopack.full.java.network.communication.OtsoRestServer;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
 public class OtsoServerManager {
 	
 	private final int otsoTestingPort;
-	protected RestServer rs;
+	protected OtsoRestServer rs;
 	protected IController controller;
 	
 	public OtsoServerManager(int otsoTestingPort){
@@ -20,7 +20,7 @@ public class OtsoServerManager {
 		EasyMock.expect(this.controller.getDataAccessService()).andReturn(new MemoryDataAccess()).anyTimes();
 		EasyMock.replay(this.controller);
 		
-		this.rs = new RestServer(otsoTestingPort, this.controller);
+		this.rs = new OtsoRestServer(otsoTestingPort, this.controller);
 	}
 	
 	public void start() throws Exception {

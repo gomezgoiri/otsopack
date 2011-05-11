@@ -34,7 +34,7 @@ import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.discovery.http.HttpDiscoveryClient;
 import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
-import otsopack.full.java.network.coordination.discovery.http.server.RestServer;
+import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryRestServer;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 
 public class DiscoveryHttpTest extends Object {
@@ -49,7 +49,7 @@ public class DiscoveryHttpTest extends Object {
 	private static final String SPACE1 = "http://space1";
 	
 	private int PORT = 18085;
-	private RestServer server;
+	private DiscoveryRestServer server;
 	private IDiscovery discovery;
 	private IDiscovery client;
 	
@@ -69,7 +69,7 @@ public class DiscoveryHttpTest extends Object {
 		
 		this.discovery = new SimpleDiscovery(managers);
 		final IDiscoveryController controller = new DiscoveryController(this.discovery);
-		this.server = new RestServer(this.PORT, controller);
+		this.server = new DiscoveryRestServer(this.PORT, controller);
 		this.server.startup();
 		
 		this.client = new HttpDiscoveryClient("http://127.0.0.1:" + this.PORT + DiscoveryResource.ROOT);
