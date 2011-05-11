@@ -70,7 +70,14 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			else
 				ret = controller.getDataAccessService().read(space, tpl, outputFormat, currentClient);
 			
-			if( ret!=null ) return ret;
+			if( ret!=null ) 
+				return ret;
+			
+			if(isMulticastProvider()){
+				final Graph multicastGraph = getMulticastProvider().read(space, tpl, outputFormat, getTimeout());
+				if(multicastGraph != null)
+					return multicastGraph;
+			}
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {
@@ -94,7 +101,14 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			else
 				ret = controller.getDataAccessService().take(space, tpl, outputFormat, currentClient);
 			
-			if( ret!=null ) return ret;
+			if( ret!=null ) 
+				return ret;
+
+			if(isMulticastProvider()){
+				final Graph multicastGraph = getMulticastProvider().take(space, tpl, outputFormat, getTimeout());
+				if(multicastGraph != null)
+					return multicastGraph;
+			}
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedSemanticFormatException e) {

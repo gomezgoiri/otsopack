@@ -15,11 +15,7 @@ package otsopack.full.java.network.communication;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertNull;
 
-import otsopack.commons.data.Graph;
-import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.network.ICommunication;
@@ -28,7 +24,7 @@ import otsopack.full.java.OtsoServerManager;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.registry.SimpleRegistry;
 
-public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerIntegrationTesting {
+public abstract class AbstractOtsopackRestMulticastIntegrationTest extends AbstractRestServerIntegrationTesting {
 
 	/*
 	 * TEST SCENARIO:
@@ -71,15 +67,15 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	private static final int OTSO_TESTING_PORT_NODE_C   = 18085;
 	private static final int OTSO_TESTING_PORT_PROXY_P  = 18086;
 	
-	private OtsoServerManager nodeA;
-	private OtsoServerManager nodeB;
-	private OtsoServerManager nodeC;
+	protected OtsoServerManager nodeA;
+	protected OtsoServerManager nodeB;
+	protected OtsoServerManager nodeC;
 	
-	private OtsoServerManager proxyP;
+	protected OtsoServerManager proxyP;
 	
-	private RestUnicastCommunication ruc;
+	protected RestUnicastCommunication ruc;
 	
-	public OtsopackRestMulticastIntegrationTest() {
+	public AbstractOtsopackRestMulticastIntegrationTest() {
 		super(OTSO_IDP_TESTING_PORT);
 	}
 
@@ -128,21 +124,6 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 		this.proxyP.stop();
 	}
 	
-	@Test
-	public void testMulticastReadWithoutSecurity() throws Exception {
-		final Graph graphA = this.ruc.read(OtsoServerManager.SPACE, this.nodeA.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
-		assertGraphEquals(OtsoServerManager.AITOR_GRAPH, graphA);
-		
-		final Graph graphB = this.ruc.read(OtsoServerManager.SPACE, this.nodeB.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
-		assertGraphEquals(OtsoServerManager.PABLO_GRAPH, graphB);
-		
-		final Graph graphC = this.ruc.read(OtsoServerManager.SPACE, this.nodeC.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
-		assertGraphEquals(OtsoServerManager.YODA_GRAPH, graphC);
-		
-		final Graph graphD = this.ruc.read(OtsoServerManager.SPACE, "http://not.existing.uri/", SemanticFormat.NTRIPLES, 1000);
-		assertNull(graphD);
-	}
-
 	public String getNodeAurl(){
 		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/";
 	}

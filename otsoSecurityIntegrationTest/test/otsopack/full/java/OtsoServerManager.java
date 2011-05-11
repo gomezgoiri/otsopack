@@ -37,7 +37,11 @@ public class OtsoServerManager {
 	public User user1 = new User("pablo");
 	public User user2 = new User("aitor");
 	
+	public static final String DEPICTION = "http://xmlns.com/foaf/0.1/depiction";
+	
 	public static final String SPACE = "http://testSpace.com/space/";
+	
+	public static final String AITOR_DEPICTION = "http://aitor.gomezgoiri.net/profile.jpg";
 	
 	public static final Graph AITOR_GRAPH = new Graph(
 			"<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
@@ -46,8 +50,10 @@ public class OtsoServerManager {
 			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/givenname> \"Aitor\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/family_name> \"Gomez-Goiri\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net> . \n" +
-			"<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/depiction> <http://aitor.gomezgoiri.net/profile.jpg> . \n",
+			"<http://aitor.gomezgoiri.net/me> <" + DEPICTION + "> <" + AITOR_DEPICTION + "> . \n",
 			SemanticFormat.NTRIPLES);
+	
+	public static final String PABLO_DEPICTION = "http://paginaspersonales.deusto.es/porduna/images/porduna.png";
 	
 	public static final Graph PABLO_GRAPH = new Graph(
 			"<http://pablo.ordunya.com/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
@@ -56,8 +62,10 @@ public class OtsoServerManager {
 			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/givenname> \"Pablo\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/family_name> \"Orduna\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/homepage> <http://pablo.ordunya.com> . \n" +
-			"<http://pablo.ordunya.com/me> <http://xmlns.com/foaf/0.1/depiction> <http://paginaspersonales.deusto.es/porduna/images/porduna.png> . \n",
+			"<http://pablo.ordunya.com/me> <" + DEPICTION + "> <" + PABLO_DEPICTION + "> . \n",
 			SemanticFormat.NTRIPLES);
+	
+	public static final String YODA_DEPICTION = "http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg";
 	
 	public static final Graph YODA_GRAPH = new Graph(
 			"<http://facebook.com/user/yoda> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +
@@ -65,7 +73,7 @@ public class OtsoServerManager {
 			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/title> \"Jedi\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/givenname> \"Yoda\"^^<http://www.w3.org/2001/XMLSchema#string> . \n" +
 			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com> . \n" +
-			"<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/depiction> <http://upload.wikimedia.org/wikipedia/en/9/96/CGIYoda.jpg> . \n",
+			"<http://facebook.com/user/yoda> <" + DEPICTION + "> <" + YODA_DEPICTION + "> . \n",
 			SemanticFormat.NTRIPLES);
 	
 	

@@ -15,6 +15,7 @@
 package otsopack.full.java;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -44,8 +45,14 @@ public abstract class AbstractRestServerIntegrationTesting {
 	public void tearDown() throws Exception {
 		this.idpManager.stop();
 	}
-	
+
 	protected void assertGraphEquals(final Graph originalGraph, final Graph retrievedGraph) {
+		// If they are both null, everything is fine
+		if(originalGraph == retrievedGraph)
+			return;
+		
+		assertNotNull(originalGraph);
+		assertNotNull("null graph retrieved, expected " + originalGraph, retrievedGraph);
 		assertEquals(originalGraph.getFormat(), retrievedGraph.getFormat());
 		final String [] originalLines = originalGraph.getData().split("\n");
 		final String [] retrievedLines = retrievedGraph.getData().split("\n");

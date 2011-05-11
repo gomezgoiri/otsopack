@@ -374,7 +374,7 @@ public class RestUnicastCommunication implements ICommunication {
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"query/wildcards/"+relativeURI );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/query/wildcards/"+relativeURI );
 				try {
 					final Representation rep = cr.get(NTriplesRepresentation.class);
 					return createGraphs(cr, rep);
@@ -383,7 +383,7 @@ public class RestUnicastCommunication implements ICommunication {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
 							throw new SpaceNotExistsException(e.getMessage());
 						}
-						return null; // Graph not found, it returns nothing
+						return new Graph[]{}; // Graph not found, it returns nothing
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST)) {
 						throw new UnsupportedTemplateException(e.getMessage());
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
@@ -398,7 +398,7 @@ public class RestUnicastCommunication implements ICommunication {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		return new Graph[]{};
 	}
 	
 	/**
