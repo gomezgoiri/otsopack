@@ -19,6 +19,8 @@ import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.AbstractRestServerIntegrationTesting;
 import otsopack.full.java.OtsoServerManager;
@@ -96,6 +98,8 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	public void setUp() throws Exception {
 		super.setUp();
 		
+		SemanticFactory.initialize(new MicrojenaFactory());
+		
 		this.nodeA = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_A);
 		this.nodeA.addGraph(OtsoServerManager.AITOR_GRAPH);
 		this.nodeB = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_B);
@@ -130,18 +134,18 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	}
 	
 	public String getNodeAurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/";
 	}
 	
 	public String getNodeBurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B + "/";
 	}
 	
 	public String getNodeCurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C + "/";
 	}
 	
 	public String getProxyUrl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_PROXY_P;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_PROXY_P + "/";
 	}
 }
