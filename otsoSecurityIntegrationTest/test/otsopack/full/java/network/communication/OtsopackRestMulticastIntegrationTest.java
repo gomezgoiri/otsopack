@@ -1,9 +1,26 @@
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ */
 package otsopack.full.java.network.communication;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import otsopack.commons.data.Graph;
+import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.impl.SemanticFactory;
+import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.AbstractRestServerIntegrationTesting;
 import otsopack.full.java.OtsoServerManager;
@@ -19,7 +36,7 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	 *   a proxy node P which consumes these nodes, and a client with 
 	 *   uses the IdP to confirm its identification. There is also a 
 	 *   Space Manager SM which is used by the Proxy P to know where the
-	 *   Nodes are. 
+	 *   Nodes are.
 	 *   
 	 *               ----------     ----------     ---------- 
 	 *               | Node A |     | Node B |     | Node C |
@@ -37,14 +54,15 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	 *                             | Client |---------/
 	 *                             ----------
 	 *   
-	 *   - Node A signs every graph as http://ts.morelab.deusto.es/users/u/nodeA
-	 *   - Node B signs every graph as http://ts.morelab.deusto.es/users/u/nodeB
+	 *   - Node A signs every graph as http://ts.morelab.deusto.es/users/u/aigomez
+	 *     + It has a single graph (AITOR_GRAPH)
+	 *   - Node B signs every graph as http://ts.morelab.deusto.es/users/u/porduna
+	 *     + It has a single graph (PABLO_GRAPH)
 	 *   - Node C does not sign any graph
+	 *     + It has a single graph (YODA_GRAPH)
 	 * 
 	 */
 	
-	private static final String HTTP_SPACE1 = "http://space1/";
-
 	private static final int OTSO_IDP_TESTING_PORT = 18082;
 	
 	private static final int OTSO_TESTING_PORT_NODE_A   = 18083;
@@ -71,6 +89,8 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	private OtsoServerManager createAndStartOtsoServer(int port, ICommunication multicastProvider, boolean provideController) throws Exception{
 		final OtsoServerManager manager = new OtsoServerManager(port, multicastProvider, provideController);
 		manager.start();
+		if(provideController)
+			manager.prepareSemanticRepository();
 		return manager;
 	}
 	
@@ -78,14 +98,19 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		this.nodeA = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_A);
-		this.nodeB = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_B);
-		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C);
+		SemanticFactory.initialize(new MicrojenaFactory());
 		
-		final IRegistry registry = new SimpleRegistry(HTTP_SPACE1, getNodeAurl(), getNodeBurl(), getNodeCurl());
+		this.nodeA = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_A);
+		this.nodeA.addGraph(OtsoServerManager.AITOR_GRAPH);
+		this.nodeB = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_B);
+		this.nodeB.addGraph(OtsoServerManager.PABLO_GRAPH);
+		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C);
+		this.nodeC.addGraph(OtsoServerManager.YODA_GRAPH);
+		
+		final IRegistry registry = new SimpleRegistry(OtsoServerManager.SPACE, getNodeAurl(), getNodeBurl(), getNodeCurl());
 		final RestMulticastCommunication multicastProvider = new RestMulticastCommunication(registry);
 		
-		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, multicastProvider, false);
+		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, multicastProvider, true);
 		
 		this.ruc = new RestUnicastCommunication(getProxyUrl());
 		this.ruc.startup();
@@ -104,22 +129,23 @@ public class OtsopackRestMulticastIntegrationTest extends AbstractRestServerInte
 	
 	@Test
 	public void testMulticast() throws Exception {
-		
+		final Graph graph = this.ruc.read(OtsoServerManager.SPACE, this.nodeA.getGraphUris().get(0), SemanticFormat.NTRIPLES, 1000);
+		System.out.println(graph);
 	}
 	
 	public String getNodeAurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/";
 	}
 	
 	public String getNodeBurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B + "/";
 	}
 	
 	public String getNodeCurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C + "/";
 	}
 	
 	public String getProxyUrl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_PROXY_P;
+		return "http://127.0.0.1:" + OTSO_TESTING_PORT_PROXY_P + "/";
 	}
 }

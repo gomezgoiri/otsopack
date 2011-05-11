@@ -61,8 +61,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			if( ret != null ) 
 				return ret;
 			
-			if( isMulticastProvider() )
-				return getMulticastProvider().read(space, graphuri, outputFormat, getTimeout());
+			if( isMulticastProvider() ){
+				final Graph multicastGraph = getMulticastProvider().read(space, graphuri, outputFormat, getTimeout());
+				if(multicastGraph != null)
+					return multicastGraph;
+			}
 			
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
@@ -101,8 +104,11 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			if( ret!=null ) 
 				return ret;
 			
-			if( isMulticastProvider() )
-				return getMulticastProvider().take(space, graphuri, outputFormat, getTimeout());
+			if( isMulticastProvider() ) {
+				final Graph multicastGraph = getMulticastProvider().take(space, graphuri, outputFormat, getTimeout());
+				if(multicastGraph != null)
+					return multicastGraph;
+			}
 				
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
