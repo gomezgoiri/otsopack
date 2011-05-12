@@ -107,6 +107,24 @@ public class RestUnicastCommunication implements ICommunication {
 	public void shutdown() throws TSException {
 	}
 	
+	/**
+	 * It calls to authenticate storing the cookies returned.
+	 */
+	private String authenticateStoringCookies(final String originalURL,
+			final String dataProviderAuthenticationURL)
+			throws AuthorizationException {
+		try {
+			final String ret = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
+			// we register session id as a cookie
+			for(CookieSetting cookie: this.authenticationClient.getCookies()) {
+				this.cookieStore.addCookie(cookie);
+			}
+			return ret;
+		} catch (AuthenticationException e1) {
+			throw new AuthorizationException(e1.getMessage());
+		}
+	}
+	
 	public String login() throws TSException, AuthorizationException {
 		final String originalURL = this.baseRESTServer+ LoginResource.ROOT;
 		final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
@@ -115,16 +133,8 @@ public class RestUnicastCommunication implements ICommunication {
 		} catch (ResourceException e) {
 			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
 				final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
-				try {
-					final String ret = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
-					// we register session id as a cookie
-					for(CookieSetting cookie: this.authenticationClient.getCookies()) {
-						this.cookieStore.addCookie(cookie);
-					}
-					return ret;
-				} catch (AuthenticationException e1) {
-					throw new AuthorizationException(e1.getMessage());
-				}
+				return authenticateStoringCookies(originalURL,
+						dataProviderAuthenticationURL);
 			}
 			// TODO: maybe we would need a more concrete exception, such as "UnexpectedLoginException or so"
 			throw new TSException("Unexpected log-in exception: " + e.getStatus() + "; " + e.getMessage());
@@ -172,13 +182,9 @@ public class RestUnicastCommunication implements ICommunication {
 				return tryGet(originalURL);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					try {
-						final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
-						final String redirectionURL = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
-						return tryGet(redirectionURL); //retry
-					} catch (AuthenticationException e1) {
-						throw new AuthorizationException(e1.getMessage());
-					}
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
+					final String redirectionURL = authenticateStoringCookies(originalURL, dataProviderAuthenticationURL);
+					return tryGet(redirectionURL); //retry
 				}
 				throw e;
 			}
@@ -280,13 +286,9 @@ public class RestUnicastCommunication implements ICommunication {
 				return tryDelete(originalURL);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
-					try {
-						final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
-						final String redirectionURL = this.authenticationClient.authenticate(dataProviderAuthenticationURL, originalURL);
-						return tryDelete(redirectionURL); //retry
-					} catch (AuthenticationException e1) {
-						throw new AuthorizationException(e1.getMessage());
-					}
+					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
+					final String redirectionURL = authenticateStoringCookies(originalURL, dataProviderAuthenticationURL);
+					return tryDelete(redirectionURL); //retry
 				}
 				throw e;
 			}
@@ -294,7 +296,7 @@ public class RestUnicastCommunication implements ICommunication {
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}	
 	
 		private Graph tryDelete(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
 			try {
