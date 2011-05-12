@@ -3,16 +3,16 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="lib/rdf2go.impl.sesame23-4.7.4.jar"/>
-	<classpathentry kind="lib" path="lib/sesame-runtime-osgi-2.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-nop-1.6.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/otsoFullJavaCommons"/>
-	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet-src.jar"/>
-	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rdf2go.impl.sesame23-4.7.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sesame-runtime-osgi-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-nop-1.6.1.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoFullJavaCommons"/>
+	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet-src.jar"/>
+	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/otsoFullJavaCommons/lib/rdf2go.api-4.7.4.jar"/>
-	<classpathentry kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
-	<classpathentry kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/lib/rdf2go.api-4.7.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

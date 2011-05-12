@@ -16,12 +16,23 @@ package otsopack.full.java.network.coordination.spacemanager.http.server;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
+import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
+
 public class SpaceManagerRestServer {
 	public static final int DEFAULT_PORT = 8185;
 	
 	private final int port;
 	private final Component component;
 	private final OtsopackHttpSpaceManagerApplication application;
+
+	public SpaceManagerRestServer(int port, String ... nodes) {
+		this(port, new SpaceManagerController(new SimpleSpaceManager(nodes)));
+	}
+
+	public SpaceManagerRestServer(int port, ISpaceManager spaceManager) {
+		this(port, new SpaceManagerController(spaceManager));
+	}
 	
 	public SpaceManagerRestServer(int port, ISpaceManagerController controller) {
 		this.port = port;
@@ -39,11 +50,11 @@ public class SpaceManagerRestServer {
 	}
 	
 	public SpaceManagerRestServer(int port){
-		this(port, null);
+		this(port, (ISpaceManagerController)null);
 	}
 	
 	public SpaceManagerRestServer(){
-		this(DEFAULT_PORT, null);
+		this(DEFAULT_PORT, (ISpaceManagerController)null);
 	}
 	
 	public OtsopackHttpSpaceManagerApplication getApplication(){
