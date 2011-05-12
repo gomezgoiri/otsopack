@@ -15,6 +15,7 @@ package otsopack.full.java.network;
 
 import otsopack.commons.IController;
 import otsopack.commons.authz.Filter;
+import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
@@ -31,15 +32,22 @@ import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.util.collections.Set;
 import otsopack.full.java.network.communication.OtsoRestServer;
-import otsopack.full.java.network.communication.RestUnicastCommunication;
+import otsopack.full.java.network.communication.RestMulticastCommunication;
+import otsopack.full.java.network.coordination.IRegistry;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
-	RestUnicastCommunication comm;
+	private ICommunication comm;
 	
 	public RestNetwork(IController controller) {
 		this.rs = new OtsoRestServer();
+		this.rs.getApplication().setController(controller);
+	}
+
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry) {
+		this.comm = new RestMulticastCommunication(registry);
+		this.rs = new OtsoRestServer(port, controller, signer);
 		this.rs.getApplication().setController(controller);
 	}
 
