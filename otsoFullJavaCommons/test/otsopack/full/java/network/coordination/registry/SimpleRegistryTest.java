@@ -59,13 +59,13 @@ public class SimpleRegistryTest {
 				return 10;
 			}
 		};
-		registry.start();
+		registry.startup();
 		
 		final Set<String> nodes = registry.getNodesBaseURLs();
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE1));
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE2));
 		
-		registry.interrupt();
+		registry.shutdown();
 		for(int i = 0; i < 100; ++i){
 			if(!registry.isAlive())
 				break;

@@ -17,6 +17,8 @@ package otsopack.full.java.network.coordination;
 import java.util.Set;
 
 public interface IRegistry {
+	public void startup();
 	public Set<SpaceManager> getSpaceManagers();
 	public Set<String> getNodesBaseURLs();
+	void shutdown();
 }

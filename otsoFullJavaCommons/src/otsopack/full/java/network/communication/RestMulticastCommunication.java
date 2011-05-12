@@ -49,10 +49,12 @@ public class RestMulticastCommunication implements ICommunication {
 	
 	@Override
 	public void startup() throws TSException {
+		this.registry.startup();
 	}
 
 	@Override
 	public void shutdown() throws TSException {
+		this.registry.shutdown();
 	}
 
 	@Override

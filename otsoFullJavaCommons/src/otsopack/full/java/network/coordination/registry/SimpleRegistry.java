@@ -30,6 +30,8 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	
 	public static final int DEFAULT_INTERVAL = 10 * 1000;
 
+	private volatile boolean additionalInterrupted = false;
+	private volatile int iterations = 0;
 	private final int interval;
 	private final IDiscovery discovery;
 	private final String spaceURI;
@@ -48,13 +50,20 @@ public class SimpleRegistry extends Thread implements IRegistry {
 		this.spaceURI  = spaceURI;
 		this.discovery = discovery;
 		this.interval  = interval;
-		this.load();
 		setDaemon(true);
 	}
 	
+	@Override
 	public void run(){
-		while(!isInterrupted()){
-			load();
+		while(!isInterrupted() && !this.additionalInterrupted){
+			try{
+				reload();
+				this.iterations++;
+			}catch(Exception e){
+				e.printStackTrace();
+				this.iterations++;
+				continue;
+			}
 			try {
 				Thread.sleep(getInterval());
 			} catch (InterruptedException e) {
@@ -67,7 +76,38 @@ public class SimpleRegistry extends Thread implements IRegistry {
 		return this.interval;
 	}
 	
-	public void load(){
+	@Override
+	public void startup(){
+		int currentIterations = this.iterations;
+		int times = 0;
+		this.start();
+		try {
+			while(this.iterations == currentIterations && times < 10){
+				Thread.sleep(100);
+				times++;
+			}
+		} catch (InterruptedException e) {
+			return;
+		}
+	}
+	
+	@Override
+	public void shutdown(){
+		this.additionalInterrupted = true;
+		interrupt();
+		int times = 0;
+		try {
+			while(isAlive() && times < 20){
+				Thread.sleep(100);
+				times++;
+			}
+		} catch (InterruptedException e) {
+			return;
+		}
+		
+	}
+	
+	public void reload(){
 		try {
 			
 			fillSet(this.spaceManagers, this.discovery.getSpaceManagers(this.spaceURI));
