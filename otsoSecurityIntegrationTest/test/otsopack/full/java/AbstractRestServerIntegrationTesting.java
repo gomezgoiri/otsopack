@@ -100,4 +100,22 @@ public abstract class AbstractRestServerIntegrationTesting {
 			assertTrue("Couldn't find " + subgraphLine + " among the retrieved lines: " + retrievedGraph.getData(), found);
 		}
 	}
+	
+	@SuppressWarnings("null") // the not null is asserted before using the object
+	protected void assertGraphContains(final Graph[] retrievedGraphs, final Graph subGraph) {
+		// If they are both null, everything is fine
+		if(retrievedGraphs == null && subGraph==null)
+			return;
+		
+		assertNotNull(subGraph);
+		assertNotNull("null graph retrieved, expected to contain at least" + subGraph, retrievedGraphs);
+		
+		String agregatedGraph = "";
+		for(Graph retrievedGraph: retrievedGraphs) {
+			if( retrievedGraph.getFormat().equals(subGraph.getFormat()) ) {
+				agregatedGraph+=retrievedGraph.getData()+"\n";
+			}
+		}
+		assertGraphContains(new Graph(agregatedGraph,subGraph.getFormat()), subGraph);
+	}
 }
