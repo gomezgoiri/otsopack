@@ -148,6 +148,7 @@ public class RestMulticastCommunication implements ICommunication {
 				for(Graph newGraph : retrievedGraphs)
 					graphs.add(newGraph);
 		}
+		if( graphs.isEmpty() ) return null;
 		return graphs.toArray(new Graph[]{});
 	}
 

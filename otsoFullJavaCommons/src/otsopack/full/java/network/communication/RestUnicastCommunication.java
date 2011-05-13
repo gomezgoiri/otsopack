@@ -391,7 +391,7 @@ public class RestUnicastCommunication implements ICommunication {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
 							throw new SpaceNotExistsException(e.getMessage());
 						}
-						return new Graph[]{}; // Graph not found, it returns nothing
+						return null; // Graph not found, it returns nothing
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST)) {
 						throw new UnsupportedTemplateException(e.getMessage());
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
