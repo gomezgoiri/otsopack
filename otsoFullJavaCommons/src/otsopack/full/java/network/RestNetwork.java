@@ -56,6 +56,7 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void startup() throws TSException {
 		try {
+			this.comm.startup();
 			this.rs.startup();
 		} catch (Exception e) {
 			throw new TSException("Rest server could not be started. " + e.getMessage());
