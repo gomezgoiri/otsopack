@@ -37,6 +37,7 @@ public class OtsoServerManager {
 	private List<String> writtenGraphURIs = new Vector<String>();
 	public User user1 = new User("pablo");
 	public User user2 = new User("aitor");
+	private final ICommunication multicastProvider;
 	
 	public static final String DEPICTION = "http://xmlns.com/foaf/0.1/depiction";
 	
@@ -92,11 +93,15 @@ public class OtsoServerManager {
 		}else
 			this.controller = null;
 		
+		this.multicastProvider = multicastProvider;
+		
 		this.rs = new OtsoRestServer(otsoTestingPort, this.controller, signer, multicastProvider);
 	}
 	
 	public void start() throws Exception {
 		this.rs.startup();
+		if(this.multicastProvider != null)
+			this.multicastProvider.startup();
 	}
 	
 	public List<String> getGraphUris(){
@@ -119,6 +124,8 @@ public class OtsoServerManager {
 	
 	public void stop() throws Exception {
 		this.rs.shutdown();
+		if(this.multicastProvider != null)
+			this.multicastProvider.shutdown();
 	}
 	
 	protected PrefixesStorage getPrefixesStorage(){
