@@ -30,6 +30,7 @@ import otsopack.commons.network.ICoordination;
 import otsopack.commons.network.INetwork;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.util.collections.HashSet;
 import otsopack.commons.util.collections.Set;
 import otsopack.full.java.network.communication.OtsoRestServer;
 import otsopack.full.java.network.communication.RestMulticastCommunication;
@@ -39,6 +40,7 @@ public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
 	private ICommunication comm;
+	private Set/*<String>*/ joinedSpaces = new HashSet/*<String>*/();
 	
 	public RestNetwork(IController controller) {
 		this.rs = new OtsoRestServer();
@@ -58,6 +60,7 @@ public class RestNetwork implements INetwork {
 		} catch (Exception e) {
 			throw new TSException("Rest server could not be started. " + e.getMessage());
 		}
+		this.joinedSpaces.clear();
 	}
 
 	@Override
@@ -193,8 +196,7 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public Set getJoinedSpaces() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.joinedSpaces;
 	}
 
 	@Override
@@ -205,14 +207,12 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public void joinSpace(String spaceURI) throws TSException {
-		// TODO Auto-generated method stub
-
+		this.joinedSpaces.add(spaceURI);
 	}
 
 	@Override
 	public void leaveSpace(String spaceURI) throws TSException {
-		// TODO Auto-generated method stub
-
+		this.joinedSpaces.remove(spaceURI);
 	}
 
 	@Override
