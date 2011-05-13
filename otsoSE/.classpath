@@ -12,7 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/lib/rdf2go.api-4.7.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
