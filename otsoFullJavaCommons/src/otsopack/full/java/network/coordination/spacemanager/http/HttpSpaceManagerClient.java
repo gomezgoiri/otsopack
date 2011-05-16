@@ -31,17 +31,18 @@ import otsopack.full.java.network.coordination.spacemanager.http.server.resource
 public class HttpSpaceManagerClient implements ISpaceManager {
 	
 	private final HttpSpaceManager spaceManager;
+	private final ClientResource client;
 	
 	public HttpSpaceManagerClient(HttpSpaceManager spaceManager){
 		this.spaceManager = spaceManager;
+		this.client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 	}
 
 	@Override
 	public String[] getNodes() throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 		final Representation repr;
 		try{
-			repr = client.get(MediaType.APPLICATION_JSON);
+			repr = this.client.get(MediaType.APPLICATION_JSON);
 		}catch(ResourceException e){
 			throw new SpaceManagerException("Could not get nodes from " + this.spaceManager.getURI() + ": " + e.getMessage(), e);
 		}
