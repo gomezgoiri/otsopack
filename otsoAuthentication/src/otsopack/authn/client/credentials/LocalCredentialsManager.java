@@ -13,7 +13,6 @@
  */
 package otsopack.authn.client.credentials;
 
-import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
@@ -59,7 +58,7 @@ public class LocalCredentialsManager {
 		String bestCoincidence = "";
 		int bestCoincidencePos = -1;
 		
-		final Map.Entry<String, T> newElement = new AbstractMap.SimpleEntry<String, T>(newDomain, newCredentials);
+		final Map.Entry<String, T> newElement = new SimpleEntry<String, T>(newDomain, newCredentials);
 
 		writeLock.lock();
 		try{
@@ -126,5 +125,31 @@ public class LocalCredentialsManager {
 		}finally{
 			readLock.unlock();
 		}
+	}
+	
+	private static class SimpleEntry<K, V> implements Map.Entry<K, V> {
+		private final K key;
+		private V value;
+		
+		SimpleEntry(K key, V value){
+			this.key = key;
+			this.value = value;
+		}
+		
+		@Override
+		public K getKey() {
+			return this.key;
+		}
+
+		@Override
+		public V getValue() {
+			return this.value;
+		}
+
+		@Override
+		public V setValue(V value) {
+			return this.value = value;
+		}
+		
 	}
 }
