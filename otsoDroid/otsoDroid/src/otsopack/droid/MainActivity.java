@@ -25,7 +25,7 @@ import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.TripleParseException;
 import otsopack.droid.configuration.JxmeConfiguration;
-import otsopack.droid.kernel.Kernel;
+import otsopack.droid.kernel.JxtaKernel;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,12 +47,12 @@ public class MainActivity extends Activity {
 	}
 	
 	public static final  String space = "http://www.morelab.deusto.es/scenario/havoc";
-	Kernel kernel;
+	JxtaKernel kernel;
 	MicrojenaFactory microjenaFactory;
 	SemanticFactory factory;
 	
 	private void initialize(){
-		kernel = new Kernel();
+		kernel = new JxtaKernel();
 		microjenaFactory = new MicrojenaFactory();
 		SemanticFactory.initialize(microjenaFactory);
 		factory = new SemanticFactory();

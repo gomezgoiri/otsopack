@@ -16,7 +16,7 @@ package otsopack.droid.kernel;
 import otsopack.commons.kernel.AbstractKernel;
 import otsopack.droid.network.jxme.JxmeNetwork;
 
-public class Kernel extends AbstractKernel {
+public class JxtaKernel extends AbstractKernel {
 
 	protected void buildKernel(){
 		super.buildKernel();
