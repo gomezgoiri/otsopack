@@ -56,16 +56,20 @@ public class AuthenticationClient {
 	}
 
 	private String sendSignedValidatedSessionToDataProvider(final String dataProviderUrlWithSecret) throws UnexpectedAuthenticationException {
-		final ClientResource dataProviderClient = this.getClientResourceFactory().createResource(dataProviderUrlWithSecret);
-		final Representation dataProviderFinalResponseRepresentation = dataProviderClient.get();
-		
-		this.receivedCookies = dataProviderClient.getResponse().getCookieSettings();
-		
 		final String dataProviderFinalResponse;
-		try {
-			dataProviderFinalResponse = IOUtils.toString(dataProviderFinalResponseRepresentation.getStream());
-		} catch (IOException e) {
-			throw new UnexpectedAuthenticationException("Could not parse the response from the data provider: " + e.getMessage(), e);
+		final ClientResource dataProviderClient = this.getClientResourceFactory().createResource(dataProviderUrlWithSecret);
+		try{
+			final Representation dataProviderFinalResponseRepresentation = dataProviderClient.get();
+			
+			this.receivedCookies = dataProviderClient.getResponse().getCookieSettings();
+			
+			try {
+				dataProviderFinalResponse = IOUtils.toString(dataProviderFinalResponseRepresentation.getStream());
+			} catch (IOException e) {
+				throw new UnexpectedAuthenticationException("Could not parse the response from the data provider: " + e.getMessage(), e);
+			}
+		}finally{
+			dataProviderClient.release();
 		}
 		return dataProviderFinalResponse;
 	}
@@ -75,28 +79,32 @@ public class AuthenticationClient {
 		final Credentials credentials = this.credentialsManager.getCredentials(identityProviderUrl);
 		if(credentials == null)
 			throw new RedirectedToWrongIdentityProviderException(LocalCredentialsManager.class.getName() + " does not have credentials for: " + identityProviderUrl);
-		final ClientResource idpClient = this.getClientResourceFactory().createResource(identityProviderUrl);
-		
-		final Form idpForm = new Form();
-		// TODO: change by HTTP Auth
-		idpForm.set("username", credentials.getUsername());
-		idpForm.set("password", credentials.getPassword());
-		// TODO: change by HTTP Auth
-		
-		final Representation dataProviderUrlWithSecretRepresentation;
-		try {
-			dataProviderUrlWithSecretRepresentation = idpClient.post(idpForm);
-		} catch (ResourceException e) {
-			if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED))
-					throw new InvalidCredentialsException("Invalid credentials provided to the identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
-			throw new AuthenticationException("Unexpected error in identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
-		}
 		
 		final String dataProviderUrlWithSecret;
-		try {
-			dataProviderUrlWithSecret = IOUtils.toString(dataProviderUrlWithSecretRepresentation.getStream());
-		} catch (IOException e) {
-			throw new UnexpectedAuthenticationException("Could not parse the response from the Identity Provider server: " + e.getMessage(), e);
+		final ClientResource idpClient = this.getClientResourceFactory().createResource(identityProviderUrl);
+		try{
+			final Form idpForm = new Form();
+			// TODO: change by HTTP Auth
+			idpForm.set("username", credentials.getUsername());
+			idpForm.set("password", credentials.getPassword());
+			// TODO: change by HTTP Auth
+			
+			final Representation dataProviderUrlWithSecretRepresentation;
+			try {
+				dataProviderUrlWithSecretRepresentation = idpClient.post(idpForm);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED))
+						throw new InvalidCredentialsException("Invalid credentials provided to the identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
+				throw new AuthenticationException("Unexpected error in identityProvider " + identityProviderUrl + ": " + e.getMessage(), e);
+			}
+			
+			try {
+				dataProviderUrlWithSecret = IOUtils.toString(dataProviderUrlWithSecretRepresentation.getStream());
+			} catch (IOException e) {
+				throw new UnexpectedAuthenticationException("Could not parse the response from the Identity Provider server: " + e.getMessage(), e);
+			}
+		}finally{
+			idpClient.release();
 		}
 		return dataProviderUrlWithSecret;
 	}
@@ -108,17 +116,21 @@ public class AuthenticationClient {
 		if(userIdentifierURI == null)
 			throw new NoAuthenticationUriFoundException("No authentication URI registered for domain " + dataProviderAuthenticationURL + " in " + LocalCredentialsManager.class.getName());
 		
-		final ClientResource authnClient = this.getClientResourceFactory().createResource(dataProviderAuthenticationURL);
-		final Form dpAuthnForm = new Form();
-		dpAuthnForm.set(SessionRequestResource.USER_IDENTIFIER_NAME, userIdentifierURI);
-		dpAuthnForm.set(SessionRequestResource.REDIRECT_NAME, originalURL);
-		final Representation authenticationServerUrlRepresentation = authnClient.post(dpAuthnForm);
-		
 		final String identityProviderUrl;
-		try {
-			identityProviderUrl = IOUtils.toString(authenticationServerUrlRepresentation.getStream());
-		} catch (IOException e) {
-			throw new UnexpectedAuthenticationException("Exception while reading the authentication url: " + e.getMessage(), e);
+		final ClientResource authnClient = this.getClientResourceFactory().createResource(dataProviderAuthenticationURL);
+		try{
+			final Form dpAuthnForm = new Form();
+			dpAuthnForm.set(SessionRequestResource.USER_IDENTIFIER_NAME, userIdentifierURI);
+			dpAuthnForm.set(SessionRequestResource.REDIRECT_NAME, originalURL);
+			final Representation authenticationServerUrlRepresentation = authnClient.post(dpAuthnForm);
+			
+			try {
+				identityProviderUrl = IOUtils.toString(authenticationServerUrlRepresentation.getStream());
+			} catch (IOException e) {
+				throw new UnexpectedAuthenticationException("Exception while reading the authentication url: " + e.getMessage(), e);
+			}
+		}finally{
+			authnClient.release();
 		}
 		return identityProviderUrl;
 	}

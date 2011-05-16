@@ -31,26 +31,29 @@ import otsopack.full.java.network.coordination.spacemanager.http.server.resource
 public class HttpSpaceManagerClient implements ISpaceManager {
 	
 	private final HttpSpaceManager spaceManager;
-	private final ClientResource client;
 	
 	public HttpSpaceManagerClient(HttpSpaceManager spaceManager){
 		this.spaceManager = spaceManager;
-		this.client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 	}
 
 	@Override
 	public String[] getNodes() throws SpaceManagerException {
-		final Representation repr;
-		try{
-			repr = this.client.get(MediaType.APPLICATION_JSON);
-		}catch(ResourceException e){
-			throw new SpaceManagerException("Could not get nodes from " + this.spaceManager.getURI() + ": " + e.getMessage(), e);
-		}
+		final ClientResource client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 		String serializedSpaceManagers;
-		try {
-			serializedSpaceManagers = IOUtils.toString(repr.getStream());
-		} catch (IOException e) {
-			throw new SpaceManagerException("Could not read stream from space manager: " + e.getMessage(), e);
+		try{
+			final Representation repr;
+			try{
+				repr = client.get(MediaType.APPLICATION_JSON);
+			}catch(ResourceException e){
+				throw new SpaceManagerException("Could not get nodes from " + this.spaceManager.getURI() + ": " + e.getMessage(), e);
+			}
+			try {
+				serializedSpaceManagers = IOUtils.toString(repr.getStream());
+			} catch (IOException e) {
+				throw new SpaceManagerException("Could not read stream from space manager: " + e.getMessage(), e);
+			}
+		}finally{
+			client.release();
 		}
 		return JSONDecoder.decode(serializedSpaceManagers, String[].class);
 	}

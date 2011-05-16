@@ -34,14 +34,18 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 		// TODO: this.fakeDataAccess.setNextRead();
 		final String space = URLEncoder.encode("http://www.deustotech.eu", "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/" + space + "/graphs");
-		final IGraphsResource prefrsc = cr.wrap(IGraphsResource.class);
-		
-		final String prefixes = prefrsc.toJson();
-		
-		final String [] results = JSONDecoder.decode(prefixes, String[].class);
-		
-		final List<String> resultsSet = Arrays.asList(results);
-		assertEquals(0, resultsSet.size());
+		try{
+			final IGraphsResource prefrsc = cr.wrap(IGraphsResource.class);
+			
+			final String prefixes = prefrsc.toJson();
+			
+			final String [] results = JSONDecoder.decode(prefixes, String[].class);
+			
+			final List<String> resultsSet = Arrays.asList(results);
+			assertEquals(0, resultsSet.size());
+		}finally{
+			cr.release();
+		}
 	}
 	
 	@Test
@@ -49,22 +53,26 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 		System.out.println("testPostGraph");
 		final String space = URLEncoder.encode("http://space1/", "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
-		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
-		
-		System.out.println("converters");
-		List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
-		for(ConverterHelper helper : converters)
-			System.out.println(helper.getClass().getName());
-		System.out.println("postconverters");
-		
-//		// Test POST
-//		Representation rep = new NTriplesRepresentation("");
-//		String uri = graphsRsc.write(rep);
-//		//assertEquals("http://space1/graph1",uri);
+		try{
+			final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
+			
+			System.out.println("converters");
+			List<ConverterHelper> converters = Engine.getInstance().getRegisteredConverters();
+			for(ConverterHelper helper : converters)
+				System.out.println(helper.getClass().getName());
+			System.out.println("postconverters");
+			
+//			// Test POST
+//			Representation rep = new NTriplesRepresentation("");
+//			String uri = graphsRsc.write(rep);
+//			//assertEquals("http://space1/graph1",uri);
 //		
-//		rep = new JacksonRepresentation<String>("JSONRepresentation");
-//		uri = graphsRsc.write(rep);
-//		//assertEquals("\"http://space1/graph2\"",uri);
+//			rep = new JacksonRepresentation<String>("JSONRepresentation");
+//			uri = graphsRsc.write(rep);
+//			//assertEquals("\"http://space1/graph2\"",uri);
+		}finally{
+			cr.release();
+		}
 	}
 	
 	
@@ -72,15 +80,19 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 	public void testGetGraph() throws Exception {		
 		final String space = URLEncoder.encode("http://space1/", "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/"+space+"/graphs");
-		final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
-		
-		// Test PUT
-		/*graphsRsc.writeGraphNTriples("blabla");
-		graphsRsc.writeGraphNTriples("blabla1");
-		graphsRsc.writeGraphNTriples("blabla2");*/
-		
-		// Test json retrieval
-		final String graph = graphsRsc.toJson();
-		System.out.println(graph);
+		try{
+			final IGraphsResource graphsRsc = cr.wrap(IGraphsResource.class);
+			
+			// Test PUT
+			/*graphsRsc.writeGraphNTriples("blabla");
+			graphsRsc.writeGraphNTriples("blabla1");
+			graphsRsc.writeGraphNTriples("blabla2");*/
+			
+			// Test json retrieval
+			final String graph = graphsRsc.toJson();
+			System.out.println(graph);
+		}finally{
+			cr.release();
+		}
 	}
 }

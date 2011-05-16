@@ -13,15 +13,18 @@
  */
 package otsopack.authn.resources;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.io.IOUtils;
 import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -70,13 +73,20 @@ public class SessionRequestResource extends AbstractOtsoServerResource implement
 		idpForm.set(DATA_PROVIDER_URI_WITH_SECRET_NAME, validationURL);
 		idpForm.set(EXPIRATION_NAME, dateFormat.format(expiration.getTime()));
 		
+		final String result;
 		final ClientResource resource = createClientResource(userIdentifier);
 		try{
 			final Representation idpRepresentation = resource.post(idpForm);
-			return idpRepresentation;
+			result = IOUtils.toString(idpRepresentation.getStream());
 		}catch(ResourceException e){
 			getSessionManager().deleteSession(sessionId);
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Identity Provider returned an error: " + e.getMessage());
+		} catch (IOException e) {
+			getSessionManager().deleteSession(sessionId);
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Identity Provider returned an error: " + e.getMessage());
+		}finally{
+			resource.release();
 		}
+		return new StringRepresentation(result);
 	}
 }

@@ -138,6 +138,8 @@ public class RestUnicastCommunication implements ICommunication {
 			}
 			// TODO: maybe we would need a more concrete exception, such as "UnexpectedLoginException or so"
 			throw new TSException("Unexpected log-in exception: " + e.getStatus() + "; " + e.getMessage());
+		}finally{
+			cr.release();
 		}
 		return originalURL;
 	}
@@ -197,8 +199,12 @@ public class RestUnicastCommunication implements ICommunication {
 		private Graph tryGet(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
 			try {
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
-				final Representation rep = cr.get(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				try{
+					final Representation rep = cr.get(NTriplesRepresentation.class);
+					return createGraph(cr, rep);
+				}finally{
+					cr.release();
+				}
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
 					throw new AuthorizationException(e.getMessage());
@@ -252,6 +258,8 @@ public class RestUnicastCommunication implements ICommunication {
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 						throw new UnsupportedSemanticFormatException(e.getMessage());
 					}
+				} finally{
+					cr.release();
 				}
 			} catch (ResourceException e) {
 				e.printStackTrace();
@@ -301,8 +309,12 @@ public class RestUnicastCommunication implements ICommunication {
 		private Graph tryDelete(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
 			try {
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL );
-				final Representation rep = cr.delete(NTriplesRepresentation.class);
-				return createGraph(cr, rep);
+				try{
+					final Representation rep = cr.delete(NTriplesRepresentation.class);
+					return createGraph(cr, rep);
+				}finally{
+					cr.release();
+				}
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_FORBIDDEN)) {
 					throw new AuthorizationException(e.getMessage());
@@ -355,6 +367,8 @@ public class RestUnicastCommunication implements ICommunication {
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 						throw new UnsupportedSemanticFormatException(e.getMessage());
 					}
+				} finally{
+					cr.release();
 				}
 			} catch (ResourceException e) {
 				e.printStackTrace();
@@ -397,6 +411,8 @@ public class RestUnicastCommunication implements ICommunication {
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 						throw new UnsupportedSemanticFormatException(e.getMessage());
 					}
+				} finally {
+					cr.release();
 				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

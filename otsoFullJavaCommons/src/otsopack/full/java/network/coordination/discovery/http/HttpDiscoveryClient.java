@@ -51,12 +51,16 @@ public class HttpDiscoveryClient implements IDiscovery {
 				throw new DiscoveryException("Could not encode space URI: " + e.getMessage(), e);
 			}
 			final ClientResource client = new ClientResource(uri + "?"+ DiscoveryResource.SPACEURI_ARGUMENT + "=" + encodedSpace);
-			final Representation repr = client.get(MediaType.APPLICATION_JSON);
 			String serializedSpaceManagers;
-			try {
-				serializedSpaceManagers = IOUtils.toString(repr.getStream());
-			} catch (IOException e) {
-				throw new DiscoveryException("Could not read stream from discovery server: " + e.getMessage(), e);
+			try{
+				final Representation repr = client.get(MediaType.APPLICATION_JSON);
+				try {
+					serializedSpaceManagers = IOUtils.toString(repr.getStream());
+				} catch (IOException e) {
+					throw new DiscoveryException("Could not read stream from discovery server: " + e.getMessage(), e);
+				}
+			}finally{
+				client.release();
 			}
 			final String [] spaceManagerURIs = JSONDecoder.decode(serializedSpaceManagers, String[].class);
 			for(String spaceManagerURI : spaceManagerURIs)
