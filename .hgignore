@@ -16,6 +16,7 @@ syntax: regexp
 ^otsoAuthentication/dist
 
 ^otsoSE/bin
+^otsoSecurityIntegrationTest/bin
 
 ^otsoDroid/otsoDroid/gen
 ^otsoDroid/otsoDroid/local\.properties$
@@ -23,6 +24,13 @@ syntax: regexp
 ^otsoDroid/otsoDroid/build\.properties$
 ^otsoDroid/otsoDroid/bin
 ^otsoDroid/otsoDroid/libs
+
+^otsoDroid/otsoDroidJxta/gen
+^otsoDroid/otsoDroidJxta/local\.properties$
+^otsoDroid/otsoDroidJxta/debug\.keystore$
+^otsoDroid/otsoDroidJxta/build\.properties$
+^otsoDroid/otsoDroidJxta/bin
+^otsoDroid/otsoDroidJxta/libs
 
 ^otsoDroid/otsoDroidTest/gen
 ^otsoDroid/otsoDroidTest/local\.properties$
