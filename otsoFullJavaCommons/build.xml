@@ -20,9 +20,6 @@
     	<fileset dir="lib">
 			<include name="*.jar"/>
     	</fileset>
-    	<fileset dir="libs">
-			<include name="*.jar"/>
-    	</fileset>
     </path>
 	
 	<fail message="${otso.commons.jar} not found. Run ant dist in that directory.">
