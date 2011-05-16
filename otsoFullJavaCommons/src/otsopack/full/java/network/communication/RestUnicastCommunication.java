@@ -155,6 +155,8 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	protected Graph [] filterResults(Graph [] graphs, Filter[] filters) {
+		if(graphs == null)
+			return null;
 		final List<Graph> resultingGraphs = new Vector<Graph>(graphs.length);
 		for(Graph graph : graphs){
 			final Graph filtered = filterResults(graph, filters);
