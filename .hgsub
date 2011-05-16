@@ -1,5 +1,6 @@
 otsoCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoCommons
 otsoDroid/otsoDroid/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoDroid
+otsoDroid/otsoDroidJxta/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoDroidJxta
 otsoME/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoME
 otsoRestletCommons/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoRestletCommons
 otsoAuthentication/lib = [svn]https://dev.morelab.deusto.es/svn/otsopack_externals/otsoAuthentication
