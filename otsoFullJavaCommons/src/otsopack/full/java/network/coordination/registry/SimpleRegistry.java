@@ -38,6 +38,8 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	private final String spaceURI;
 	private final Set<SpaceManager> spaceManagers = new CopyOnWriteArraySet<SpaceManager>();
 	private final Set<Node> nodes = new CopyOnWriteArraySet<Node>();
+	private final String localNodeUUID;
+	
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery){
 		this(spaceURI, discovery, DEFAULT_INTERVAL);
@@ -48,9 +50,14 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	}
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval){
+		this(spaceURI, discovery, interval, null);
+	}
+	
+	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval, String localNodeUUID){
 		this.spaceURI  = spaceURI;
 		this.discovery = discovery;
 		this.interval  = interval;
+		this.localNodeUUID = localNodeUUID;
 		setDaemon(true);
 	}
 	
@@ -118,7 +125,9 @@ public class SimpleRegistry extends Thread implements IRegistry {
 				final ISpaceManager client = spaceManager.createClient();
 				try {
 					for(Node node : client.getNodes())
-						newNodes.add(node);
+						if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
+							newNodes.add(node);
+					
 				} catch (SpaceManagerException e) {
 					System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
 					e.printStackTrace();
