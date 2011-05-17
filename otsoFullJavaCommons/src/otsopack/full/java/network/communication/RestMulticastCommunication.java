@@ -17,6 +17,8 @@ package otsopack.full.java.network.communication;
 import java.util.List;
 import java.util.Vector;
 
+import org.restlet.resource.ResourceException;
+
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
@@ -64,7 +66,13 @@ public class RestMulticastCommunication implements ICommunication {
 		// TODO: Use ExecutorService
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			final Graph graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
+			Graph graph;
+			try{
+				graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
+			}catch(ResourceException e){
+				e.printStackTrace();
+				graph = null;
+			}
 			if(graph != null)
 				return graph;
 		}
@@ -84,7 +92,13 @@ public class RestMulticastCommunication implements ICommunication {
 		// TODO: Use ExecutorService
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			final Graph graph = unicast.read(spaceURI, template, outputFormat, filters, timeout);
+			Graph graph;
+			try {
+				graph = unicast.read(spaceURI, template, outputFormat, filters, timeout);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+				graph = null;
+			}
 			if(graph != null)
 				return graph;
 		}
@@ -104,7 +118,13 @@ public class RestMulticastCommunication implements ICommunication {
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			final Graph graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
+			Graph graph;
+			try {
+				graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
+			} catch (Exception e) {
+				e.printStackTrace();
+				graph = null;
+			}
 			if(graph != null)
 				return graph;
 		}
@@ -124,7 +144,13 @@ public class RestMulticastCommunication implements ICommunication {
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			final Graph graph = unicast.take(spaceURI, template, outputFormat, filters, timeout);
+			Graph graph;
+			try {
+				graph = unicast.take(spaceURI, template, outputFormat, filters, timeout);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+				graph = null;
+			}
 			if(graph != null)
 				return graph;
 		}
@@ -143,7 +169,13 @@ public class RestMulticastCommunication implements ICommunication {
 		final List<Graph> graphs = new Vector<Graph>();
 		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			final Graph [] retrievedGraphs = unicast.query(spaceURI, template, outputFormat, filters, timeout);
+			Graph[] retrievedGraphs;
+			try {
+				retrievedGraphs = unicast.query(spaceURI, template, outputFormat, filters, timeout);
+			} catch (ResourceException e) {
+				e.printStackTrace();
+				retrievedGraphs = null;
+			}
 			if(retrievedGraphs != null)
 				for(Graph newGraph : retrievedGraphs)
 					graphs.add(newGraph);
