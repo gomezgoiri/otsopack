@@ -14,7 +14,6 @@
  */
 package otsopack.full.java.network.communication;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -249,6 +248,6 @@ public class OtsopackRestUnicastIntegrationAuthorizationTest extends AbstractSin
 		
 		// Seriously, he cannot
 		ret = this.ruc.query(this.spaceURI, aitortpl, SemanticFormat.NTRIPLES, timeout);		
-		assertEquals(ret.length,0);
+		assertNull(ret);
 	}
 }

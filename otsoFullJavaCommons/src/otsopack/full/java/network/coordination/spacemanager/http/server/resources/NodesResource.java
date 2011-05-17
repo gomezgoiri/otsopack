@@ -25,6 +25,7 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.OtsopackHttpSpaceManagerApplication;
 
@@ -41,7 +42,7 @@ public class NodesResource extends ServerResource implements ISpaceManagerResour
 	@Override
 	public Representation getNodes() {
 		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
-		String[] nodes;
+		Node[] nodes;
 		try {
 			nodes = spaceManager.getNodes();
 		} catch (SpaceManagerException e) {

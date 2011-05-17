@@ -18,23 +18,24 @@ import java.util.List;
 import java.util.Vector;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.Node;
 
 public class SimpleSpaceManager implements ISpaceManager {
 
-	private final List<String> nodes = new Vector<String>();
+	private final List<Node> nodes = new Vector<Node>();
 	
-	public SimpleSpaceManager(List<String> nodes){
-		for(String node : nodes)
+	public SimpleSpaceManager(List<Node> nodes){
+		for(Node node : nodes)
 			this.nodes.add(node);
 	}
 	
-	public SimpleSpaceManager(String ... nodes){
-		for(String node : nodes)
+	public SimpleSpaceManager(Node ... nodes){
+		for(Node node : nodes)
 			this.nodes.add(node);
 	}
 	
 	@Override
-	public String [] getNodes() {
-		return this.nodes.toArray(new String[]{});
+	public Node [] getNodes() {
+		return this.nodes.toArray(new Node[]{});
 	}
 }

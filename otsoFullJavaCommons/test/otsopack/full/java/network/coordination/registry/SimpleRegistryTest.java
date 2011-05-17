@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import otsopack.full.java.network.coordination.IDiscovery;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.http.SpaceManagerManager;
@@ -61,7 +62,7 @@ public class SimpleRegistryTest {
 		};
 		registry.startup();
 		
-		final Set<String> nodes = registry.getNodesBaseURLs();
+		final Set<Node> nodes = registry.getNodesBaseURLs();
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE1));
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE2));
 		

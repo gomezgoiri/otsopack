@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.Node;
 
 public class SpaceManagerServerHttpTest {
 	private int PORT = 18086;
@@ -46,7 +47,7 @@ public class SpaceManagerServerHttpTest {
 
 	@Test
 	public void testServer() throws Exception {
-		final List<String> nodes = Arrays.asList(this.client.getNodes());
+		final List<Node> nodes = Arrays.asList(this.client.getNodes());
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE1));
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE2));
 	}

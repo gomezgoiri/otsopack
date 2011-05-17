@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.SpaceManager;
 
 // TODO: make this in parallel
@@ -44,8 +45,8 @@ public class MultipleRegistry implements IRegistry {
 	}
 
 	@Override
-	public Set<String> getNodesBaseURLs() {
-		final Set<String> nodesBaseURLs = new HashSet<String>();
+	public Set<Node> getNodesBaseURLs() {
+		final Set<Node> nodesBaseURLs = new HashSet<Node>();
 		for(IRegistry registry : this.registries)
 			nodesBaseURLs.addAll(registry.getNodesBaseURLs());
 		return nodesBaseURLs;

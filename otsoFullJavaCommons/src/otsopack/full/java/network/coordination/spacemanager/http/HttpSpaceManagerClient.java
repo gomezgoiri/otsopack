@@ -24,6 +24,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
@@ -37,7 +38,7 @@ public class HttpSpaceManagerClient implements ISpaceManager {
 	}
 
 	@Override
-	public String[] getNodes() throws SpaceManagerException {
+	public Node[] getNodes() throws SpaceManagerException {
 		final ClientResource client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
 		String serializedSpaceManagers;
 		try{
@@ -55,7 +56,7 @@ public class HttpSpaceManagerClient implements ISpaceManager {
 		}finally{
 			client.release();
 		}
-		return JSONDecoder.decode(serializedSpaceManagers, String[].class);
+		return JSONDecoder.decode(serializedSpaceManagers, Node[].class);
 	}
 	
 }

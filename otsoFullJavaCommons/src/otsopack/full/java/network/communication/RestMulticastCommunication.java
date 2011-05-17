@@ -34,6 +34,7 @@ import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.Node;
 
 public class RestMulticastCommunication implements ICommunication {
 
@@ -64,7 +65,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService
-		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+		for(Node nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			Graph graph;
 			try{
@@ -90,7 +91,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService
-		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+		for(Node nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			Graph graph;
 			try {
@@ -116,7 +117,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
-		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+		for(Node nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			Graph graph;
 			try {
@@ -142,7 +143,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		// Return the first result found
 		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
-		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+		for(Node nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			Graph graph;
 			try {
@@ -167,7 +168,7 @@ public class RestMulticastCommunication implements ICommunication {
 	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		final List<Graph> graphs = new Vector<Graph>();
-		for(String nodeBaseURL : this.registry.getNodesBaseURLs()){
+		for(Node nodeBaseURL : this.registry.getNodesBaseURLs()){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 			Graph[] retrievedGraphs;
 			try {
@@ -184,8 +185,8 @@ public class RestMulticastCommunication implements ICommunication {
 		return graphs.toArray(new Graph[]{});
 	}
 
-	private RestUnicastCommunication createUnicastCommunication(String nodeBaseURI) {
-		return new RestUnicastCommunication(nodeBaseURI, this.credentialsManager);
+	private RestUnicastCommunication createUnicastCommunication(Node nodeBaseURI) {
+		return new RestUnicastCommunication(nodeBaseURI.getBaseURI(), this.credentialsManager);
 	}
 
 	@Override

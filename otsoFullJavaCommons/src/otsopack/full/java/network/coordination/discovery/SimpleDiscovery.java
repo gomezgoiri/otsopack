@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import otsopack.full.java.network.coordination.IDiscovery;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.MemorySpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
@@ -35,7 +36,7 @@ public class SimpleDiscovery implements IDiscovery {
 		this.discoverers.put("", spaceManagers);
 	}
 	
-	public SimpleDiscovery(String ... nodes){
+	public SimpleDiscovery(Node ... nodes){
 		this.discoverers.put("", new SpaceManager[]{new MemorySpaceManager(new SimpleSpaceManager(nodes))});
 	}
 	
