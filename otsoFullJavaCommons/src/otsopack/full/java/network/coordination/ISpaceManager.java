@@ -17,5 +17,5 @@ package otsopack.full.java.network.coordination;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
 public interface ISpaceManager {
-	public String [] getNodes() throws SpaceManagerException;
+	public Node [] getNodes() throws SpaceManagerException;
 }

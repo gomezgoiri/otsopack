@@ -266,15 +266,15 @@ public abstract class AbstractKernel implements ITripleSpace {
 	
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		Graph ret;
-		if( filters==null )
-			ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
-		else
-			ret = networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
 		
-		if( ret==null ) 
-			return dataAccessService.read(spaceURI, template, outputFormat);
-		return ret;
+		final Graph ret = dataAccessService.read(spaceURI, template, outputFormat);
+		if(ret != null)
+			return ret;
+		
+		if( filters==null )
+			return networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
+		
+		return networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
 
@@ -297,15 +297,14 @@ public abstract class AbstractKernel implements ITripleSpace {
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		Graph ret;
-		if( filters==null )
-			ret = networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
-		else
-			ret = networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
+		final Graph ret = dataAccessService.read(spaceURI, graphURI, outputFormat);
+		if(ret != null)
+			return ret;
 		
-		if(ret==null) 
-			return dataAccessService.read(spaceURI, graphURI, outputFormat);
-		return ret;
+		if( filters==null )
+			return networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
+		
+		return networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
 	public Graph take(String spaceURI, Template template) throws TSException {
@@ -326,16 +325,14 @@ public abstract class AbstractKernel implements ITripleSpace {
 
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		Graph ret;
+		final Graph ret = dataAccessService.take(spaceURI, template, outputFormat);
+		if(ret != null)
+			return ret;
+		
 		if( filters==null )
-			ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
-		else
-			ret = networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
+			return networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, timeout);
 		
-		if( ret==null )
-			return dataAccessService.take(spaceURI, template, outputFormat);
-		
-		return ret;
+		return networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
 	public Graph take(String spaceURI, String graphURI) throws TSException {
@@ -357,16 +354,15 @@ public abstract class AbstractKernel implements ITripleSpace {
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
-		Graph ret;
+		final Graph ret = dataAccessService.take(spaceURI, graphURI, outputFormat);
+		
+		if(ret != null)
+			return ret;
+		
 		if( filters==null )
-			ret = networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
-		else
-			ret = networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
+			return networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, timeout);
 		
-		if( ret==null )
-			return dataAccessService.take(spaceURI, graphURI, outputFormat);
-		
-		return ret;
+		return networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
 	public String write(String spaceURI, Graph triples) throws TSException {

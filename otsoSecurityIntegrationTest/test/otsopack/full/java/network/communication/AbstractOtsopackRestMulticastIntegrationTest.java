@@ -23,6 +23,7 @@ import otsopack.commons.network.ICommunication;
 import otsopack.full.java.AbstractRestServerIntegrationTesting;
 import otsopack.full.java.OtsoServerManager;
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.registry.SimpleRegistry;
 
 public abstract class AbstractOtsopackRestMulticastIntegrationTest extends AbstractRestServerIntegrationTesting {
@@ -117,7 +118,7 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C, getNodeCSigner());
 		this.nodeC.addGraph(OtsoServerManager.YODA_GRAPH);
 		
-		final IRegistry registry = new SimpleRegistry(OtsoServerManager.SPACE, getNodeAurl(), getNodeBurl(), getNodeCurl());
+		final IRegistry registry = new SimpleRegistry(OtsoServerManager.SPACE, getNodeA(), getNodeB(), getNodeC());
 		final RestMulticastCommunication multicastProvider = new RestMulticastCommunication(registry);
 		
 		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, null, multicastProvider, true);
@@ -137,16 +138,16 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		this.proxyP.stop();
 	}
 	
-	public String getNodeAurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/";
+	public Node getNodeA(){
+		return new Node("http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_A + "/", "nodeA");
 	}
 	
-	public String getNodeBurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B + "/";
+	public Node getNodeB(){
+		return new Node("http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_B + "/", "nodeB");
 	}
 	
-	public String getNodeCurl(){
-		return "http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C + "/";
+	public Node getNodeC(){
+		return new Node("http://127.0.0.1:" + OTSO_TESTING_PORT_NODE_C + "/", "nodeC");
 	}
 	
 	public String getProxyUrl(){

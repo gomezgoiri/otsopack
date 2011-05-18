@@ -19,6 +19,6 @@ import java.util.Set;
 public interface IRegistry {
 	public void startup();
 	public Set<SpaceManager> getSpaceManagers();
-	public Set<String> getNodesBaseURLs();
+	public Set<Node> getNodesBaseURLs();
 	void shutdown();
 }

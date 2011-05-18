@@ -21,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
@@ -36,20 +37,27 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	private final IDiscovery discovery;
 	private final String spaceURI;
 	private final Set<SpaceManager> spaceManagers = new CopyOnWriteArraySet<SpaceManager>();
-	private final Set<String> nodes = new CopyOnWriteArraySet<String>();
+	private final Set<Node> nodes = new CopyOnWriteArraySet<Node>();
+	private final String localNodeUUID;
+	
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery){
 		this(spaceURI, discovery, DEFAULT_INTERVAL);
 	}
 	
-	public SimpleRegistry(String spaceURI, String ... nodes){
+	public SimpleRegistry(String spaceURI, Node ... nodes){
 		this(spaceURI, new SimpleDiscovery(nodes), DEFAULT_INTERVAL);
 	}
 	
 	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval){
+		this(spaceURI, discovery, interval, null);
+	}
+	
+	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval, String localNodeUUID){
 		this.spaceURI  = spaceURI;
 		this.discovery = discovery;
 		this.interval  = interval;
+		this.localNodeUUID = localNodeUUID;
 		setDaemon(true);
 	}
 	
@@ -112,18 +120,20 @@ public class SimpleRegistry extends Thread implements IRegistry {
 			
 			fillSet(this.spaceManagers, this.discovery.getSpaceManagers(this.spaceURI));
 			
-			final Set<String> newNodes = new HashSet<String>();
+			final Set<Node> newNodes = new HashSet<Node>();
 			for(SpaceManager spaceManager : this.spaceManagers){
 				final ISpaceManager client = spaceManager.createClient();
 				try {
-					for(String node : client.getNodes())
-						newNodes.add(node);
+					for(Node node : client.getNodes())
+						if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
+							newNodes.add(node);
+					
 				} catch (SpaceManagerException e) {
 					System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
 					e.printStackTrace();
 				}
 			}
-			fillSet(this.nodes, newNodes.toArray(new String[]{}));
+			fillSet(this.nodes, newNodes.toArray(new Node[]{}));
 			
 		} catch (DiscoveryException e) {
 			System.err.println("Discovery failed: " + e.getMessage() + "; keeping the already stored space managers");
@@ -151,7 +161,7 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	}
 
 	@Override
-	public Set<String> getNodesBaseURLs() {
+	public Set<Node> getNodesBaseURLs() {
 		return this.nodes;
 	}
 }

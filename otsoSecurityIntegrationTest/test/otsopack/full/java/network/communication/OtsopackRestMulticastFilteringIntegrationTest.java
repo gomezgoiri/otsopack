@@ -120,8 +120,6 @@ public class OtsopackRestMulticastFilteringIntegrationTest extends
 	@Test
 	public void testQueryNone() throws Exception {
 		final Graph [] returnedGraphs = this.ruc.query(OtsoServerManager.SPACE, WildcardTemplate.createWithURI(null, OtsoServerManager.DEPICTION, "http://this.does.not.exist"), SemanticFormat.NTRIPLES, this.filters, 1000);
-		// No exception, no null, just an empty array
-		assertNotNull(returnedGraphs);
-		assertEquals(0, returnedGraphs.length);
+		assertNull(returnedGraphs);
 	}
 }
