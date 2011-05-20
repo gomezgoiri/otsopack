@@ -45,7 +45,7 @@ public class WildcardConverter {
 			return createTemplateFromURLwithURI(subject, predicate, objectUri, prefixes);
 		
 		if(objectValue != null){
-			if(objectType != null)
+			if(objectType == null)
 				throw new IllegalArgumentException("if objectValue is provided, then objectType must be provided!");
 
 			for(Class<?> klass : datatypes.keySet()){

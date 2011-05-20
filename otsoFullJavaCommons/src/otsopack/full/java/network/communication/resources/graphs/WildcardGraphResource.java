@@ -53,6 +53,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			//throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not serialize retrieved data", e);
 		} catch (Exception e) {
 			//TODO is this a internal error or a bad request?
+			e.printStackTrace();
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The given prefix used in the template does not exist");
 		}
 	}
