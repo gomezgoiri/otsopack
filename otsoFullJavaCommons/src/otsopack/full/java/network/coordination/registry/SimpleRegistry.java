@@ -90,7 +90,7 @@ public class SimpleRegistry extends Thread implements IRegistry {
 		int times = 0;
 		this.start();
 		try {
-			while(this.iterations == currentIterations && times < 10){
+			while(this.iterations == currentIterations && times < 100){
 				Thread.sleep(100);
 				times++;
 			}

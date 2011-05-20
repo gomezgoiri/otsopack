@@ -74,4 +74,9 @@ public class Node {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Node [uuid=" + this.uuid + ", baseURI=" + this.baseURI + "]";
+	}
 }
