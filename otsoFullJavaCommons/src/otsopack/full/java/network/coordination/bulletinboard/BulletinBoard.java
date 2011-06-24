@@ -1,0 +1,211 @@
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: FILLME
+ *
+ */
+package otsopack.full.java.network.coordination.bulletinboard;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import otsopack.commons.data.NotificableTemplate;
+import otsopack.full.java.network.coordination.IBulletinBoard;
+import otsopack.full.java.network.coordination.Node;
+
+public class BulletinBoard implements IBulletinBoard, Runnable {
+	final public long DEFAULT_LIFETIME = 3600000; // TODO 1h by default
+	
+	// cancel the thread which removes the expired notifications
+	private volatile boolean cancel = false;
+	
+	protected Map<String, Subscription> subscriptions
+					= new ConcurrentHashMap<String,Subscription>();
+	protected Map<String, Advertisement> advertisements
+					= new ConcurrentHashMap<String,Advertisement>();
+	
+	// auxiliar list to store subscriptions and advertisements
+	// ordered by their expiration date
+	protected SortedSet<AbstractNotificableElement> expirableElements
+					= new ConcurrentSkipListSet<AbstractNotificableElement>();
+	//guards expirableElement
+	private Lock lock = new ReentrantLock();
+	private final Object lockDelete = new Object();
+	
+	public void stop() {
+		this.cancel = true;
+	}
+	
+	// Just for testing purposes
+	protected String subscribe(Subscription subs) {
+		this.subscriptions.put(subs.getID(), subs);
+		
+		this.lock.lock();
+		try {
+			this.expirableElements.add(subs);
+	     } finally {
+	         this.lock.unlock();
+	     }
+		
+	    // Just in case the added advertisement is the first one
+		synchronized(this.lockDelete) {
+			this.lockDelete.notifyAll();
+		}
+		return subs.getID();
+	}
+	
+	@Override
+	public String suscribe(Node node, NotificableTemplate tpl) {
+		final long currentTime = System.currentTimeMillis();
+		final String uuid = UUID.randomUUID().toString();
+		final Subscription subs = new Subscription(uuid, currentTime+this.DEFAULT_LIFETIME, tpl);
+		return subscribe(subs);
+	}
+
+	@Override
+	public void updateSubscription(String subscriptionId) {
+		final Subscription subs = this.subscriptions.get(subscriptionId);
+		
+		if( subs!=null ) {
+			this.lock.lock();
+			try {
+				// TODO check whether sortedSet already takes into account the changes in the object.
+				// treated as completely new subs
+				this.expirableElements.remove(subs);
+				this.expirableElements.add(subs);
+				//TODO could it be better just calling to Collections.sort()?
+		     } finally {
+		         this.lock.unlock();
+		     }
+		}
+	}
+
+	@Override
+	public void unsuscribe(String subscriptionId) {
+		final Subscription subs = this.subscriptions.remove(subscriptionId);
+		
+		if( subs!=null ) {
+			this.lock.lock();
+			try {
+				this.expirableElements.remove(subs);
+		     } finally {
+		         this.lock.unlock();
+		     }
+		}
+	}
+	
+	// Just for testing purposes
+	protected String advertise(Advertisement adv) {
+		this.advertisements.put(adv.getID(),adv);
+		
+		this.lock.lock();
+		try {
+			this.expirableElements.add(adv);
+	     } finally {
+	         this.lock.unlock();
+	     }
+		
+	    // Just in case the added advertisement is the first one
+		synchronized(this.lockDelete) {
+			this.lockDelete.notifyAll();
+		}
+		return adv.getID();
+	}
+
+	@Override
+	public String advertise(NotificableTemplate tpl) {
+		final long currentTime = System.currentTimeMillis();
+		final String uuid = UUID.randomUUID().toString();
+		final Advertisement adv = new Advertisement(uuid, currentTime+this.DEFAULT_LIFETIME, tpl);
+		return advertise(adv);
+	}
+
+	@Override
+	public void updateAdvertisement(String advId) {
+		final Advertisement adv = this.advertisements.get(advId);
+		
+		if( adv!=null ) {
+			this.lock.lock();
+			try {
+				// TODO check whether sortedSet already takes into account the changes in the object.
+				// treated as completely new adv
+				this.expirableElements.remove(adv);
+				this.expirableElements.add(adv);
+				//TODO could it be better just calling to Collections.sort()?
+		     } finally {
+		         this.lock.unlock();
+		     }
+		}
+	}
+	
+	@Override
+	public void unadvertise(String advId) {
+		final Advertisement adv = this.advertisements.remove(advId);
+		
+		if( adv!=null ) {
+			this.lock.lock();
+			try {
+				this.expirableElements.remove(adv);
+		     } finally {
+		         this.lock.unlock();
+		     }
+		}
+	}
+	
+	@Override
+	public Collection<Advertisement> getAdvertises() {
+		return this.advertisements.values();
+	}
+
+	@Override
+	public void run() {
+		long currentTime;
+		boolean shouldWait;
+		
+		while( !this.cancel ) {
+			currentTime = System.currentTimeMillis();
+			shouldWait = false;
+			
+			this.lock.lock();
+			try {
+				AbstractNotificableElement element = this.expirableElements.first();
+				if( currentTime>element.getExpiration() ) {
+					this.expirableElements.remove(element);
+					
+					// It should be in one of these collections
+					this.subscriptions.remove(element.getID());
+					this.advertisements.remove(element.getID());
+				} else shouldWait = true;
+		     } finally {
+		         this.lock.unlock();
+		     }
+		     // if another element has inserted in the first position between
+		     // the assignment and this if we are going to wait unnecessarily
+		     if( shouldWait ) {
+				synchronized(this.lockDelete) {
+					try {
+						this.lockDelete.wait();
+					} catch (InterruptedException e) {
+						// it's ok if another Thread interrupts it,
+						// it'll wait again the remaining time during
+						// the next iteration of the while
+					}
+				}
+			}
+		}
+	}
+}
