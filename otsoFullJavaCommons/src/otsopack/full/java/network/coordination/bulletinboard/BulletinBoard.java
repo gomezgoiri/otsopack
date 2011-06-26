@@ -44,7 +44,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 					= new ConcurrentSkipListSet<AbstractNotificableElement>();
 	//guards expirableElement
 	private Lock lock = new ReentrantLock();
-	private final Object lockDelete = new Object();
+	private final Object lockElementAdded = new Object();
 	
 	public void stop() {
 		this.cancel = true;
@@ -62,8 +62,8 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	     }
 		
 	    // Just in case the added advertisement is the first one
-		synchronized(this.lockDelete) {
-			this.lockDelete.notifyAll();
+		synchronized(this.lockElementAdded) {
+			this.lockElementAdded.notifyAll();
 		}
 		return subs.getID();
 	}
@@ -120,8 +120,8 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	     }
 		
 	    // Just in case the added advertisement is the first one
-		synchronized(this.lockDelete) {
-			this.lockDelete.notifyAll();
+		synchronized(this.lockElementAdded) {
+			this.lockElementAdded.notifyAll();
 		}
 		return adv.getID();
 	}
@@ -173,36 +173,42 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 
 	@Override
 	public void run() {
-		long currentTime;
-		boolean shouldWait;
+		long remainingTime;
 		
 		while( !this.cancel ) {
-			currentTime = System.currentTimeMillis();
-			shouldWait = false;
-			
-			this.lock.lock();
-			try {
-				AbstractNotificableElement element = this.expirableElements.first();
-				if( currentTime>element.getExpiration() ) {
-					this.expirableElements.remove(element);
-					
-					// It should be in one of these collections
-					this.subscriptions.remove(element.getID());
-					this.advertisements.remove(element.getID());
-				} else shouldWait = true;
-		     } finally {
-		         this.lock.unlock();
-		     }
-		     // if another element has inserted in the first position between
-		     // the assignment and this if we are going to wait unnecessarily
-		     if( shouldWait ) {
-				synchronized(this.lockDelete) {
+			if( this.expirableElements.isEmpty() ) {
+				synchronized(this.lockElementAdded) {
 					try {
-						this.lockDelete.wait();
-					} catch (InterruptedException e) {
-						// it's ok if another Thread interrupts it,
-						// it'll wait again the remaining time during
-						// the next iteration of the while
+						// wait until a new notificable element is added
+						this.lockElementAdded.wait();
+					} catch (InterruptedException e) {}
+				}
+			} else {
+				this.lock.lock();
+				try {
+					final AbstractNotificableElement element = this.expirableElements.first();
+					remainingTime = element.getExpiration() - System.currentTimeMillis();
+					if( remainingTime<=0 ) {
+						this.expirableElements.remove(element);
+						
+						// It should be in one of these collections
+						this.subscriptions.remove(element.getID());
+						this.advertisements.remove(element.getID());
+					}
+			     } finally {
+			         this.lock.unlock();
+			     }
+			     // if another element has inserted in the first position between
+			     // the assignment and this if we are going to wait unnecessarily
+			     if( remainingTime>0 ) {
+					synchronized(this.lockElementAdded) {
+						try {
+							this.lockElementAdded.wait(remainingTime);
+						} catch (InterruptedException e) {
+							// it's ok if another Thread interrupts it,
+							// it'll wait again the remaining time during
+							// the next iteration of the while
+						}
 					}
 				}
 			}
