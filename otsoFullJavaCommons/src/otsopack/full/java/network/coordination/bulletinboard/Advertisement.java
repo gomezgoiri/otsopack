@@ -14,8 +14,6 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard;
 
-import java.util.Date;
-
 import otsopack.commons.data.NotificableTemplate;
 
 public class Advertisement extends AbstractNotificableElement {

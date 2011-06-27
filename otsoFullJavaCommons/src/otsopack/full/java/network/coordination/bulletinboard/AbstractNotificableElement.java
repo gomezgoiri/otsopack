@@ -17,9 +17,9 @@ package otsopack.full.java.network.coordination.bulletinboard;
 import otsopack.commons.data.NotificableTemplate;
 
 public abstract class AbstractNotificableElement implements Comparable<AbstractNotificableElement> {
-	protected String id;
+	final protected String id;
+	final protected NotificableTemplate tpl;
 	protected long expiration;
-	protected NotificableTemplate tpl;
 	
 	public AbstractNotificableElement(String id, long expiration, NotificableTemplate tpl) {
 		this.id = id;
@@ -30,11 +30,16 @@ public abstract class AbstractNotificableElement implements Comparable<AbstractN
 	public String getID() {
 		return this.id;
 	}
-	
-	long getExpiration() {
+
+	public long getExpiration() {
 		return this.expiration;
 	}
-	NotificableTemplate getTemplate() {
+	
+	public void setExpiration(long expiration) {
+		this.expiration = expiration;
+	}
+	
+	public NotificableTemplate getTemplate() {
 		return this.tpl;
 	}
 

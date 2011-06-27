@@ -77,10 +77,12 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 
 	@Override
-	public void updateSubscription(String subscriptionId) {
+	public void updateSubscription(String subscriptionId, long extratime) {
 		final Subscription subs = this.subscriptions.get(subscriptionId);
 		
 		if( subs!=null ) {
+			subs.setExpiration( System.currentTimeMillis() + extratime );
+			
 			this.lock.lock();
 			try {
 				// TODO check whether sortedSet already takes into account the changes in the object.
@@ -135,10 +137,12 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 
 	@Override
-	public void updateAdvertisement(String advId) {
+	public void updateAdvertisement(String advId, long extratime) {
 		final Advertisement adv = this.advertisements.get(advId);
 		
 		if( adv!=null ) {
+			adv.setExpiration( System.currentTimeMillis() + extratime );
+			
 			this.lock.lock();
 			try {
 				// TODO check whether sortedSet already takes into account the changes in the object.

@@ -21,11 +21,11 @@ import otsopack.full.java.network.coordination.bulletinboard.Advertisement;
 
 public interface IBulletinBoard {
 	String suscribe(Node node, NotificableTemplate tpl);
-	void updateSubscription(String subscriptionId);
+	void updateSubscription(String subscriptionId, long extratime);
 	void unsuscribe(String subscriptionId);
 	
 	String advertise(NotificableTemplate tpl);
-	void updateAdvertisement(String advId);
+	void updateAdvertisement(String advId, long extratime);
 	void unadvertise(String advId);
 	
 	Collection<Advertisement> getAdvertises();
