@@ -9,24 +9,21 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.full.java.network.coordination;
 
-import java.util.Collection;
-
-import otsopack.commons.data.NotificableTemplate;
-import otsopack.full.java.network.coordination.bulletinboard.Advertisement;
+import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
+import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 
 public interface IBulletinBoard {
-	String suscribe(Node node, NotificableTemplate tpl);
+	String subscribe(Subscription subscription);
 	void updateSubscription(String subscriptionId, long extratime);
 	void unsuscribe(String subscriptionId);
 	
-	String advertise(NotificableTemplate tpl);
+	String advertise(Advertisement adv);
 	void updateAdvertisement(String advId, long extratime);
 	void unadvertise(String advId);
 	
-	Collection<Advertisement> getAdvertises();
+	Advertisement[] getAdvertises();
 }
