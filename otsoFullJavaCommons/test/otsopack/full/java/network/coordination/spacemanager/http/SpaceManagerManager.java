@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
 package otsopack.full.java.network.coordination.spacemanager.http;
 
@@ -52,6 +51,4 @@ public class SpaceManagerManager {
 	public void stopSpaceManagerServer() throws Exception {
 		this.server.shutdown();
 	}
-	
-
 }

@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
 package otsopack.full.java.network.coordination.registry;
 
@@ -39,8 +38,6 @@ public class SimpleRegistryTest {
 	public void setUp() throws Exception {
 		this.manager = new SpaceManagerManager(this.port);
 		this.manager.startSpaceManagerServer();
-		
-		
 	}
 	
 	@After
