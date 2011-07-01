@@ -29,6 +29,7 @@ import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializab
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertiseResource;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertisesResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.SubscriptionResource;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.SubscriptionsResource;
 
 public class HttpBulletinBoardClient {
@@ -90,9 +91,9 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
+				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				JsonRepresentation json = new JsonRepresentation(advJson);
+				final JsonRepresentation json = new JsonRepresentation(advJson);
 				repr = client.put(json, MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
@@ -131,9 +132,9 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
+				final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				JsonRepresentation json = new JsonRepresentation(subJson);
+				final JsonRepresentation json = new JsonRepresentation(subJson);
 				repr = client.post(json, MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
@@ -149,7 +150,7 @@ public class HttpBulletinBoardClient {
 
 	//@Override
 	public String updateSubscription(Subscription sub) {
-		final String url = null;//(this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}", sub.getID());
+		final String url = (this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}", sub.getID());
 		final ClientResource client = new ClientResource(url);
 		try{
 			final Representation repr;
@@ -172,7 +173,7 @@ public class HttpBulletinBoardClient {
 	
 	//@Override
 	public String unsubscribe(String subId) {
-		final String url = null;//(this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}",subId);
+		final String url = (this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}", subId);
 		final ClientResource client = new ClientResource(url);
 		try {
 			final Representation repr;

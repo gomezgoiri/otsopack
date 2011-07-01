@@ -40,14 +40,12 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
-		// TODO Auto-generated method stub
-
+		this.client.updateSubscription(new Subscription(subscriptionId, extratime, null, null));
 	}
 
 	@Override
-	public void unsuscribe(String subscriptionId) {
-		// TODO Auto-generated method stub
-
+	public void unsubscribe(String subscriptionId) {
+		this.client.unsubscribe(subscriptionId);
 	}
 
 	@Override

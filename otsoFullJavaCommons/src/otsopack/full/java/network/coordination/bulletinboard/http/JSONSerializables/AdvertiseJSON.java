@@ -15,7 +15,7 @@ package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializa
 
 public class AdvertiseJSON {
 	protected String id;
-	transient protected TemplateJSON tpl;
+	protected TemplateJSON tpl;
 	protected long expiration;
 	
 	public AdvertiseJSON() {
@@ -70,5 +70,5 @@ public class AdvertiseJSON {
 		} else if (!this.id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
 }

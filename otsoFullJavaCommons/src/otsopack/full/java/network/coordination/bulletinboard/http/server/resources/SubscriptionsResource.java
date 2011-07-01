@@ -38,7 +38,7 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, SubscriptionsResource.class);
-		graphsRoots.putAll(AdvertiseResource.getRoots());
+		graphsRoots.putAll(SubscriptionResource.getRoots());
 		return graphsRoots;
 	}
 

@@ -72,7 +72,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		final Subscription subs = this.subscriptions.get(subscriptionId);
 		
 		if( subs!=null ) {
-			subs.setExpiration( System.currentTimeMillis() + extratime );
+			subs.setExpiration( extratime );
 			
 			this.lock.lock();
 			try {
@@ -88,7 +88,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 
 	@Override
-	public void unsuscribe(String subscriptionId) {
+	public void unsubscribe(String subscriptionId) {
 		final Subscription subs = this.subscriptions.remove(subscriptionId);
 		
 		if( subs!=null ) {

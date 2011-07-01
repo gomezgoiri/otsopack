@@ -118,19 +118,70 @@ public class HttpBulletinBoardClientTest {
 		assertThat(advertises, hasItem(this.manager.ADV1));
 		assertThat(advertises, hasItem(this.manager.ADV2));		
 	}
-	
 
 	@Test
-	public void testSubscription() {
+	public void testSubscribe() {
 		final Subscription sentSub = new Subscription( null,
 										System.currentTimeMillis()+60000,
 										WildcardTemplate.createWithNull(null, null),
 										new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
 		final String uuid = this.client.subscribe(sentSub);
-		final Subscription createdSubs = new  Subscription(uuid, 0, null, null);
+		final Subscription createdSubs = new Subscription(uuid, 0, null, null);
 		
 		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
 		assertEquals(1, subscriptions.size());
 		assertThat(subscriptions, hasItem(createdSubs));
+	}
+	
+	
+	@Test
+	public void testUpdateSubscribe() {
+		final long timestamp1 = System.currentTimeMillis()+60000;
+		final long timestamp2 = System.currentTimeMillis()+360000;
+		final Subscription sentSub = new Subscription( null,
+				timestamp1,
+				WildcardTemplate.createWithNull(null, null),
+				new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
+		final String uuid = this.client.subscribe(sentSub);
+		
+		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
+		assertEquals(1, subscriptions.size());
+		for(Subscription subscription: subscriptions) {
+			if( subscription.getID().equals(uuid) ) {
+				assertEquals(timestamp1, subscription.getExpiration());
+				break;
+			}
+		}
+
+		this.client.updateSubscription(uuid, timestamp2);
+		
+		subscriptions = this.manager.getSubscriptions();
+		assertEquals(1, subscriptions.size());
+		for(Subscription subscription: subscriptions) {
+			if( subscription.getID().equals(uuid) ) {
+				assertEquals(timestamp2, subscription.getExpiration());
+				break;
+			}
+		}
+	}
+	
+	@Test
+	public void testUnsubscribe() {
+		final Subscription sentSub = new Subscription( null,
+											System.currentTimeMillis()+60000,
+											WildcardTemplate.createWithNull(null, null),
+											new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
+
+		final String uuid = this.client.subscribe(sentSub);
+		final Subscription createdSubscription = new  Subscription(uuid,0, null, null);
+		
+		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
+		assertEquals(1, subscriptions.size());
+		assertThat(subscriptions, hasItem(createdSubscription));
+
+		this.client.unsubscribe(uuid);
+		
+		subscriptions = this.manager.getSubscriptions();
+		assertEquals(0, subscriptions.size());
 	}
 }

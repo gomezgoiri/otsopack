@@ -19,7 +19,7 @@ import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 public interface IBulletinBoard {
 	String subscribe(Subscription subscription);
 	void updateSubscription(String subscriptionId, long extratime);
-	void unsuscribe(String subscriptionId);
+	void unsubscribe(String subscriptionId);
 	
 	String advertise(Advertisement adv);
 	void updateAdvertisement(String advId, long extratime);

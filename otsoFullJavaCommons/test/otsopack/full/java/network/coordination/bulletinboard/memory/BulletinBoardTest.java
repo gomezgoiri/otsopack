@@ -109,8 +109,8 @@ public class BulletinBoardTest {
 		assertEquals(this.bb.subscriptions.get(uuid[2]), subs[2]);
 		assertEquals(this.bb.subscriptions.get(uuid[3]), subs[3]);
 		
-		this.bb.unsuscribe(uuid[2]);
-		this.bb.unsuscribe(uuid[3]);
+		this.bb.unsubscribe(uuid[2]);
+		this.bb.unsubscribe(uuid[3]);
 		
 		this.bb.updateSubscription(uuid[1], expire[3]);
 		

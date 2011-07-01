@@ -46,8 +46,8 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	}
 	
 	@Override
-	public void unsuscribe(String subscriptionId) {
-		this.bulletinBoard.unsuscribe(subscriptionId);
+	public void unsubscribe(String subscriptionId) {
+		this.bulletinBoard.unsubscribe(subscriptionId);
 	}
 	
 	@Override

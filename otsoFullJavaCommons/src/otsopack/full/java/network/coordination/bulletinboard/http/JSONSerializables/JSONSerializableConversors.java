@@ -16,6 +16,7 @@ package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializa
 import otsopack.commons.data.TripleLiteralObject;
 import otsopack.commons.data.TripleURIObject;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.full.java.network.coordination.bulletinboard.data.RemoteNotificationListener;
 import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
@@ -40,25 +41,30 @@ public class JSONSerializableConversors {
 	
 	
 	public static SubscribeJSON convertToSerializable(Subscription adv) {
-		if (adv.getListener() instanceof RemoteNotificationListener) {
-			final WildcardTemplate wtpl = (WildcardTemplate) adv.getTemplate();
-			final TemplateJSON tpl;
-			if (wtpl==null) {
-				tpl = null;
+		final WildcardTemplate wtpl = (WildcardTemplate) adv.getTemplate();
+		final TemplateJSON tpl;
+		if (wtpl==null) {
+			tpl = null;
+		} else {
+			final String obj;
+			if (wtpl.getObject()==null) {
+				obj = null;
+			} else if (wtpl.getObject() instanceof TripleLiteralObject ) {
+				obj = ((TripleLiteralObject)wtpl.getObject()).getValue().toString();
 			} else {
-				final String obj;
-				if (wtpl.getObject()==null) {
-					obj = null;
-				} else if (wtpl.getObject() instanceof TripleLiteralObject ) {
-					obj = ((TripleLiteralObject)wtpl.getObject()).getValue().toString();
-				} else {
-					obj = ((TripleURIObject)wtpl.getObject()).getURI();
-				}
-				tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
+				obj = ((TripleURIObject)wtpl.getObject()).getURI();
 			}
-			return new SubscribeJSON(adv.getID(), tpl, adv.getExpiration(), ((RemoteNotificationListener)adv.getListener()).getNode());
+			tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		}
-		return null;
+		
+		final Node node;
+		if (!(adv.getListener() instanceof RemoteNotificationListener)) { // null or another Listener
+			node = null;
+		} else {
+			node = ((RemoteNotificationListener)adv.getListener()).getNode();
+		}
+		
+		return new SubscribeJSON(adv.getID(), tpl, adv.getExpiration(), node);
 	}
 	
 	public static Advertisement convertFromSerializable(AdvertiseJSON adv) {

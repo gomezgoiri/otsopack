@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
 
@@ -20,7 +19,7 @@ import org.restlet.resource.Put;
 
 public interface ISubscriptionResource {	
 	@Put("json")
-	Representation modifySubscription();
+	Representation modifySubscription(Representation rep);
 	
 	@Delete("json")
 	Representation removeSubscription();

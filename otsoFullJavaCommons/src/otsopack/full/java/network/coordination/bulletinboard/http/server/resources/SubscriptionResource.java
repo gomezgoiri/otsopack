@@ -24,36 +24,36 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
-import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.OtsopackHttpBulletinBoardApplication;
 
-public class AdvertiseResource extends AbstractServerResource implements IAdvertiseResource {
-	public static final String ROOT = AdvertisesResource.ROOT + "/{advertise}";
+public class SubscriptionResource extends AbstractServerResource implements ISubscriptionResource {
+	public static final String ROOT = SubscriptionsResource.ROOT + "/{subscribe}";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
-		roots.put(ROOT, AdvertiseResource.class);
+		roots.put(ROOT, SubscriptionResource.class);
 		return roots;
 	}
 	
 	@Override
-	public Representation modifyAdvertise(Representation rep) {
+	public Representation modifySubscription(Representation rep) {
 		try {
-			final String advID = getArgument("advertise");
+			final String subID = getArgument("subscribe");
 			final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
-			final AdvertiseJSON advjson = JSONDecoder.decode(rep.getText(), AdvertiseJSON.class);
-			bulletinBoard.updateAdvertisement(advID, advjson.getExpiration());
-			return new StringRepresentation(advID);
+			final SubscribeJSON subjson = JSONDecoder.decode(rep.getText(), SubscribeJSON.class);
+			bulletinBoard.updateSubscription(subID, subjson.getExpiration());
+			return new StringRepresentation(subID);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
 		}		
 	}
 	
 	@Override
-	public Representation removeAdvertise() {
-		final String advID = getArgument("advertise");
+	public Representation removeSubscription() {
+		final String subID = getArgument("subscribe");
 		final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
-		bulletinBoard.unadvertise(advID);
-		return new StringRepresentation(advID);
+		bulletinBoard.unsubscribe(subID);
+		return new StringRepresentation(subID);
 	}
 }
