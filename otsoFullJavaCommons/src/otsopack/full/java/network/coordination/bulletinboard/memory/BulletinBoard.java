@@ -123,7 +123,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		final Advertisement adv = this.advertisements.get(advId);
 		
 		if( adv!=null ) {
-			adv.setExpiration( System.currentTimeMillis() + extratime );
+			adv.setExpiration( extratime );
 			
 			this.lock.lock();
 			try {

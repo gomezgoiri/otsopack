@@ -21,9 +21,8 @@ import otsopack.full.java.network.coordination.bulletinboard.http.server.Bulleti
 import otsopack.full.java.network.coordination.registry.SimpleRegistry;
 
 public class BulletinBoardManager {
-	public final Advertisement ADV1 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj1","http://predicate1","http://obj1"));
-	public final Advertisement ADV2 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj2","http://predicate1","http://obj2"));
-	//public final Advertisement ADV2 = new Advertisement("adv2", System.currentTimeMillis()+3600000, WildcardTemplate.createWithNull(null,"http://predicate2"));
+	public static final Advertisement ADV1 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj1","http://predicate1","http://obj1"));
+	public static final Advertisement ADV2 = new Advertisement("adv2", System.currentTimeMillis()+3600000, WildcardTemplate.createWithNull(null,"http://predicate2"));
 	
 	private BulletinBoardRestServer server;
 	private int port;

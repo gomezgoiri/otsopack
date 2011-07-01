@@ -87,8 +87,10 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				//JSONEncoder.encode(adv);
-				repr = client.put(adv,MediaType.APPLICATION_JSON);
+				AdvertiseJSON advJson = SerializableConversors.convertToSerializable(adv);
+				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				JsonRepresentation json = new JsonRepresentation(advJson);
+				repr = client.put(json, MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {
@@ -102,8 +104,8 @@ public class HttpBulletinBoardClient {
 	}
 	
 	//@Override
-	public String unadvertise(Advertisement adv) {
-		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",adv.getID());
+	public String unadvertise(String advId) {
+		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",advId);
 		final ClientResource client = new ClientResource(url);
 		try {
 			final Representation repr;

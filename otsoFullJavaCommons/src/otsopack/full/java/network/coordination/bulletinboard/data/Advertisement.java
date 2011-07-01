@@ -16,8 +16,6 @@ package otsopack.full.java.network.coordination.bulletinboard.data;
 import otsopack.commons.data.NotificableTemplate;
 
 public class Advertisement extends AbstractNotificableElement {
-	protected long expiration;
-	
 	public Advertisement(String id, long expiration, NotificableTemplate tpl) {
 		super(id, expiration, tpl);
 	}

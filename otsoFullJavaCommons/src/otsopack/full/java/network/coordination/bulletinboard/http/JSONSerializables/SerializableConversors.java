@@ -34,15 +34,20 @@ public class SerializableConversors {
 	
 	public static AdvertiseJSON convertToSerializable(Advertisement adv) {
 		final WildcardTemplate wtpl = (WildcardTemplate) adv.getTemplate();
-		final String obj;
-		if (wtpl.getObject()==null) {
-			obj = null;
-		} else if (wtpl.getObject() instanceof TripleLiteralObject ) {
-			obj = ((TripleLiteralObject)wtpl.getObject()).getValue().toString();
+		final TemplateJSON tpl;
+		if (wtpl==null) {
+			tpl = null;
 		} else {
-			obj = ((TripleURIObject)wtpl.getObject()).getURI();
+			final String obj;
+			if (wtpl.getObject()==null) {
+				obj = null;
+			} else if (wtpl.getObject() instanceof TripleLiteralObject ) {
+				obj = ((TripleLiteralObject)wtpl.getObject()).getValue().toString();
+			} else {
+				obj = ((TripleURIObject)wtpl.getObject()).getURI();
+			}
+			tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		}
-		TemplateJSON tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		return new AdvertiseJSON(adv.getID(), tpl, adv.getExpiration());
 	}
 	

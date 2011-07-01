@@ -20,7 +20,7 @@ import org.restlet.resource.Put;
 
 public interface IAdvertiseResource {
 	@Put("json")
-	Representation modifyAdvertise();
+	Representation modifyAdvertise(Representation json);
 	
 	@Delete("json")
 	Representation removeAdvertise();

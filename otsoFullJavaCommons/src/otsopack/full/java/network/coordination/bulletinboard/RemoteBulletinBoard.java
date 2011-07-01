@@ -33,67 +33,44 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 		this.client = new HttpBulletinBoardClient(this);
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#subscribe(otsopack.full.java.network.coordination.bulletinboard.data.Subscription)
-	 */
 	@Override
 	public String subscribe(Subscription subscription) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#updateSubscription(java.lang.String, long)
-	 */
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#unsuscribe(java.lang.String)
-	 */
 	@Override
 	public void unsuscribe(String subscriptionId) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#advertise(otsopack.commons.data.NotificableTemplate)
-	 */
 	@Override
 	public String advertise(Advertisement adv) {
 		return this.client.advertise(adv);
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#updateAdvertisement(java.lang.String, long)
-	 */
 	@Override
 	public void updateAdvertisement(String advId, long extratime) {
-		// TODO Auto-generated method stub
-
+		this.client.updateAdvertise(new Advertisement(advId, extratime, null));
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#unadvertise(java.lang.String)
-	 */
 	@Override
 	public void unadvertise(String advId) {
-		// TODO Auto-generated method stub
-
+		this.client.unadvertise(advId);
 	}
 
-	/* (non-Javadoc)
-	 * @see otsopack.full.java.network.coordination.IBulletinBoard#getAdvertises()
-	 */
 	@Override
 	public Advertisement[] getAdvertises() {
 		return this.client.getAdvertises();
 	}
-	
+
 	public String getURI() {
 		return this.uri;
 	}
