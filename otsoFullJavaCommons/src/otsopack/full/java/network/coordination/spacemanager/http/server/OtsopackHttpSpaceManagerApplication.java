@@ -37,5 +37,4 @@ public class OtsopackHttpSpaceManagerApplication extends AbstractOtsopackApplica
 	public OtsopackHttpSpaceManagerApplication() {
 		super(PATHS);
 	}
-
 }

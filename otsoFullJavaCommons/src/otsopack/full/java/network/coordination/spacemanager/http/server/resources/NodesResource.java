@@ -10,7 +10,6 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
  */
 package otsopack.full.java.network.coordination.spacemanager.http.server.resources;
 
