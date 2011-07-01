@@ -9,15 +9,10 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard;
+package otsopack.full.java.network.coordination.bulletinboard.data;
 
-import otsopack.commons.data.NotificableTemplate;
-
-public class Advertisement extends AbstractNotificableElement {
-	public Advertisement(String id, long expiration, NotificableTemplate tpl) {
-		super(id, expiration, tpl);
-	}
+public interface INotificationListener {
+	void notifyEvent(EventNotification notification);
 }

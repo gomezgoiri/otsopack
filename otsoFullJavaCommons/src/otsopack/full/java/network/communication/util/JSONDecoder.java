@@ -9,9 +9,8 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * 			Pablo Orduña <pablo.orduna@deusto.es>
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-
 package otsopack.full.java.network.communication.util;
 
 import org.codehaus.jackson.map.ObjectMapper;

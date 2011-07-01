@@ -9,11 +9,9 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables;
-
 
 public class TemplateJSON {
 	String subject;
