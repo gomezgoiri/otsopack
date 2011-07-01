@@ -16,6 +16,7 @@ package otsopack.full.java.network.coordination.bulletinboard.http;
 import java.io.IOException;
 
 import org.restlet.data.MediaType;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -59,12 +60,35 @@ public class HttpBulletinBoardClient {
 
 	//@Override
 	public String advertise(Advertisement adv) {
-		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertiseResource.ROOT);
+		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertisesResource.ROOT);
+		try{
+			final Representation repr;
+			try {
+				AdvertiseJSON advJson = SerializableConversors.convertToSerializable(adv);
+				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				JsonRepresentation json = new JsonRepresentation(advJson);
+				repr = client.post(json, MediaType.APPLICATION_JSON);
+				return repr.getText();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} finally {
+			client.release();
+		}
+		return null;
+	}
+	
+
+	//@Override
+	public String updateAdvertise(Advertisement adv) {
+		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",adv.getID());
+		final ClientResource client = new ClientResource(url);
 		try{
 			final Representation repr;
 			try {
 				//JSONEncoder.encode(adv);
-				repr = client.post(adv,MediaType.TEXT_PLAIN);
+				repr = client.put(adv,MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {
@@ -84,7 +108,7 @@ public class HttpBulletinBoardClient {
 		try {
 			final Representation repr;
 			try {
-				repr = client.delete(MediaType.TEXT_PLAIN);
+				repr = client.delete(MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

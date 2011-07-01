@@ -13,7 +13,10 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables;
 
-public class AdvertiseJSON {
+import java.io.Serializable;
+
+// TODO Serializable is not really necessary except for our JSONEncoder utility class
+public class AdvertiseJSON implements Serializable {
 	protected String id;
 	transient protected TemplateJSON tpl;
 	protected long expiration;

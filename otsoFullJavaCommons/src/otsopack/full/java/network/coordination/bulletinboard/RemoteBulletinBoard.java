@@ -65,8 +65,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	 */
 	@Override
 	public String advertise(Advertisement adv) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.client.advertise(adv);
 	}
 
 	/* (non-Javadoc)

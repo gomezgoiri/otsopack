@@ -118,13 +118,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		return adv.getID();
 	}
 
-	/*public String advertise(NotificableTemplate tpl) {
-		final long currentTime = System.currentTimeMillis();
-		final String uuid = UUID.randomUUID().toString();
-		final Advertisement adv = new Advertisement(uuid, currentTime+this.DEFAULT_LIFETIME, tpl);
-		return advertise(adv);
-	}*/
-
 	@Override
 	public void updateAdvertisement(String advId, long extratime) {
 		final Advertisement adv = this.advertisements.get(advId);
