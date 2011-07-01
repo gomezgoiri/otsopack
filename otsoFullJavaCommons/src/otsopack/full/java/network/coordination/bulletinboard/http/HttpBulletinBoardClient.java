@@ -127,12 +127,11 @@ public class HttpBulletinBoardClient {
 	}
 	
 	//@Override
-	public String subscribe(Subscription sub) {
+	public String subscribe(SubscribeJSON subJson) {
 		final ClientResource client = new ClientResource(this.remoteBB.getURI() + SubscriptionsResource.ROOT);
 		try{
 			final Representation repr;
 			try {
-				final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				final JsonRepresentation json = new JsonRepresentation(subJson);
 				repr = client.post(json, MediaType.APPLICATION_JSON);

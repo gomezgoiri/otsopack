@@ -14,16 +14,25 @@
 package otsopack.full.java.network.coordination.bulletinboard;
 
 import otsopack.full.java.network.coordination.IBulletinBoard;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 import otsopack.full.java.network.coordination.bulletinboard.http.HttpBulletinBoardClient;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.full.java.network.coordination.bulletinboard.memory.BulletinBoard;
 
 public class RemoteBulletinBoard implements IBulletinBoard {
 	// client with the bulletin board server
-	HttpBulletinBoardClient client;
+	final HttpBulletinBoardClient client;
 	
 	// server to receive notifications
+	
 	// bulletin board for local subscriptions
+	// TODO BulletinBoard has unnecesary attributes here
+	// TODO simply substitute with a map if local subscriptions do not expirate
+	// TODO automatic mechanism to automatically send updates?
+	final BulletinBoard mySubscriptions = new BulletinBoard();
 	
 	private String uri;
 	
@@ -34,18 +43,25 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public String subscribe(Subscription subscription) {
-		return this.client.subscribe(subscription);
+	public String subscribe(Subscription s) {
+		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
+		// where is stored the node's reference?
+		subJson.setNode(new Node()); //XXX TODO take from somewhere!
+		final String ret = this.client.subscribe(subJson);
+		this.mySubscriptions.subscribe(new Subscription(ret, s.getExpiration(), s.getTemplate(), s.getListener()));
+		return ret;
 	}
 
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
+		this.mySubscriptions.updateSubscription(subscriptionId, extratime);
 		this.client.updateSubscription(new Subscription(subscriptionId, extratime, null, null));
 	}
 
 	@Override
 	public void unsubscribe(String subscriptionId) {
 		this.client.unsubscribe(subscriptionId);
+		this.mySubscriptions.unsubscribe(subscriptionId);
 	}
 
 	@Override

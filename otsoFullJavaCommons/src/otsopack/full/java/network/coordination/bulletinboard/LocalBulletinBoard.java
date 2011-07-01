@@ -21,11 +21,13 @@ import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 import otsopack.full.java.network.coordination.bulletinboard.memory.BulletinBoard;
 
+/**
+ * This class can be accessed both from local processes or
+ * by remote request (through BulletinBoardController) to
+ * store subscriptions and advertisements.
+ */
 public class LocalBulletinBoard implements IBulletinBoard {
 	final IRegistry registry;
-	
-	// server to receive subscriptions from clients or advertisements
-	// from both clients and other bulletin boards
 	
 	// bulletin board for both local and remote subscriptions
 	final BulletinBoard bulletinBoard;
