@@ -22,6 +22,10 @@ public class RemoteNotificationListener implements INotificationListener {
 		this.node = node;
 	}
 	
+	public Node getNode() {
+		return this.node;
+	}
+
 	@Override
 	public void notifyEvent(EventNotification notification) {
 		// TODO submit notification task

@@ -25,5 +25,5 @@ public interface IBulletinBoard {
 	void updateAdvertisement(String advId, long extratime);
 	void unadvertise(String advId);
 	
-	Advertisement[] getAdvertises();
+	Advertisement[] getAdvertisements();
 }

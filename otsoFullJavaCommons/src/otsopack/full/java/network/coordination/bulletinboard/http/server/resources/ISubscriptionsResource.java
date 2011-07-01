@@ -15,13 +15,16 @@
 package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
 
 import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Put;
+import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
-public interface ISubscriptionResource {	
-	@Put("json")
-	Representation modifySubscription();
+public interface ISubscriptionsResource {
+	@Get("html")	
+	String toHtml();
 	
-	@Delete("json")
-	Representation removeSubscription();
+	@Get("json")
+	String toJson();
+	
+	@Post("json")
+	Representation createSubscription(Representation rep);
 }

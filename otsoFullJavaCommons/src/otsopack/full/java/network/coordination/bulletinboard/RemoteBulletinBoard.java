@@ -35,8 +35,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 
 	@Override
 	public String subscribe(Subscription subscription) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.client.subscribe(subscription);
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public Advertisement[] getAdvertises() {
+	public Advertisement[] getAdvertisements() {
 		return this.client.getAdvertises();
 	}
 

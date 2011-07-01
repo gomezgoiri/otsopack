@@ -13,6 +13,7 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.memory;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -153,8 +154,13 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 	
 	@Override
-	public Advertisement[] getAdvertises() {
+	public Advertisement[] getAdvertisements() {
 		return this.advertisements.values().toArray((new Advertisement[0]));
+	}
+	
+	/* for testing purpouses in HttpBulletinBoardClient */
+	public Collection<Subscription> getSubscription() {
+		return this.subscriptions.values();
 	}
 
 	@Override

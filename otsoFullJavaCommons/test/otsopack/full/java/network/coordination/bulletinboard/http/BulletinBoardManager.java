@@ -13,16 +13,19 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http;
 
+import java.util.Collection;
+
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.bulletinboard.RemoteBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
+import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.BulletinBoardRestServer;
 import otsopack.full.java.network.coordination.registry.SimpleRegistry;
 
 public class BulletinBoardManager {
-	public static final Advertisement ADV1 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj1","http://predicate1","http://obj1"));
-	public static final Advertisement ADV2 = new Advertisement("adv2", System.currentTimeMillis()+3600000, WildcardTemplate.createWithNull(null,"http://predicate2"));
+	public final Advertisement ADV1 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj1","http://predicate1","http://obj1"));
+	public final Advertisement ADV2 = new Advertisement("adv2", System.currentTimeMillis()+3600000, WildcardTemplate.createWithNull(null,"http://predicate2"));
 	
 	private BulletinBoardRestServer server;
 	private int port;
@@ -52,5 +55,13 @@ public class BulletinBoardManager {
 	
 	public void stop() throws Exception {
 		this.server.shutdown();
+	}
+	
+	protected Advertisement[] getAdvertisements() {
+		return this.server.getApplication().getController().getBulletinBoard().getAdvertisements();
+	}
+	
+	protected Collection<Subscription> getSubscriptions() {
+		return this.server.getApplication().getController().getBulletinBoard().getSubscriptions();
 	}
 }

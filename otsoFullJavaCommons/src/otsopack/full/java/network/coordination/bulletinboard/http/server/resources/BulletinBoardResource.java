@@ -25,6 +25,7 @@ public class BulletinBoardResource extends ServerResource implements IBulletinBo
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, BulletinBoardResource.class);
 		graphsRoots.putAll(AdvertisesResource.getRoots());
+		graphsRoots.putAll(SubscriptionsResource.getRoots());
 		return graphsRoots;
 	}
 	

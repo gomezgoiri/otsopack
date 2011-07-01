@@ -23,10 +23,13 @@ import org.restlet.resource.ClientResource;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.bulletinboard.RemoteBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
+import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
-import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SerializableConversors;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertiseResource;
 import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertisesResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.SubscriptionsResource;
 
 public class HttpBulletinBoardClient {
 	private final RemoteBulletinBoard remoteBB;
@@ -47,7 +50,7 @@ public class HttpBulletinBoardClient {
 				final String text = repr.getText();
 				//System.out.println(text);
 				AdvertiseJSON[] advs = JSONDecoder.decode(text, AdvertiseJSON[].class);
-				return SerializableConversors.convertFromSerializable(advs);
+				return JSONSerializableConversors.convertFromSerializable(advs);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -64,7 +67,7 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				AdvertiseJSON advJson = SerializableConversors.convertToSerializable(adv);
+				AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				JsonRepresentation json = new JsonRepresentation(advJson);
 				repr = client.post(json, MediaType.APPLICATION_JSON);
@@ -87,7 +90,7 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				AdvertiseJSON advJson = SerializableConversors.convertToSerializable(adv);
+				AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				JsonRepresentation json = new JsonRepresentation(advJson);
 				repr = client.put(json, MediaType.APPLICATION_JSON);
@@ -106,6 +109,70 @@ public class HttpBulletinBoardClient {
 	//@Override
 	public String unadvertise(String advId) {
 		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",advId);
+		final ClientResource client = new ClientResource(url);
+		try {
+			final Representation repr;
+			try {
+				repr = client.delete(MediaType.APPLICATION_JSON);
+				return repr.getText();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} finally {
+			client.release();
+		}
+		return null;
+	}
+	
+	//@Override
+	public String subscribe(Subscription sub) {
+		final ClientResource client = new ClientResource(this.remoteBB.getURI() + SubscriptionsResource.ROOT);
+		try{
+			final Representation repr;
+			try {
+				SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
+				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				JsonRepresentation json = new JsonRepresentation(subJson);
+				repr = client.post(json, MediaType.APPLICATION_JSON);
+				return repr.getText();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} finally {
+			client.release();
+		}
+		return null;
+	}
+	
+
+	//@Override
+	public String updateSubscription(Subscription sub) {
+		final String url = null;//(this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}", sub.getID());
+		final ClientResource client = new ClientResource(url);
+		try{
+			final Representation repr;
+			try {
+				SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
+				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				JsonRepresentation json = new JsonRepresentation(subJson);
+				repr = client.put(json, MediaType.APPLICATION_JSON);
+				// TODO check if json is generated!
+				return repr.getText();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} finally {
+			client.release();
+		}
+		return null;
+	}
+	
+	//@Override
+	public String unsubscribe(String subId) {
+		final String url = null;//(this.remoteBB.getURI() + SubscriptionResource.ROOT).replace("{subscribe}",subId);
 		final ClientResource client = new ClientResource(url);
 		try {
 			final Representation repr;

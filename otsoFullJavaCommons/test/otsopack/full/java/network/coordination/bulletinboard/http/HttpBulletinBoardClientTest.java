@@ -15,10 +15,10 @@ package otsopack.full.java.network.coordination.bulletinboard.http;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
@@ -26,8 +26,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.bulletinboard.RemoteBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
+import otsopack.full.java.network.coordination.bulletinboard.data.RemoteNotificationListener;
+import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 
 public class HttpBulletinBoardClientTest {
 	private int PORT = 18086;
@@ -49,10 +52,10 @@ public class HttpBulletinBoardClientTest {
 
 	@Test
 	public void testGetAdvertises() {
-		final List<Advertisement> advertises = Arrays.asList(this.client.getAdvertises());
+		final List<Advertisement> advertises = Arrays.asList(this.client.getAdvertisements());
 		assertEquals(2, advertises.size());
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV1));
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV2));
+		assertThat(advertises, hasItem(this.manager.ADV1));
+		assertThat(advertises, hasItem(this.manager.ADV2));
 	}
 
 	@Test
@@ -60,10 +63,11 @@ public class HttpBulletinBoardClientTest {
 		final Advertisement sentAdv = new  Advertisement(null, System.currentTimeMillis()+60000, WildcardTemplate.createWithNull(null, null));
 		final String uuid = this.client.advertise(sentAdv);
 		final Advertisement createdAdv = new  Advertisement(uuid,0, null);
-		final List<Advertisement> advertises = Arrays.asList(this.client.getAdvertises());
+		// using manager instead of client, we avoid an HTTP request in the test
+		final List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(3, advertises.size());
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV1));
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV2));
+		assertThat(advertises, hasItem(this.manager.ADV1));
+		assertThat(advertises, hasItem(this.manager.ADV2));
 		assertThat(advertises, hasItem(createdAdv));
 	}
 	
@@ -74,7 +78,7 @@ public class HttpBulletinBoardClientTest {
 		final Advertisement sentAdv = new  Advertisement(null, timestamp1, WildcardTemplate.createWithNull(null, null));
 		final String uuid = this.client.advertise(sentAdv);
 		
-		List<Advertisement> advertises = Arrays.asList(this.client.getAdvertises());
+		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(3, advertises.size());
 		for(Advertisement advert: advertises) {
 			if( advert.getID().equals(uuid) ) {
@@ -85,7 +89,7 @@ public class HttpBulletinBoardClientTest {
 
 		this.client.updateAdvertisement(uuid, timestamp2);
 		
-		advertises = Arrays.asList(this.client.getAdvertises());
+		advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(3, advertises.size());
 		for(Advertisement advert: advertises) {
 			if( advert.getID().equals(uuid) ) {
@@ -101,17 +105,32 @@ public class HttpBulletinBoardClientTest {
 		final String uuid = this.client.advertise(sentAdv);
 		final Advertisement createdAdv = new  Advertisement(uuid,0, null);
 		
-		List<Advertisement> advertises = Arrays.asList(this.client.getAdvertises());
+		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(3, advertises.size());
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV1));
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV2));
+		assertThat(advertises, hasItem(this.manager.ADV1));
+		assertThat(advertises, hasItem(this.manager.ADV2));
 		assertThat(advertises, hasItem(createdAdv));
 
 		this.client.unadvertise(uuid);
 		
-		advertises = Arrays.asList(this.client.getAdvertises());
+		advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(2, advertises.size());
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV1));
-		assertThat(advertises, hasItem(BulletinBoardManager.ADV2));		
+		assertThat(advertises, hasItem(this.manager.ADV1));
+		assertThat(advertises, hasItem(this.manager.ADV2));		
+	}
+	
+
+	@Test
+	public void testSubscription() {
+		final Subscription sentSub = new Subscription( null,
+										System.currentTimeMillis()+60000,
+										WildcardTemplate.createWithNull(null, null),
+										new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
+		final String uuid = this.client.subscribe(sentSub);
+		final Subscription createdSubs = new  Subscription(uuid, 0, null, null);
+		
+		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
+		assertEquals(1, subscriptions.size());
+		assertThat(subscriptions, hasItem(createdSubs));
 	}
 }

@@ -13,6 +13,8 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard;
 
+import java.util.Collection;
+
 import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
@@ -69,7 +71,12 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public Advertisement[] getAdvertises() {
-		return this.bulletinBoard.getAdvertises();
+	public Advertisement[] getAdvertisements() {
+		return this.bulletinBoard.getAdvertisements();
+	}
+	
+	/* for testing purpouses in HttpBulletinBoardClient */
+	public Collection<Subscription> getSubscriptions() {
+		return this.bulletinBoard.getSubscription();
 	}
 }
