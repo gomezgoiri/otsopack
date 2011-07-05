@@ -75,7 +75,6 @@
             	encoding="utf-8">
 			<classpath refid="project.class.path"/>
 		</javac>
-		<delete dir="libs" failonerror="false" />
 	</target>
 	
 	<target name="dist" depends="javac">
@@ -89,6 +88,7 @@
 		</javac>
 		<mkdir dir="dist" />
 		<jar destfile="dist/otsoFullJavaCommons-sources.jar" basedir="bin"/>
+		<delete dir="libs" failonerror="false" />
 	</target>
 	
 	<target name="test" depends="dist">
