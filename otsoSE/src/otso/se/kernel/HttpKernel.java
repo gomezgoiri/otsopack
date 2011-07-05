@@ -18,6 +18,7 @@ import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
 import otsopack.full.java.network.RestNetwork;
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
 
 public class HttpKernel extends AbstractKernel {
 
@@ -35,7 +36,9 @@ public class HttpKernel extends AbstractKernel {
 		super.buildKernel();
 		
 		if (this.networkService == null) {
-			this.setNetworkService(new RestNetwork(getController(), port, signer, registry));
+			// TODO define by default IBulletinBoard
+			LocalBulletinBoard lbb = new LocalBulletinBoard(registry);
+			this.setNetworkService(new RestNetwork(getController(), port, signer, registry, lbb));
 		}
 	}
 
