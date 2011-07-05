@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,9 +23,9 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
+import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.OtsopackHttpBulletinBoardApplication;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class AdvertiseResource extends AbstractServerResource implements IAdvertiseResource {
 	public static final String ROOT = AdvertisesResource.ROOT + "/{advertise}";
@@ -40,7 +40,7 @@ public class AdvertiseResource extends AbstractServerResource implements IAdvert
 	public Representation modifyAdvertise(Representation rep) {
 		try {
 			final String advID = getArgument("advertise");
-			final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
+			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final AdvertiseJSON advjson = JSONDecoder.decode(rep.getText(), AdvertiseJSON.class);
 			bulletinBoard.updateAdvertisement(advID, advjson.getExpiration());
 			return new StringRepresentation(advID);
@@ -52,7 +52,7 @@ public class AdvertiseResource extends AbstractServerResource implements IAdvert
 	@Override
 	public Representation removeAdvertise() {
 		final String advID = getArgument("advertise");
-		final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
+		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 		bulletinBoard.unadvertise(advID);
 		return new StringRepresentation(advID);
 	}

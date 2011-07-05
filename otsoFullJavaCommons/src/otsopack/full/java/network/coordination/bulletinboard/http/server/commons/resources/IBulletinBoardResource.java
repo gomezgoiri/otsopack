@@ -11,16 +11,9 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources;
 
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Put;
 
-public interface IAdvertiseResource {
-	@Put("json")
-	Representation modifyAdvertise(Representation json);
-	
-	@Delete("json")
-	Representation removeAdvertise();
+public interface IBulletinBoardResource {
+
 }

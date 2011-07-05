@@ -34,6 +34,7 @@ import otsopack.commons.util.collections.HashSet;
 import otsopack.commons.util.collections.Set;
 import otsopack.full.java.network.communication.OtsoRestServer;
 import otsopack.full.java.network.communication.RestMulticastCommunication;
+import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.IRegistry;
 
 public class RestNetwork implements INetwork {
@@ -41,15 +42,17 @@ public class RestNetwork implements INetwork {
 	OtsoRestServer rs;
 	private ICommunication comm;
 	private Set/*<String>*/ joinedSpaces = new HashSet/*<String>*/();
+	private IBulletinBoard bulletinBoard;
 	
 	public RestNetwork(IController controller) {
 		this.rs = new OtsoRestServer();
 		this.rs.getApplication().setController(controller);
 	}
 
-	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry) {
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry, IBulletinBoard bulletinboard) {
 		this.comm = new RestMulticastCommunication(registry);
-		this.rs = new OtsoRestServer(port, controller, signer);
+		this.bulletinBoard = bulletinboard;
+		this.rs = new OtsoRestServer(port, controller, signer, bulletinboard);
 		this.rs.getApplication().setController(controller);
 	}
 

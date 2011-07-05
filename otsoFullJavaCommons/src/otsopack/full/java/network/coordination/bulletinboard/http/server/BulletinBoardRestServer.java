@@ -17,13 +17,14 @@ import org.restlet.Component;
 import org.restlet.data.Protocol;
 
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class BulletinBoardRestServer {
 	public static final int DEFAULT_PORT = 8185;
 	
 	private final int port;
 	private final Component component;
-	private final OtsopackHttpBulletinBoardApplication application;
+	private final OtsopackHttpBulletinBoardProviderApplication application;
 
 
 	public BulletinBoardRestServer(int port, IBulletinBoardController controller) {
@@ -32,7 +33,7 @@ public class BulletinBoardRestServer {
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    
-	    this.application = new OtsopackHttpBulletinBoardApplication();
+	    this.application = new OtsopackHttpBulletinBoardProviderApplication();
 	    this.application.setController(controller);
 	    this.component.getDefaultHost().attach(this.application);
 	}
@@ -45,7 +46,7 @@ public class BulletinBoardRestServer {
 		this(port, new BulletinBoardController(registry));
 	}
 	
-	public OtsopackHttpBulletinBoardApplication getApplication(){
+	public OtsopackHttpBulletinBoardProviderApplication getApplication(){
 		return this.application;
 	}
 	

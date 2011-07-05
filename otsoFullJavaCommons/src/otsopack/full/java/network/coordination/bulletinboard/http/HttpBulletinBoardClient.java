@@ -27,10 +27,10 @@ import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertiseResource;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.AdvertisesResource;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.SubscriptionResource;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.SubscriptionsResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources.AdvertiseResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources.AdvertisesResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionsResource;
 
 public class HttpBulletinBoardClient {
 	private final RemoteBulletinBoard remoteBB;

@@ -57,14 +57,7 @@ public class JSONSerializableConversors {
 			tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		}
 		
-		final Node node;
-		if (!(adv.getListener() instanceof RemoteNotificationListener)) { // null or another Listener
-			node = null;
-		} else {
-			node = ((RemoteNotificationListener)adv.getListener()).getNode();
-		}
-		
-		return new SubscribeJSON(adv.getID(), tpl, adv.getExpiration(), node);
+		return new SubscribeJSON(adv.getID(), tpl, adv.getExpiration(), null);
 	}
 	
 	public static Advertisement convertFromSerializable(AdvertiseJSON adv) {

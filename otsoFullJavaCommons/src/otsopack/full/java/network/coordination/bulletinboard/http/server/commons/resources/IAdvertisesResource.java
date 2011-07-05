@@ -11,11 +11,16 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources;
 
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
-import otsopack.restlet.commons.ICommonsController;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
-public interface IBulletinBoardController extends ICommonsController {
-	public LocalBulletinBoard getBulletinBoard();
+public interface IAdvertisesResource {
+	@Get("html")	
+	String toHtml();
+
+	@Post("json")
+	Representation addAdvertise(Representation rep);
 }

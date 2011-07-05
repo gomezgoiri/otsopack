@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.full.java.network.coordination.Node;
+import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.RemoteBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
@@ -62,6 +63,6 @@ public class BulletinBoardManager {
 	}
 	
 	protected Collection<Subscription> getSubscriptions() {
-		return this.server.getApplication().getController().getBulletinBoard().getSubscriptions();
+		return ((LocalBulletinBoard)this.server.getApplication().getController().getBulletinBoard()).getSubscriptions();
 	}
 }

@@ -67,11 +67,11 @@ public class BulletinBoardTest {
 		this.bb.unadvertise(uuid[2]);
 		this.bb.unadvertise(uuid[3]);
 		
-		this.bb.updateAdvertisement(uuid[1], expire[3]);
+		this.bb.updateAdvertisement(uuid[1], currentTime+expire[3]);
 		
 		Thread.sleep(expire[0]+EXPIRATIONTIME);
 		assertNull(this.bb.advertisements.get(uuid[0]));
-		assertEquals(this.bb.advertisements.get(uuid[1]), adv[1]);
+		assertEquals(adv[1], this.bb.advertisements.get(uuid[1]));
 		assertNull(this.bb.advertisements.get(uuid[2]));
 		assertNull(this.bb.advertisements.get(uuid[3]));
 		
@@ -112,7 +112,7 @@ public class BulletinBoardTest {
 		this.bb.unsubscribe(uuid[2]);
 		this.bb.unsubscribe(uuid[3]);
 		
-		this.bb.updateSubscription(uuid[1], expire[3]);
+		this.bb.updateSubscription(uuid[1], currentTime+expire[3]);
 		
 		Thread.sleep(expire[0]+EXPIRATIONTIME);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
@@ -179,7 +179,7 @@ public class BulletinBoardTest {
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.advertisements.get(uuid[2]));
 		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
-		this.bb.updateAdvertisement(uuid[3],extraTime);
+		this.bb.updateAdvertisement(uuid[3],currentTime+expire[3]+extraTime);
 		
 		Thread.sleep(expire[3]-expire[2]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));

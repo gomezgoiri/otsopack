@@ -179,7 +179,7 @@ public class AbstractServerResource extends ServerResource {
 		if(semanticFormat == null)
 			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Invalid semantic format: " + contentType.getName());
 		
-		if(semanticFormatsManager.isInputSupported(semanticFormat))
+		if(!semanticFormatsManager.isInputSupported(semanticFormat))
 			throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE, "Could not read " + semanticFormat + " format!");
 	}
 	

@@ -13,20 +13,25 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.server;
 
+import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
 
 public class BulletinBoardController implements IBulletinBoardController {
 	
 	// TODO rethink: maybe this class or LocalBulletinBoard are redundant
-	final LocalBulletinBoard local;
+	final IBulletinBoard local;
+	
+	public BulletinBoardController(IBulletinBoard localBulletinBoard) {
+		this.local = localBulletinBoard;
+	}
 	
 	public BulletinBoardController(IRegistry registry) {
-		this.local = new LocalBulletinBoard(registry);
+		this(new LocalBulletinBoard(registry));
 	}
 	
 	@Override
-	public LocalBulletinBoard getBulletinBoard() {
+	public IBulletinBoard getBulletinBoard() {
 		return this.local;
 	}
 }

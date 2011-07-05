@@ -11,20 +11,22 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.consumer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import otsopack.full.java.network.coordination.bulletinboard.http.server.resources.BulletinBoardResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.IBulletinBoardController;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
-public class OtsopackHttpBulletinBoardApplication extends AbstractOtsopackApplication<IBulletinBoardController> {
-
+public class OtsopackHttpBulletinBoardConsumerApplication extends AbstractOtsopackApplication<IBulletinBoardController> {
+	
+	public static final String BULLETIN_ROOT_PATH = "/bulletinboard";
+	
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
-		addPaths(BulletinBoardResource.getRoots());
+		addPaths(BulletinBoardConsumerResource.getRoots());
 	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){
@@ -33,7 +35,7 @@ public class OtsopackHttpBulletinBoardApplication extends AbstractOtsopackApplic
 	}
 
 	
-	public OtsopackHttpBulletinBoardApplication() {
+	public OtsopackHttpBulletinBoardConsumerApplication() {
 		super(PATHS);
 	}
 }

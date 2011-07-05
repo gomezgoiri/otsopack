@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,43 +26,43 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONDecoder;
-import otsopack.full.java.network.communication.util.JSONEncoder;
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
+import otsopack.full.java.network.coordination.IBulletinBoard;
+import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.OtsopackHttpBulletinBoardApplication;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.BulletinBoardProviderResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
-public class SubscriptionsResource extends ServerResource implements ISubscriptionsResource {
-	public static final String ROOT = BulletinBoardResource.ROOT + "/subscribes";
+public class AdvertisesResource extends ServerResource implements IAdvertisesResource {
+	public static final String ROOT = BulletinBoardProviderResource.ROOT + "/advertises";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
-		graphsRoots.put(ROOT, SubscriptionsResource.class);
-		graphsRoots.putAll(SubscriptionResource.getRoots());
+		graphsRoots.put(ROOT, AdvertisesResource.class);
+		graphsRoots.putAll(AdvertiseResource.getRoots());
 		return graphsRoots;
 	}
-
+	
 	@Override
 	public String toHtml() {
 		return HTMLEncoder.encodeURIs(getRoots().keySet());
 	}
 
-	@Override
+	/*@Override
 	public String toJson() {
 		return JSONEncoder.encodeSortedURIs(getRoots().keySet());
-	}
-
+	}*/
+	
 	@Override
-	public Representation createSubscription(Representation rep) {
+	public Representation addAdvertise(Representation rep) {
 		try {
 			final String argument = rep.getText();
-			final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
-			final SubscribeJSON subjson = JSONDecoder.decode(argument, SubscribeJSON.class);
+			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final AdvertiseJSON advjson = JSONDecoder.decode(argument, AdvertiseJSON.class);
 			
 			final String uuid = UUID.randomUUID().toString();
-			subjson.setId(uuid);
+			advjson.setId(uuid);
 			
-			bulletinBoard.subscribe( JSONSerializableConversors.convertFromSerializable(subjson) );
+			bulletinBoard.advertise( JSONSerializableConversors.convertFromSerializable(advjson) );
 			return new StringRepresentation(uuid);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

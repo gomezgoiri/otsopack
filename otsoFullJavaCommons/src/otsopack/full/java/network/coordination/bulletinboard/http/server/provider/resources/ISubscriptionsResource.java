@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.provider.resources;
 
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;

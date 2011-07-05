@@ -39,7 +39,7 @@ public abstract class AbstractRestServerTesting {
 		EasyMock.expect(this.controller.getDataAccessService()).andReturn(new MemoryDataAccess()).anyTimes();
 		EasyMock.replay(this.controller);
 		
-		this.rs = new OtsoRestServer(this.testingPort, this.controller, null);
+		this.rs = new OtsoRestServer(this.testingPort, this.controller, null, null);
 		this.rs.startup();
 	}
 	

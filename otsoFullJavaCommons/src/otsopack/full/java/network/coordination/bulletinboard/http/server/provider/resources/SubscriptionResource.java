@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.http.server.resources;
+package otsopack.full.java.network.coordination.bulletinboard.http.server.provider.resources;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,9 +23,10 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
+import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.OtsopackHttpBulletinBoardApplication;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.commons.resources.AbstractServerResource;
+import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionResource extends AbstractServerResource implements ISubscriptionResource {
 	public static final String ROOT = SubscriptionsResource.ROOT + "/{subscribe}";
@@ -40,7 +41,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	public Representation modifySubscription(Representation rep) {
 		try {
 			final String subID = getArgument("subscribe");
-			final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
+			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final SubscribeJSON subjson = JSONDecoder.decode(rep.getText(), SubscribeJSON.class);
 			bulletinBoard.updateSubscription(subID, subjson.getExpiration());
 			return new StringRepresentation(subID);
@@ -52,7 +53,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	@Override
 	public Representation removeSubscription() {
 		final String subID = getArgument("subscribe");
-		final LocalBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardApplication)getApplication()).getController().getBulletinBoard();
+		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 		bulletinBoard.unsubscribe(subID);
 		return new StringRepresentation(subID);
 	}
