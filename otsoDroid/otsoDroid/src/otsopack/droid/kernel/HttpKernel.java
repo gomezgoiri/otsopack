@@ -36,7 +36,7 @@ public class HttpKernel extends AbstractKernel {
 		super.buildKernel();
 		
 		if (this.networkService == null) {
-			this.setNetworkService(new RestNetwork(getController(), port, signer, registry));
+			this.setNetworkService(new RestNetwork(getController(), port, signer, registry, null));
 		}
 	}
 
