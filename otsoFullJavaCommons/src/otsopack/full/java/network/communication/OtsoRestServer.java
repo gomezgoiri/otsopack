@@ -79,15 +79,20 @@ public class OtsoRestServer {
 	    this.component.getDefaultHost().attach(this.application);
 	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH,this.authnApp);
 	    
-	    // TODO depending on the kind of BulletinBoard, expose an interface or other
-	    if (bulletinboard instanceof LocalBulletinBoard) {
-	    	this.bulletinApp = new OtsopackHttpBulletinBoardProviderApplication();
-	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
+	    // TODO remove when bulletin board is finished and added to HttpKernels! 
+	    if (bulletinboard==null) {
+	    	 this.bulletinApp=null;
 	    } else {
-	    	this.bulletinApp = new OtsopackHttpBulletinBoardConsumerApplication();
-	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
+		    // TODO depending on the kind of BulletinBoard, expose an interface or other
+		    if (bulletinboard instanceof LocalBulletinBoard) {
+		    	this.bulletinApp = new OtsopackHttpBulletinBoardProviderApplication();
+		    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
+		    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
+		    } else {
+		    	this.bulletinApp = new OtsopackHttpBulletinBoardConsumerApplication();
+		    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
+		    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
+		    }
 	    }
 	}
 	
