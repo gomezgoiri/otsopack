@@ -138,6 +138,9 @@
 	<!-- Cannot delete "libs" folder until pathconvert exists -->
 	<target name="clean">
 		<delete dir="bin/otsopack" failonerror="false" />
-		<delete dir="libs/*" failonerror="false" />
+		<delete dir="dist" failonerror="false" />
+		<delete includeemptydirs="true">
+			<fileset dir="libs" includes="**/*" defaultexcludes="false" />
+		</delete>
 	</target>
 </project>
