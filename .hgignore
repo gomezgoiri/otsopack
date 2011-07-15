@@ -16,6 +16,8 @@ syntax: regexp
 ^otsoAuthentication/dist
 
 ^otsoSE/bin
+^otsoSE/dist
+
 ^otsoSecurityIntegrationTest/bin
 
 ^otsoDroid/otsoDroid/gen
@@ -54,6 +56,6 @@ syntax: regexp
 ^otsoME/.mtj.tmp/verified/required-libs/*
 ^otsoME/.settings/org.eclipse.core.resources.prefs$
 
-^otsoRestletCommons/dist/otsoRestletCommons-sources\.jar$
+^otsoRestletCommons/dist
 ^otsoRestletCommons/bin
 ^otsoRestletCommons/build
