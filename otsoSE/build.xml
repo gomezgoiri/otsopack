@@ -1,50 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="otsoSE" default="javac">
-	
+
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
+	<property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/" />
+	<property name="otso.authn.libs" location="../otsoAuthentication/lib/" />
+	<property name="otso.full.java.commons.jar" location="../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" />
 	
-    <path id="project.class.path">
-		<pathelement location="../otsoCommons/dist/otsoCommons.jar"/>
-		<pathelement location="../otsoFullJavaCommons/dist/otsoFullJavaCommons.jar"/>
-    	<fileset dir="../otsoCommons/lib/">
-			<include name="*.jar"/>
-    	</fileset>
-    	<fileset dir="../otsoFullJavaCommons/lib/">
-			<include name="*.jar"/>
-    	</fileset>
-    	<fileset dir="lib">
-			<include name="*.jar"/>
-    	</fileset>
-    </path>
+	<path id="project.class.path">
+		<pathelement location="../otsoCommons/dist/otsoCommons-sources.jar" />
+		<pathelement location="../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" />
+		<fileset dir="../otsoCommons/lib/">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="../otsoFullJavaCommons/lib/">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
 	
-	<target name="javac">
-		<javac srcdir="src:test" destdir="bin" 
-				includes="**" debug="on" debuglevel="lines,vars,source" 
-            	encoding="utf-8">
-			<classpath refid="project.class.path"/>
-		</javac>            
+	<path id="project.class.path.test">
+		<pathelement location="dist/otsoSE-sources.jar" />
+		<path refid="project.class.path" />
+	</path>
+	
+	<fail message="${otso.full.java.commons.jar} not found. Run ant dist in that directory.">
+		<condition>
+			<not>
+				<available file="${otso.full.java.commons.jar}" />
+			</not>
+		</condition>
+	</fail>
+
+	<fail message="${otso.restlet.commons.libs} not found. Can not import restlet libraries">
+		<condition>
+			<not>
+				<available file="${otso.restlet.commons.libs}" />
+			</not>
+		</condition>
+	</fail>
+	
+	<fail message="${otso.authn.libs} not found. Can not import restlet libraries">
+		<condition>
+			<not>
+				<available file="${otso.authn.libs}" />
+			</not>
+		</condition>
+	</fail>
+	
+
+	<target name="javac" depends="clean">
+		<mkdir dir="bin" />
+		<copy todir="libs">
+			<fileset dir="${otso.restlet.commons.libs}" />
+			<fileset dir="${otso.authn.libs}" />
+		</copy>
+		<javac srcdir="src:test" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
+		</javac>
 	</target>
-	
+
+	<target name="dist" depends="javac">
+		<copy todir="bin">
+			<fileset dir="src" />
+		</copy>
+		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
+		</javac>
+		<mkdir dir="dist" />
+		<jar destfile="dist/otsoSE-sources.jar" basedir="bin" />
+		<jar destfile="dist/otsoSE-all.jar" filesetmanifest="skip">
+			<zipgroupfileset dir="bin" includes="*.class" />
+			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
+			<zipgroupfileset dir="dist" includes="dist/otsoSE-sources.jar" excludes="" />
+			<zipgroupfileset dir="../otsoFullJavaCommons/dist" includes="otsoFullJavaCommons-all.jar" excludes="" />
+			<manifest>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<pathconvert property="mf.classpath" pathsep=" ">
+		<path refid="project.class.path" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.jar" to="lib/*.jar" />
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
 	<target name="test" depends="javac">
-		<mkdir dir="${testreportdir}"/>
+		<mkdir dir="${testreportdir}" />
+		<javac srcdir="test" destdir="${testreportdir}">
+			<classpath refid="project.class.path.test" />
+		</javac>
 		<junit failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true" showoutput="true">
 			<classpath>
-			        <pathelement path="bin"/>
-			        <path refid="project.class.path"/>
+				<pathelement path="bin" />
+				<path refid="project.class.path.test" />
 			</classpath>
 			<batchtest todir="${testreportdir}">
-			        <fileset dir="test">
-			                <include name="**/**Test.java"/>
-			        </fileset>
+				<fileset dir="test">
+					<include name="**/**Test.java" />
+				</fileset>
 			</batchtest>
-			<formatter type="${junit.formatter.type}"/>
+			<formatter type="${junit.formatter.type}" />
 			<formatter usefile="false" type="plain" />
 		</junit>
-        <fail if="test.failure" message="Tests failed..."/>
+		<fail if="test.failure" message="Tests failed..." />
 	</target>
-	
+
+	<!-- Cannot delete "libs" folder until pathconvert exists -->
 	<target name="clean">
 		<delete dir="bin/otsopack" failonerror="false" />
+		<delete dir="libs/*" failonerror="false" />
 	</target>
 </project>

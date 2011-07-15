@@ -1,54 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="otsoCommons" default="dist">
-	
+
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-	
-    <path id="project.class.path">
-        <pathelement path="lib/microjena.jar"/>
-        <pathelement path="lib/junit.jar"/>
-        <pathelement path="lib/easymock.jar"/>
-    </path>
-	
+
+	<path id="project.class.path">
+		<pathelement path="lib/microjena.jar" />
+		<pathelement path="lib/junit.jar" />
+		<pathelement path="lib/easymock.jar" />
+	</path>
+
 	<target name="javac" depends="clean">
-		<javac srcdir="src:test" destdir="bin" 
-				includes="**" debug="on" debuglevel="lines,vars,source" 
-            	encoding="utf-8">
-			<classpath refid="project.class.path"/>
-		</javac>            
+		<mkdir dir="bin" />
+		<javac srcdir="src:test" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
+		</javac>
 	</target>
-	
+
+	<pathconvert property="mf.classpath" pathsep=" ">
+		<path refid="project.class.path" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.jar" to="lib/*.jar" />
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
 	<target name="dist" depends="javac">
 		<copy todir="bin">
-			<fileset dir="src"/>
+			<fileset dir="src" />
 		</copy>
-		<javac srcdir="bin" destdir="bin" 
-				includes="**" debug="on" debuglevel="lines,vars,source" 
-            	encoding="utf-8">
-			<classpath refid="project.class.path"/>
+		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
 		</javac>
 		<mkdir dir="dist" />
-		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin"/>
+		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin" />
+		<jar destfile="dist/otsoCommons-all.jar" filesetmanifest="skip">
+			<zipgroupfileset dir="bin" includes="*.class" />
+			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
+			<zipgroupfileset dir="dist" includes="otsoCommons-sources.jar" excludes="" />
+			<manifest>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
 	</target>
-	
+
 	<target name="test" depends="dist">
-		<mkdir dir="${testreportdir}"/>
+		<mkdir dir="${testreportdir}" />
 		<junit failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true" showoutput="true">
 			<classpath>
-			        <pathelement path="bin"/>
-			        <path refid="project.class.path"/>
+				<pathelement path="bin" />
+				<path refid="project.class.path" />
 			</classpath>
 			<batchtest todir="${testreportdir}">
-			        <fileset dir="test">
-			                <include name="**/**Test.java"/>
-			        </fileset>
+				<fileset dir="test">
+					<include name="**/**Test.java" />
+				</fileset>
 			</batchtest>
-			<formatter type="${junit.formatter.type}"/>
+			<formatter type="${junit.formatter.type}" />
 			<formatter usefile="false" type="plain" />
 		</junit>
-        <fail if="test.failure" message="Tests failed..."/>
+		<fail if="test.failure" message="Tests failed..." />
 	</target>
-	
+
 	<target name="clean">
 		<delete dir="bin/otsopack" failonerror="false" />
 	</target>

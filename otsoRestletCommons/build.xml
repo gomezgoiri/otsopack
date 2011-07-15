@@ -1,49 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="otsoRestletCommons" default="dist">
-	
+
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-	
-    <path id="project.class.path">
-    	<pathelement path="lib/cglib-nodep-2.2.jar"/>
-    	<pathelement path="lib/jackson-all-1.7.3.jar"/>
-        <pathelement path="lib/objenesis-1.2.jar"/>
-    	<pathelement path="lib/org.apache.commons.io.jar"/>
-    	<pathelement path="lib/org.json.jar"/>
-    	<pathelement path="lib/org.restlet-src.jar"/>
-    	<pathelement path="lib/org.restlet.ext.jackson.jar"/>
-    	<pathelement path="lib/org.restlet.ext.json.jar"/>
-    	<pathelement path="lib/org.restlet.jar"/>
-    	<pathelement path="lib/restlet-ext-jackson-src.jar"/>
-    </path>
-	
+
+	<path id="project.class.path">
+		<pathelement path="lib/cglib-nodep-2.2.jar" />
+		<pathelement path="lib/jackson-all-1.7.3.jar" />
+		<pathelement path="lib/objenesis-1.2.jar" />
+		<pathelement path="lib/org.apache.commons.io.jar" />
+		<pathelement path="lib/org.json.jar" />
+		<pathelement path="lib/org.restlet-src.jar" />
+		<pathelement path="lib/org.restlet.ext.jackson.jar" />
+		<pathelement path="lib/org.restlet.ext.json.jar" />
+		<pathelement path="lib/org.restlet.jar" />
+		<pathelement path="lib/restlet-ext-jackson-src.jar" />
+	</path>
+
 	<target name="javac" depends="clean">
-		<mkdir dir="bin"/>
-		<javac srcdir="src" destdir="bin"
-						includes="**" debug="on" debuglevel="lines,vars,source" 
-		            	encoding="utf-8">
-					<classpath refid="project.class.path"/>
+		<mkdir dir="bin" />
+		<javac srcdir="src" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
 		</javac>
 		<!-- <javac srcdir="src:test" destdir="bin"
 				includes="**" debug="on" debuglevel="lines,vars,source" 
             	encoding="utf-8">
 			<classpath refid="project.class.path"/>
-		</javac> -->            
+		</javac> -->
 	</target>
-	
+
 	<target name="dist" depends="javac">
 		<copy todir="bin">
-			<fileset dir="src"/>
+			<fileset dir="src" />
 		</copy>
-		<javac srcdir="bin" destdir="bin" 
-				includes="**" debug="on" debuglevel="lines,vars,source" 
-            	encoding="utf-8">
-			<classpath refid="project.class.path"/>
+		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
 		</javac>
 		<mkdir dir="dist" />
-		<jar destfile="dist/otsoRestletCommons-sources.jar" basedir="bin"/>
+		<jar destfile="dist/otsoRestletCommons-sources.jar" basedir="bin" />
 	</target>
-	
+
 	<!--
 	<target name="test" depends="dist">
 		<mkdir dir="${testreportdir}"/>
@@ -63,7 +59,7 @@
         <fail if="test.failure" message="Tests failed..."/>
 	</target>
 	-->
-	
+
 	<target name="clean">
 		<delete dir="bin/" failonerror="false" />
 	</target>

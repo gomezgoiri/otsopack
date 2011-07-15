@@ -1,63 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="otsoAuthentication" default="dist">
-	
+
 	<property name="junit.formatter.type" value="xml" />
 	<property name="testreportdir" value="build" />
-    <property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/"/>
-    <property name="otso.restlet.commons.jar" location="../otsoRestletCommons/dist/otsoRestletCommons-sources.jar"/>
+	<property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/" />
+	<property name="otso.restlet.commons.jar" location="../otsoRestletCommons/dist/otsoRestletCommons-sources.jar" />
 
-    <path id="project.class.path">
-    	<pathelement location="${otso.restlet.commons.jar}" />
-    	<fileset dir="lib">
-			<include name="*.jar"/>
-    	</fileset>
-    	<fileset dir="libs">
-			<include name="*.jar"/>
-    	</fileset>
-    </path>
-	
+	<path id="project.class.path">
+		<pathelement location="${otso.restlet.commons.jar}" />
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="libs">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
 	<fail message="${otso.restlet.commons.libs} not found. Can not import restlet libraries">
 		<condition>
-	        <not>
-				<available file="${otso.restlet.commons.libs}"/>
+			<not>
+				<available file="${otso.restlet.commons.libs}" />
 			</not>
-	    </condition>
+		</condition>
 	</fail>
-	
+
 	<fail message="${otso.restlet.commons.jar} not found. Run ant dist in that directory.">
 		<condition>
-	        <not>
-				<available file="${otso.restlet.commons.jar}"/>
+			<not>
+				<available file="${otso.restlet.commons.jar}" />
 			</not>
-	    </condition>
+		</condition>
 	</fail>
-	
-	
+
 	<target name="javac" depends="clean">
-        <copy todir="libs">
-            <fileset dir="${otso.restlet.commons.libs}"/>
-        </copy>
-		<mkdir dir="bin"/>
-		<javac srcdir="src" destdir="bin"
-						includes="**" debug="on" debuglevel="lines,vars,source" 
-		            	encoding="utf-8">
-					<classpath refid="project.class.path"/>
+		<copy todir="libs">
+			<fileset dir="${otso.restlet.commons.libs}" />
+		</copy>
+		<mkdir dir="bin" />
+		<javac srcdir="src" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
 		</javac>
 	</target>
-	
+
+	<pathconvert property="mf.classpath" pathsep=" ">
+		<path refid="project.class.path" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.jar" to="lib/*.jar" />
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
 	<target name="dist" depends="javac">
 		<copy todir="bin">
-			<fileset dir="src"/>
+			<fileset dir="src" />
 		</copy>
-		<javac srcdir="bin" destdir="bin" 
-				includes="**" debug="on" debuglevel="lines,vars,source" 
-            	encoding="utf-8">
-			<classpath refid="project.class.path"/>
+		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+			<classpath refid="project.class.path" />
 		</javac>
 		<mkdir dir="dist" />
-		<jar destfile="dist/otsoAuthentication-sources.jar" basedir="bin"/>
+		<jar destfile="dist/otsoAuthentication-sources.jar" basedir="bin" />
+		<jar destfile="dist/otsoAuthentication-all.jar" filesetmanifest="skip">
+			<zipgroupfileset dir="bin" includes="*.class" />
+			<zipgroupfileset dir="libs" includes="*.jar" excludes="" />
+			<zipgroupfileset dir="dist" includes="otsoAuthentication-sources.jar" excludes="" />
+			<zipgroupfileset dir="../otsoRestletCommons/dist" includes="otsoRestletCommons-sources.jar" excludes="" />
+			<manifest>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
 	</target>
-	
+
 	<target name="clean">
 		<delete dir="bin/" failonerror="false" />
 	</target>
