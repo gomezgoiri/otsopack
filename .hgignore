@@ -1,24 +1,14 @@
 
 syntax: regexp
 
-^otsoCommons/dist/otsoCommons-sources\.jar$
-^otsoCommons/bin
-^otsoCommons/build
-
-^otsoFullJavaCommons/dist/otsoFullJavaCommons-sources\.jar$
-^otsoFullJavaCommons/bin
-^otsoFullJavaCommons/build
-^otsoFullJavaCommons/libs
-
-^otsoIdentityProvider/bin
 ^otsoAuthentication/bin
 ^otsoAuthentication/libs
 ^otsoAuthentication/dist
 
-^otsoSE/bin
-^otsoSE/dist
-
-^otsoSecurityIntegrationTest/bin
+^otsoCommons/dist/otsoCommons-sources\.jar$
+^otsoCommons/bin
+^otsoCommons/build
+^otsoCommons/dist
 
 ^otsoDroid/otsoDroid/gen
 ^otsoDroid/otsoDroid/local\.properties$
@@ -41,6 +31,13 @@ syntax: regexp
 ^otsoDroid/otsoDroidTest/bin
 ^otsoDroid/otsoDroidTest/libs
 
+^otsoFullJavaCommons/dist
+^otsoFullJavaCommons/bin
+^otsoFullJavaCommons/build
+^otsoFullJavaCommons/libs
+
+^otsoIdentityProvider/bin
+
 ^otsoME/classes_cldc_unverified
 ^otsoME/classes_cldc
 ^otsoME/bin
@@ -59,3 +56,9 @@ syntax: regexp
 ^otsoRestletCommons/dist
 ^otsoRestletCommons/bin
 ^otsoRestletCommons/build
+
+^otsoSE/bin
+^otsoSE/dist
+^otsoSE/libs
+
+^otsoSecurityIntegrationTest/bin
