@@ -17,6 +17,7 @@ package otsopack.full.java.network.communication.resources.graphs;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
 
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -35,8 +36,10 @@ public class WildcardsGraphResource extends ServerResource implements IWildcards
 	}
 	
 	@Override
-	public String toHtml() {
-		return HTMLEncoder.encodeURIs(getRoots().keySet());
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		return encoder.getHtmlRepresentation();
 	}
 	
 	@Override

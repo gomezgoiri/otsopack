@@ -25,5 +25,5 @@ public interface IWildcardQueryResource {
 	public abstract Representation query();
 	
 	@Get("html")
-	public abstract String toHtml();
+	public abstract Representation toHtml();
 }

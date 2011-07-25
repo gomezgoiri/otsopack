@@ -14,14 +14,13 @@
 
 package otsopack.full.java.network.communication.resources.graphs;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 public interface IWildcardsGraphResource {
-
 	@Get("json")
 	public String toJson();
 
 	@Get("html")
-	public String toHtml();
-
+	public Representation toHtml();
 }

@@ -14,6 +14,7 @@
 
 package otsopack.full.java.network.communication.resources.prefixes;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 public interface IPrefixesResource {
@@ -21,5 +22,5 @@ public interface IPrefixesResource {
     public String retrieveJson();
 	
 	@Get("html")
-    public String retrieveHtml();
+    public Representation retrieveHtml();
 }

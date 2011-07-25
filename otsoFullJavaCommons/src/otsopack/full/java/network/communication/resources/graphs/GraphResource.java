@@ -13,9 +13,11 @@
  */
 package otsopack.full.java.network.communication.resources.graphs;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
@@ -142,16 +144,12 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 	
 	@Override
 	public Representation toHtml() {
-		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
-		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
-		bodyHtml.append("\t\t<textarea rows=\"10\" cols=\"50\">");
-		bodyHtml.append("triple1, triple2,...");
-		bodyHtml.append("</textarea>\n");
-		bodyHtml.append("\t</fieldset>\n");
-		
-		return new StringRepresentation(HTMLEncoder.encodeURIs(
-					super.getArguments(ROOT).entrySet(),
-					null,
-					bodyHtml.toString())); // TODO print NTriples
+		final HTMLEncoder encoder = new HTMLEncoder();
+		final Set<String> sets = new HashSet<String>();
+		sets.add(ROOT);
+		encoder.appendRoots(sets);
+		encoder.appendProperties( super.getArguments(ROOT).entrySet() );
+		encoder.appendGraph( readGraph(SemanticFormat.NTRIPLES) );
+		return encoder.getHtmlRepresentation();
 	}
 }

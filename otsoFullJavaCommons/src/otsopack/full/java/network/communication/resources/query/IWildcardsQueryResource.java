@@ -14,11 +14,12 @@
 
 package otsopack.full.java.network.communication.resources.query;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 public interface IWildcardsQueryResource {
 	@Get("html")
-	public abstract String toHtml();
+	public abstract Representation toHtml();
 
 	@Get("json")
 	public abstract String toJson();

@@ -15,7 +15,6 @@
 package otsopack.full.java.network.communication.resources.query;
 
 import java.util.HashSet;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.restlet.data.Status;
@@ -126,21 +125,22 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 	
 	
 	@Override
-	public String toHtml() {
-		final StringBuilder bodyHtml = new StringBuilder("<br />\n");
-		bodyHtml.append("\t<fieldset>\n\t<legend>Triples</legend>\n");
-		bodyHtml.append("\t\t<textarea rows=\"10\" cols=\"50\">");
-		bodyHtml.append("triple1, triple2,...");
-		bodyHtml.append("\t\t</textarea>\n");
-		bodyHtml.append("\t</fieldset>\n");
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
 		
-		final Set<Entry<String, String>> keys = new HashSet<Entry<String, String>>();
-		for(String root : ROOTS)
-			keys.addAll(this.getArguments(root).entrySet());
+		final Set<String> sets = new HashSet<String>();
+		for(String root: ROOTS) sets.add(root);
+		encoder.appendRoots(sets);
 		
-		return HTMLEncoder.encodeURIs(
-					keys,
-					null,
-					bodyHtml.toString()); // TODO print NTriples
+		if (getArgument("object-value")==null) {
+			encoder.appendProperties(super.getArguments(ROOTS[0]).entrySet());
+		} else {
+			encoder.appendProperties(super.getArguments(ROOTS[1]).entrySet());
+		}
+		
+		// TODO display the rest of received graphs!
+		encoder.appendGraph( getTriplesByWildcard(SemanticFormat.NTRIPLES)[0] );
+		
+		return encoder.getHtmlRepresentation();
 	}
 }

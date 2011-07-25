@@ -17,6 +17,8 @@ package otsopack.full.java.network.communication.resources.query;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.representation.Representation;
+
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.spaces.SpaceResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
@@ -34,8 +36,10 @@ public class QueryResource extends AbstractServerResource implements IQueryResou
 	}
 	
 	@Override
-	public String toHtml() {
-		return HTMLEncoder.encodeURIs(getRoots().keySet());
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		return encoder.getHtmlRepresentation();
 	}
 
 	@Override

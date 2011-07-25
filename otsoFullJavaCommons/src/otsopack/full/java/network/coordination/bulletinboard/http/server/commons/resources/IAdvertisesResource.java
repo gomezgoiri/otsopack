@@ -19,7 +19,7 @@ import org.restlet.resource.Post;
 
 public interface IAdvertisesResource {
 	@Get("html")	
-	String toHtml();
+	Representation toHtml();
 
 	@Post("json")
 	Representation addAdvertise(Representation rep);

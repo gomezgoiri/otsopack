@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
@@ -48,7 +49,10 @@ public class PrefixesResource extends AbstractServerResource implements IPrefixe
     }
 	
 	@Override
-	public String retrieveHtml() {
+	public Representation retrieveHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		
 		final StringBuilder bodyHtml = new StringBuilder("<br>Available prefixes:<br>\n<ul>\n");
 		for(Entry<String, String> entry : getPrefixesByURI().entrySet()){
 			bodyHtml.append("\t<li><span style=\"font-weight: bold;\">");
@@ -70,7 +74,8 @@ public class PrefixesResource extends AbstractServerResource implements IPrefixe
 			bodyHtml.append("</li>\n");
 		}
 		bodyHtml.append("</ul>\n");
-		System.out.println(bodyHtml.toString());
-		return HTMLEncoder.encodeURIs(null,getRoots().keySet(), bodyHtml.toString());
+		encoder.appendOtherContent(bodyHtml.toString());
+		
+		return encoder.getHtmlRepresentation();
 	}
 }

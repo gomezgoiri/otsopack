@@ -17,6 +17,8 @@ package otsopack.full.java.network.communication.resources.spaces;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.representation.Representation;
+
 import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.resources.graphs.GraphsResource;
 import otsopack.full.java.network.communication.resources.query.QueryResource;
@@ -36,11 +38,10 @@ public class SpaceResource extends AbstractServerResource implements ISpaceResou
 	}
 	
 	@Override
-	public String toHtml() {
-		return HTMLEncoder.encodeURIs(
-					super.getArguments(ROOT).entrySet(),
-					getRoots().keySet()
-				);
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		return encoder.getHtmlRepresentation();
 	}
 	
 	@Override

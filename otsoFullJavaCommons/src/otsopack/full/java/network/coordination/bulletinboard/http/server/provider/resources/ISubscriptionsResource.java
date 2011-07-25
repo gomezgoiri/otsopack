@@ -19,7 +19,7 @@ import org.restlet.resource.Post;
 
 public interface ISubscriptionsResource {
 	@Get("html")	
-	String toHtml();
+	Representation toHtml();
 	
 	@Get("json")
 	String toJson();

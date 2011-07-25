@@ -44,8 +44,10 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	}
 
 	@Override
-	public String toHtml() {
-		return HTMLEncoder.encodeURIs(getRoots().keySet());
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		return encoder.getHtmlRepresentation();
 	}
 
 	@Override

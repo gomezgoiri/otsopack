@@ -14,6 +14,7 @@
 
 package otsopack.full.java.network.communication.resources.graphs;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -22,7 +23,7 @@ import otsopack.full.java.network.communication.representations.SemanticFormatRe
 
 public interface IGraphsResource {
 	@Get("html")
-	public abstract String toHtml();
+	public abstract Representation toHtml();
 
 	@Get("json")
 	public abstract String toJson();

@@ -41,7 +41,7 @@ public class AdvertisesManagerResource extends ServerResource implements IAdvert
 	}
 	
 	@Override
-	public String toHtml() {
+	public Representation toHtml() {
 		return this.simple.toHtml();
 	}
 	

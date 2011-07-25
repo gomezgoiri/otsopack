@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.IController;
@@ -49,7 +50,11 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 	}
 	
 	@Override
-	public String toHtml() {
+	public Representation toHtml() {
+		final HTMLEncoder encoder = new HTMLEncoder();
+		encoder.appendRoots(getRoots().keySet());
+		encoder.appendProperties(super.getArguments(ROOT).entrySet());
+		
 		final StringBuilder bodyHtml = new StringBuilder("<br>Locally available graphs:<br>\n<ul>\n");
 		try {		
 			final String space = getArgument("space");
@@ -70,16 +75,14 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 				bodyHtml.append("</li>\n");
 			}
 			bodyHtml.append("</ul>\n");
-			System.out.println(bodyHtml.toString());
+			encoder.appendOtherContent(bodyHtml.toString());
 		} catch (SpaceNotExistsException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
 		} catch (UnsupportedEncodingException e) {
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "URL could not be encoded", e);
 		}
-		return HTMLEncoder.encodeURIs(
-				super.getArguments(ROOT).entrySet(),
-				getRoots().keySet(),
-				bodyHtml.toString());
+		
+		return encoder.getHtmlRepresentation();
 	}
 	
 	@Override
