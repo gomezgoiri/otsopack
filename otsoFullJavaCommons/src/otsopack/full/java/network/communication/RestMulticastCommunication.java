@@ -17,6 +17,11 @@ package otsopack.full.java.network.communication;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.restlet.resource.ResourceException;
 
@@ -39,8 +44,11 @@ import otsopack.full.java.network.coordination.Node;
 
 public class RestMulticastCommunication implements ICommunication {
 
+	private final static int MULTICAST_THREADS = 5;
+	
 	private final IRegistry registry;
 	private final LocalCredentialsManager credentialsManager;
+	private ExecutorService executor;
 	
 	public RestMulticastCommunication(IRegistry registry){
 		this(registry, new LocalCredentialsManager());
@@ -54,32 +62,46 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public void startup() throws TSException {
 		this.registry.startup();
+		this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
 	}
 
 	@Override
 	public void shutdown() throws TSException {
 		this.registry.shutdown();
+		this.executor.shutdown();
 	}
-
+	
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(final String spaceURI, final String graphURI, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
+		
 		// Return the first result found
-		// TODO: Use ExecutorService
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
-		for(Node nodeBaseURL : nodeBaseURLs){
-			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			Graph graph;
-			try{
-				graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
-			}catch(ResourceException e){
-				e.printStackTrace();
-				graph = null;
-			}
-			if(graph != null)
-				return graph;
+		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
+		
+		for(final Node nodeBaseURL : nodeBaseURLs){
+			for(Future<Graph> existingGraph : submittedGraphs)
+				if(existingGraph.isDone())
+					break;
+				
+			final Future<Graph> submittedGraph = this.executor.submit(new Callable<Graph>(){
+				
+				@Override
+				public Graph call() throws Exception {
+					final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
+					try{
+						return unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
+					}catch(ResourceException e){
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			
+			submittedGraphs.add(submittedGraph);
 		}
-		return null;
+		
+		return retrieveFirstGraph(submittedGraphs);
 	}
 
 	@Override
@@ -89,24 +111,40 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(final String spaceURI, final Template template, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		// Return the first result found
-		// TODO: Use ExecutorService
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
-		for(Node nodeBaseURL : nodeBaseURLs){
-			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			Graph graph;
-			try {
-				graph = unicast.read(spaceURI, template, outputFormat, filters, timeout);
-			} catch (ResourceException e) {
-				e.printStackTrace();
-				graph = null;
-			}
-			if(graph != null)
-				return graph;
+		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
+
+		for(final Node nodeBaseURL : nodeBaseURLs){
+			for(Future<Graph> existingGraph : submittedGraphs)
+				if(existingGraph.isDone())
+					break;
+				
+			final Future<Graph> submittedGraph = this.executor.submit(new Callable<Graph>(){
+				
+				@Override
+				public Graph call() throws Exception {
+					final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
+					try{
+						return unicast.read(spaceURI, template, outputFormat, filters, timeout);
+					}catch(ResourceException e){
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			
+			submittedGraphs.add(submittedGraph);
 		}
-		return null;
+		
+		try {
+			return retrieveFirstGraph(submittedGraphs);
+		} catch (AuthorizationException e) {
+			// Should not happen with a template. If it happens, we just say "there was no graph"
+			return null;
+		}
 	}
 
 	@Override
@@ -170,25 +208,32 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph[] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph[] query(final String spaceURI, final Template template, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
-		final List<Graph> graphs = new Vector<Graph>();
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
-		for(Node nodeBaseURL : nodeBaseURLs){
+		
+		final List<Future<Graph []>> submittedTasks = new Vector<Future<Graph[]>>();
+		
+		for(final Node nodeBaseURL : nodeBaseURLs){
 			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			Graph[] retrievedGraphs;
-			try {
-				retrievedGraphs = unicast.query(spaceURI, template, outputFormat, filters, timeout);
-			} catch (ResourceException e) {
-				e.printStackTrace();
-				retrievedGraphs = null;
-			}
-			if(retrievedGraphs != null)
-				for(Graph newGraph : retrievedGraphs)
-					graphs.add(newGraph);
+			
+			final Future<Graph[]> submittedTask = this.executor.submit(new Callable<Graph []>(){
+
+				@Override
+				public Graph[] call() throws Exception {
+					try {
+						return unicast.query(spaceURI, template, outputFormat, filters, timeout);
+					} catch (ResourceException e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			
+			submittedTasks.add(submittedTask);
 		}
-		if( graphs.isEmpty() ) return null;
-		return graphs.toArray(new Graph[]{});
+		
+		return retrieveAllGraphs(submittedTasks);
 	}
 
 	private RestUnicastCommunication createUnicastCommunication(Node nodeBaseURI) {
@@ -200,6 +245,86 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return query(spaceURI, template, outputFormat, new Filter[]{}, timeout);
 	}
+
+	private Graph[] retrieveAllGraphs(final List<Future<Graph[]>> submittedTasks) {
+		final List<Graph> graphs = new Vector<Graph>();
+		for(Future<Graph []> submittedTask : submittedTasks){
+			final Graph[] retrievedGraphs;
+			try {
+				retrievedGraphs = submittedTask.get();
+			} catch (InterruptedException e) {
+				for(Future<Graph[]> task : submittedTasks)
+					task.cancel(true);
+				break;
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			if(retrievedGraphs != null)
+				for(Graph newGraph : retrievedGraphs)
+					graphs.add(newGraph);
+		}
+		
+		if( graphs.isEmpty() ) return null;
+		return graphs.toArray(new Graph[]{});
+	}
+	
+	/**
+	 * Given a list of Future<Graph>, it returns the first graph found in the list and cancels the rest of the jobs.
+	 */
+	private Graph retrieveFirstGraph(final List<Future<Graph>> submittedGraphs) 
+		throws UnsupportedSemanticFormatException, AuthorizationException, SpaceNotExistsException {
+		
+		Graph finalGraph = null;
+		final List<Future<Graph>> remainingGraphs = new Vector<Future<Graph>>(submittedGraphs);
+
+		while(!remainingGraphs.isEmpty()){
+			for(Future<Graph> submittedGraph : submittedGraphs){
+				if(remainingGraphs.contains(submittedGraph) && submittedGraph.isDone()){
+
+					remainingGraphs.remove(submittedGraph);
+
+					try {
+						finalGraph = submittedGraph.get();
+						break;
+					} catch (InterruptedException e) {
+						// Should never happen since we're only iterating in those that are done
+						continue; 
+					} catch (ExecutionException e){
+						e.printStackTrace();
+
+						if(e.getCause() instanceof UnsupportedSemanticFormatException)
+							throw (UnsupportedSemanticFormatException)e.getCause();
+
+						if(e.getCause() instanceof AuthorizationException)
+							throw (AuthorizationException)e.getCause();
+
+						if(e.getCause() instanceof SpaceNotExistsException)
+							throw (SpaceNotExistsException)e.getCause();
+
+						// Otherwise, 
+						continue;
+					}
+				}
+			}
+
+			if(finalGraph != null || remainingGraphs.isEmpty())
+				break;
+
+			try{
+				Thread.sleep(50);
+			}catch(InterruptedException ie){
+				return null;
+			}
+		}
+
+		for(Future<Graph> remainingGraph : remainingGraphs)
+			remainingGraph.cancel(true);
+
+		return finalGraph;
+	}
+
 
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException {
