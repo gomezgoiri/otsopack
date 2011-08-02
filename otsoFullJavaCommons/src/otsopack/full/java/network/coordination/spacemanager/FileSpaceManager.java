@@ -47,7 +47,9 @@ public class FileSpaceManager implements ISpaceManager {
 				final JSONObject obj = arr.getJSONObject(i);
 				final String uuid = obj.getString("uuid");
 				final String url = obj.getString("url");
-				final Node node = new Node(url, uuid);
+				final boolean reachable = obj.optBoolean("reachable", true);
+				final boolean mustPoll  = obj.optBoolean("mustPoll", false);
+				final Node node = new Node(url, uuid, reachable, mustPoll);
 				nodes[i] = node;
 			}
 		} catch (Exception e) {

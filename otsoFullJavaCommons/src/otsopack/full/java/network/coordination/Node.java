@@ -18,12 +18,20 @@ public class Node {
 	
 	private String uuid;
 	private String baseURI;
+	private boolean reachable;
+	private boolean mustPoll;
 	
 	public Node(){}
 	
 	public Node(String baseURI, String uuid){
+		this(baseURI, uuid, true, false);
+	}
+
+	public Node(String baseURI, String uuid, boolean reachable, boolean mustPoll){
 		this.baseURI = baseURI;
 		this.uuid = uuid;
+		this.reachable = reachable;
+		this.mustPoll  = mustPoll;
 	}
 
 	public void setUuid(String uuid) {
@@ -42,12 +50,30 @@ public class Node {
 		return this.baseURI;
 	}
 
+	public boolean isReachable() {
+		return this.reachable;
+	}
+
+	public void setReachable(boolean reachable) {
+		this.reachable = reachable;
+	}
+
+	public boolean isMustPoll() {
+		return this.mustPoll;
+	}
+
+	public void setMustPoll(boolean mustPoll) {
+		this.mustPoll = mustPoll;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((this.baseURI == null) ? 0 : this.baseURI.hashCode());
+		result = prime * result + (this.mustPoll ? 1231 : 1237);
+		result = prime * result + (this.reachable ? 1231 : 1237);
 		result = prime * result
 				+ ((this.uuid == null) ? 0 : this.uuid.hashCode());
 		return result;
@@ -67,6 +93,10 @@ public class Node {
 				return false;
 		} else if (!this.baseURI.equals(other.baseURI))
 			return false;
+		if (this.mustPoll != other.mustPoll)
+			return false;
+		if (this.reachable != other.reachable)
+			return false;
 		if (this.uuid == null) {
 			if (other.uuid != null)
 				return false;
@@ -77,6 +107,8 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [uuid=" + this.uuid + ", baseURI=" + this.baseURI + "]";
+		return "Node [uuid=" + this.uuid + ", baseURI=" + this.baseURI
+				+ ", reachable=" + this.reachable + ", mustPoll="
+				+ this.mustPoll + "]";
 	}
 }
