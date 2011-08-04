@@ -58,4 +58,11 @@ public class FileSpaceManager implements ISpaceManager {
 		return nodes;
 	}
 
+	private static final String [] references = new String[]{};
+	
+	@Override
+	public String [] getExternalReferences() {
+		return references;
+	}
+
 }

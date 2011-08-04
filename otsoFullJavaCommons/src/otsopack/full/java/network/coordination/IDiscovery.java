@@ -29,5 +29,5 @@ import otsopack.full.java.network.coordination.discovery.DiscoveryException;
  * </ul>
  */
 public interface IDiscovery {
-	public SpaceManager [] getSpaceManagers(String spaceURI) throws DiscoveryException;
+	public ISpaceManager [] getSpaceManagers(String spaceURI) throws DiscoveryException;
 }

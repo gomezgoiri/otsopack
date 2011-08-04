@@ -18,26 +18,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import otsopack.full.java.network.coordination.IDiscovery;
+import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
-import otsopack.full.java.network.coordination.SpaceManager;
-import otsopack.full.java.network.coordination.spacemanager.MemorySpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
 
 public class SimpleDiscovery implements IDiscovery {
 
-	private final Map<String, SpaceManager[]> discoverers = new HashMap<String, SpaceManager[]>();
+	private final Map<String, ISpaceManager[]> discoverers = new HashMap<String, ISpaceManager[]>();
 	
-	public SimpleDiscovery(Map<String, SpaceManager[]> spaceManagers){
+	public SimpleDiscovery(Map<String, ISpaceManager[]> spaceManagers){
 		for(String space : spaceManagers.keySet())
 			this.discoverers.put(space, spaceManagers.get(space));
 	}
 	
-	public SimpleDiscovery(SpaceManager ... spaceManagers){
+	public SimpleDiscovery(ISpaceManager ... spaceManagers){
 		this.discoverers.put("", spaceManagers);
 	}
 	
 	public SimpleDiscovery(Node ... nodes){
-		this.discoverers.put("", new SpaceManager[]{new MemorySpaceManager(new SimpleSpaceManager(nodes))});
+		this.discoverers.put("", new ISpaceManager[]{new SimpleSpaceManager(nodes)});
 	}
 	
 	private String getMostConcrete(String spaceURI){
@@ -55,7 +54,7 @@ public class SimpleDiscovery implements IDiscovery {
 	}
 	
 	@Override
-	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
+	public ISpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
 		final String concrete = getMostConcrete(spaceURI);
 		if(concrete == null)
 			throw new DiscoverySpaceNotFoundException("Space: " + spaceURI + " did not match any space registered in " + SimpleDiscovery.class.getName());

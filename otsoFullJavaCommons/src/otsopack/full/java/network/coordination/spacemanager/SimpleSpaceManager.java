@@ -38,4 +38,11 @@ public class SimpleSpaceManager implements ISpaceManager {
 	public Node [] getNodes() {
 		return this.nodes.toArray(new Node[]{});
 	}
+
+	private static final String [] references = new String[]{};
+	
+	@Override
+	public String [] getExternalReferences() {
+		return references;
+	}
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import otsopack.full.java.network.coordination.IDiscovery;
-import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.ISpaceManager;
 
 public class MultiplexerDiscovery implements IDiscovery {
 	
@@ -57,16 +57,16 @@ public class MultiplexerDiscovery implements IDiscovery {
 	}
 	
 	@Override
-	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
+	public ISpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
 		final IDiscovery [] discoveries = getDiscoveries(spaceURI);
 		if(discoveries == null)
-			return new SpaceManager[]{};
+			return new ISpaceManager[]{};
 		
-		final List<SpaceManager> spaceManagers = new Vector<SpaceManager>();
+		final List<ISpaceManager> spaceManagers = new Vector<ISpaceManager>();
 		for(IDiscovery discovery : discoveries)
-			for(SpaceManager spaceManager : discovery.getSpaceManagers(spaceURI))
+			for(ISpaceManager spaceManager : discovery.getSpaceManagers(spaceURI))
 				spaceManagers.add(spaceManager);
 		
-		return spaceManagers.toArray(new SpaceManager[]{});
+		return spaceManagers.toArray(new ISpaceManager[]{});
 	}
 }

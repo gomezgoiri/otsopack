@@ -25,28 +25,29 @@ import org.restlet.resource.ResourceException;
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
-import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
 
 public class HttpSpaceManagerClient implements ISpaceManager {
 	
-	private final HttpSpaceManager spaceManager;
+	private final String uri;
+	private final String [] references; 
 	
-	public HttpSpaceManagerClient(HttpSpaceManager spaceManager){
-		this.spaceManager = spaceManager;
+	public HttpSpaceManagerClient(String uri){
+		this.uri = uri;
+		this.references = new String[]{"[http]" + uri};
 	}
 
 	@Override
 	public Node[] getNodes() throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.spaceManager.getURI() + NodesResource.ROOT);
+		final ClientResource client = new ClientResource(this.uri + NodesResource.ROOT);
 		String serializedSpaceManagers;
 		try{
 			final Representation repr;
 			try{
 				repr = client.get(MediaType.APPLICATION_JSON);
 			}catch(ResourceException e){
-				throw new SpaceManagerException("Could not get nodes from " + this.spaceManager.getURI() + ": " + e.getMessage(), e);
+				throw new SpaceManagerException("Could not get nodes from " + this.uri + ": " + e.getMessage(), e);
 			}
 			try {
 				serializedSpaceManagers = IOUtils.toString(repr.getStream());
@@ -57,6 +58,42 @@ public class HttpSpaceManagerClient implements ISpaceManager {
 			client.release();
 		}
 		return JSONDecoder.decode(serializedSpaceManagers, Node[].class);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((this.uri == null) ? 0 : this.uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HttpSpaceManagerClient other = (HttpSpaceManagerClient) obj;
+		if (this.uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!this.uri.equals(other.uri))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return "HttpSpaceManagerClient [uri=" + this.uri + "]";
+	}
+
+	@Override
+	public String [] getExternalReferences() {
+		return this.references;
 	}
 	
 }

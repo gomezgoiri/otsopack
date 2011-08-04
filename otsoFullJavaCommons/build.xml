@@ -140,7 +140,7 @@
 		<delete dir="bin/otsopack" failonerror="false" />
 		<delete dir="dist" failonerror="false" />
 		<delete includeemptydirs="true">
-			<fileset dir="libs" includes="**/*" defaultexcludes="false" />
+			<fileset dir="libs" includes="**/*jar" defaultexcludes="false" />
 		</delete>
 	</target>
 </project>

@@ -14,36 +14,37 @@
  */
 package otsopack.full.java.network.coordination.discovery;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+
 import org.junit.Test;
 
-import otsopack.full.java.network.coordination.SpaceManager;
-import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
+import otsopack.full.java.network.coordination.ISpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
 
 
 public class MultiplexerDiscoveryTest {
-	private final SimpleDiscovery discovery1 = new SimpleDiscovery(new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"), new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"));
-	private final SimpleDiscovery discovery2 = new SimpleDiscovery(new HttpSpaceManager("http://sample01.morelab.deusto.es"), new HttpSpaceManager("http://sample02.morelab.deusto.es"));
+	private final SimpleDiscovery discovery1 = new SimpleDiscovery(new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample01/"), new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample02/"));
+	private final SimpleDiscovery discovery2 = new SimpleDiscovery(new HttpSpaceManagerClient("http://sample01.morelab.deusto.es"), new HttpSpaceManagerClient("http://sample02.morelab.deusto.es"));
 	
 	@Test
 	public void testSingle() throws DiscoveryException{
 		final MultiplexerDiscovery md = new MultiplexerDiscovery(this.discovery1);
-		final SpaceManager [] managers = md.getSpaceManagers("");
-		assertArrayEquals(new SpaceManager[]{ 
-				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"),
-				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"),
+		final ISpaceManager [] managers = md.getSpaceManagers("");
+		assertArrayEquals(new ISpaceManager[]{ 
+				new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample01/"),
+				new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample02/"),
 		}, managers);
 	}
 	
 	@Test
 	public void testMultiple() throws DiscoveryException{
 		final MultiplexerDiscovery md = new MultiplexerDiscovery(this.discovery1, this.discovery2);
-		final SpaceManager [] managers = md.getSpaceManagers("");
-		assertArrayEquals(new SpaceManager[]{ 
-				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample01/"),
-				new HttpSpaceManager("http://ts.alimerka.es/discovery/sample02/"),
-				new HttpSpaceManager("http://sample01.morelab.deusto.es"),
-				new HttpSpaceManager("http://sample02.morelab.deusto.es"),
+		final ISpaceManager [] managers = md.getSpaceManagers("");
+		assertArrayEquals(new ISpaceManager[]{ 
+				new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample01/"),
+				new HttpSpaceManagerClient("http://ts.alimerka.es/discovery/sample02/"),
+				new HttpSpaceManagerClient("http://sample01.morelab.deusto.es"),
+				new HttpSpaceManagerClient("http://sample02.morelab.deusto.es"),
 		}, managers);
 	}
 }

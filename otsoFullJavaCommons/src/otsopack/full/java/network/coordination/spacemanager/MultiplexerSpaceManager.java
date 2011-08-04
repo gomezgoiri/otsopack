@@ -48,4 +48,13 @@ public class MultiplexerSpaceManager implements ISpaceManager {
 		
 		return nodes.toArray(new Node[]{});
 	}
+
+	@Override
+	public String [] getExternalReferences() {
+		final List<String> references = new Vector<String>();
+		for(ISpaceManager spaceManager : this.spaceManagers)
+			for(String reference : spaceManager.getExternalReferences())
+				references.add(reference);
+		return references.toArray(new String[]{});
+	}
 }

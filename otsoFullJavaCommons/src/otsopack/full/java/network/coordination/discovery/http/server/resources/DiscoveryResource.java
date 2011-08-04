@@ -17,7 +17,9 @@ package otsopack.full.java.network.coordination.discovery.http.server.resources;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -27,11 +29,10 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.IDiscovery;
-import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.DiscoverySpaceNotFoundException;
 import otsopack.full.java.network.coordination.discovery.http.server.OtsopackHttpDiscoveryApplication;
-import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 public class DiscoveryResource extends ServerResource implements IDiscoveryResource {
 	
@@ -60,7 +61,7 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 		
 		final IDiscovery discovery = ((OtsopackHttpDiscoveryApplication)getApplication()).getController().getDiscovery();
 		
-		SpaceManager[] spaceManagers;
+		ISpaceManager[] spaceManagers;
 		try {
 			spaceManagers = discovery.getSpaceManagers(decodedSpaceURI);
 		} catch (DiscoverySpaceNotFoundException e){
@@ -69,11 +70,11 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not find a response for the given space URI: " + e.getMessage(), e);
 		}
 		
-		final String [] spaceManagerURIs = new String[spaceManagers.length];
-		for(int i = 0; i < spaceManagerURIs.length; ++i)
-			if(spaceManagers[i] instanceof HttpSpaceManager)
-				spaceManagerURIs[i] = ((HttpSpaceManager)spaceManagers[i]).getURI();
+		final List<String> spaceManagerReferences = new Vector<String>();
+		for(ISpaceManager spaceManager : spaceManagers)
+			for(String externalReference : spaceManager.getExternalReferences())
+				spaceManagerReferences.add(externalReference);
 		
-		return new StringRepresentation(JSONEncoder.encode(spaceManagerURIs));
+		return new StringRepresentation(JSONEncoder.encode(spaceManagerReferences.toArray(new String[]{})));
 	}
 }

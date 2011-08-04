@@ -22,7 +22,6 @@ import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
-import otsopack.full.java.network.coordination.SpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
@@ -36,7 +35,7 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	private final int interval;
 	private final IDiscovery discovery;
 	private final String spaceURI;
-	private final Set<SpaceManager> spaceManagers = new CopyOnWriteArraySet<SpaceManager>();
+	private final Set<ISpaceManager> spaceManagers = new CopyOnWriteArraySet<ISpaceManager>();
 	private final Set<Node> nodes = new CopyOnWriteArraySet<Node>();
 	private final String localNodeUUID;
 	
@@ -121,10 +120,9 @@ public class SimpleRegistry extends Thread implements IRegistry {
 			fillSet(this.spaceManagers, this.discovery.getSpaceManagers(this.spaceURI));
 			
 			final Set<Node> newNodes = new HashSet<Node>();
-			for(SpaceManager spaceManager : this.spaceManagers){
-				final ISpaceManager client = spaceManager.createClient();
+			for(ISpaceManager spaceManager : this.spaceManagers){
 				try {
-					for(Node node : client.getNodes())
+					for(Node node : spaceManager.getNodes())
 						if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
 							newNodes.add(node);
 					
@@ -156,7 +154,7 @@ public class SimpleRegistry extends Thread implements IRegistry {
 			instanceSet.add(currentElement);
 	}
 	
-	public Set<SpaceManager> getSpaceManagers(){
+	public Set<ISpaceManager> getSpaceManagers(){
 		return this.spaceManagers;
 	}
 

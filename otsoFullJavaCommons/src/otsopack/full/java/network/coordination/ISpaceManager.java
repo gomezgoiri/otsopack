@@ -17,5 +17,11 @@ package otsopack.full.java.network.coordination;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
 public interface ISpaceManager {
+	/**
+	 * Get an external reference to show how to call it. In the case of an HTTP Space Manager, it could be "[http]http://192.168.1.1:12345/".
+	 * 
+	 * @return The external reference or null if it can't be called from outside (such as if it is in a file or memory).
+	 */
+	public String [] getExternalReferences();
 	public Node [] getNodes() throws SpaceManagerException;
 }

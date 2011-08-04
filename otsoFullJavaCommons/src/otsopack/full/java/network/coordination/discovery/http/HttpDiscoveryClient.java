@@ -27,10 +27,10 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.coordination.IDiscovery;
-import otsopack.full.java.network.coordination.SpaceManager;
+import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
-import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManagerFactory;
 
 public class HttpDiscoveryClient implements IDiscovery {
 
@@ -41,8 +41,8 @@ public class HttpDiscoveryClient implements IDiscovery {
 	}
 	
 	@Override
-	public SpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
-		final Set<SpaceManager> spaceManagers = new HashSet<SpaceManager>();
+	public ISpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
+		final Set<ISpaceManager> spaceManagers = new HashSet<ISpaceManager>();
 		for(String uri : this.uris){
 			String encodedSpace;
 			try {
@@ -64,9 +64,15 @@ public class HttpDiscoveryClient implements IDiscovery {
 			}
 			final String [] spaceManagerURIs = JSONDecoder.decode(serializedSpaceManagers, String[].class);
 			for(String spaceManagerURI : spaceManagerURIs)
-				spaceManagers.add(new HttpSpaceManager(spaceManagerURI));
+				if(spaceManagerURI != null)
+					try{
+						spaceManagers.add(SpaceManagerFactory.create(spaceManagerURI));
+					}catch(IllegalArgumentException e){
+						System.err.println("Could not create space manager with URI: " + spaceManagerURI);
+						e.printStackTrace();
+					}
 		}
-		return spaceManagers.toArray(new SpaceManager[]{});
+		return spaceManagers.toArray(new ISpaceManager[]{});
 	}
 
 }
