@@ -46,7 +46,7 @@ public class SpaceManagerServerHttpTest {
 	}
 
 	@Test
-	public void testServer() throws Exception {
+	public void testGetNodes() throws Exception {
 		final List<Node> nodes = Arrays.asList(this.client.getNodes());
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE1));
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE2));

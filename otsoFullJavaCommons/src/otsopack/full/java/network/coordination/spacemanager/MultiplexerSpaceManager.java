@@ -20,7 +20,7 @@ import java.util.Vector;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 
-public class MultiplexerSpaceManager implements ISpaceManager {
+public class MultiplexerSpaceManager extends SpaceManager {
 	
 	private final List<ISpaceManager> spaceManagers = new Vector<ISpaceManager>();
 	
@@ -35,7 +35,7 @@ public class MultiplexerSpaceManager implements ISpaceManager {
 	}
 	
 	@Override
-	public Node[] getNodes(){
+	public Node[] getRegisteredNodes(){
 		final List<Node> nodes = new Vector<Node>();
 		for(ISpaceManager spaceManager : this.spaceManagers)
 			try {

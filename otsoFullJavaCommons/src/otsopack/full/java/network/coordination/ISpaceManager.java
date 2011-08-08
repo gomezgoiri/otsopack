@@ -24,4 +24,8 @@ public interface ISpaceManager {
 	 */
 	public String [] getExternalReferences();
 	public Node [] getNodes() throws SpaceManagerException;
+	
+	public String join(Node node) throws SpaceManagerException;
+	public void poll(String secret) throws SpaceManagerException;
+	public void leave(String secret) throws SpaceManagerException;
 }

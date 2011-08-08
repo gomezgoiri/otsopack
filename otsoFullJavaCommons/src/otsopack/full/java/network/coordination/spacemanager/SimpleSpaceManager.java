@@ -17,10 +17,9 @@ package otsopack.full.java.network.coordination.spacemanager;
 import java.util.List;
 import java.util.Vector;
 
-import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 
-public class SimpleSpaceManager implements ISpaceManager {
+public class SimpleSpaceManager extends SpaceManager {
 
 	private final List<Node> nodes = new Vector<Node>();
 	
@@ -35,7 +34,7 @@ public class SimpleSpaceManager implements ISpaceManager {
 	}
 	
 	@Override
-	public Node [] getNodes() {
+	public Node [] getRegisteredNodes() {
 		return this.nodes.toArray(new Node[]{});
 	}
 

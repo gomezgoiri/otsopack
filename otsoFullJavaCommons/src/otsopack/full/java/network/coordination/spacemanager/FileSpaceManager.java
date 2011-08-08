@@ -21,10 +21,9 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 
-public class FileSpaceManager implements ISpaceManager {
+public class FileSpaceManager extends SpaceManager {
 
 	private final File file;
 	
@@ -36,7 +35,7 @@ public class FileSpaceManager implements ISpaceManager {
 	}
 	
 	@Override
-	public Node[] getNodes() throws SpaceManagerException {
+	public Node[] getRegisteredNodes() throws SpaceManagerException {
 		final Node[] nodes;
 		try {
 			final FileInputStream fis = new FileInputStream(this.file);

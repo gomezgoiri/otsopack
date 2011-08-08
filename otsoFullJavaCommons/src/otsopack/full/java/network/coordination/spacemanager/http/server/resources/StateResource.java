@@ -10,6 +10,7 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ *
  */
 package otsopack.full.java.network.coordination.spacemanager.http.server.resources;
 
@@ -17,36 +18,52 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.data.Status;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
-import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.OtsopackHttpSpaceManagerApplication;
 
-public class NodesResource extends ServerResource implements ISpaceManagerResource {
-	
-	public static final String ROOT = "/spacemanager/nodes";
+public class StateResource extends ServerResource implements IStateResource {
+
+	public static final String ROOT = StatesResource.ROOT + "/{secret}";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
-		roots.put(ROOT, NodesResource.class);
+		roots.put(ROOT, StateResource.class);
 		return roots;
 	}
-
+	
+	private String getSecret(){
+		return (String)getRequestAttributes().get("secret");
+	}
+	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.network.coordination.spacemanager.http.server.resources.IStateResource#update(java.lang.String)
+	 */
 	@Override
-	public Representation getNodes() {
+	public void updateNode() {
 		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
-		final Node[] nodes;
 		try {
-			nodes = spaceManager.getNodes();
+			spaceManager.poll(getSecret());
 		} catch (SpaceManagerException e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not find a response: " + e.getMessage(), e);
+			e.printStackTrace();
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not poll");
 		}
-		return new StringRepresentation(JSONEncoder.encode(nodes));
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.network.coordination.spacemanager.http.server.resources.IStateResource#delete(java.lang.String)
+	 */
+	@Override
+	public void deleteNode() {
+		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
+		try {
+			spaceManager.leave(getSecret());
+		} catch (SpaceManagerException e) {
+			e.printStackTrace();
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not leave");
+		}
 	}
 }

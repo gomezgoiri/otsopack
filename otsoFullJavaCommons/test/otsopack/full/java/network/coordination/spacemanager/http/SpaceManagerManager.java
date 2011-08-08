@@ -15,7 +15,9 @@ package otsopack.full.java.network.coordination.spacemanager.http;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.http.server.ISpaceManagerController;
 import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerController;
 import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
@@ -25,6 +27,7 @@ public class SpaceManagerManager {
 	public static final Node NODE2 = new Node("http://node2/", "node2");
 
 	private SpaceManagerRestServer server;
+	private SpaceManager spaceManager;
 	private int port;
 	
 	public SpaceManagerManager(int port){
@@ -32,15 +35,17 @@ public class SpaceManagerManager {
 	}
 	
 	public void startSpaceManagerServer() throws Exception {
-		ISpaceManager spaceManager = new SimpleSpaceManager(NODE1, NODE2);
+		this.spaceManager = new SimpleSpaceManager(NODE1, NODE2);
 		
-		final ISpaceManagerController controller = new SpaceManagerController(spaceManager);
+		final ISpaceManagerController controller = new SpaceManagerController(this.spaceManager);
 		this.server = new SpaceManagerRestServer(this.port, controller);
 		this.server.startup();
+		
+		this.spaceManager.start();
 	}
 	
 	public ISpaceManager createClient(){
-		return new HttpSpaceManagerClient(createClientAddress());
+		return new HttpSpaceManager(createClientAddress());
 	}
 
 	public String createClientAddress() {
@@ -49,5 +54,6 @@ public class SpaceManagerManager {
 	
 	public void stopSpaceManagerServer() throws Exception {
 		this.server.shutdown();
+		this.spaceManager.shutdown();
 	}
 }

@@ -35,7 +35,7 @@ import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryCo
 import otsopack.full.java.network.coordination.discovery.http.server.DiscoveryRestServer;
 import otsopack.full.java.network.coordination.discovery.http.server.IDiscoveryController;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
-import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 
 public class DiscoveryHttpTest extends Object {
 	
@@ -62,11 +62,11 @@ public class DiscoveryHttpTest extends Object {
 	private void initialize(boolean withDefault) throws Exception {
 		final Map<String, ISpaceManager[]> managers = new HashMap<String, ISpaceManager[]>();
 		
-		this.sp1 = new HttpSpaceManagerClient(SPACE_MANAGER1);
-		this.sp2 = new HttpSpaceManagerClient(SPACE_MANAGER2);
-		this.sp3 = new HttpSpaceManagerClient(SPACE_MANAGER3);
-		this.sp4 = new HttpSpaceManagerClient(SPACE_MANAGER4);
-		this.sp5 = new HttpSpaceManagerClient(SPACE_MANAGER5);
+		this.sp1 = new HttpSpaceManager(SPACE_MANAGER1);
+		this.sp2 = new HttpSpaceManager(SPACE_MANAGER2);
+		this.sp3 = new HttpSpaceManager(SPACE_MANAGER3);
+		this.sp4 = new HttpSpaceManager(SPACE_MANAGER4);
+		this.sp5 = new HttpSpaceManager(SPACE_MANAGER5);
 		
 		managers.put(SPACE1, new ISpaceManager[]{this.sp1, this.sp2});
 		managers.put(SPACE2, new ISpaceManager[]{this.sp3, this.sp4});
@@ -113,7 +113,7 @@ public class DiscoveryHttpTest extends Object {
 		final List<ISpaceManager> spaceManagers = Arrays.asList(this.client.getSpaceManagers("http://foo"));
 		assertEquals(1, spaceManagers.size());
 		
-		assertThat(spaceManagers, hasItem( (ISpaceManager)new HttpSpaceManagerClient(SPACE_MANAGER5) ));
+		assertThat(spaceManagers, hasItem( (ISpaceManager)new HttpSpaceManager(SPACE_MANAGER5) ));
 	}
 	
 	@Test

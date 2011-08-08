@@ -15,12 +15,11 @@
 package otsopack.full.java.network.coordination.spacemanager;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
-import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
 
 public class SpaceManagerFactory {
 	public static ISpaceManager create(String uri){
 		if(uri.startsWith("[http]"))
-			return new HttpSpaceManagerClient(uri.substring("[http]".length()));
+			return new HttpSpaceManager(uri.substring("[http]".length()));
 		throw new IllegalArgumentException("Unknown space manager protocol: " + uri);
 	}
 }

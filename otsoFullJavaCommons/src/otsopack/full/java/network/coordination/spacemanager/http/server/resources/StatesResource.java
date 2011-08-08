@@ -10,43 +10,58 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ *
  */
 package otsopack.full.java.network.coordination.spacemanager.http.server.resources;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.data.Status;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.util.JSONDecoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 import otsopack.full.java.network.coordination.spacemanager.http.server.OtsopackHttpSpaceManagerApplication;
 
-public class NodesResource extends ServerResource implements ISpaceManagerResource {
-	
-	public static final String ROOT = "/spacemanager/nodes";
+public class StatesResource extends ServerResource implements IStatesResource {
+
+	public static final String ROOT = "/spacemanager/states";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
-		roots.put(ROOT, NodesResource.class);
+		roots.put(ROOT, StatesResource.class);
+		for(String key : StateResource.getRoots().keySet())
+			roots.put(key, StateResource.getRoots().get(key));
 		return roots;
 	}
-
+	
 	@Override
-	public Representation getNodes() {
+	public String createState() {
 		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
-		final Node[] nodes;
+		
+		final Node node;
+		
 		try {
-			nodes = spaceManager.getNodes();
-		} catch (SpaceManagerException e) {
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not find a response: " + e.getMessage(), e);
+			final String provided = getRequestEntity().getText();
+			node = JSONDecoder.decode(provided, Node.class);
+		} catch (IOException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Could not parse node information");
 		}
-		return new StringRepresentation(JSONEncoder.encode(nodes));
+		
+		final String secret;
+		try {
+			secret = spaceManager.join(node);
+		} catch (SpaceManagerException e) {
+			e.printStackTrace();
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not join node!");
+
+		}
+		return JSONEncoder.encode(secret);
 	}
 }

@@ -26,7 +26,7 @@ import org.junit.Test;
 import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
-import otsopack.full.java.network.coordination.spacemanager.http.HttpSpaceManagerClient;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.full.java.network.coordination.spacemanager.http.SpaceManagerManager;
 
 public class SimpleRegistryTest {
@@ -50,7 +50,7 @@ public class SimpleRegistryTest {
 		
 		final String spaceURI = "http://space1/";
 		
-		final IDiscovery discovery = new SimpleDiscovery(new HttpSpaceManagerClient(this.manager.createClientAddress()));
+		final IDiscovery discovery = new SimpleDiscovery(new HttpSpaceManager(this.manager.createClientAddress()));
 		final SimpleRegistry registry = new SimpleRegistry(spaceURI, discovery){
 			@Override
 			public int getInterval(){

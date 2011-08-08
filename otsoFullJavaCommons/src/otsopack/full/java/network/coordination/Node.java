@@ -14,7 +14,11 @@
  */
 package otsopack.full.java.network.coordination;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable {
+	
+	private static final long serialVersionUID = -168551890952026555L;
 	
 	private String uuid;
 	private String baseURI;
@@ -58,7 +62,7 @@ public class Node {
 		this.reachable = reachable;
 	}
 
-	public boolean isMustPoll() {
+	public boolean mustPoll() {
 		return this.mustPoll;
 	}
 
