@@ -17,11 +17,14 @@ package otsopack.full.java.network.communication;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.restlet.resource.ResourceException;
 
@@ -80,9 +83,8 @@ public class RestMulticastCommunication implements ICommunication {
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 		
 		for(final Node nodeBaseURL : nodeBaseURLs){
-			for(Future<Graph> existingGraph : submittedGraphs)
-				if(existingGraph.isDone())
-					break;
+			if(anyTaskFinishedWithNotNull(submittedGraphs))
+				break;
 				
 			final Future<Graph> submittedGraph = this.executor.submit(new Callable<Graph>(){
 				
@@ -118,9 +120,8 @@ public class RestMulticastCommunication implements ICommunication {
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 
 		for(final Node nodeBaseURL : nodeBaseURLs){
-			for(Future<Graph> existingGraph : submittedGraphs)
-				if(existingGraph.isDone())
-					break;
+			if(anyTaskFinishedWithNotNull(submittedGraphs))
+				break;
 				
 			final Future<Graph> submittedGraph = this.executor.submit(new Callable<Graph>(){
 				
@@ -147,31 +148,126 @@ public class RestMulticastCommunication implements ICommunication {
 		}
 	}
 
+	/**
+	 * Fast method that checks if any previous submitted task finished
+	 * 
+	 * @param submittedGraphs
+	 * @return
+	 */
+	private boolean anyTaskFinishedWithNotNull(final List<Future<Graph>> submittedTasks) {
+		for(Future<Graph> existingTask : submittedTasks)
+			try {
+				if(existingTask.isDone() && existingTask.get() != null)
+					return true;
+			} catch (InterruptedException e1) {
+				;
+			} catch (ExecutionException e1) {
+				;
+			}
+		return false;
+	}
+
 	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		return read(spaceURI, template, outputFormat, new Filter[]{}, timeout);
 	}
 
+	/**
+	 * Takes a graph from the unicast communication providers. It first performs a set of reads, until one read provides a 
+	 * correct value. When a correct value is provided, it performs the take against the same node. If it is successful, 
+	 * it returns the returned graph and finishes the remaining reads. 
+	 */
 	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph take(final String spaceURI, final String graphURI, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
-		// Return the first result found
-		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
+		
+		final BlockingQueue<Node> successfulReads = new SynchronousQueue<Node>();
+		
+		final List<Future<?>> submittedTasks = new Vector<Future<?>>();
+		
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
-		for(Node nodeBaseURL : nodeBaseURLs){
-			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			Graph graph;
-			try {
-				graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
-			} catch (Exception e) {
-				e.printStackTrace();
-				graph = null;
-			}
-			if(graph != null)
-				return graph;
+		
+		// This is a holder of the returning graph. If there is an element, this method should finish
+		final List<Graph> graphs = new Vector<Graph>(1);
+		
+		// Perform all the READs to the nodes
+		for(final Node nodeBaseURL : nodeBaseURLs){
+			
+			final Future<?> futureTask = this.executor.submit(new Runnable() {
+				@Override
+				public void run() {
+					// It's already finished
+					if(!graphs.isEmpty())
+						return;
+					
+					final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
+					try {
+						final Graph graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
+						
+						if(graph != null && graphs.isEmpty()){
+							// If other read was also successful, we wait. When the take is successful, 
+							// this thread will be interrupted. Otherwise, we will put this node
+							successfulReads.put(nodeBaseURL);
+						}
+						
+					}catch(InterruptedException ie){
+						
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			});
+			
+			submittedTasks.add(futureTask);
 		}
-		return null;
+		
+		// Wait while there are READs remaining
+		while(tasksRemaining(submittedTasks)){
+			final Node node;
+			try {
+				node = successfulReads.poll(50, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				break;
+			}
+			// If any READ is successful, perform the TAKE
+			if(node != null){
+				final RestUnicastCommunication unicast = createUnicastCommunication(node);
+				try {
+					final Graph graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
+					if(graph != null){
+						// If the TAKE is successful, finish
+						graphs.add(graph);
+						break;
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		// Interrupt the rest of the running tasks (if any)
+		for(Future<?> task : submittedTasks)
+			task.cancel(true);
+		
+		// Return 
+		if(graphs.isEmpty())
+			return null;
+		
+		return graphs.get(0);
+	}
+
+	/**
+	 * Check if there is any task remaining.
+	 * 
+	 * @param submittedTasks
+	 * @return
+	 */
+	private boolean tasksRemaining(List<Future<?>> submittedTasks) {
+		for(Future<?> task : submittedTasks)
+			if(!task.isDone())
+				return true;
+		return false;
 	}
 
 	@Override
@@ -251,6 +347,9 @@ public class RestMulticastCommunication implements ICommunication {
 		for(Future<Graph []> submittedTask : submittedTasks){
 			final Graph[] retrievedGraphs;
 			try {
+				for(int i = 0; i < 100; ++i)
+					System.out.println("HOLA");
+				submittedTask.get();
 				retrievedGraphs = submittedTask.get();
 			} catch (InterruptedException e) {
 				for(Future<Graph[]> task : submittedTasks)

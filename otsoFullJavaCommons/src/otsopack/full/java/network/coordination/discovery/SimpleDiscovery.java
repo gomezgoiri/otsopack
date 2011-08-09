@@ -21,6 +21,7 @@ import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManager;
 
 public class SimpleDiscovery implements IDiscovery {
 
@@ -36,7 +37,9 @@ public class SimpleDiscovery implements IDiscovery {
 	}
 	
 	public SimpleDiscovery(Node ... nodes){
-		this.discoverers.put("", new ISpaceManager[]{new SimpleSpaceManager(nodes)});
+		final SpaceManager spaceManager = new SimpleSpaceManager(nodes);
+		spaceManager.start();
+		this.discoverers.put("", new ISpaceManager[]{spaceManager});
 	}
 	
 	private String getMostConcrete(String spaceURI){
