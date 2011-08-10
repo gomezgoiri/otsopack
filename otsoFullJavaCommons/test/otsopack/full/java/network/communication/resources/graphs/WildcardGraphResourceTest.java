@@ -14,6 +14,8 @@
  */
 package otsopack.full.java.network.communication.resources.graphs;
 
+import static otsopack.full.java.network.communication.GraphAssert.assertGraphEquals;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -28,7 +30,6 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.full.java.network.communication.AbstractRestServerTesting;
-import otsopack.full.java.network.communication.representations.RepresentationException;
 import otsopack.full.java.network.communication.representations.SemanticFormatRepresentation;
 
 public class WildcardGraphResourceTest extends AbstractRestServerTesting {

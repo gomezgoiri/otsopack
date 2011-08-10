@@ -14,16 +14,11 @@
 
 package otsopack.full.java.network.communication;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 
 import otsopack.commons.IController;
-import otsopack.commons.data.Graph;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
 
@@ -57,25 +52,5 @@ public abstract class AbstractRestServerTesting {
 		System.out.println("Shutting down...");
 		this.rs.shutdown();
 		System.out.println("Shut down!");
-	}
-	
-	protected void assertGraphEquals(final Graph originalGraph, final Graph retrievedGraph) {
-		// If they are both null, everything is fine
-		if(originalGraph == retrievedGraph)
-			return;
-		
-		assertNotNull(originalGraph);
-		assertNotNull("null graph retrieved, expected " + originalGraph, retrievedGraph);
-		assertEquals(originalGraph.getFormat(), retrievedGraph.getFormat());
-		final String [] originalLines = originalGraph.getData().split("\n");
-		final String [] retrievedLines = retrievedGraph.getData().split("\n");
-		assertEquals(originalLines.length, retrievedLines.length);
-		for(String originalLine : originalLines){
-			boolean found = false;
-			for(String retrievedLine : retrievedLines)
-				if(originalLine.trim().equals(retrievedLine.trim()))
-					found = true;
-			assertTrue("Couldn't find " + originalLine + " among the retrieved lines: " + retrievedGraph.getData(), found);
-		}
 	}
 }
