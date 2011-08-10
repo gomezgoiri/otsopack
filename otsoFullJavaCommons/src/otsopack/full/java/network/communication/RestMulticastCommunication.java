@@ -181,7 +181,12 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public Graph take(final String spaceURI, final String graphURI, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
+		final TakeArguments takeArgs = new TakeGraphUriArguments(spaceURI, graphURI, filters, timeout, outputFormat);
 		
+		return performTake(takeArgs);
+	}
+
+	private Graph performTake(final TakeArguments takeArgs) {
 		final BlockingQueue<Node> successfulReads = new SynchronousQueue<Node>();
 		
 		final List<Future<?>> submittedTasks = new Vector<Future<?>>();
@@ -203,7 +208,7 @@ public class RestMulticastCommunication implements ICommunication {
 					
 					final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
 					try {
-						final Graph graph = unicast.read(spaceURI, graphURI, outputFormat, filters, timeout);
+						final Graph graph = takeArgs.read(unicast);
 						
 						if(graph != null && graphs.isEmpty()){
 							// If other read was also successful, we wait. When the take is successful, 
@@ -234,7 +239,7 @@ public class RestMulticastCommunication implements ICommunication {
 			if(node != null){
 				final RestUnicastCommunication unicast = createUnicastCommunication(node);
 				try {
-					final Graph graph = unicast.take(spaceURI, graphURI, outputFormat, filters, timeout);
+					final Graph graph = takeArgs.take(unicast);
 					if(graph != null){
 						// If the TAKE is successful, finish
 						graphs.add(graph);
@@ -277,24 +282,10 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph take(final String spaceURI, final Template template, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
-		// Return the first result found
-		// TODO: Use ExecutorService with special caution (performing a read and then a take to the first one that returns something different to null)
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
-		for(Node nodeBaseURL : nodeBaseURLs){
-			final RestUnicastCommunication unicast = createUnicastCommunication(nodeBaseURL);
-			Graph graph;
-			try {
-				graph = unicast.take(spaceURI, template, outputFormat, filters, timeout);
-			} catch (ResourceException e) {
-				e.printStackTrace();
-				graph = null;
-			}
-			if(graph != null)
-				return graph;
-		}
-		return null;
+		final TakeArguments takeArgs = new TakeTemplateArguments(spaceURI, template, filters, timeout, outputFormat);
+		return performTake(takeArgs);
 	}
 
 	@Override
@@ -471,5 +462,60 @@ public class RestMulticastCommunication implements ICommunication {
 	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI, Graph triples) throws TSException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	private static abstract class TakeArguments{
+		protected final String spaceURI;
+		protected final Filter [] filters;
+		protected final long timeout;
+		protected final SemanticFormat outputFormat;
+		
+		TakeArguments(String spaceURI, Filter[] filters, long timeout, SemanticFormat outputFormat) {
+			this.spaceURI = spaceURI;
+			this.filters = filters;
+			this.timeout = timeout;
+			this.outputFormat = outputFormat;
+		}
+		
+		abstract Graph take(ICommunication comm) throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
+		abstract Graph read(ICommunication comm) throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException, UnsupportedTemplateException;
+	}
+	
+	private static class TakeTemplateArguments extends TakeArguments {
+		protected final Template template;
+		
+		TakeTemplateArguments(String spaceURI, Template template, Filter[] filters, long timeout, SemanticFormat outputFormat) {
+			super(spaceURI, filters, timeout, outputFormat);
+			this.template = template;
+		}
+
+		@Override
+		Graph take(ICommunication comm) throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException, UnsupportedTemplateException{
+			return comm.take(this.spaceURI, this.template, this.outputFormat, this.filters, this.timeout);
+		}
+		
+		@Override
+		Graph read(ICommunication comm) throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException{
+			return comm.read(this.spaceURI, this.template, this.outputFormat, this.filters, this.timeout);
+		}
+	}
+	
+	private static class TakeGraphUriArguments extends TakeArguments {
+		protected final String graphURI;
+		
+		TakeGraphUriArguments(String spaceURI, String graphURI, Filter[] filters, long timeout, SemanticFormat outputFormat) {
+			super(spaceURI, filters, timeout, outputFormat);
+			this.graphURI = graphURI;
+		}
+		
+		@Override
+		Graph take(ICommunication comm) throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException{
+			return comm.take(this.spaceURI, this.graphURI, this.outputFormat, this.filters, this.timeout);
+		}
+		
+		@Override
+		Graph read(ICommunication comm) throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException{
+			return comm.read(this.spaceURI, this.graphURI, this.outputFormat, this.filters, this.timeout);
+		}
 	}
 }
