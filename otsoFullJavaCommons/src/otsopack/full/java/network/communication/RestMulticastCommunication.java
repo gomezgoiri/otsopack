@@ -47,11 +47,12 @@ import otsopack.full.java.network.coordination.Node;
 
 public class RestMulticastCommunication implements ICommunication {
 
-	private final static int MULTICAST_THREADS = 5;
+	final static int MULTICAST_THREADS = 5;
 	
 	private final IRegistry registry;
 	private final LocalCredentialsManager credentialsManager;
-	private ExecutorService executor;
+	private volatile ExecutorService executor;
+	private volatile boolean started;
 	
 	public RestMulticastCommunication(IRegistry registry){
 		this(registry, new LocalCredentialsManager());
@@ -64,12 +65,14 @@ public class RestMulticastCommunication implements ICommunication {
 	
 	@Override
 	public void startup() throws TSException {
+		this.started = true;
 		this.registry.startup();
 		this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
 	}
 
 	@Override
 	public void shutdown() throws TSException {
+		this.started = false;
 		this.registry.shutdown();
 		this.executor.shutdown();
 	}
@@ -77,6 +80,7 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public Graph read(final String spaceURI, final String graphURI, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
+		checkStarted();
 		
 		// Return the first result found
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
@@ -106,6 +110,11 @@ public class RestMulticastCommunication implements ICommunication {
 		return retrieveFirstGraph(submittedGraphs);
 	}
 
+	private void checkStarted() {
+		if(!this.started)
+			throw new IllegalStateException(RestMulticastCommunication.class.getName() + " not started!");
+	}
+
 	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
@@ -115,6 +124,8 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public Graph read(final String spaceURI, final Template template, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		checkStarted();
+		
 		// Return the first result found
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
@@ -187,6 +198,8 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	private Graph performTake(final TakeArguments takeArgs) {
+		checkStarted();
+		
 		final BlockingQueue<Node> successfulReads = new SynchronousQueue<Node>();
 		
 		final List<Future<?>> submittedTasks = new Vector<Future<?>>();
@@ -297,6 +310,8 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public Graph[] query(final String spaceURI, final Template template, final SemanticFormat outputFormat, final Filter[] filters, final long timeout)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		checkStarted();
+		
 		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
 		
 		final List<Future<Graph []>> submittedTasks = new Vector<Future<Graph[]>>();
@@ -338,9 +353,6 @@ public class RestMulticastCommunication implements ICommunication {
 		for(Future<Graph []> submittedTask : submittedTasks){
 			final Graph[] retrievedGraphs;
 			try {
-				for(int i = 0; i < 100; ++i)
-					System.out.println("HOLA");
-				submittedTask.get();
 				retrievedGraphs = submittedTask.get();
 			} catch (InterruptedException e) {
 				for(Future<Graph[]> task : submittedTasks)

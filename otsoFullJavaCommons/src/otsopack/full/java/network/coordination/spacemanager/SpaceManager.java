@@ -63,6 +63,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	
 	private volatile boolean initialized     = false;
 	private volatile boolean stop = false; 
+	private volatile boolean started = false;
 	
 	private final Random rnd = new Random();
 	private final int timeout;
@@ -285,6 +286,15 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 				this.currentNodes.remove(nodeStatus.getSecret());
 			else
 				this.currentNodes.putIfAbsent(nodeStatus.getSecret(), nodeStatus.getNode());
+		}
+	}
+	
+	public void startup(){
+		synchronized(this){
+			if(!this.started){
+				this.started = true;
+				start();
+			}
 		}
 	}
 	
