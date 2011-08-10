@@ -30,7 +30,7 @@ public class MultipleRegistry implements IRegistry {
 	}
 	
 	@Override
-	public void startup() {
+	public void startup() throws RegistryException {
 		for(IRegistry registry : this.registries)
 			registry.startup();
 	}
@@ -52,7 +52,7 @@ public class MultipleRegistry implements IRegistry {
 	}
 
 	@Override
-	public void shutdown() {
+	public void shutdown() throws RegistryException {
 		for(IRegistry registry : this.registries)
 			registry.shutdown();
 	}

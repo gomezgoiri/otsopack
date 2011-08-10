@@ -14,8 +14,8 @@
  */
 package otsopack.full.java.network.communication;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static otsopack.full.java.network.communication.GraphAssert.assertGraphEquals;
@@ -35,7 +35,6 @@ import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.discovery.SimpleDiscovery;
 import otsopack.full.java.network.coordination.registry.SimpleRegistry;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
-import otsopack.full.java.network.coordination.spacemanager.SpaceManager;
 
 public class RestMulticastCommunicationTest {
 
@@ -49,7 +48,6 @@ public class RestMulticastCommunicationTest {
 	private OtsoRestServer [] restServers;
 	private IController [] controllers;
 	private Node [] nodes;
-	private SpaceManager spaceManager;
 	private IRegistry registry;
 	
 	private RestMulticastCommunication comm;
@@ -107,10 +105,7 @@ public class RestMulticastCommunicationTest {
 			this.nodes[i] = new Node("http://localhost:" + (this.currentStartingPort + i) + "/", "node" + i, false, false);
 		}
 
-		this.spaceManager = new SimpleSpaceManager(this.nodes);
-		this.spaceManager.startup();
-		
-		this.registry = new SimpleRegistry(this.spaceURI, new SimpleDiscovery(this.spaceManager));
+		this.registry = new SimpleRegistry(this.spaceURI, new SimpleDiscovery(new SimpleSpaceManager(this.nodes)));
 		
 		this.comm = new RestMulticastCommunication(this.registry);
 		this.comm.startup();
@@ -119,8 +114,6 @@ public class RestMulticastCommunicationTest {
 	@After
 	public void tearDown() throws Exception {
 		this.comm.shutdown();
-		
-		this.spaceManager.shutdown();
 		
 		for(int i = 0; i < SERVERS; ++i)
 			this.restServers[i].shutdown();

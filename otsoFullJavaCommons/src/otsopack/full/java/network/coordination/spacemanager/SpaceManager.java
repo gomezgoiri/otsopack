@@ -289,6 +289,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		}
 	}
 	
+	@Override
 	public void startup(){
 		synchronized(this){
 			if(!this.started){
@@ -298,6 +299,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		}
 	}
 	
+	@Override
 	public void shutdown(){
 		this.stop = true;
 		interrupt();

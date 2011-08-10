@@ -12,15 +12,16 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.coordination;
+package otsopack.full.java.network.communication;
 
-import java.util.Set;
+import otsopack.commons.exceptions.TSException;
 
-import otsopack.full.java.network.coordination.registry.RegistryException;
+public class RestCommunicationException extends TSException {
 
-public interface IRegistry {
-	public void startup() throws RegistryException;
-	public Set<ISpaceManager> getSpaceManagers();
-	public Set<Node> getNodesBaseURLs();
-	void shutdown() throws RegistryException;
+	private static final long serialVersionUID = -679112088098310143L;
+
+	public RestCommunicationException(String message) {
+		super(message);
+	}
+
 }

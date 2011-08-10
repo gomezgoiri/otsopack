@@ -84,7 +84,13 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	}
 	
 	@Override
-	public void startup(){
+	public void startup() throws RegistryException {
+		try{
+			this.discovery.startup();
+		}catch(DiscoveryException de){
+			throw new RegistryException("Could not start registry: " + de.getMessage(), de);
+		}
+
 		int currentIterations = this.iterations;
 		int times = 0;
 		this.start();
@@ -99,7 +105,7 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	}
 	
 	@Override
-	public void shutdown(){
+	public void shutdown() throws RegistryException {
 		this.additionalInterrupted = true;
 		interrupt();
 		int times = 0;
@@ -109,9 +115,13 @@ public class SimpleRegistry extends Thread implements IRegistry {
 				times++;
 			}
 		} catch (InterruptedException e) {
-			return;
+			
 		}
-		
+		try{
+			this.discovery.shutdown();
+		}catch(DiscoveryException de){
+			throw new RegistryException("Could not stop " + SimpleRegistry.class.getName() + ": " + de.getMessage(), de);
+		}
 	}
 	
 	public void reload(){

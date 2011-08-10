@@ -21,7 +21,7 @@ import otsopack.full.java.network.coordination.IDiscovery;
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.SimpleSpaceManager;
-import otsopack.full.java.network.coordination.spacemanager.SpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
 public class SimpleDiscovery implements IDiscovery {
 
@@ -37,9 +37,28 @@ public class SimpleDiscovery implements IDiscovery {
 	}
 	
 	public SimpleDiscovery(Node ... nodes){
-		final SpaceManager spaceManager = new SimpleSpaceManager(nodes);
-		spaceManager.start();
-		this.discoverers.put("", new ISpaceManager[]{spaceManager});
+		this.discoverers.put("", new ISpaceManager[]{new SimpleSpaceManager(nodes)});
+	}
+	
+	@Override
+	public void startup() throws DiscoveryException {
+		try{
+			for(String key : this.discoverers.keySet())
+				for(ISpaceManager spaceManager : this.discoverers.get(key))
+					spaceManager.startup();
+		}catch(SpaceManagerException e){
+			throw new DiscoveryException("Could not start discovery due to the relying space managers: " + e.getMessage(), e);
+		}
+	}
+	
+	public void shutdown() throws DiscoveryException {
+		try{
+			for(String key : this.discoverers.keySet())
+				for(ISpaceManager spaceManager : this.discoverers.get(key))
+					spaceManager.shutdown();
+		}catch(SpaceManagerException e){
+			throw new DiscoveryException("Could not stop discovery due to the relying space managers: " + e.getMessage(), e);
+		}
 	}
 	
 	private String getMostConcrete(String spaceURI){

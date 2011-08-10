@@ -75,4 +75,12 @@ public class HttpDiscoveryClient implements IDiscovery {
 		return spaceManagers.toArray(new ISpaceManager[]{});
 	}
 
+	@Override
+	public void startup() throws DiscoveryException {
+	}
+
+	@Override
+	public void shutdown() throws DiscoveryException {
+	}
+
 }

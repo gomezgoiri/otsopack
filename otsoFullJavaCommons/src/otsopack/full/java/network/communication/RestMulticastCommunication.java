@@ -44,6 +44,7 @@ import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.Node;
+import otsopack.full.java.network.coordination.registry.RegistryException;
 
 public class RestMulticastCommunication implements ICommunication {
 
@@ -66,15 +67,26 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public void startup() throws TSException {
 		this.started = true;
-		this.registry.startup();
+		try{
+			this.registry.startup();
+		}catch(RegistryException re){
+			re.printStackTrace();
+			throw new RestCommunicationException("Could not start " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
+		}
 		this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
 	}
 
 	@Override
 	public void shutdown() throws TSException {
 		this.started = false;
-		this.registry.shutdown();
 		this.executor.shutdown();
+		
+		try{
+			this.registry.shutdown();
+		}catch(RegistryException re){
+			re.printStackTrace();
+			throw new RestCommunicationException("Could not shutdown " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
+		}
 	}
 	
 	@Override

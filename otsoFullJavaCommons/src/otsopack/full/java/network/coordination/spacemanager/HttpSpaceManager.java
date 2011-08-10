@@ -158,4 +158,12 @@ public class HttpSpaceManager implements ISpaceManager {
 			client.release();
 		}
 	}
+
+	@Override
+	public void startup() throws SpaceManagerException {
+	}
+
+	@Override
+	public void shutdown() throws SpaceManagerException {
+	}
 }

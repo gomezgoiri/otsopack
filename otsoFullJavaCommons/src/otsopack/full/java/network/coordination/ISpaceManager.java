@@ -28,4 +28,7 @@ public interface ISpaceManager {
 	public String join(Node node) throws SpaceManagerException;
 	public void poll(String secret) throws SpaceManagerException;
 	public void leave(String secret) throws SpaceManagerException;
+	
+	public void startup() throws SpaceManagerException;
+	public void shutdown() throws SpaceManagerException;
 }

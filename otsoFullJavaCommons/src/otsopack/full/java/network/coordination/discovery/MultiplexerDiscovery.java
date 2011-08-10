@@ -57,6 +57,20 @@ public class MultiplexerDiscovery implements IDiscovery {
 	}
 	
 	@Override
+	public void startup() throws DiscoveryException {
+		for(String key : this.discoverers.keySet())
+			for(IDiscovery discovery : this.discoverers.get(key))
+				discovery.startup();
+	}
+	
+	@Override
+	public void shutdown() throws DiscoveryException {
+		for(String key : this.discoverers.keySet())
+			for(IDiscovery discovery : this.discoverers.get(key))
+				discovery.shutdown();
+	}
+	
+	@Override
 	public ISpaceManager[] getSpaceManagers(String spaceURI) throws DiscoveryException {
 		final IDiscovery [] discoveries = getDiscoveries(spaceURI);
 		if(discoveries == null)
