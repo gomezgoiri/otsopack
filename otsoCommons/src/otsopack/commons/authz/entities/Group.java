@@ -19,6 +19,19 @@ package otsopack.commons.authz.entities;
  * More specifically: groups.
  */
 public class Group implements IEntity {
+	
+	private static final long serialVersionUID = 2910875729797688679L;
+	
+	public static final String code = "group";
+
+	public String serialize(){
+		return code + ":"; // + TODO
+	}
+	
+	public static Group create(String serialized){
+		throw new RuntimeException(Group.class.getName() + " not implemented");
+	}
+	
 	public boolean check(Object o) {
 		// TODO Auto-generated method stub
 		return false;

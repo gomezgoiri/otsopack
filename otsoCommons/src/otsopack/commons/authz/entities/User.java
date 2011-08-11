@@ -19,6 +19,10 @@ package otsopack.commons.authz.entities;
  * More specifically: individual users.
  */
 public class User implements IEntity {
+	private static final long serialVersionUID = -4396605345110467927L;
+	
+	public static final String code = "user";
+	
 	final String id;
 	
 	public User(String id) {
@@ -27,6 +31,16 @@ public class User implements IEntity {
 
 	public String getId() {
 		return id;
+	}
+	
+	public String serialize() {
+		return code + ":" + this.id;
+	}
+	
+	public static User create(String serialized) throws EntityDecodingException {
+		if(!serialized.startsWith(code))
+			throw new EntityDecodingException("Could not deserialize " + serialized + " as " + User.class.getName());
+		return new User(serialized.substring(code.length() + 1));
 	}
 
 	public int hashCode() {

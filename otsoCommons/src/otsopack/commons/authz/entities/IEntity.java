@@ -13,11 +13,13 @@
  */
 package otsopack.commons.authz.entities;
 
+import java.io.Serializable;
+
 /**
  * @author tulvur
  *
  */
-public interface IEntity {
+public interface IEntity extends Serializable {
 	/**
 	 * The authenticity of this entity is checked
 	 * @param o
@@ -33,4 +35,9 @@ public interface IEntity {
 	 * @return
 	 */
 	public boolean isAnonymous();
+	
+	/**
+	 * Serialize it to disk
+	 */
+	public String serialize();
 }

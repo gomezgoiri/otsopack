@@ -16,9 +16,23 @@ package otsopack.commons.authz.entities;
 
 public class AnonymousEntity implements IEntity {
 
+	private static final long serialVersionUID = 3107255149078732910L;
+	
+	public static final String code = "anonymous";
+	
 	public final static AnonymousEntity ANONYMOUS = new AnonymousEntity();
 	
 	private AnonymousEntity(){}
+
+	public String serialize(){
+		return code;
+	}
+	
+	public static AnonymousEntity create(String serialized) throws EntityDecodingException{
+		if(!serialized.equals(code))
+			throw new EntityDecodingException("Could not deserialize: " + serialized + " as " + AnonymousEntity.class.getName());
+		return AnonymousEntity.ANONYMOUS;
+	}
 	
 	/* (non-Javadoc)
 	 * @see otsopack.commons.authz.entities.IEntity#check(java.lang.Object)
