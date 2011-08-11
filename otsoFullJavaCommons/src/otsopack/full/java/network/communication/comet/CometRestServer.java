@@ -56,11 +56,5 @@ public class CometRestServer {
 	
 	public void shutdown() throws Exception {
 		this.component.stop();
-	}
-	
-	public static void main(String [] args) throws Exception {
-		ICometController controller = new CometController();
-		CometRestServer server = new CometRestServer(controller);
-		server.startup();
-	}
+	}	
 }
