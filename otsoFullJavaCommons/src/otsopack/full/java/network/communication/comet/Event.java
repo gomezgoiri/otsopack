@@ -1,0 +1,140 @@
+/*
+ * Copyright (C) 2008-2011 University of Deusto
+ * 
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution.
+ * 
+ * This software consists of contributions made by many individuals, 
+ * listed below:
+ *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ *
+ */
+package otsopack.full.java.network.communication.comet;
+
+import java.io.Serializable;
+
+public class Event implements Serializable {
+	
+	private static final long serialVersionUID = -8414362780443364402L;
+
+	/**
+	 * What kind of event is this one: poll, request, response  
+	 */
+	private String type;
+	
+	/**
+	 * Each request provides a unique identifier, and the response must carry it
+	 */
+	private String eventId;
+	
+	/**
+	 * Triple Space operation: read, take, query (notify, etc.)
+	 */
+	private String operation;
+	
+	/**
+	 * If it is a request, carry the request in a serialized form. 
+	 * If it is a response, carry the response in a serialized form.
+	 */
+	private String payload;
+
+	public Event(){}
+	
+	public Event(String type, String eventId, String operation, String payload) {
+		this.type = type;
+		this.eventId = eventId;
+		this.operation = operation;
+		this.payload = payload;
+	}
+
+
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getEventId() {
+		return this.eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getOperation() {
+		return this.operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getPayload() {
+		return this.payload;
+	}
+
+	public void setPayload(String payload) {
+		this.payload = payload;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((this.eventId == null) ? 0 : this.eventId.hashCode());
+		result = prime * result
+				+ ((this.operation == null) ? 0 : this.operation.hashCode());
+		result = prime * result
+				+ ((this.payload == null) ? 0 : this.payload.hashCode());
+		result = prime * result
+				+ ((this.type == null) ? 0 : this.type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Event other = (Event) obj;
+		if (this.eventId == null) {
+			if (other.eventId != null)
+				return false;
+		} else if (!this.eventId.equals(other.eventId))
+			return false;
+		if (this.operation == null) {
+			if (other.operation != null)
+				return false;
+		} else if (!this.operation.equals(other.operation))
+			return false;
+		if (this.payload == null) {
+			if (other.payload != null)
+				return false;
+		} else if (!this.payload.equals(other.payload))
+			return false;
+		if (this.type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!this.type.equals(other.type))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Event [type=" + this.type + ", eventId=" + this.eventId
+				+ ", operation=" + this.operation + ", payload=" + this.payload
+				+ "]";
+	}
+}

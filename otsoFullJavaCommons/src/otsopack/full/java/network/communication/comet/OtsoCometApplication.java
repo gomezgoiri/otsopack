@@ -19,6 +19,7 @@ import java.util.Map;
 
 import otsopack.full.java.network.communication.comet.resources.EventResource;
 import otsopack.full.java.network.communication.comet.resources.SessionResource;
+import otsopack.full.java.network.communication.comet.resources.SessionsResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 
@@ -28,6 +29,7 @@ public class OtsoCometApplication extends AbstractOtsopackApplication<ICometCont
 		
 	static {
 		addPaths(SessionResource.getRoots());
+		addPaths(SessionsResource.getRoots());
 		addPaths(EventResource.getRoots());
 	}
 	
