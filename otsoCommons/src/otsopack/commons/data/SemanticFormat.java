@@ -35,6 +35,13 @@ public final class SemanticFormat {
 		this.name = name;
 	}
 	
+	public static SemanticFormat getSemanticFormat(String name){
+		for(int i = 0; i < FORMATS.size(); ++i)
+			if(((SemanticFormat)FORMATS.get(i)).getName().equals(name))
+				return (SemanticFormat)FORMATS.get(i);
+		throw new IllegalArgumentException("Invalid semantic format name: " + name);
+	}
+	
 	public String getName(){
 		return this.name;
 	}
