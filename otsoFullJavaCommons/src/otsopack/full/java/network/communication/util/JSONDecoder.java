@@ -18,7 +18,7 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 public class JSONDecoder {
-	public static <T> T decode(String encoded, Class<T> type, String errorMessage){
+	public static <T> T decode(String encoded, Class<T> type, String errorMessage) throws ResourceException {
 		final ObjectMapper mapper = new ObjectMapper();
 		
 		try {
@@ -28,7 +28,7 @@ public class JSONDecoder {
 		} 
 	}
 	
-	public static <T> T decode(String encoded, Class<T> type){
+	public static <T> T decode(String encoded, Class<T> type) throws ResourceException {
 		return decode(encoded, type, "Couldn't decode request");
 	}
 }

@@ -16,16 +16,19 @@ package otsopack.full.java.network.communication.comet;
 
 public class CometEvents {
 	
-	public static final String READ_URI               = "read-uri"; 
-	public static final String READ_URI_FILTERS       = "read-uri-filters"; 
-	public static final String READ_TEMPLATE          = "read-template";
-	public static final String READ_TEMPLATE_FILTERS  = "read-template-filters";
+	public static final String READ                   = "read";
+	public static final String READ_URI               = READ + "-uri"; 
+	public static final String READ_URI_FILTERS       = READ + "-uri-filters"; 
+	public static final String READ_TEMPLATE          = READ + "-template";
+	public static final String READ_TEMPLATE_FILTERS  = READ + "-template-filters";
 	
-	public static final String TAKE_URI               = "take-uri"; 
-	public static final String TAKE_URI_FILTERS       = "take-uri-filters"; 
-	public static final String TAKE_TEMPLATE          = "take-template";
-	public static final String TAKE_TEMPLATE_FILTERS  = "take-template-filters";
+	public static final String TAKE                   = "take";
+	public static final String TAKE_URI               = TAKE + "-uri"; 
+	public static final String TAKE_URI_FILTERS       = TAKE + "-uri-filters"; 
+	public static final String TAKE_TEMPLATE          = TAKE + "-template";
+	public static final String TAKE_TEMPLATE_FILTERS  = TAKE + "-template-filters";
 	
-	public static final String QUERY_TEMPLATE         = "query-template";
-	public static final String QUERY_TEMPLATE_FILTERS = "query-template-filters";
+	public static final String QUERY                  = "query";
+	public static final String QUERY_TEMPLATE         = QUERY + "-template";
+	public static final String QUERY_TEMPLATE_FILTERS = QUERY + "-template-filters";
 }

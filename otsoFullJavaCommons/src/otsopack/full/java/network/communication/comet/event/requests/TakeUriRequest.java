@@ -12,11 +12,14 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.communication.comet.event;
+package otsopack.full.java.network.communication.comet.event.requests;
 
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICommunication;
 
-public class TakeUriRequest extends GraphRequest {
+public class TakeUriRequest extends TakeRequest {
 	
 	private String uri;
 	
@@ -25,6 +28,11 @@ public class TakeUriRequest extends GraphRequest {
 	public TakeUriRequest(long timeout, SemanticFormat outputFormat, String uri) {
 		super(timeout, outputFormat);
 		this.uri = uri;
+	}
+	
+	@Override
+	public Graph take(String spaceURI, ICommunication comm) throws TSException {
+		return comm.take(spaceURI, this.uri, getOutputFormat(), getTimeout());
 	}
 
 	public String getUri() {

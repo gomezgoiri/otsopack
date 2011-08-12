@@ -16,6 +16,8 @@ package otsopack.full.java.network.communication.comet.event;
 
 import java.io.Serializable;
 
+import otsopack.full.java.network.communication.comet.CometEvents;
+
 public class Event implements Serializable {
 	
 	private static final long serialVersionUID = -8414362780443364402L;
@@ -31,7 +33,7 @@ public class Event implements Serializable {
 	private String eventId;
 	
 	/**
-	 * Triple Space operation: read, take, query (notify, etc.)
+	 * Triple Space operation: read, take, query (notify, etc.). See {@link CometEvents}
 	 */
 	private String operation;
 	

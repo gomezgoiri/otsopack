@@ -12,9 +12,12 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.communication.comet.event;
+package otsopack.full.java.network.communication.comet.event.requests;
 
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.data.SerializableTemplateFactory;
+import otsopack.commons.data.Template;
+import otsopack.commons.data.TemplateDeserializingException;
 
 /**
  * A {@link GraphRequest} collects those requests that are will
@@ -33,6 +36,11 @@ public abstract class GraphRequest {
 		this.outputFormat = outputFormat;
 	}
 
+	protected Template getTemplate(HasTemplateRequest request) throws TemplateDeserializingException {
+		final String serializedTemplate = request.getSerializedTemplate();
+		return (Template)SerializableTemplateFactory.create(serializedTemplate);
+	}
+	
 	public long getTimeout() {
 		return this.timeout;
 	}

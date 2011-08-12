@@ -12,12 +12,15 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.communication.comet.event;
+package otsopack.full.java.network.communication.comet.event.requests;
 
 import java.util.Arrays;
 
 import otsopack.commons.authz.Filter;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICommunication;
 
 public class TakeUriWithFiltersRequest extends TakeUriRequest {
 
@@ -30,6 +33,11 @@ public class TakeUriWithFiltersRequest extends TakeUriRequest {
 		this.filters = filters;
 	}
 	
+	@Override
+	public Graph take(String spaceURI, ICommunication comm) throws TSException {
+		return comm.take(spaceURI, getUri(), getOutputFormat(), this.filters, getTimeout());
+	}
+
 	public Filter[] getFilters() {
 		return this.filters;
 	}

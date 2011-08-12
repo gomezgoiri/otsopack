@@ -12,24 +12,32 @@
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  *
  */
-package otsopack.full.java.network.communication.comet.event;
+package otsopack.full.java.network.communication.comet.event.requests;
 
 import java.util.Arrays;
 
 import otsopack.commons.authz.Filter;
+import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.ICommunication;
 
-public class ReadUriWithFiltersRequest extends ReadUriRequest {
+public class QueryWithFiltersRequest extends QueryRequest {
 
 	private Filter [] filters;
 	
-	public ReadUriWithFiltersRequest(){ }
-	
-	public ReadUriWithFiltersRequest(long timeout, SemanticFormat outputFormat, String uri, Filter [] filters) {
-		super(timeout, outputFormat, uri);
+	public QueryWithFiltersRequest() {
+	}
+
+	public QueryWithFiltersRequest(long timeout, SemanticFormat outputFormat, String serializedTemplate, Filter [] filters) {
+		super(timeout, outputFormat, serializedTemplate);
 		this.filters = filters;
 	}
 	
+	public Graph [] query(String spaceURI, ICommunication comm) throws TSException {
+		return comm.query(spaceURI, getTemplate(this), getOutputFormat(), this.filters, getTimeout());
+	}
+
 	public Filter[] getFilters() {
 		return this.filters;
 	}
@@ -54,7 +62,7 @@ public class ReadUriWithFiltersRequest extends ReadUriRequest {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ReadUriWithFiltersRequest other = (ReadUriWithFiltersRequest) obj;
+		QueryWithFiltersRequest other = (QueryWithFiltersRequest) obj;
 		if (!Arrays.equals(this.filters, other.filters))
 			return false;
 		return true;
@@ -62,9 +70,10 @@ public class ReadUriWithFiltersRequest extends ReadUriRequest {
 
 	@Override
 	public String toString() {
-		return "ReadUriWithFiltersRequest [filters="
-				+ Arrays.toString(this.filters) + ", getUri()=" + this.getUri()
-				+ ", getTimeout()=" + this.getTimeout()
+		return "QueryWithFiltersRequest [filters="
+				+ Arrays.toString(this.filters) + ", getSerializedTemplate()="
+				+ this.getSerializedTemplate() + ", toString()="
+				+ super.toString() + ", getTimeout()=" + this.getTimeout()
 				+ ", getOutputFormat()=" + this.getOutputFormat() + "]";
 	}
 }
