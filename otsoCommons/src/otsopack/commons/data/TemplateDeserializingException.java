@@ -14,7 +14,9 @@
  */
 package otsopack.commons.data;
 
-public class TemplateDeserializingException extends Exception {
+import otsopack.commons.exceptions.TSException;
+
+public class TemplateDeserializingException extends TSException {
 
 	private static final long serialVersionUID = 1317959127449991421L;
 
