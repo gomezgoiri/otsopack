@@ -8,6 +8,7 @@
 		<pathelement path="lib/microjena.jar" />
 		<pathelement path="lib/junit.jar" />
 		<pathelement path="lib/easymock.jar" />
+		<pathelement path="lib/json-me-1.0.jar" />
 	</path>
 
 	<target name="javac" depends="clean">

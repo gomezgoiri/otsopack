@@ -16,11 +16,18 @@ package otsopack.commons.data;
 
 import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
 import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
+
+import org.json.me.JSONException;
+import org.json.me.JSONObject;
+
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
 
 
-public class WildcardTemplate extends NotificableTemplate {
+public class WildcardTemplate extends NotificableTemplate implements SerializableTemplate {
+	
+	public static final String code = "wildcard";
+	
 	private final String subject;
 	private final String predicate;
 	private final ITripleObject object;
@@ -64,6 +71,61 @@ public class WildcardTemplate extends NotificableTemplate {
 
 	public ITripleObject getObject() {
 		return object;
+	}
+	
+	public String serialize() throws TemplateSerializingException {
+		try{
+			final JSONObject jsonWildcard = new JSONObject();
+			jsonWildcard.put("type", code);
+			jsonWildcard.put("subject",     this.subject);
+			jsonWildcard.put("predicate",   this.predicate);
+			final JSONObject jsonObject;
+			if(this.object == null){
+				jsonObject = null;
+			}else if(this.object instanceof TripleURIObject){
+				jsonObject = new JSONObject();
+				jsonObject.put("type", "uri");
+				jsonObject.put("uri", ((TripleURIObject)this.object).getURI());
+			}else{
+				jsonObject = new JSONObject();
+				jsonObject.put("type", "obj");
+				jsonObject.put("value", ((TripleLiteralObject)this.object).getValue());
+			}
+			jsonWildcard.put("object",      jsonObject);
+			return jsonWildcard.toString();
+		}catch(JSONException e){
+			e.printStackTrace();
+			throw new TemplateSerializingException("Could not serialize object: " + e.getMessage());
+		}
+	}
+
+	static WildcardTemplate create(JSONObject jsonWildcard) throws TemplateDeserializingException {
+		try{
+			if(!jsonWildcard.get("type").equals(code))
+				throw new TemplateDeserializingException("Expected type: " + code + "; found: " + jsonWildcard.get("type"));
+			
+			final String subject          = (String)jsonWildcard.get("subject");
+			final String predicate        = (String)jsonWildcard.get("predicate");
+			final JSONObject jsonObject   = (JSONObject)jsonWildcard.opt("object");
+			
+			if(jsonObject == null){
+				
+				return createWithNull(subject, predicate);
+				
+			}else if(jsonObject.get("type").equals("uri")){
+				
+				final String uri = (String)jsonObject.get("uri");
+				return createWithURI(subject, predicate, uri);
+				
+			}else{
+				
+				final Object value = jsonObject.get("value");
+				return createWithLiteral(subject, predicate, value);
+				
+			}
+		}catch(JSONException e){
+			throw new TemplateDeserializingException("Could not deserialize wildcard template: " + e.getMessage());
+		}
 	}
 
 	public boolean match(NotificableTemplate tpl) {
