@@ -24,6 +24,8 @@ import otsopack.commons.network.ICommunication;
 
 public class ReadUriWithFiltersRequest extends ReadUriRequest {
 
+	private static final long serialVersionUID = -1250729965431529147L;
+	
 	private Filter [] filters;
 	
 	public ReadUriWithFiltersRequest(){ }

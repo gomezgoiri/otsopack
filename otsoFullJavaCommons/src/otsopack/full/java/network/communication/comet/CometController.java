@@ -124,15 +124,21 @@ public class CometController implements ICometController {
 		if(userQueue == null) // User has expired
 			return;
 		
+		final List<EventPetition> addedEvents = new Vector<EventPetition>();
+		
 		for(Event event : events){
-			userQueue.add(event);
-			this.userRequests.add(new EventPetition(sessionId, event));
+			if(event.getType().equals(Event.TYPE_REQUEST)){
+				userQueue.add(event);
+				final EventPetition petition = new EventPetition(sessionId, event);
+				this.userRequests.add(petition);
+				addedEvents.add(petition);
+			}// else TODO
 		}
 		
 		// If user expired, rollback
 		if(!this.user2serverQueues.containsKey(sessionId)){
-			for(Event event : events)
-				this.userRequests.remove(new EventPetition(sessionId, event));
+			for(EventPetition petition : addedEvents)
+				this.userRequests.remove(petition);
 			return;
 		}
 	}

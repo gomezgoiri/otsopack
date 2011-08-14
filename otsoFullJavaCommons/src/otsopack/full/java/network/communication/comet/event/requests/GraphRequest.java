@@ -14,17 +14,22 @@
  */
 package otsopack.full.java.network.communication.comet.event.requests;
 
+import java.io.Serializable;
+
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SerializableTemplateFactory;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.TemplateDeserializingException;
+import otsopack.full.java.network.communication.util.JSONEncoder;
 
 /**
  * A {@link GraphRequest} collects those requests that are will
  * get a graph or set of graphs as response. They all have a set
  * of common arguments (such as a timeout, output format, etc.)
  */
-public abstract class GraphRequest {
+public abstract class GraphRequest implements Serializable {
+	
+	private static final long serialVersionUID = -2879892695503325088L;
 	
 	private long timeout;
 	private SemanticFormat outputFormat;
@@ -34,6 +39,10 @@ public abstract class GraphRequest {
 	public GraphRequest(long timeout, SemanticFormat outputFormat) {
 		this.timeout = timeout;
 		this.outputFormat = outputFormat;
+	}
+	
+	public String serialize(){
+		return JSONEncoder.encode(this);
 	}
 
 	protected Template getTemplate(HasTemplateRequest request) throws TemplateDeserializingException {

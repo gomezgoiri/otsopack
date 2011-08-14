@@ -21,6 +21,8 @@ import otsopack.commons.network.ICommunication;
 
 public abstract class ReadRequest extends GraphRequest {
 
+	private static final long serialVersionUID = 8958199136639427933L;
+
 	public ReadRequest() {
 	}
 

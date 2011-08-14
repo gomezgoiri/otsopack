@@ -21,6 +21,8 @@ import otsopack.commons.network.ICommunication;
 
 public class ReadTemplateRequest extends ReadRequest implements HasTemplateRequest {
 
+	private static final long serialVersionUID = -6769270354929460223L;
+	
 	private String serializedTemplate;
 	
 	public ReadTemplateRequest() {

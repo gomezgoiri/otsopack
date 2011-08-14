@@ -21,6 +21,8 @@ import otsopack.commons.network.ICommunication;
 
 public class QueryRequest extends GraphRequest implements HasTemplateRequest {
 
+	private static final long serialVersionUID = -1226423684531185584L;
+	
 	private String serializedTemplate;
 	
 	public QueryRequest() {

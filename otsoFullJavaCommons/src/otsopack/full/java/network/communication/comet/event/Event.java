@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import otsopack.full.java.network.communication.comet.CometEvents;
+import otsopack.full.java.network.communication.comet.event.requests.GraphRequest;
 
 public class Event implements Serializable {
 	
@@ -68,6 +69,13 @@ public class Event implements Serializable {
 		this.spaceUri = spaceUri;
 	}
 
+	public Event(String type, String eventId, String operation, GraphRequest request, String spaceUri) {
+		this.type = type;
+		this.eventId = eventId;
+		this.operation = operation;
+		this.payload = request.serialize();
+		this.spaceUri = spaceUri;
+	}
 	public boolean isRequest(){
 		return this.type.equals("request");
 	}

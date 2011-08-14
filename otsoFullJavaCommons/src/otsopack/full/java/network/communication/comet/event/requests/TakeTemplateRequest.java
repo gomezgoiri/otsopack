@@ -21,6 +21,8 @@ import otsopack.commons.network.ICommunication;
 
 public class TakeTemplateRequest extends TakeRequest implements HasTemplateRequest {
 
+	private static final long serialVersionUID = 8822545965280967890L;
+	
 	private String serializedTemplate;
 	
 	public TakeTemplateRequest() {

@@ -24,6 +24,8 @@ import otsopack.commons.network.ICommunication;
 
 public class TakeTemplateWithFiltersRequest extends TakeTemplateRequest {
 
+	private static final long serialVersionUID = -8497089805865276467L;
+	
 	private Filter [] filters;
 	
 	public TakeTemplateWithFiltersRequest() {

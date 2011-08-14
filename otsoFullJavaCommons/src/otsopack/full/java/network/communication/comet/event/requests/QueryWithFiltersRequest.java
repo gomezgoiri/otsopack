@@ -24,6 +24,8 @@ import otsopack.commons.network.ICommunication;
 
 public class QueryWithFiltersRequest extends QueryRequest {
 
+	private static final long serialVersionUID = -469950622014720537L;
+	
 	private Filter [] filters;
 	
 	public QueryWithFiltersRequest() {
