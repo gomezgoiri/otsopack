@@ -14,20 +14,18 @@
  */
 package otsopack.full.java.network.communication.comet.resources;
 
-import java.awt.Event;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import otsopack.full.java.network.communication.comet.CometSession;
+import otsopack.full.java.network.communication.comet.ICometController;
 import otsopack.full.java.network.communication.comet.OtsoCometApplication;
+import otsopack.full.java.network.communication.comet.event.Event;
 import otsopack.full.java.network.communication.util.JSONDecoder;
-import otsopack.restlet.commons.sessions.ISessionManager;
+import otsopack.full.java.network.communication.util.JSONEncoder;
 
 public class EventResource extends ServerResource {
 
@@ -39,29 +37,25 @@ public class EventResource extends ServerResource {
 		return roots;
 	}
 	
-	private CometSession getSession(){
-		final ISessionManager<CometSession> sessionManager = ((OtsoCometApplication)getApplication()).getController().getSessionManager();
-		final String sessionId = (String)getRequestAttributes().get("session-id");
-		final CometSession session = sessionManager.getSession(sessionId);
-		if(session == null)
-			throw new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "Expired session id");
-		return session;
+	private ICometController getController(){
+		return ((OtsoCometApplication)getApplication()).getController();
+	}
+	
+	private String getSessionId(){
+		return (String)getRequestAttributes().get("session-id");
 	}
 
 	@Post("json")
 	public String postEvents(String serializedEvents){
-		final CometSession session = getSession();
-		final Event [] events = JSONDecoder.decode(serializedEvents, Event[].class);
-		
-		
-		
-		return "hi";
+		final Event [] incomingEvents = JSONDecoder.decode(serializedEvents, Event[].class);
+		getController().pushEvents(getSessionId(), incomingEvents);
+		final Event [] outgoingEvents = getController().getEvents(getSessionId());
+		return JSONEncoder.encode(outgoingEvents);
 	}
 	
 	@Get("json")
 	public String getEvents(){
-		final CometSession session = getSession();
-		
-		return "hi";
+		final Event [] outgoingEvents = getController().getEvents(getSessionId());
+		return JSONEncoder.encode(outgoingEvents);
 	}
 }

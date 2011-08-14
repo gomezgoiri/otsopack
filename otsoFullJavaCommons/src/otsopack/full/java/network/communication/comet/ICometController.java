@@ -14,9 +14,15 @@
  */
 package otsopack.full.java.network.communication.comet;
 
+import otsopack.full.java.network.communication.comet.event.Event;
 import otsopack.restlet.commons.ICommonsController;
-import otsopack.restlet.commons.sessions.ISessionManager;
 
 public interface ICometController extends ICommonsController {
-	ISessionManager<CometSession> getSessionManager();
+	String createSession();
+	void pushEvents(String sessionId, Event [] events);
+	Event [] getEvents(String sessionId);
+	void deleteSession(String sessionId);
+	
+	void startup();
+	void shutdown();
 }

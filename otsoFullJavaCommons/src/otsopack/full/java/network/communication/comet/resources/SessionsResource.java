@@ -20,9 +20,7 @@ import java.util.Map;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-import otsopack.full.java.network.communication.comet.CometSession;
 import otsopack.full.java.network.communication.comet.OtsoCometApplication;
-import otsopack.restlet.commons.sessions.ISessionManager;
 
 public class SessionsResource extends ServerResource {
 
@@ -36,11 +34,7 @@ public class SessionsResource extends ServerResource {
 
 	@Post("json")
 	public String createSession(){
-		final ISessionManager<CometSession> sessionManager = ((OtsoCometApplication)getApplication()).getController().getSessionManager();
-
-		final CometSession session = new CometSession();
-		
-		final String sessionId = sessionManager.putSession(session);
+		final String sessionId = ((OtsoCometApplication)getApplication()).getController().createSession();
 		return "\"" + sessionId + "\"";
 	}
 }

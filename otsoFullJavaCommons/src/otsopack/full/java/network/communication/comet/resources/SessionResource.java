@@ -20,9 +20,7 @@ import java.util.Map;
 import org.restlet.resource.Delete;
 import org.restlet.resource.ServerResource;
 
-import otsopack.full.java.network.communication.comet.CometSession;
 import otsopack.full.java.network.communication.comet.OtsoCometApplication;
-import otsopack.restlet.commons.sessions.ISessionManager;
 
 public class SessionResource extends ServerResource {
 	public static final String ROOT = "/sessions/{session-id}";
@@ -35,9 +33,8 @@ public class SessionResource extends ServerResource {
 
 	@Delete("json")
 	public String deleteSession(){
-		final ISessionManager<CometSession> sessionManager = ((OtsoCometApplication)getApplication()).getController().getSessionManager();
 		final String sessionId = (String)getRequestAttributes().get("session-id");
-		sessionManager.deleteSession(sessionId);
+		((OtsoCometApplication)getApplication()).getController().deleteSession(sessionId);
 		return "\"ok\"";
 	}
 }

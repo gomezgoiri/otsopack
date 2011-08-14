@@ -14,141 +14,163 @@
  */
 package otsopack.full.java.network.communication.comet;
 
+import java.util.List;
+import java.util.Queue;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
-import otsopack.commons.data.Graph;
-import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.comet.event.Event;
-import otsopack.full.java.network.communication.comet.event.requests.QueryRequest;
-import otsopack.full.java.network.communication.comet.event.requests.QueryWithFiltersRequest;
-import otsopack.full.java.network.communication.comet.event.requests.ReadRequest;
-import otsopack.full.java.network.communication.comet.event.requests.ReadTemplateRequest;
-import otsopack.full.java.network.communication.comet.event.requests.ReadTemplateWithFiltersRequest;
-import otsopack.full.java.network.communication.comet.event.requests.ReadUriRequest;
-import otsopack.full.java.network.communication.comet.event.requests.ReadUriWithFiltersRequest;
-import otsopack.full.java.network.communication.comet.event.requests.TakeRequest;
-import otsopack.full.java.network.communication.comet.event.requests.TakeTemplateRequest;
-import otsopack.full.java.network.communication.comet.event.requests.TakeTemplateWithFiltersRequest;
-import otsopack.full.java.network.communication.comet.event.requests.TakeUriRequest;
-import otsopack.full.java.network.communication.comet.event.requests.TakeUriWithFiltersRequest;
-import otsopack.full.java.network.communication.comet.event.responses.GraphResponse;
-import otsopack.full.java.network.communication.util.JSONDecoder;
-import otsopack.full.java.network.communication.util.JSONEncoder;
+import otsopack.full.java.network.communication.comet.event.EventPetition;
 import otsopack.restlet.commons.sessions.ISessionManager;
 import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
 public class CometController implements ICometController {
 
+	public static final int THREADS      = 5;
+	public static final int HOLDING_TIME = 30 * 1000; // 30 seconds
+	public static final int STEP_TIME    = 100; // milliseconds 
+	
 	private final ISessionManager<CometSession> sessionManager;
 	private final ICommunication comm;
+	private final EventExecutor eventExecutor;
+	
+	private final ConcurrentHashMap<String, Queue<Event>> server2userQueues = new ConcurrentHashMap<String, Queue<Event>>();
+	private final ConcurrentHashMap<String, Queue<Event>> user2serverQueues = new ConcurrentHashMap<String, Queue<Event>>();
+	private final Queue<EventPetition> userRequests = new ConcurrentLinkedQueue<EventPetition>();
+
+	private ExecutorService executor;
+	private Future<?> [] futures;
 	
 	public CometController(ISessionManager<CometSession> sessionManager, ICommunication comm){
 		this.sessionManager = sessionManager;
 		this.comm           = comm;
+		this.eventExecutor = new EventExecutor(this.comm);
 	}
 	
 	public CometController(ICommunication comm){
 		this(new MemorySessionManager<CometSession>(), comm);
 	}
+
+	@Override
+	public void startup() {
+		this.executor = Executors.newFixedThreadPool(THREADS);
+		this.futures = new Future[THREADS];
+		for(int i = 0; i < THREADS; ++i){
+			final EventExecutorTask task = new EventExecutorTask(this.eventExecutor, this.userRequests, this.server2userQueues);
+			this.futures[i] = this.executor.submit(task);
+		}
+	}
 	
 	@Override
-	public ISessionManager<CometSession> getSessionManager() {
-		return this.sessionManager;
+	public void shutdown() {
+		for(Future<?> future : this.futures)
+			future.cancel(true);
+		
+		this.executor.shutdown();
 	}
 	
-	public void pushEvent(){
+	@Override
+	public String createSession() {
+		clearExpiredSessions();
 		
+		final CometSession session = new CometSession();
+		final String sessionId = this.sessionManager.putSession(session);
+		this.server2userQueues.put(sessionId, new ConcurrentLinkedQueue<Event>());
+		return sessionId;
 	}
-	
-	public void executeEvent(Event event){
-		
-		final String payload = event.getPayload();
-		
-		try{
-			final String response;
-			
-			if(event.getOperation() == null)
-				
-				throw new CometException("Null operation provided");
-			
-			else if(event.getOperation().startsWith(CometEvents.READ)){
-				
-				final ReadRequest request = buildReadRequest(event, payload);
-				final Graph graph = request.read(event.getSpaceURI(), this.comm);
-				final GraphResponse graphResponse = GraphResponse.create(graph);
-				response = JSONEncoder.encode(graphResponse);
-				
-			}else if(event.getOperation().startsWith(CometEvents.TAKE)){
-				
-				final TakeRequest request = buildTakeRequest(event, payload);
-				final Graph graph = request.take(event.getSpaceURI(), this.comm);
-				final GraphResponse graphResponse = GraphResponse.create(graph);
-				response = JSONEncoder.encode(graphResponse);
-				
-			}else if(event.getOperation().startsWith(CometEvents.QUERY)){
-				
-				final QueryRequest request = buildQueryRequest(event, payload);
-				final Graph [] graphs = request.query(event.getSpaceURI(), this.comm);
-				final GraphResponse [] graphResponses = new GraphResponse[graphs.length];
-				for(int i = 0; i < graphs.length; ++i)
-					graphResponses[i] = GraphResponse.create(graphs[i]);
 
-				response = JSONEncoder.encode(graphResponses);
-				
-			}else
-				throw new CometException("Could not understand operation: " + event.getOperation());
-			
-			System.out.println(response);
-			
-		}catch(ResourceException e){
-			e.printStackTrace();
-		}catch(CometException e){
-			e.printStackTrace();
-		}catch(TSException e){
-			e.printStackTrace();
+	@Override
+	public void deleteSession(String sessionId) {
+		clearExpiredSessions();
+		clearSession(sessionId);
+		this.sessionManager.deleteSession(sessionId);
+	}
+	
+	/**
+	 * Clears a particular session, removing the internal structures
+	 *  
+	 * @param sessionId
+	 */
+	private void clearSession(String sessionId){
+		this.server2userQueues.remove(sessionId);
+		
+		final Queue<Event> events = this.user2serverQueues.remove(sessionId);
+		for(Event event : events)
+			this.userRequests.remove(new EventPetition(sessionId, event));
+	}
+
+	private void clearExpiredSessions(){
+		for(String sessionId : this.sessionManager.deleteExpiredSessions())
+			clearSession(sessionId);
+	}
+	
+	/**
+	 * Pushes the events to the request queue. The threads performing requests will
+	 * store the responses in the proper queues.
+	 */
+	@Override
+	public void pushEvents(String sessionId, Event[] events) {
+		clearExpiredSessions();
+		
+		final Queue<Event> userQueue = this.user2serverQueues.get(sessionId);
+		if(userQueue == null) // User has expired
+			return;
+		
+		for(Event event : events){
+			userQueue.add(event);
+			this.userRequests.add(new EventPetition(sessionId, event));
+		}
+		
+		// If user expired, rollback
+		if(!this.user2serverQueues.containsKey(sessionId)){
+			for(Event event : events)
+				this.userRequests.remove(new EventPetition(sessionId, event));
+			return;
 		}
 	}
 
-	private QueryRequest buildQueryRequest(Event event, String payload) throws CometException, ResourceException {
-		if(event.getOperation().equals(CometEvents.QUERY_TEMPLATE))
-			return JSONDecoder.decode(payload, QueryRequest.class);
+	/**
+	 * Retrieves the pending requests, waiting if required. It will wait up to {@link HOLDING_TIME} 
+	 * milliseconds if required.  
+	 */
+	@Override
+	public Event[] getEvents(String sessionId) {
+		clearExpiredSessions();
 		
-		if(event.getOperation().equals(CometEvents.QUERY_TEMPLATE_FILTERS))
-			return JSONDecoder.decode(payload, QueryWithFiltersRequest.class);
+		final Queue<Event> responses = this.server2userQueues.get(sessionId);
 		
-		throw new CometException("Could not understand take operation: " + event.getOperation());
-	}
+		if(responses == null)
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Session not found");
 
-	private ReadRequest buildReadRequest(Event event, final String payload) throws CometException, ResourceException {
-		if(event.getOperation().equals(CometEvents.READ_URI))
-			return JSONDecoder.decode(payload, ReadUriRequest.class);
+		final long initialTime = System.currentTimeMillis();
 		
-		if(event.getOperation().equals(CometEvents.READ_URI_FILTERS))
-			return JSONDecoder.decode(payload, ReadUriWithFiltersRequest.class);
+		while(responses.isEmpty() // There are not enough responses 
+				&& this.server2userQueues.containsKey(sessionId) // The user is still there  
+				&& (System.currentTimeMillis() - initialTime) <= HOLDING_TIME){ // Not enough time has ellapsed
+			
+			try{
+				Thread.sleep(STEP_TIME);
+			}catch(InterruptedException ie){
+				return new Event[]{};
+			}
+		}
 		
-		if(event.getOperation().equals(CometEvents.READ_TEMPLATE))
-			return JSONDecoder.decode(payload, ReadTemplateRequest.class);
+		if(responses.isEmpty())
+			return new Event[]{};
 		
-		if(event.getOperation().equals(CometEvents.READ_TEMPLATE_FILTERS))
-			return JSONDecoder.decode(payload, ReadTemplateWithFiltersRequest.class);
+		final List<Event> retrievedEvents = new Vector<Event>(responses.size());
+		while(!responses.isEmpty()){
+			retrievedEvents.add(responses.poll());
+		}
 		
-		throw new CometException("Could not understand read operation: " + event.getOperation());
-	}
-
-	private TakeRequest buildTakeRequest(Event event, final String payload) throws CometException, ResourceException {
-		if(event.getOperation().equals(CometEvents.TAKE_URI))
-			return JSONDecoder.decode(payload, TakeUriRequest.class);
-		
-		if(event.getOperation().equals(CometEvents.TAKE_URI_FILTERS))
-			return JSONDecoder.decode(payload, TakeUriWithFiltersRequest.class);
-		
-		if(event.getOperation().equals(CometEvents.TAKE_TEMPLATE))
-			return JSONDecoder.decode(payload, TakeTemplateRequest.class);
-		
-		if(event.getOperation().equals(CometEvents.TAKE_TEMPLATE_FILTERS))
-			return JSONDecoder.decode(payload, TakeTemplateWithFiltersRequest.class);
-	
-		throw new CometException("Could not understand take operation: " + event.getOperation());
+		return retrievedEvents.toArray(new Event[]{});
 	}
 }

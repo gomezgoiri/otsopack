@@ -15,6 +15,7 @@
 package otsopack.full.java.network.communication.comet.event;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import otsopack.full.java.network.communication.comet.CometEvents;
 
@@ -22,10 +23,19 @@ public class Event implements Serializable {
 	
 	private static final long serialVersionUID = -8414362780443364402L;
 
+	public static final String TYPE_POLL                = "poll";
+	public static final String TYPE_REQUEST             = "request";
+	public static final String TYPE_SUCCESSFUL_RESPONSE = "response::success";
+	public static final String TYPE_ERROR_RESPONSE      = "response::error";
+	
 	/**
 	 * What kind of event is this one: poll, request, response  
 	 */
 	private String type;
+	
+	public static String generateEventId(){
+		return UUID.randomUUID().toString();
+	}
 	
 	/**
 	 * Each request provides a unique identifier, and the response must carry it
