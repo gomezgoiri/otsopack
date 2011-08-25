@@ -47,11 +47,12 @@ public class BulletinBoardTest {
 		final int EXPIRATIONTIME = 50;
 		final long currentTime = System.currentTimeMillis();
 		
-		final int[] expire = new int[4];
-		final String[] uuid = new String[4];
-		final NotificableTemplate[] nt = new NotificableTemplate[4];
-		final Advertisement adv[] = new Advertisement[4];
-		for(int i=0; i<4; i++) {
+		final int ELEMNUM = 4;
+		final int[] expire = new int[ELEMNUM];
+		final String[] uuid = new String[ELEMNUM];
+		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
+		final Advertisement adv[] = new Advertisement[ELEMNUM];
+		for(int i=0; i<ELEMNUM; i++) {
 			expire[i] = (i+1) * 50;
 			uuid[i] = "uuid"+i;
 			nt[i] = WildcardTemplate.createWithNull(null,"http://p"+i);
@@ -92,15 +93,16 @@ public class BulletinBoardTest {
 		final int EXPIRATIONTIME = 50;
 		final long currentTime = System.currentTimeMillis();
 		
-		final int[] expire = new int[4];
-		final String[] uuid = new String[4];
-		final NotificableTemplate[] nt = new NotificableTemplate[4];
-		final Subscription subs[] = new Subscription[4];
-		for(int i=0; i<4; i++) {
+		final int ELEMNUM = 4;		
+		final int[] expire = new int[ELEMNUM];
+		final String[] uuid = new String[ELEMNUM];
+		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
+		final Subscription subs[] = new Subscription[ELEMNUM];
+		for(int i=0; i<ELEMNUM; i++) {
 			expire[i] = (i+1) * 50;
 			uuid[i] = "uuid"+i;
 			nt[i] = WildcardTemplate.createWithNull(null,"http://p"+i);
-			subs[i] = new Subscription(uuid[i], currentTime+expire[i], nt[i], null);
+			subs[i] = Subscription.createNamedSubcription(uuid[i], currentTime+expire[i], nt[i], null);
 			this.bb.subscribe(subs[i]);
 		}
 		
@@ -127,7 +129,7 @@ public class BulletinBoardTest {
 		assertNull(this.bb.subscriptions.get(uuid[3]));
 		
 		Thread.sleep(expire[3]-expire[1]);
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<ELEMNUM; i++) {
 			assertNull(this.bb.subscriptions.get(uuid[i]));
 		}
 	}
@@ -136,10 +138,11 @@ public class BulletinBoardTest {
 	public void testDaemon() throws InterruptedException {
 		final int EXPIRATIONTIME = 20;
 		
-		final int[] expire = new int[4];
+		final int ELEMNUM = 4;
+		final int[] expire = new int[ELEMNUM];
 		final int extraTime = 100;
-		final String[] uuid = new String[4];
-		final NotificableTemplate[] nt = new NotificableTemplate[4];
+		final String[] uuid = new String[ELEMNUM];
+		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
 		for(int i=0; i<4; i++) {
 			expire[i] = (i+1) * 50;
 			uuid[i] = "uuid"+i;
@@ -147,8 +150,8 @@ public class BulletinBoardTest {
 		}
 		
 		final long currentTime = System.currentTimeMillis();
-		final Subscription sub1 = new Subscription(uuid[0], currentTime+expire[0], nt[0], null);
-		final Subscription sub2 = new Subscription(uuid[1], currentTime+expire[1], nt[1], null);
+		final Subscription sub1 = Subscription.createNamedSubcription(uuid[0], currentTime+expire[0], nt[0], null);
+		final Subscription sub2 = Subscription.createNamedSubcription(uuid[1], currentTime+expire[1], nt[1], null);
 		final Advertisement adv3 = new Advertisement(uuid[2], currentTime+expire[2], nt[2]);
 		final Advertisement adv4 = new Advertisement(uuid[3], currentTime+expire[3], nt[3]);
 		

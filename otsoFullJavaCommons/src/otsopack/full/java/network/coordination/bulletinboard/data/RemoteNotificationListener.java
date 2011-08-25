@@ -13,6 +13,8 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.data;
 
+import otsopack.commons.network.communication.event.listener.EventNotification;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.full.java.network.coordination.Node;
 
 public class RemoteNotificationListener implements INotificationListener {

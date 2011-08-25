@@ -16,7 +16,6 @@ package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializa
 import otsopack.commons.data.TripleLiteralObject;
 import otsopack.commons.data.TripleURIObject;
 import otsopack.commons.data.WildcardTemplate;
-import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.full.java.network.coordination.bulletinboard.data.RemoteNotificationListener;
 import otsopack.full.java.network.coordination.bulletinboard.data.Subscription;
@@ -36,7 +35,7 @@ public class JSONSerializableConversors {
 				tpl = WildcardTemplate.createWithLiteral(sub.tpl.subject, sub.tpl.predicate, sub.tpl.object);
 			}
 		}
-		return new Subscription(sub.id, sub.expiration, tpl, new RemoteNotificationListener(sub.getNode()));
+		return Subscription.createNamedSubcription(sub.id, sub.expiration, tpl, new RemoteNotificationListener(sub.getNode()));
 	}
 	
 	
