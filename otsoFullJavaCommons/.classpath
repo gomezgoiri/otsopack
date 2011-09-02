@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/easymock-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/otsoAuthentication"/>
+	<classpathentry kind="lib" path="/otsoCommons/lib/json-me-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
