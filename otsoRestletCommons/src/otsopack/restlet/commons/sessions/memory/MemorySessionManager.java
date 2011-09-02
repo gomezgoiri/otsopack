@@ -54,7 +54,7 @@ public class MemorySessionManager <T extends AbstractSession> implements ISessio
 	}
 
 	@Override
-	public void deleteExpiredSessions() {
+	public String [] deleteExpiredSessions() {
 		final List<String> expiredSessionIds = new Vector<String>();
 		for(String sessionId : this.sessions.keySet()){
 			final T session = this.sessions.get(sessionId);
@@ -63,6 +63,7 @@ public class MemorySessionManager <T extends AbstractSession> implements ISessio
 		}
 		for(String expiredSessionId : expiredSessionIds)
 			this.sessions.remove(expiredSessionId);
+		return expiredSessionIds.toArray(new String[]{});
 	}
 
 	@Override
