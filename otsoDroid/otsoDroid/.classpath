@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/lib/microjena.jar"/>
+	<classpathentry exported="true" kind="lib" path="/otsoCommons/lib/json-me-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
