@@ -38,6 +38,13 @@ public class SpaceManagerRestServer {
 	public SpaceManagerRestServer(int port, ISpaceManagerController controller) {
 		this.port = port;
 		
+		try{
+			// Avoid deadlocks
+			Thread.sleep(300);
+		}catch(InterruptedException e){
+			
+		}
+		
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
 	    

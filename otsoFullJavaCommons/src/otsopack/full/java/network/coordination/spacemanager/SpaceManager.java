@@ -31,7 +31,8 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	private static final int DEFAULT_TIMEOUT      = 15 * 1000; // 15 seconds
 	private static final int DEFAULT_DEAD_TIMEOUT = 15 * 60 * 1000; // 15 minutes
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
+	private static final boolean DEBUG_VERBOSE = false;
 	
 	/**
 	 * This map is used for generating keys. Whenever a node joins, it is the first map in registering it and the last one when leaving. 
@@ -205,25 +206,38 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		
 		if(!nodeToCheck.mustCheck()){
 			if(DEBUG)
-				System.out.println("already checked few time ago... " + (System.currentTimeMillis() - nodeToCheck.lastCheck));
+				if(DEBUG_VERBOSE)
+					System.out.println("already checked few time ago... " + (System.currentTimeMillis() - nodeToCheck.lastCheck));
 			return;
 		}
 		
-		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI());
+		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI() + "spaces");
 		try{
 			if(DEBUG)
-				System.out.print("Checking... ");
+				if(DEBUG_VERBOSE)
+					System.out.println("Checking... " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
 			
 			client.get();
 			
-			if(DEBUG)
-				System.out.println("[success]");
+			if(DEBUG){
+				if(DEBUG_VERBOSE){
+					System.out.println("[success] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+				}else if(!this.currentNodes.containsKey(secret)){
+					System.out.println("[recovered] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+				}
+			}
 			this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
 			nodeToCheck.updateTimestamp();
 		}catch(ResourceException re){
-			if(DEBUG)
-				System.out.println("[fail]");
-			re.printStackTrace();
+			if(DEBUG){
+				if(DEBUG_VERBOSE){
+					System.out.println("[success] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					re.printStackTrace();
+				}else if(this.currentNodes.containsKey(secret)){
+					System.out.println("[fail] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					re.printStackTrace();
+				}
+			}
 			this.currentNodes.remove(secret);
 		}finally{
 			client.release();
