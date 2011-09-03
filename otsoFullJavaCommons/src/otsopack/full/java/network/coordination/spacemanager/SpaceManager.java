@@ -212,6 +212,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		}
 		
 		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI() + "spaces");
+        client.setRetryAttempts(0);
 		try{
 			if(DEBUG)
 				if(DEBUG_VERBOSE)
