@@ -25,19 +25,6 @@ import otsopack.commons.exceptions.TripleParseException;
 public class TripleImpl extends AbstractTriple {
 	Statement triple;
 	
-	protected TripleImpl(Statement triple) {
-		super();
-		this.triple = triple;
-		super.setSubject(triple.getSubject().getURI());
-		super.setPredicate(triple.getPredicate().getURI());
-		super.setObject(triple.getObject().toString());
-	}
-	
-	protected TripleImpl(String triple) throws TripleParseException {
-		super(triple);
-		initializeStatement();
-	}
-	
 	public TripleImpl(String subject, String predicate, Object object) throws TripleParseException {
 		super(subject,predicate,object);
 		initializeStatement();
