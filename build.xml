@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tsdit" default="test">
+<project name="tsdit" default="dist">
+    <target name="dist">
+        <ant antfile="build.xml" dir="otsoCommons"             target="dist" />
+        <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
+        <ant antfile="build.xml" dir="otsoAuthentication"      target="dist" />
+        <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="dist" />
+        <ant antfile="build.xml" dir="otsoSE"                  target="dist" />
+    </target>
+
     <target name="test">
         <ant antfile="build.xml" dir="otsoCommons"             target="test" />
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
