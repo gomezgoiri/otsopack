@@ -81,6 +81,10 @@
 			</manifest>
 		</jar>
 	</target>
+	
+	<target name="dist-all">
+		<ant antfile="build.xml" dir=".."             target="dist" />
+	</target>
 
 	<pathconvert property="mf.classpath" pathsep=" ">
 		<path refid="project.class.path" />
