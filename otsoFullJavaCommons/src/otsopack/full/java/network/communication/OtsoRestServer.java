@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.restlet.Component;
+import org.restlet.Context;
+import org.restlet.Server;
 import org.restlet.data.CookieSetting;
 import org.restlet.data.Protocol;
 import org.restlet.resource.ServerResource;
@@ -53,7 +55,11 @@ public class OtsoRestServer {
 	public OtsoRestServer(int port, IController controller, IEntity signer, IBulletinBoard bulletinboard, ICommunication multicastProvider) {
 		this.port = port;
 	    this.component = new Component();
-	    this.component.getServers().add(Protocol.HTTP, this.port);
+	    final Server server = new Server(Protocol.HTTP, this.port);
+	    final Context ctx = new Context();
+	    ctx.getParameters().add("persistingConnections","false");
+	    server.setContext(ctx);
+	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsopackApplication(multicastProvider, signer);
 	    this.application.setController(controller);
