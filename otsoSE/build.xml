@@ -74,7 +74,7 @@
 		<jar destfile="dist/otsoSE-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="bin" includes="*.class" />
 			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
-			<zipgroupfileset dir="dist" includes="dist/otsoSE-sources.jar" excludes="" />
+			<zipgroupfileset dir="dist" includes="otsoSE-sources.jar" excludes="" />
 			<zipgroupfileset dir="../otsoFullJavaCommons/dist" includes="otsoFullJavaCommons-all.jar" excludes="" />
 			<manifest>
 				<attribute name="Class-Path" value="${mf.classpath}" />
