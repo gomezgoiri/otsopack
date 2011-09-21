@@ -8,8 +8,6 @@
 	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
 	<classpathentry kind="lib" path="lib/org.json.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet-src.jar"/>
-	<classpathentry kind="lib" path="lib/org.restlet.ext.jackson.jar"/>
-	<classpathentry kind="lib" path="lib/org.restlet.ext.json.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.jar"/>
 	<classpathentry kind="lib" path="lib/restlet-ext-jackson-src.jar"/>
 	<classpathentry kind="output" path="bin"/>

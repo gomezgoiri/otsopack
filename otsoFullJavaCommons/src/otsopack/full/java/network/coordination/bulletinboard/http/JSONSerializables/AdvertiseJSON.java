@@ -13,7 +13,12 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables;
 
-public class AdvertiseJSON {
+import java.io.Serializable;
+
+public class AdvertiseJSON implements Serializable {
+	
+	private static final long serialVersionUID = 2140394701261993859L;
+	
 	protected String id;
 	protected TemplateJSON tpl;
 	protected long expiration;

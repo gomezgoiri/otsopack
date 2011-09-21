@@ -27,8 +27,8 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.commons.data.Graph;
@@ -67,7 +67,7 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 		final String space = URLEncoder.encode(this.sampleSpace, "utf-8");
 		final ClientResource cr = new ClientResource(getBaseURL() + "spaces/" + space + "/graphs");
 		try{
-			final Representation rep = cr.get(JsonRepresentation.class);
+			final Representation rep = cr.get(StringRepresentation.class);
 			final String [] results = JSONDecoder.decode(rep.getText(), String[].class);
 			
 			final List<String> resultsSet = Arrays.asList(results);
@@ -91,7 +91,7 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 			final Representation rcvRep = cr.post(sentRep, SemanticFormatRepresentation.class);
 			final String [] resultPost = JSONDecoder.decode(rcvRep.getText(), String[].class);
 			
-			final Representation rep = cr.get(JsonRepresentation.class);
+			final Representation rep = cr.get(StringRepresentation.class);
 			final String [] resultsGet = JSONDecoder.decode(rep.getText(), String[].class);
 			
 			final List<String> resultsSet = Arrays.asList(resultsGet);

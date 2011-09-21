@@ -13,9 +13,14 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables;
 
+import java.io.Serializable;
+
 import otsopack.full.java.network.coordination.Node;
 
-public class SubscribeJSON {
+public class SubscribeJSON implements Serializable {
+	
+	private static final long serialVersionUID = 4659020443077554065L;
+	
 	//instead of extends AdvertiseJSON :-S
 	//JsonRepresentation seems not to serialize parents' attributes :-S
 	protected String id;

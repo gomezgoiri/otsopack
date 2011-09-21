@@ -13,7 +13,12 @@
  */
 package otsopack.full.java.network.coordination.bulletinboard.http.JSONSerializables;
 
-public class TemplateJSON {
+import java.io.Serializable;
+
+public class TemplateJSON implements Serializable {
+	
+	private static final long serialVersionUID = 325129592419579719L;
+	
 	String subject;
 	String predicate;
 	String object;
