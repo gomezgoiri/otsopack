@@ -25,5 +25,5 @@ public interface ISubscriptionsResource {
 	String toJson();
 	
 	@Post("json")
-	Representation createSubscription(Representation rep);
+	Representation createSubscription();
 }

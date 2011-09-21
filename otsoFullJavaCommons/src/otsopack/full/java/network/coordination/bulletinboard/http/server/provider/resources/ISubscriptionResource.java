@@ -19,7 +19,7 @@ import org.restlet.resource.Put;
 
 public interface ISubscriptionResource {	
 	@Put("json")
-	Representation modifySubscription(Representation rep);
+	Representation modifySubscription();
 	
 	@Delete("json")
 	Representation removeSubscription();

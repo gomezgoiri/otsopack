@@ -56,9 +56,9 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	}
 
 	@Override
-	public Representation createSubscription(Representation rep) {
+	public Representation createSubscription() {
 		try {
-			final String argument = rep.getText();
+			final String argument = getRequestEntity().getText();
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final SubscribeJSON subjson = JSONDecoder.decode(argument, SubscribeJSON.class);
 			

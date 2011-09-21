@@ -17,7 +17,6 @@ import java.io.IOException;
 
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 import otsopack.full.java.network.communication.util.JSONDecoder;
@@ -71,8 +70,7 @@ public class HttpBulletinBoardClient {
 			try {
 				AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				StringRepresentation json = new StringRepresentation(JSONEncoder.encode(advJson));
-				repr = client.post(json, MediaType.APPLICATION_JSON);
+				repr = client.post(JSONEncoder.encode(advJson), MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -95,8 +93,7 @@ public class HttpBulletinBoardClient {
 				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				// final JsonRepresentation json = new JsonRepresentation(advJson);
-				final StringRepresentation json = new StringRepresentation(JSONEncoder.encode(advJson));
-				repr = client.put(json, MediaType.APPLICATION_JSON);
+				repr = client.put(JSONEncoder.encode(advJson), MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {
@@ -136,8 +133,7 @@ public class HttpBulletinBoardClient {
 			try {
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				// final JsonRepresentation json = new JsonRepresentation(subJson);
-				final StringRepresentation json = new StringRepresentation(JSONEncoder.encode(subJson));
-				repr = client.post(json, MediaType.APPLICATION_JSON);
+				repr = client.post(JSONEncoder.encode(subJson), MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -160,8 +156,7 @@ public class HttpBulletinBoardClient {
 				SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
 				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				// JsonRepresentation json = new JsonRepresentation(subJson);
-				StringRepresentation json = new StringRepresentation(JSONEncoder.encode(subJson));
-				repr = client.put(json, MediaType.APPLICATION_JSON);
+				repr = client.put(JSONEncoder.encode(subJson), MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {
