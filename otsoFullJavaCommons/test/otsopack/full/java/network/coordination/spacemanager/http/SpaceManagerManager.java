@@ -23,8 +23,8 @@ import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceMan
 import otsopack.full.java.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
 
 public class SpaceManagerManager {
-	public static final Node NODE1 = new Node("http://node1/", "node1");
-	public static final Node NODE2 = new Node("http://node2/", "node2");
+	public static final Node NODE1 = new Node("http://node1/", "node1", false, false);
+	public static final Node NODE2 = new Node("http://node2/", "node2", false, false);
 
 	private SpaceManagerRestServer server;
 	private SpaceManager spaceManager;
