@@ -33,6 +33,7 @@ import otsopack.commons.exceptions.ResponseNotExpected;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
+import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.otsoME.network.communication.ISpaceInformationHolder;
 import otsopack.otsoME.network.communication.demand.local.ISuggestionCallbackManager;
 import otsopack.otsoME.network.communication.demand.remote.IRemoteDemandIOManager;
@@ -173,7 +174,7 @@ public class ResponseManager implements ITSCallback {
 		Enumeration enumeration = subscriberList.getThoseWhichMatch(template).elements();
 		while( enumeration.hasMoreElements() ) {
 			ISubscription subscription = (ISubscription) enumeration.nextElement();
-			subscription.getListener().notifyEvent();
+			subscription.getListener().notifyEvent(new EventNotification(template));
 		}
 	}
 	
