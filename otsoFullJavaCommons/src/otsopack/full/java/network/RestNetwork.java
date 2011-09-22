@@ -34,25 +34,25 @@ import otsopack.commons.util.collections.HashSet;
 import otsopack.commons.util.collections.Set;
 import otsopack.full.java.network.communication.OtsoRestServer;
 import otsopack.full.java.network.communication.RestMulticastCommunication;
-import otsopack.full.java.network.coordination.IBulletinBoard;
 import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.full.java.network.coordination.bulletinboard.BulletinBoardsManager;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
 	private ICommunication comm;
 	private Set/*<String>*/ joinedSpaces = new HashSet/*<String>*/();
-	private IBulletinBoard bulletinBoard;
+	private BulletinBoardsManager bulletinBoards;
 	
 	public RestNetwork(IController controller) {
 		this.rs = new OtsoRestServer();
 		this.rs.getApplication().setController(controller);
 	}
 
-	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry, IBulletinBoard bulletinboard) {
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry, BulletinBoardsManager bbMngr) {
 		this.comm = new RestMulticastCommunication(registry);
-		this.bulletinBoard = bulletinboard;
-		this.rs = new OtsoRestServer(port, controller, signer, bulletinboard);
+		this.bulletinBoards = bbMngr;
+		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
 		this.rs.getApplication().setController(controller);
 	}
 
@@ -140,15 +140,14 @@ public class RestNetwork implements INetwork {
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template,
 			INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO check where to set the expiration time
+		return this.bulletinBoards.subscribe(spaceURI, template, listener);
 	}
 
 	@Override
 	public void unsubscribe(String spaceURI, String subscriptionURI)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-
+		this.bulletinBoards.unsubscribe(spaceURI, subscriptionURI);
 	}
 
 	@Override

@@ -121,12 +121,12 @@ public class HttpBulletinBoardClientTest {
 
 	@Test
 	public void testSubscribe() {
-		final Subscription sentSub = new Subscription( null,
+		final Subscription sentSub = Subscription.createUnnamedSubcription(
 										System.currentTimeMillis()+60000,
 										WildcardTemplate.createWithNull(null, null),
 										new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
 		final String uuid = this.client.subscribe(sentSub);
-		final Subscription createdSubs = new Subscription(uuid, 0, null, null);
+		final Subscription createdSubs = Subscription.createNamedSubcription(uuid, 0, null, null);
 		
 		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
 		assertEquals(1, subscriptions.size());
@@ -138,7 +138,7 @@ public class HttpBulletinBoardClientTest {
 	public void testUpdateSubscribe() {
 		final long timestamp1 = System.currentTimeMillis()+60000;
 		final long timestamp2 = System.currentTimeMillis()+360000;
-		final Subscription sentSub = new Subscription( null,
+		final Subscription sentSub = Subscription.createUnnamedSubcription(
 				timestamp1,
 				WildcardTemplate.createWithNull(null, null),
 				new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
@@ -167,13 +167,13 @@ public class HttpBulletinBoardClientTest {
 	
 	@Test
 	public void testUnsubscribe() {
-		final Subscription sentSub = new Subscription( null,
+		final Subscription sentSub = Subscription.createUnnamedSubcription(
 											System.currentTimeMillis()+60000,
 											WildcardTemplate.createWithNull(null, null),
 											new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
 
 		final String uuid = this.client.subscribe(sentSub);
-		final Subscription createdSubscription = new  Subscription(uuid,0, null, null);
+		final Subscription createdSubscription = Subscription.createNamedSubcription(uuid,0, null, null);
 		
 		Collection<Subscription> subscriptions = this.manager.getSubscriptions();
 		assertEquals(1, subscriptions.size());

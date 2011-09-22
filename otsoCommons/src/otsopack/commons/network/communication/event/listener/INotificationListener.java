@@ -24,5 +24,5 @@ public interface INotificationListener {
 	 * notification about an event
 	 * @param event
 	 */
-	public void notifyEvent(/*INotificationEvent event*/);
+	public void notifyEvent(EventNotification notification);
 }

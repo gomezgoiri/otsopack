@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.network.coordination.bulletinboard.data;
+package otsopack.commons.network.communication.event.listener;
 
 import otsopack.commons.data.NotificableTemplate;
 

@@ -41,6 +41,7 @@ public class HttpBulletinBoardClient {
 	
 	//@Override
 	public Advertisement[] getAdvertises() {
+		//TODO meter space en la url 
 		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertisesResource.ROOT);
 		try {
 			final Representation repr;

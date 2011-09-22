@@ -47,15 +47,15 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
 		// where is stored the node's reference?
 		subJson.setNode(new Node()); //XXX TODO take from somewhere!
-		final String ret = this.client.subscribe(subJson);
-		this.mySubscriptions.subscribe(new Subscription(ret, s.getExpiration(), s.getTemplate(), s.getListener()));
-		return ret;
+		final String subscriptionId = this.client.subscribe(subJson);
+		this.mySubscriptions.subscribe(Subscription.createNamedSubcription(subscriptionId, s.getExpiration(), s.getTemplate(), s.getListener()));
+		return subscriptionId;
 	}
 
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
 		this.mySubscriptions.updateSubscription(subscriptionId, extratime);
-		this.client.updateSubscription(new Subscription(subscriptionId, extratime, null, null));
+		this.client.updateSubscription(Subscription.createNamedSubcription(subscriptionId, extratime, null, null));
 	}
 
 	@Override
