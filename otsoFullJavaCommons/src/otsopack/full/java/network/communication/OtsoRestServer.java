@@ -29,13 +29,6 @@ import otsopack.commons.IController;
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.session.UserSession;
-import otsopack.full.java.network.coordination.IBulletinBoard;
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.BulletinBoardController;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.IBulletinBoardController;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.consumer.OtsopackHttpBulletinBoardConsumerApplication;
-import otsopack.full.java.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
-import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsoRestServer {
 	public static final int DEFAULT_PORT = 8182;
@@ -44,13 +37,14 @@ public class OtsoRestServer {
 	private final Component component;
 	private final OtsopackApplication application;
 	private final OtsoAuthnApplication authnApp;
-	private final AbstractOtsopackApplication<IBulletinBoardController> bulletinApp;
+	//TODO redesign
+	//private final AbstractOtsopackApplication<IBulletinBoardController> bulletinApp;
 	
-	public OtsoRestServer(int port, IController controller, IEntity signer, IBulletinBoard bulletinboard) {
-		this(port, controller, signer, bulletinboard, null);
+	public OtsoRestServer(int port, IController controller, IEntity signer/*, TODO BulletinBoardsManager bbMngr*/) {
+		this(port, controller, signer/*, bbMngr*/, null);
 	}
 	
-	public OtsoRestServer(int port, IController controller, IEntity signer, IBulletinBoard bulletinboard, ICommunication multicastProvider) {
+	public OtsoRestServer(int port, IController controller, IEntity signer, /*TODO BulletinBoardsManager bbMngr,*/ ICommunication multicastProvider) {
 		this.port = port;
 	    this.component = new Component();
 	    this.component.getServers().add(Protocol.HTTP, this.port);
@@ -79,21 +73,16 @@ public class OtsoRestServer {
 	    this.component.getDefaultHost().attach(this.application);
 	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH,this.authnApp);
 	    
-	    // TODO remove when bulletin board is finished and added to HttpKernels! 
-	    if (bulletinboard==null) {
-	    	 this.bulletinApp=null;
+	    // TODO redesign BulletinBoard
+	    /*if (bulletinboard instanceof LocalBulletinBoard) {
+	    	this.bulletinApp = new OtsopackHttpBulletinBoardProviderApplication();
+	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
+	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
 	    } else {
-		    // TODO depending on the kind of BulletinBoard, expose an interface or other
-		    if (bulletinboard instanceof LocalBulletinBoard) {
-		    	this.bulletinApp = new OtsopackHttpBulletinBoardProviderApplication();
-		    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-		    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
-		    } else {
-		    	this.bulletinApp = new OtsopackHttpBulletinBoardConsumerApplication();
-		    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-		    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
-		    }
-	    }
+	    	this.bulletinApp = new OtsopackHttpBulletinBoardConsumerApplication();
+	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
+	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardConsumerApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
+	    }*/
 	}
 	
 	public OtsoRestServer(IController controller){
