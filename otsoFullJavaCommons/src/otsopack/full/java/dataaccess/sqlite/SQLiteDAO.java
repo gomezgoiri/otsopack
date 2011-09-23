@@ -49,38 +49,44 @@ public class SQLiteDAO {
 	
 	public void startup() throws PersistenceException {
 		try {
+			// TODO become this database location configurable?
 			this.conn = DriverManager.getConnection("jdbc:sqlite:dbOtsoPack");
-			if( !doesDatabaseExists() ) {
+			if( !doesTableExists() ) {
 				final Statement stmt = this.conn.createStatement();
-				createDatabase(stmt);
 				createTable(stmt);
 				stmt.close();
 			}
 			createPreparedStatements();
 		} catch (SQLException e) {
-			throw new PersistenceException("Connection with sqlite database could not be opened.");
+			throw new PersistenceException("Connection with sqlite database could not be stablished.");
 		}
 	}
 	
-	protected boolean doesDatabaseExists() throws PersistenceException {
+	/*protected boolean doesDatabaseExists() throws PersistenceException {
 		try {
 			final DatabaseMetaData meta = this.conn.getMetaData();
-	        final ResultSet rs = meta.getCatalogs();
-	        while (rs.next()) {
-	            if( rs.getString("TABLE_CAT").equals(this.DATABASE_NAME) )
-	            	return true;
-	        }
+	        final ResultSet rs = meta.getTables(null, null, this.DATABASE_NAME, null);
+	        return rs.next();
 		} catch(SQLException e) {
 			throw new PersistenceException("The existence of the local database could not be checked.");
 		}
-		return false;
 	}
 	
 	protected void createDatabase(Statement stmt) throws PersistenceException {
 		try {
-			stmt.executeUpdate("CREATE DATABASE " + this.DATABASE_NAME);
+			stmt.executeUpdate("CREATE DATABASE '" + this.DATABASE_NAME + "'");
 		} catch (SQLException e) {
 			throw new PersistenceException("Database could not be created.");
+		}
+	}*/
+	
+	protected boolean doesTableExists() throws PersistenceException {
+		try {
+			final DatabaseMetaData meta = this.conn.getMetaData();
+	        final ResultSet rs = meta.getTables(null, null, this.TABLE_NAME, null);
+	        return rs.next();
+		} catch(SQLException e) {
+			throw new PersistenceException("The existence of the table could not be checked.");
 		}
 	}
 	
@@ -104,7 +110,7 @@ public class SQLiteDAO {
 					"SELECT format, data FROM " + this.TABLE_NAME + " WHERE " +
 					"spaceuri=? AND graphuri=?" );
 			this.getGraphsURIs = this.conn.prepareStatement(
-					"SELECT graphuri FROM " + this.TABLE_NAME + "WHERE " +
+					"SELECT graphuri FROM " + this.TABLE_NAME + " WHERE " +
 					"spaceuri=?" );
 			this.insertGraph = this.conn.prepareStatement(
 					"INSERT INTO " + this.TABLE_NAME + " VALUES(?,?,?,?)" );
