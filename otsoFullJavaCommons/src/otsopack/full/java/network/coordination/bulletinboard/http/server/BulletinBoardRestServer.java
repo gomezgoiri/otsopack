@@ -35,6 +35,9 @@ public class BulletinBoardRestServer {
 	    this.component = new Component();
 	    final Server server = new Server(Protocol.HTTP, this.port);
 	    final Context ctx = new Context();
+        ctx.getParameters().add("lowThreads", "15");
+        ctx.getParameters().add("maxThreads", "40");
+        ctx.getParameters().add("maxQueued", "-1");
 	    ctx.getParameters().add("persistingConnections","false");
 	    server.setContext(ctx);
 	    this.component.getServers().add(server);
