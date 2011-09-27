@@ -14,6 +14,8 @@
 package otsopack.full.java.network.coordination.spacemanager.http.server;
 
 import org.restlet.Component;
+import org.restlet.Context;
+import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
@@ -46,7 +48,11 @@ public class SpaceManagerRestServer {
 		}
 		
 	    this.component = new Component();
-	    this.component.getServers().add(Protocol.HTTP, this.port);
+	    final Server server = new Server(Protocol.HTTP, this.port);
+	    final Context ctx = new Context();
+	    ctx.getParameters().add("persistingConnections","false");
+	    server.setContext(ctx);
+	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsopackHttpSpaceManagerApplication();
 	    this.application.setController(controller);

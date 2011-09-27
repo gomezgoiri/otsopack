@@ -14,6 +14,8 @@
 package otsopack.authn;
 
 import org.restlet.Component;
+import org.restlet.Context;
+import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 public class AuthenticationRestServer {
@@ -27,7 +29,11 @@ public class AuthenticationRestServer {
 		this.port = port;
 		
 	    this.component = new Component();
-	    this.component.getServers().add(Protocol.HTTP, this.port);
+	    final Server server = new Server(Protocol.HTTP, this.port);
+	    final Context ctx = new Context();
+	    ctx.getParameters().add("persistingConnections","false");
+	    server.setContext(ctx);
+	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsoAuthnApplication();
 	    this.application.setController(controller);
