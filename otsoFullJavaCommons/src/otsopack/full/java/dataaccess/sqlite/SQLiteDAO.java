@@ -13,7 +13,6 @@
  */
 package otsopack.full.java.dataaccess.sqlite;
 
-import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -29,7 +28,6 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.PersistenceException;
 
 public class SQLiteDAO {
-	private final String DATABASE_NAME = "otsopackData";
 	// everything in the same table (we just use sqlite to persist info...)
 	private final String TABLE_NAME = "Graphs";
 	
@@ -137,19 +135,15 @@ public class SQLiteDAO {
 		}
 	}
 	
-	public Set<String> insertGraph(String spaceuri, String graphuri, Graph graph) throws PersistenceException {
+	public void insertGraph(String spaceuri, String graphuri, Graph graph) throws PersistenceException {
 		try {
-			final Set<String> ret = new HashSet<String>();
 			this.insertGraph.setString(1,graphuri);
 			this.insertGraph.setString(2,spaceuri);
 			this.insertGraph.setString(3,graph.getFormat().getName());
-			this.insertGraph.setBlob(4,new ByteArrayInputStream(graph.getData().getBytes()));
+			this.insertGraph.setBytes(4,graph.getData().getBytes());
 			// automatically closed in the next creation
-			final ResultSet rs = this.getGraphsURIs.executeQuery();
-			while (rs.next()) {
-				ret.add( rs.getString(1) );
-			}
-			return ret;
+			final int updated = this.insertGraph.executeUpdate();
+			if (updated==0) throw new PersistenceException("Graphs could not be stored.");
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
 		}
