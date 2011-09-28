@@ -75,22 +75,22 @@ public abstract class AbstractDataAccess implements IDataAccess {
 	 */
 	public abstract Graph concreteRead(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException;
 	
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws SpaceNotExistsException, UnsupportedTemplateException, PersistenceException {
 		return take(spaceURI,template,outputFormat,null);
 	}
 	
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedTemplateException {
+	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, User user) throws SpaceNotExistsException, UnsupportedTemplateException, PersistenceException {
 		final IAuthorizationChecker checker = new UserAuthorizationChecker(authz, user);
 		return concreteTake(spaceURI,template,outputFormat,checker);
 	}
 
-	public abstract Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException;
+	public abstract Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException, PersistenceException;
 
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, AuthorizationException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, AuthorizationException, PersistenceException {
 		return take(spaceURI,graphURI,outputFormat,null);
 	}
 	
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, User authorized) throws SpaceNotExistsException, AuthorizationException {
+	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, User authorized) throws SpaceNotExistsException, AuthorizationException, PersistenceException {
 		if(authz.isUserAuthorized(graphURI, authorized))
 			return concreteTake(spaceURI,graphURI,outputFormat);
 		throw new AuthorizationException("Unable to access to"+graphURI);
@@ -99,5 +99,5 @@ public abstract class AbstractDataAccess implements IDataAccess {
 	/**
 	 * Already authorized method.
 	 */
-	public abstract Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException;
+	public abstract Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, PersistenceException;
 }

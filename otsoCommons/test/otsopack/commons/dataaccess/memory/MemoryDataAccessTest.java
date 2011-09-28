@@ -23,6 +23,7 @@ import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
@@ -579,7 +580,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	private void assertNotAuthorizedTake(MemoryDataAccess memo, String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
+	private void assertNotAuthorizedTake(MemoryDataAccess memo, String spaceuri, String graphuri, User user) throws SpaceNotExistsException, PersistenceException {
 		try {
 			memo.take(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
 			fail();

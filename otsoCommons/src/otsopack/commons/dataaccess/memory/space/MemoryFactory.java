@@ -19,11 +19,11 @@ public class MemoryFactory {
 	
 	private MemoryFactory() {}
 	
-	public static GraphMem createGraph(String spaceuri) {
+	public static String createSimpleGraphURI(String spaceuri) {
 		if( !spaceuri.endsWith("/") ) spaceuri += "/";
 		String graphUri = spaceuri+"graph"+MemoryFactory.uricount;
 		MemoryFactory.uricount++;
-		return new GraphMem(graphUri);
+		return graphUri;
 	}
 	
 	public static SpaceMem createSpace(String spaceuri) {

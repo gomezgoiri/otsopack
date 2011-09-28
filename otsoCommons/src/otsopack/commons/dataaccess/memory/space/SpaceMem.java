@@ -48,7 +48,11 @@ public class SpaceMem {
 	}
 	
 	public String write(ModelImpl triples) {
-		GraphMem gm = MemoryFactory.createGraph(spaceURI);
+		return this.write(triples,MemoryFactory.createSimpleGraphURI(spaceURI));
+	}
+	
+	public String write(ModelImpl triples, String graphuri) {
+		final GraphMem gm = new GraphMem(graphuri);
 		gm.write(triples);
 		graphs.addElement(gm);
 		return gm.getUri();
