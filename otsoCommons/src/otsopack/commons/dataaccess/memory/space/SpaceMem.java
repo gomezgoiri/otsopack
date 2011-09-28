@@ -26,13 +26,13 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
  * Each MemorySpace can store a model and a spaceURI which identifies this model. 
  */
 public class SpaceMem {	
-	String spaceURI = null;
-	Vector/*<GraphMem>*/ graphs = null;
+	final String spaceURI;
+	final Vector/*<GraphMem>*/ graphs;
 	
 	
 	protected SpaceMem(String spaceURI) {
 		this.spaceURI = spaceURI;
-		graphs = new Vector();
+		this.graphs = new Vector();
 	}
 	
 	protected boolean containsGraph(String graphuri) {
@@ -66,38 +66,36 @@ public class SpaceMem {
 		return (ret.isEmpty())?null:ret.getModelImpl();
 	}
 
-	public ModelImpl read(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {
-		ModelImpl graph = null;
-		for(int i=0; i<graphs.size() && graph==null; i++) {
+	public GraphMem read(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {
+		for(int i=0; i<graphs.size(); i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( checker.isAuthorized(gm.getUri()) )
 			if( gm.contains(template) )
-				graph = gm.getModel(); // we hold the first graph which contains a triple like that
+				return gm; // we hold the first graph which contains a triple like that
 		}
-		return graph;
+		return null;
 	}
 
-	public ModelImpl read(String graphURI) {
-		ModelImpl mod = null;
-		for(int i=0; i<graphs.size() && mod==null; i++) {
+	public GraphMem read(String graphURI) {
+		for(int i=0; i<graphs.size(); i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.getUri().equals(graphURI) )
-				mod = gm.getModel(); // we hold the first graph which contains a triple like that
+				return gm; // we hold the first graph which contains a triple like that
 		}
-		return mod;
+		return null;
 	}
 	
-	public ModelImpl take(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {		
-		ModelImpl graph = null;
-		for(int i=0; i<graphs.size() && graph==null; i++) {
+	public GraphMem take(Template template, IAuthorizationChecker checker) throws UnsupportedTemplateException {		
+		for(int i=0; i<graphs.size(); i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( checker.isAuthorized(gm.getUri()) )
 				if( gm.contains(template) ) {
-					graph = gm.getModel(); // we hold the first graph which contains a triple like that
+					// we hold the first graph which contains a triple like that
 					graphs.removeElement(gm); // if it is done only once it is ok (the for does not continue)
+					return gm;
 				}
 		}
-		return graph;
+		return null;
 	}
 
 	/**
@@ -106,16 +104,16 @@ public class SpaceMem {
 	 * @return
 	 * 		The graph if it has access.
 	 */
-	public ModelImpl take(String graphURI) {
-		ModelImpl graph = null;
-		for(int i=0; i<graphs.size() && graph==null; i++) {
+	public GraphMem take(String graphURI) {
+		for(int i=0; i<graphs.size() ; i++) {
 			GraphMem gm = (GraphMem) graphs.elementAt(i);
 			if( gm.getUri().equals(graphURI) ) {
-				graph = gm.getModel(); // we hold the first graph which contains a triple like that
+				// we hold the first graph which contains a triple like that
 				graphs.removeElement(gm);
+				return gm;
 			}
 		}
-		return graph;
+		return null;
 	}
 	
 	public String[] getLocalGraphs() {

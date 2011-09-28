@@ -21,6 +21,7 @@ import otsopack.commons.dataaccess.authz.AuthorizedGraphs;
 import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.dataaccess.authz.UserAuthorizationChecker;
 import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -31,7 +32,7 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
 public abstract class AbstractDataAccess implements IDataAccess {
 	protected AuthorizedGraphs authz = new AuthorizedGraphs();
 	
-	public String write(String spaceURI, Graph triples, User authorized) throws SpaceNotExistsException, UnsupportedSemanticFormatException {
+	public String write(String spaceURI, Graph triples, User authorized) throws SpaceNotExistsException, UnsupportedSemanticFormatException, PersistenceException {
 		final String graphuri = write(spaceURI,triples);
 		authz.add(graphuri, authorized); //TODO remove graphs when they are taken
 		return graphuri;

@@ -22,6 +22,7 @@ import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.dataaccess.AbstractDataAccess;
 import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
+import otsopack.commons.dataaccess.memory.space.GraphMem;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
@@ -30,26 +31,23 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.Util;
 
 public class MemoryDataAccess extends AbstractDataAccess {
-	private static class MiniLogger{
-		public void debug(String message){
-			System.out.println(message);
-		}
-	}
-	
-	private final static MiniLogger log = new MiniLogger();
 	
 	private Vector spaces = null;
 	
 	public MemoryDataAccess() {
-		spaces = new Vector();
+		this.spaces = new Vector();
 	}
 	
 	public void startup() {}
 	public void shutdown() {}
 
 	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
-		if( getSpace(spaceURI) != null ) throw new SpaceAlreadyExistsException();
-		addSpace(spaceURI);
+		try {
+			getSpace(spaceURI);
+			throw new SpaceAlreadyExistsException();
+		} catch(SpaceNotExistsException e) {
+			addSpace(spaceURI);
+		}
 	}
 
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
@@ -64,18 +62,17 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 	
 	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
-		SpaceMem espacio = getSpace(spaceURI);
-		if( espacio == null ) throw new SpaceNotExistsException();
+		final SpaceMem espacio = getSpace(spaceURI);
 		return espacio.getLocalGraphs();
 	}
 	
-	protected SpaceMem getSpace(String spaceURI) {
+	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		for(int i=0; i<spaces.size(); i++) {
 			if(((SpaceMem)spaces.elementAt(i)).getSpaceURI().equals(spaceURI))
 				return (SpaceMem)spaces.elementAt(i);
 		}
-		return null;
+		throw new SpaceNotExistsException();
 	}
 	
 	protected void addSpace(String spaceURI) {
@@ -100,62 +97,44 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 	
 	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();
-		String ret = space.write(new ModelImpl(triples));
-		log.debug("Write ("+(System.currentTimeMillis()-start)+"ms).");
-		return ret;
+		final SpaceMem space = getSpace(spaceURI);
+		return space.write(new ModelImpl(triples));
 	}
 	
 	public Graph concreteQuery(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();
-		ModelImpl ret = space.query(template,checker);
-		log.debug("Query with template ("+(System.currentTimeMillis()-start)+"ms).");
+		final SpaceMem space = getSpace(spaceURI);
+		final ModelImpl ret = space.query(template,checker);
 		return (ret==null)? null: ret.write(outputFormat);
+	}
+	
+	protected Graph convertToGraph(GraphMem graphmem, SemanticFormat outputFormat) {
+		if( graphmem==null ) return null;
+		return graphmem.getModel().write(outputFormat);
 	}
 
 	public Graph concreteRead(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();		
-		ModelImpl ret = space.read(template,checker);
-		log.debug("Read with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return (ret==null)? null: ret.write(outputFormat);
+		final SpaceMem space = getSpace(spaceURI);
+		return convertToGraph(space.read(template,checker),outputFormat);
 	}
 
 	/**
 	 * Already authorized in AbstractDataAccess
 	 */
 	public Graph concreteRead(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();
-		ModelImpl ret = space.read(graphURI);
-		log.debug("Read with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return (ret==null)? null: ret.write(outputFormat);
+		final SpaceMem space = getSpace(spaceURI);
+		return convertToGraph(space.read(graphURI),outputFormat);
 	}
 	
 	public Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();		
-		ModelImpl ret = space.take(template,checker);
-		log.debug("Take with template ("+(System.currentTimeMillis()-start)+"ms).");
-		return (ret==null)? null: ret.write(outputFormat);
+		final SpaceMem space = getSpace(spaceURI);	
+		return convertToGraph(space.take(template,checker),outputFormat);
 	}
 	
 	/**
 	 * Already authorized in AbstractDataAccess
 	 */
 	public Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		long start = System.currentTimeMillis();
-		SpaceMem space = getSpace(spaceURI);
-		if( space == null ) throw new SpaceNotExistsException();
-		ModelImpl ret = space.take(graphURI);		
-		log.debug("Take with uri ("+(System.currentTimeMillis()-start)+"ms).");
-		return (ret==null)? null: ret.write(outputFormat);
+		final SpaceMem space = getSpace(spaceURI);
+		return convertToGraph(space.take(graphURI),outputFormat);
 	}
 }
