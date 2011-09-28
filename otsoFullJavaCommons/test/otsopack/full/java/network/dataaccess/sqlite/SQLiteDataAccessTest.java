@@ -28,11 +28,21 @@ import otsopack.full.java.dataaccess.sqlite.SQLiteDataAccess;
 
 public class SQLiteDataAccessTest extends TestCase {
 	
+	SQLiteDataAccess da;
 	final Graph[] models = new Graph[3];
 	final String[] triples = new String[9];
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		this.da = new SQLiteDataAccess();
+		this.da.startup();
+		this.da.setAutoCommit(false);
+		this.da.clear();
+		this.da.setAutoCommit(true);
+		this.da.shutdown();
+		
+		
 		final MicrojenaFactory factory = new MicrojenaFactory();
 		SemanticFactory.initialize(factory);
 		
@@ -62,9 +72,8 @@ public class SQLiteDataAccessTest extends TestCase {
 	}
 	
 	public void testCreateSpace() throws Exception {
-		final SQLiteDataAccess da = new SQLiteDataAccess();
 		try {
-			da.createSpace("ts://espacio");
+			this.da.createSpace("ts://espacio");
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(false);
@@ -72,10 +81,9 @@ public class SQLiteDataAccessTest extends TestCase {
 	}
 	
 	public void testCreateSpaceFailure() throws Exception {
-		final SQLiteDataAccess da = new SQLiteDataAccess();
 		try {
-			da.createSpace("ts://espacio");
-			da.createSpace("ts://espacio");
+			this.da.createSpace("ts://espacio");
+			this.da.createSpace("ts://espacio");
 			fail();
 		} catch (Exception e) {
 		}
@@ -84,15 +92,14 @@ public class SQLiteDataAccessTest extends TestCase {
 	public void testJoinSpace() {}
 
 	public void testLeaveSpace() throws Exception {
-		final SQLiteDataAccess da = new SQLiteDataAccess();
 		try {
-			da.createSpace("ts://espacio");
+			this.da.createSpace("ts://espacio");
 		} catch (Exception e) {
 			assertTrue(false);
 		}
 		
 		try {
-			da.leaveSpace("ts://espacio");
+			this.da.leaveSpace("ts://espacio");
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(false);
@@ -100,15 +107,14 @@ public class SQLiteDataAccessTest extends TestCase {
 	}
 	
 	public void testLeaveSpaceFailure() throws Exception {
-		final SQLiteDataAccess da = new SQLiteDataAccess();
 		try {
-			da.createSpace("ts://espacio");
+			this.da.createSpace("ts://espacio");
 		} catch (Exception e) {
 			assertTrue(false);
 		}
 		
 		try {
-			da.leaveSpace("ts://espacio2");
+			this.da.leaveSpace("ts://espacio2");
 			// assertTrue(false);
             // TODO: what should be the behaviour?
 		} catch (Exception e) {
@@ -118,17 +124,16 @@ public class SQLiteDataAccessTest extends TestCase {
 	
 	public void testWriteGraphs() throws Exception {
 		final String spaceuri = "ts://spaceWrite3";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri);
-		da.joinSpace(spaceuri);
+		this.da.startup();
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
 		
 		for(int i=0; i<this.models.length; i++) {
-			assertNotNull( da.write(spaceuri,this.models[i]) );
+			assertNotNull( this.da.write(spaceuri,this.models[i]) );
 		}
 		
-		da.leaveSpace(spaceuri);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri);
+		this.da.shutdown();
 	}
 	
 	private boolean contains(int[] contains, int num) {
@@ -153,20 +158,19 @@ public class SQLiteDataAccessTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
 		final String spaceuri2 = "ts://spaceQuery2";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
-		da.createSpace(spaceuri2);
-		da.joinSpace(spaceuri2);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri2);
+		this.da.joinSpace(spaceuri2);
 		
-		da.write( spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1]);
-		da.write(spaceuri2, this.models[2]);
+		this.da.write( spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1]);
+		this.da.write(spaceuri2, this.models[2]);
 		
-		final Graph retGraph1 = da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = da.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph1 = this.da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.query( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = this.da.query( spaceuri1, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 2 );
 		assertTrue( retGraph1.getData().contains(this.triples[0]) );
@@ -175,9 +179,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertTrue( retGraph2.getData().contains(this.triples[8]) );
 		assertNull( retGraph3 );
 		
-		da.leaveSpace(spaceuri1);
-		da.leaveSpace(spaceuri2);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.leaveSpace(spaceuri2);
+		this.da.shutdown();
 	}
 	
 	// Authorized query
@@ -187,45 +191,43 @@ public class SQLiteDataAccessTest extends TestCase {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
+		this.da.startup();
 		
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
 				
-		da.write(spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1], user1);
-		da.write(spaceuri1, this.models[2], user2);
+		this.da.write(spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1], user1);
+		this.da.write(spaceuri1, this.models[2], user2);
 		
-		final Graph retGraph1 = da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph1 = this.da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.query( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
 		assertGraphContains(retGraph1, new int[] {0});
 		assertGraphContains(retGraph2, new int[] {0,3});
 		assertGraphContains(retGraph3, new int[] {0,6});
 		
-		da.shutdown();
+		this.da.shutdown();
 	}
 	
 	public void testReadTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceRead1";
 		final String spaceuri2 = "ts://spaceRead2";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
-		da.createSpace(spaceuri2);
-		da.joinSpace(spaceuri2);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri2);
+		this.da.joinSpace(spaceuri2);
 		
-		da.write( spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1]);
-		da.write(spaceuri2, this.models[2]);
+		this.da.write( spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1]);
+		this.da.write(spaceuri2, this.models[2]);
 		
-		final Graph retGraph1 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = da.read( spaceuri2, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph1 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.read( spaceuri2, sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = this.da.read( spaceuri2, sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.getData().contains(this.triples[0]) ) {
@@ -242,9 +244,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertTrue( retGraph2.getData().contains(this.triples[8]) );
 		assertNull( retGraph3 );
 		
-		da.leaveSpace(spaceuri1);
-		da.leaveSpace(spaceuri2);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.leaveSpace(spaceuri2);
+		this.da.shutdown();
 	}
 	
 	// Authorized read(template)
@@ -254,27 +256,26 @@ public class SQLiteDataAccessTest extends TestCase {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
+		this.da.startup();
 		
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
 				
-		da.write(spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1], user1);
-		da.write(spaceuri1, this.models[2], user2);
+		this.da.write(spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1], user1);
+		this.da.write(spaceuri1, this.models[2], user2);
 		
-		final Graph retGraph1 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph1 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		final Graph retGraph4 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph5 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph6 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph6 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 
-		final Graph retGraph7 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph8 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph9 = da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph7 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph8 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph9 = this.da.read( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
 		int[] contains = {0,1,2};
 		assertGraphContains(retGraph1, contains);
@@ -289,30 +290,29 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph7);
 		assertNull(retGraph8);
 		
-		da.shutdown();
+		this.da.shutdown();
 	}
 	
 	public void testReadURI() throws Exception {
 		final String spaceuri1 = "ts://spaceRead3";
 		final String spaceuri2 = "ts://spaceRead4";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
-		da.createSpace(spaceuri2);
-		da.joinSpace(spaceuri2);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri2);
+		this.da.joinSpace(spaceuri2);
 		
 		final String[] graphuris = new String[this.models.length];
-		graphuris[0] = da.write(spaceuri1, this.models[0]);
-		graphuris[1] = da.write(spaceuri1, this.models[1]);
-		graphuris[2] = da.write(spaceuri2, this.models[2]);
+		graphuris[0] = this.da.write(spaceuri1, this.models[0]);
+		graphuris[1] = this.da.write(spaceuri1, this.models[1]);
+		graphuris[2] = this.da.write(spaceuri2, this.models[2]);
 		
-		final Graph retGraph1 = da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = da.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
-		final Graph retGraph4 = da.read( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph5 = da.read( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
-		final Graph retGraph6 = da.read( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );		
+		final Graph retGraph1 = this.da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = this.da.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = this.da.read( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = this.da.read( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = this.da.read( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );		
 		
 		assertGraphContains(retGraph1, new int[] {0,1,2});
 		assertGraphContains(retGraph2, new int[] {3,4,5});
@@ -323,9 +323,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		assertGraphContains(retGraph6, new int[] {6,7,8});
 		
-		da.leaveSpace(spaceuri1);
-		da.leaveSpace(spaceuri2);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.leaveSpace(spaceuri2);
+		this.da.shutdown();
 	}
 	
 	public void testReadURIUser() throws Exception {
@@ -333,26 +333,25 @@ public class SQLiteDataAccessTest extends TestCase {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[this.models.length];
-		graphuris[0] = da.write(spaceuri1,this.models[0]);
-		graphuris[1] = da.write(spaceuri1,this.models[1],user1);
-		graphuris[2] = da.write(spaceuri1,this.models[2],user2);
+		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
+		graphuris[1] = this.da.write(spaceuri1,this.models[1],user1);
+		graphuris[2] = this.da.write(spaceuri1,this.models[2],user2);
 		
-		assertNotAuthorizedRead(da,spaceuri1,graphuris[1],null);
-		assertNotAuthorizedRead(da,spaceuri1,graphuris[2],null);
-		assertNotAuthorizedRead(da,spaceuri1,graphuris[2],user1);
-		assertNotAuthorizedRead(da,spaceuri1,graphuris[1],user2);
+		assertNotAuthorizedRead(spaceuri1,graphuris[1],null);
+		assertNotAuthorizedRead(spaceuri1,graphuris[2],null);
+		assertNotAuthorizedRead(spaceuri1,graphuris[2],user1);
+		assertNotAuthorizedRead(spaceuri1,graphuris[1],user2);
 		
-		final Graph retGraph1 = da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph4 = da.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph5 = da.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph1 = this.da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.read( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = this.da.read( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph5 = this.da.read( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
 		
 		int[] contains = {0,1,2};
 		assertGraphContains(retGraph1, contains);
@@ -362,13 +361,13 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertGraphContains(retGraph4, new int[] {3,4,5});
 		assertGraphContains(retGraph5, new int[] {6,7,8});
 		
-		da.leaveSpace(spaceuri1);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.shutdown();
 	}
 	
-	private void assertNotAuthorizedRead(SQLiteDataAccess da, String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
+	private void assertNotAuthorizedRead(String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
 		try {
-			da.read(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
+			this.da.read(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
 			fail();
 		} catch(AuthorizationException ae) {
 			//always thrown
@@ -379,27 +378,26 @@ public class SQLiteDataAccessTest extends TestCase {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceTake1";
 		final String spaceuri2 = "ts://spaceTake2";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
-		da.createSpace(spaceuri2);
-		da.joinSpace(spaceuri2);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri2);
+		this.da.joinSpace(spaceuri2);
 		
-		da.write(spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1]);
-		da.write(spaceuri2, this.models[2]);
+		this.da.write(spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1]);
+		this.da.write(spaceuri2, this.models[2]);
 		
 		final Template sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final Template sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
 		final Template sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
-		final Graph retGraph1 = da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
-		final Graph retGraph4 = da.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
-		final Graph retGraph5 = da.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
-		final Graph retGraph6 = da.take( spaceuri1, sel3, SemanticFormat.NTRIPLES );
-		final Graph retGraph7 = da.take( spaceuri2, sel3, SemanticFormat.NTRIPLES );
+		final Graph retGraph1 = this.da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = this.da.take( spaceuri1, sel1, SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = this.da.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = this.da.take( spaceuri2, sel2, SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = this.da.take( spaceuri1, sel3, SemanticFormat.NTRIPLES );
+		final Graph retGraph7 = this.da.take( spaceuri2, sel3, SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		if( retGraph1.getData().contains(this.triples[0]) ) {
@@ -432,9 +430,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull( retGraph6 );
 		assertNull( retGraph7 );
 		
-		da.leaveSpace(spaceuri1);
-		da.leaveSpace(spaceuri2);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.leaveSpace(spaceuri2);
+		this.da.shutdown();
 	}
 	
 	// Authorized read(template)
@@ -444,27 +442,26 @@ public class SQLiteDataAccessTest extends TestCase {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
+		this.da.startup();
 		
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
 				
-		da.write(spaceuri1, this.models[0]);
-		da.write(spaceuri1, this.models[1], user1);
-		da.write(spaceuri1, this.models[2], user2);
+		this.da.write(spaceuri1, this.models[0]);
+		this.da.write(spaceuri1, this.models[1], user1);
+		this.da.write(spaceuri1, this.models[2], user2);
 		
-		final Graph retGraph1 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph1 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop1+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
-		final Graph retGraph4 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph5 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph6 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph4 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph6 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop2+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
 
-		final Graph retGraph7 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES );
-		final Graph retGraph8 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph9 = da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph7 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES );
+		final Graph retGraph8 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph9 = this.da.take( spaceuri1, sf.createTemplate("<"+Example.subj1+"> <"+Example.prop5+"> ?o ."), SemanticFormat.NTRIPLES, user2 );
 		
 		assertGraphContains(retGraph1, new int[] {0,1,2});
 		assertGraphContains(retGraph6, new int[] {3,4,5});
@@ -480,33 +477,32 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph7);
 		assertNull(retGraph8);
 		
-		da.shutdown();
+		this.da.shutdown();
 	}
 	
 	public void testTakeURI() throws Exception {
 		final String spaceuri1 = "ts://spaceTake3";
 		final String spaceuri2 = "ts://spaceTake4";
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
-		da.createSpace(spaceuri2);
-		da.joinSpace(spaceuri2);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		this.da.createSpace(spaceuri2);
+		this.da.joinSpace(spaceuri2);
 		
 		String[] graphuris = new String[this.models.length];
-		graphuris[0] = da.write( spaceuri1, this.models[0]);
-		graphuris[1] = da.write(spaceuri1, this.models[1]);
-		graphuris[2] = da.write(spaceuri2, this.models[2]);
+		graphuris[0] = this.da.write( spaceuri1, this.models[0]);
+		graphuris[1] = this.da.write(spaceuri1, this.models[1]);
+		graphuris[2] = this.da.write(spaceuri2, this.models[2]);
 		
-		final Graph retGraph1 = da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph3 = da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
-		final Graph retGraph4 = da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
-		final Graph retGraph5 = da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
-		final Graph retGraph6 = da.take( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph7 = da.take( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
-		final Graph retGraph8 = da.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
-		final Graph retGraph9 = da.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph1 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph3 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph4 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph5 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph6 = this.da.take( spaceuri2, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph7 = this.da.take( spaceuri2, graphuris[1], SemanticFormat.NTRIPLES );
+		final Graph retGraph8 = this.da.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
+		final Graph retGraph9 = this.da.take( spaceuri2, graphuris[2], SemanticFormat.NTRIPLES );
 		
 		//assertEquals( retGraph1.size(), 3 );
 		assertTrue( retGraph1.getData().contains(this.triples[0]) );
@@ -530,9 +526,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertTrue( retGraph8.getData().contains(this.triples[8]) );
 		assertNull( retGraph9 );
 		
-		da.leaveSpace(spaceuri1);
-		da.leaveSpace(spaceuri2);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.leaveSpace(spaceuri2);
+		this.da.shutdown();
 	}
 	
 	public void testTakeURIUser() throws Exception {
@@ -540,28 +536,27 @@ public class SQLiteDataAccessTest extends TestCase {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		final SQLiteDataAccess da = new SQLiteDataAccess();
-		da.startup();
-		da.createSpace(spaceuri1);
-		da.joinSpace(spaceuri1);
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[this.models.length];
-		graphuris[0] = da.write(spaceuri1,this.models[0]);
-		graphuris[1] = da.write(spaceuri1,this.models[1],user1);
-		graphuris[2] = da.write(spaceuri1,this.models[2],user2);
+		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
+		graphuris[1] = this.da.write(spaceuri1,this.models[1],user1);
+		graphuris[2] = this.da.write(spaceuri1,this.models[2],user2);
 		
-		assertNotAuthorizedTake(da,spaceuri1,graphuris[1],null);
-		assertNotAuthorizedTake(da,spaceuri1,graphuris[2],null);
-		assertNotAuthorizedTake(da,spaceuri1,graphuris[2],user1);
-		assertNotAuthorizedTake(da,spaceuri1,graphuris[1],user2);
+		assertNotAuthorizedTake(spaceuri1,graphuris[1],null);
+		assertNotAuthorizedTake(spaceuri1,graphuris[2],null);
+		assertNotAuthorizedTake(spaceuri1,graphuris[2],user1);
+		assertNotAuthorizedTake(spaceuri1,graphuris[1],user2);
 		
-		final Graph retGraph1 = da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph4 = da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph5 = da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph6 = da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph7 = da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph1 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph5 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph6 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph7 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
 		
 		assertGraphContains(retGraph1, new int[] {0,1,2});
 		assertGraphContains(retGraph4, new int[] {3,4,5});
@@ -573,16 +568,63 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph5);
 		assertNull(retGraph7);
 		
-		da.leaveSpace(spaceuri1);
-		da.shutdown();
+		this.da.leaveSpace(spaceuri1);
+		this.da.shutdown();
 	}
 	
-	private void assertNotAuthorizedTake(SQLiteDataAccess da, String spaceuri, String graphuri, User user) throws Exception {
+	private void assertNotAuthorizedTake(String spaceuri, String graphuri, User user) throws Exception {
 		try {
-			da.take(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
+			this.da.take(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
 			fail();
 		} catch(AuthorizationException ae) {
 			//always thrown
 		}
+	}
+	
+	public void testRollback() throws Exception {
+		final String spaceuri1 = "ts://spaceRead5";
+		final User user1 = new User("http://aitor.myopenid.com");
+		final User user2 = new User("http://pablo.myopenid.com");
+		
+		final String[] graphuris = new String[this.models.length];
+		
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		
+		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
+		this.da.setAutoCommit(false);
+		
+		graphuris[1] = this.da.write(spaceuri1,this.models[1],user1);
+		//this.da.
+		graphuris[2] = this.da.write(spaceuri1,this.models[2],user2);
+		
+		
+		
+		assertNotAuthorizedTake(spaceuri1,graphuris[1],null);
+		assertNotAuthorizedTake(spaceuri1,graphuris[2],null);
+		assertNotAuthorizedTake(spaceuri1,graphuris[2],user1);
+		assertNotAuthorizedTake(spaceuri1,graphuris[1],user2);
+		
+		final Graph retGraph1 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
+		final Graph retGraph2 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph3 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph4 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph5 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
+		final Graph retGraph6 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		final Graph retGraph7 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
+		
+		assertGraphContains(retGraph1, new int[] {0,1,2});
+		assertGraphContains(retGraph4, new int[] {3,4,5});
+		assertGraphContains(retGraph6, new int[] {6,7,8});
+		
+		// those graphs were taken before
+		assertNull(retGraph2);
+		assertNull(retGraph3);
+		assertNull(retGraph5);
+		assertNull(retGraph7);
+		
+		this.da.leaveSpace(spaceuri1);
+		this.da.shutdown();
 	}
 }

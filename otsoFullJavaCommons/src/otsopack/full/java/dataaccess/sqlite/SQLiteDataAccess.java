@@ -37,8 +37,8 @@ import otsopack.full.java.dataaccess.IPersistentDataAccess;
 public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
 
 	private boolean autocommit = true;
-	private ConcurrentHashMap<String,SpaceMem> spaces = null;
-	private SQLiteDAO dao;
+	ConcurrentHashMap<String,SpaceMem> spaces = null;
+	SQLiteDAO dao;
 	
 	private final Object commitLock = new Object();
 	
@@ -70,47 +70,30 @@ public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentD
 	@Override
 	public void rollback() throws PersistenceException  {
 		if (this.autocommit) throw new PersistenceException("Autocommit enabled."); 
-		try {
-			synchronized(this.commitLock) {
-				this.commitLock.wait();
-				
-				this.commitLock.notify();
-			}
-		} catch(InterruptedException ie) {
-			throw new PersistenceException("Rollback could not be performed.");
+		
+		synchronized(this.commitLock) {
+			//todo remove all the graphs not stored
 		}
 	}
 
 	@Override
 	public void commit() throws PersistenceException {
 		if (this.autocommit) throw new PersistenceException("Autocommit enabled."); 
-		try {
-			synchronized(this.commitLock) {
-				this.commitLock.wait();
-				// disable autocommit in the store and perform all in one commit
-				this.commitLock.notify();
-			}
-		} catch(InterruptedException ie) {
-			throw new PersistenceException("Rollback could not be performed.");
+
+		synchronized(this.commitLock) {
+			// disable autocommit in the store and perform all in one commit
 		}
 	}
 
 	// TODO Maybe a clear(space) could be more useful
 	@Override
 	public void clear() throws PersistenceException {
-		if (this.autocommit) throw new PersistenceException("Autocommit enabled."); 
-		try {
-			synchronized(this.commitLock) {
-				this.commitLock.wait();
-				//delete all database
-				this.dao.clear();
-				this.spaces.clear();
-				this.commitLock.notify();
-			}
-		} catch(InterruptedException ie) {
-			// if dao.clear() fails, the memory is not going to be cleaned
-			// so it will maintain consistent
-			throw new PersistenceException("Clear could not be performed.");
+		if (this.autocommit) throw new PersistenceException("Autocommit enabled.");
+		
+		synchronized(this.commitLock) {
+			//delete all database
+			this.dao.clear();
+			this.spaces.clear();
 		}
 	}
 	
