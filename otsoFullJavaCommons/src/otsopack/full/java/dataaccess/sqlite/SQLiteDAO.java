@@ -155,7 +155,7 @@ public class SQLiteDAO {
 			this.deleteGraph.setString(2,graphuri);
 			this.deleteGraph.executeUpdate();
 		} catch (SQLException e) {
-			throw new PersistenceException("Graphs selection statement could not be executed.");
+			throw new PersistenceException("Graph removal statement could not be executed.");
 		}
 	}
 	

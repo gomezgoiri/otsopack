@@ -25,6 +25,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.MalformedTemplateException;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -122,6 +123,8 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Unsupported output format: " + outputFormat);
 		} catch (UnsupportedTemplateException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PersistenceException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The information could not be stored.");
 		}
 		throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Graph not found");
 	}

@@ -28,6 +28,7 @@ import org.restlet.resource.ResourceException;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.full.java.network.communication.representations.RepresentationException;
@@ -115,15 +116,18 @@ public class GraphsResource extends AbstractServerResource implements IGraphsRes
 		return JSONEncoder.encode(graphURIs.toArray(new String[]{}));
 	}
 	
+	// TODO Decide: does it worth offering this remote writing service if we claim to be using Negative Broadcasting?
 	protected String write(Graph graph, SemanticFormat semanticFormat) {
 		final String space = getArgument("space");
 		try {		
 			final IController controller = getController();
 			return controller.getDataAccessService().write(space,graph);
 		} catch (SpaceNotExistsException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, SpaceNotExistsException.HTTPMSG);
 		} catch (UnsupportedSemanticFormatException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't write in format: " + semanticFormat, e);
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE, "Can't write in format: " + semanticFormat);
+		} catch (PersistenceException e) {
+			throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "The information could not be stored.");
 		}
 	}
 }

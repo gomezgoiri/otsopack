@@ -76,9 +76,8 @@ public class SQLiteDataAccessTest extends TestCase {
 		try {
 			da.createSpace("ts://espacio");
 			da.createSpace("ts://espacio");
-			assertTrue(false);
+			fail();
 		} catch (Exception e) {
-			assertTrue(true);
 		}
 	}
 
@@ -387,7 +386,7 @@ public class SQLiteDataAccessTest extends TestCase {
 		da.createSpace(spaceuri2);
 		da.joinSpace(spaceuri2);
 		
-		da.write( spaceuri1, this.models[0]);
+		da.write(spaceuri1, this.models[0]);
 		da.write(spaceuri1, this.models[1]);
 		da.write(spaceuri2, this.models[2]);
 		
@@ -578,7 +577,7 @@ public class SQLiteDataAccessTest extends TestCase {
 		da.shutdown();
 	}
 	
-	private void assertNotAuthorizedTake(SQLiteDataAccess da, String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
+	private void assertNotAuthorizedTake(SQLiteDataAccess da, String spaceuri, String graphuri, User user) throws Exception {
 		try {
 			da.take(spaceuri, graphuri, SemanticFormat.NTRIPLES, user);
 			fail();

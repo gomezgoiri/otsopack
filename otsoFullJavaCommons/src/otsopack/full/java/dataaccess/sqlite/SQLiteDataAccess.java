@@ -13,36 +13,48 @@
  */
 package otsopack.full.java.dataaccess.sqlite;
 
-import otsopack.commons.authz.entities.User;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
-import otsopack.commons.dataaccess.IDataAccess;
-import otsopack.commons.dataaccess.memory.MemoryDataAccess;
-import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.commons.data.impl.microjena.ModelImpl;
+import otsopack.commons.dataaccess.AbstractDataAccess;
+import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
+import otsopack.commons.dataaccess.memory.space.GraphMem;
+import otsopack.commons.dataaccess.memory.space.MemoryFactory;
+import otsopack.commons.dataaccess.memory.space.SpaceMem;
 import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
+import otsopack.commons.util.Util;
 import otsopack.full.java.dataaccess.IPersistentDataAccess;
 
-public class SQLiteDataAccess implements IDataAccess, IPersistentDataAccess {
+public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
 
-	private boolean autocommit = false;
-	private MemoryDataAccess memory = new MemoryDataAccess();
+	private boolean autocommit = true;
+	private ConcurrentHashMap<String,SpaceMem> spaces = null;
+	private SQLiteDAO dao;
 	
 	private final Object commitLock = new Object();
 	
+	public SQLiteDataAccess() throws TSException {
+		this.dao = new SQLiteDAO();
+		this.spaces = new ConcurrentHashMap<String,SpaceMem>();
+	}
+	
 	@Override
 	public void startup() throws TSException {
-		this.memory.startup();
+		this.dao.startup();
 	}
 	
 	@Override
 	public void shutdown() throws TSException {
-		this.memory.shutdown();
+		this.dao.shutdown();
 	}
 	
 	@Override
@@ -75,7 +87,7 @@ public class SQLiteDataAccess implements IDataAccess, IPersistentDataAccess {
 		try {
 			synchronized(this.commitLock) {
 				this.commitLock.wait();
-				
+				// disable autocommit in the store and perform all in one commit
 				this.commitLock.notify();
 			}
 		} catch(InterruptedException ie) {
@@ -91,122 +103,130 @@ public class SQLiteDataAccess implements IDataAccess, IPersistentDataAccess {
 			synchronized(this.commitLock) {
 				this.commitLock.wait();
 				//delete all database
-				//abrupt way to clear it... :-S
-				this.memory = new MemoryDataAccess();
+				this.dao.clear();
+				this.spaces.clear();
 				this.commitLock.notify();
 			}
 		} catch(InterruptedException ie) {
-			throw new PersistenceException("Rollback could not be performed.");
+			// if dao.clear() fails, the memory is not going to be cleaned
+			// so it will maintain consistent
+			throw new PersistenceException("Clear could not be performed.");
 		}
+	}
+	
+	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		final SpaceMem ret = this.spaces.get(normalizedURI);
+		if (ret==null) throw new SpaceNotExistsException(); 
+		return ret;
 	}
 
 	@Override
 	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
-		this.memory.createSpace(spaceURI);
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		if (this.spaces.containsKey(normalizedURI)) throw new SpaceAlreadyExistsException();
+		this.spaces.putIfAbsent(normalizedURI,MemoryFactory.createSpace(normalizedURI));
 	}
-
+	
 	@Override
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
-		this.memory.joinSpace(spaceURI);
+		// load if not loaded?
 	}
-
+	
 	@Override
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
-		this.memory.leaveSpace(spaceURI);
+		// commit?
 	}
-
+	
 	@Override
-	public String[] getLocalGraphs(String spaceURI)
-			throws SpaceNotExistsException {
-		return this.memory.getLocalGraphs(spaceURI);
+	public String[] getLocalGraphs(String spaceURI)	throws SpaceNotExistsException {
+		final SpaceMem espacio = getSpace(spaceURI);
+		return espacio.getLocalGraphs();
 	}
-
+	
+	protected String generateUniqueURIbasedOnContent(String spaceuri, byte[] bytes) {
+		final String normalizedURI = Util.normalizeSpaceURI(spaceuri, "");
+		return Util.normalizeSpaceURI(normalizedURI + UUID.nameUUIDFromBytes(bytes).toString(), "");
+	}
+	
 	@Override
 	public String write(String spaceURI, Graph triples)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException {
-		return this.memory.write(spaceURI, triples);
-	}
-
-	@Override
-	public String write(String spaceURI, Graph triples, User authorized)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException {
-		return this.memory.write(spaceURI, triples, authorized);
-	}
-
-	@Override
-	public Graph query(String spaceURI, Template template,
-			SemanticFormat outputFormat) throws SpaceNotExistsException,
-			UnsupportedSemanticFormatException, UnsupportedTemplateException {
-		return this.memory.query(spaceURI, template, outputFormat);
-	}
-
-	@Override
-	public Graph query(String spaceURI, Template template,
-			SemanticFormat outputFormat, User user)
 			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
-			UnsupportedTemplateException {
-		return this.memory.query(spaceURI, template, outputFormat, user);
+			PersistenceException {
+		final SpaceMem space = getSpace(spaceURI);
+		final String graphuri = generateUniqueURIbasedOnContent(spaceURI,triples.getData().getBytes());
+		
+		if( this.autocommit ) {
+			final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+			this.dao.insertGraph(normalizedURI, graphuri, triples);
+			// consistency kept, if the exception does not do the following write in memory
+			space.write(new ModelImpl(triples), graphuri);
+		}
+		return graphuri;
 	}
-
+	
 	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat) throws SpaceNotExistsException,
-			UnsupportedSemanticFormatException, UnsupportedTemplateException {
-		// TODO Auto-generated method stub
-		return this.memory.read(spaceURI, template, outputFormat);
+	public Graph concreteQuery(String spaceURI, Template template,
+			SemanticFormat outputFormat, IAuthorizationChecker checker)
+			throws SpaceNotExistsException, UnsupportedTemplateException {
+		final SpaceMem space = getSpace(spaceURI);
+		final ModelImpl ret = space.query(template,checker);
+		return (ret==null)? null: ret.write(outputFormat);
 	}
-
+	
+	protected Graph convertToGraph(GraphMem graphmem, SemanticFormat outputFormat) {
+		if( graphmem==null ) return null;
+		return graphmem.getModel().write(outputFormat);
+	}
+	
 	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat, User user)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
-			UnsupportedTemplateException {
-		return this.memory.read(spaceURI, template, outputFormat, user);
+	public Graph concreteRead(String spaceURI, Template template,
+			SemanticFormat outputFormat, IAuthorizationChecker checker)
+			throws SpaceNotExistsException, UnsupportedTemplateException {
+		final SpaceMem space = getSpace(spaceURI);
+		return convertToGraph(space.read(template,checker),outputFormat);
 	}
 
-	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat) throws SpaceNotExistsException,
-			UnsupportedSemanticFormatException, AuthorizationException {
-		return this.memory.read(spaceURI, graphURI, outputFormat);
+	/**
+	 * Already authorized in AbstractDataAccess
+	 */
+	public Graph concreteRead(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
+		final SpaceMem space = getSpace(spaceURI);
+		return convertToGraph(space.read(graphURI),outputFormat);
 	}
-
-	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, User user)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
-			AuthorizationException {
-		return this.memory.read(spaceURI, graphURI, outputFormat, user);
+	
+	public Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException, PersistenceException {
+		final SpaceMem space = getSpace(spaceURI);
+		final GraphMem graph = space.take(template, checker);
+		if (this.autocommit) {
+			if (graph!=null) {
+				try {
+					final String normalizedgraphuri = Util.normalizeSpaceURI(graph.getUri(), "");
+					final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
+					this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
+				} catch(PersistenceException e) {
+					// writing if sth has gone wrong, we ensure the space consistency
+					space.write(graph.getModel(), graph.getUri());
+					throw e;
+				}
+			}
+		}
+		return convertToGraph(graph,outputFormat);
 	}
-
-	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat) throws SpaceNotExistsException,
-			UnsupportedSemanticFormatException, UnsupportedTemplateException {
-		return this.memory.take(spaceURI, template, outputFormat);
+	
+	/**
+	 * Already authorized in AbstractDataAccess
+	 */
+	public Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, PersistenceException {
+		final SpaceMem space = getSpace(spaceURI);
+		final String normalizedgraphuri = Util.normalizeSpaceURI(graphURI, "");
+			
+		if( this.autocommit ) {
+			final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
+			this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
+			// space consistency kept, if this.dao throws an exception does not reach here
+			return convertToGraph(space.take(normalizedgraphuri),outputFormat);
+		}
+		return convertToGraph(space.take(normalizedgraphuri),outputFormat);
 	}
-
-	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat, User user)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
-			UnsupportedTemplateException {
-		return this.memory.take(spaceURI, template, outputFormat, user);
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat) throws SpaceNotExistsException,
-			UnsupportedSemanticFormatException, AuthorizationException {
-		return this.memory.take(spaceURI, graphURI, outputFormat);
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, User user)
-			throws SpaceNotExistsException, UnsupportedSemanticFormatException,
-			AuthorizationException {
-		return this.memory.take(spaceURI, graphURI, outputFormat, user);
-	}
-
 }
