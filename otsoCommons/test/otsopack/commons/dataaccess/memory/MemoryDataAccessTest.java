@@ -25,7 +25,6 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.sampledata.Example;
 
 public class MemoryDataAccessTest extends TestCase {
@@ -295,7 +294,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	public void testReadURI() throws SpaceAlreadyExistsException, SpaceNotExistsException, UnsupportedTemplateException, AuthorizationException {
+	public void testReadURI() throws Exception {
 		final String spaceuri1 = "ts://spaceRead3";
 		final String spaceuri2 = "ts://spaceRead4";
 		final MemoryDataAccess memo = new MemoryDataAccess();
@@ -486,7 +485,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
-	public void testTakeURI() throws SpaceAlreadyExistsException, SpaceNotExistsException, UnsupportedTemplateException, AuthorizationException {
+	public void testTakeURI() throws Exception {
 		final String spaceuri1 = "ts://spaceTake3";
 		final String spaceuri2 = "ts://spaceTake4";
 		final MemoryDataAccess memo = new MemoryDataAccess();

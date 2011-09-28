@@ -112,28 +112,28 @@ public class SpaceMemTest extends TestCase {
 			space.write(models[i]);
 		}
 		
-		final ModelImpl retGraph1 = space.read( sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), new AlwaysAuthorized() );
-		final ModelImpl retGraph2 = space.read( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), new AlwaysAuthorized() );
-		final ModelImpl retGraph3 = space.read( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), new AlwaysAuthorized() );
+		final GraphMem retGraph1 = space.read( sf.createTemplate("<"+Example.subj1+"> ?p ?o ."), new AlwaysAuthorized() );
+		final GraphMem retGraph2 = space.read( sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> ."), new AlwaysAuthorized() );
+		final GraphMem retGraph3 = space.read( sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> ."), new AlwaysAuthorized() );
 		
-		assertEquals( retGraph1.getModel().size(), 3 );
-		if( retGraph1.getModel().contains(triples[0].asStatement()) ) {
-			assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
-			assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
+		assertEquals( retGraph1.getModel().getModel().size(), 3 );
+		if( retGraph1.getModel().getModel().contains(triples[0].asStatement()) ) {
+			assertTrue( retGraph1.getModel().getModel().contains(triples[1].asStatement()) );
+			assertTrue( retGraph1.getModel().getModel().contains(triples[2].asStatement()) );
 		} else
-		if( retGraph1.getModel().contains(triples[3].asStatement()) ) {
-			assertTrue( retGraph1.getModel().contains(triples[4].asStatement()) );
-			assertTrue( retGraph1.getModel().contains(triples[5].asStatement()) );
+		if( retGraph1.getModel().getModel().contains(triples[3].asStatement()) ) {
+			assertTrue( retGraph1.getModel().getModel().contains(triples[4].asStatement()) );
+			assertTrue( retGraph1.getModel().getModel().contains(triples[5].asStatement()) );
 		} else
-		if( retGraph1.getModel().contains(triples[6].asStatement()) ) {
-			assertTrue( retGraph1.getModel().contains(triples[7].asStatement()) );
-			assertTrue( retGraph1.getModel().contains(triples[8].asStatement()) );
+		if( retGraph1.getModel().getModel().contains(triples[6].asStatement()) ) {
+			assertTrue( retGraph1.getModel().getModel().contains(triples[7].asStatement()) );
+			assertTrue( retGraph1.getModel().getModel().contains(triples[8].asStatement()) );
 		} else fail("At least one graph must be returned.");
 		
-		assertEquals( retGraph2.getModel().size(), 3 );
-		assertTrue( retGraph2.getModel().contains(triples[6].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[7].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[8].asStatement()) );
+		assertEquals( retGraph2.getModel().getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph3 );
 	}
@@ -146,37 +146,37 @@ public class SpaceMemTest extends TestCase {
 			graphuris[i] = space.write(models[i]);
 		}
 		
-		final ModelImpl retGraph1 = space.read( graphuris[0] );
-		final ModelImpl retGraph2 = space.read( graphuris[1] );
-		final ModelImpl retGraph3 = space.read( graphuris[2] );
-		final ModelImpl retGraph4 = space.read( "http://invalid/graph-uri/" );
+		final GraphMem retGraph1 = space.read( graphuris[0] );
+		final GraphMem retGraph2 = space.read( graphuris[1] );
+		final GraphMem retGraph3 = space.read( graphuris[2] );
+		final GraphMem retGraph4 = space.read( "http://invalid/graph-uri/" );
 		
-		assertEquals( retGraph1.getModel().size(), 3 );
-		assertTrue( retGraph1.getModel().contains(triples[0].asStatement()) );
-		assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
-		assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
+		assertEquals( retGraph1.getModel().getModel().size(), 3 );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[0].asStatement()) );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[1].asStatement()) );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[2].asStatement()) );
 		
-		assertEquals( retGraph2.getModel().size(), 3 );
-		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
+		assertEquals( retGraph2.getModel().getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getModel().size(), 3 );
-		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
+		assertEquals( retGraph3.getModel().getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 		
-		assertEquals( retGraph2.getModel().size(), 3 );
-		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
+		assertEquals( retGraph2.getModel().getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getModel().size(), 3 );
-		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
+		assertEquals( retGraph3.getModel().getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 	}
@@ -192,21 +192,21 @@ public class SpaceMemTest extends TestCase {
 		final Template sel1 = sf.createTemplate("<"+Example.subj1+"> ?p ?o .");
 		final Template sel2 = sf.createTemplate("<"+Example.subj3+"> <"+Example.prop5+"> <"+Example.obj6+"> .");
 		final Template sel3 = sf.createTemplate("<"+Example.subj4+"> ?p <"+Example.obj4+"> .");
-		final ModelImpl retGraph1 = space.take( sel1, new AlwaysAuthorized() );
-		final ModelImpl retGraph2 = space.take( sel1, new AlwaysAuthorized() );
-		final ModelImpl retGraph3 = space.take( sel1, new AlwaysAuthorized() );
-		final ModelImpl retGraph4 = space.take( sel2, new AlwaysAuthorized() );
-		final ModelImpl retGraph5 = space.take( sel2, new AlwaysAuthorized() );
-		final ModelImpl retGraph6 = space.take( sel3, new AlwaysAuthorized() );
+		final GraphMem retGraph1 = space.take( sel1, new AlwaysAuthorized() );
+		final GraphMem retGraph2 = space.take( sel1, new AlwaysAuthorized() );
+		final GraphMem retGraph3 = space.take( sel1, new AlwaysAuthorized() );
+		final GraphMem retGraph4 = space.take( sel2, new AlwaysAuthorized() );
+		final GraphMem retGraph5 = space.take( sel2, new AlwaysAuthorized() );
+		final GraphMem retGraph6 = space.take( sel3, new AlwaysAuthorized() );
 		
-		hasCheckRightTriples( retGraph1.getModel() );
-		hasCheckRightTriples( retGraph2.getModel() );
+		hasCheckRightTriples( retGraph1.getModel().getModel() );
+		hasCheckRightTriples( retGraph2.getModel().getModel() );
 		assertNull( retGraph3 );
 		
-		assertEquals( retGraph4.getModel().size(), 3 );
-		assertTrue( retGraph4.getModel().contains(triples[6].asStatement()) );
-		assertTrue( retGraph4.getModel().contains(triples[7].asStatement()) );
-		assertTrue( retGraph4.getModel().contains(triples[8].asStatement()) );
+		assertEquals( retGraph4.getModel().getModel().size(), 3 );
+		assertTrue( retGraph4.getModel().getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph4.getModel().getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph4.getModel().getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph5 );
 		
@@ -238,28 +238,28 @@ public class SpaceMemTest extends TestCase {
 			graphuris[i] = space.write(models[i]);
 		}
 		
-		final ModelImpl retGraph1 = space.take( graphuris[0] );
-		final ModelImpl retGraph2 = space.take( graphuris[1] );
-		final ModelImpl retGraph3 = space.take( graphuris[2] );
-		final ModelImpl retGraph4 = space.take( "http://invalid/graph-uri/" );
-		final ModelImpl retGraph5 = space.take( graphuris[0] );
-		final ModelImpl retGraph6 = space.take( graphuris[1] );
-		final ModelImpl retGraph7 = space.take( graphuris[2] );
+		final GraphMem retGraph1 = space.take( graphuris[0] );
+		final GraphMem retGraph2 = space.take( graphuris[1] );
+		final GraphMem retGraph3 = space.take( graphuris[2] );
+		final GraphMem retGraph4 = space.take( "http://invalid/graph-uri/" );
+		final GraphMem retGraph5 = space.take( graphuris[0] );
+		final GraphMem retGraph6 = space.take( graphuris[1] );
+		final GraphMem retGraph7 = space.take( graphuris[2] );
 		
-		assertEquals( retGraph1.getModel().size(), 3 );
-		assertTrue( retGraph1.getModel().contains(triples[0].asStatement()) );
-		assertTrue( retGraph1.getModel().contains(triples[1].asStatement()) );
-		assertTrue( retGraph1.getModel().contains(triples[2].asStatement()) );
+		assertEquals( retGraph1.getModel().getModel().size(), 3 );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[0].asStatement()) );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[1].asStatement()) );
+		assertTrue( retGraph1.getModel().getModel().contains(triples[2].asStatement()) );
 		
-		assertEquals( retGraph2.getModel().size(), 3 );
-		assertTrue( retGraph2.getModel().contains(triples[3].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[4].asStatement()) );
-		assertTrue( retGraph2.getModel().contains(triples[5].asStatement()) );
+		assertEquals( retGraph2.getModel().getModel().size(), 3 );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[3].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[4].asStatement()) );
+		assertTrue( retGraph2.getModel().getModel().contains(triples[5].asStatement()) );
 		
-		assertEquals( retGraph3.getModel().size(), 3 );
-		assertTrue( retGraph3.getModel().contains(triples[6].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[7].asStatement()) );
-		assertTrue( retGraph3.getModel().contains(triples[8].asStatement()) );
+		assertEquals( retGraph3.getModel().getModel().size(), 3 );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[6].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[7].asStatement()) );
+		assertTrue( retGraph3.getModel().getModel().contains(triples[8].asStatement()) );
 		
 		assertNull( retGraph4 );
 		assertNull( retGraph5 );
