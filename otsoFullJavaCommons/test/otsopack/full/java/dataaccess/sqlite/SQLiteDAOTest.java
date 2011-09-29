@@ -16,64 +16,61 @@ package otsopack.full.java.dataaccess.sqlite;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
-import otsopack.full.java.dataaccess.sqlite.SQLiteDAO;
 
 public class SQLiteDAOTest {
-
-	@Test
-	public void testStartup() throws Exception {
-		final SQLiteDAO dao = new SQLiteDAO();
-		dao.startup();
-		dao.shutdown();
+	
+	SQLiteDAO dao;
+	
+	@Before
+	public void setUp() throws Exception {
+		this.dao = new SQLiteDAO();
+		this.dao.startup();
+		this.dao.clear();
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		this.dao.shutdown();
 	}
 	
 	@Test
 	public void testInsertGraph() throws Exception {
-		final SQLiteDAO dao = new SQLiteDAO();
-		dao.startup();
-		dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
-		dao.shutdown();
+		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
 	}
 	
 	@Test
 	public void testClear() throws Exception {
-		final SQLiteDAO dao = new SQLiteDAO();
-		dao.startup();
-		dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
-		dao.clear();
-		assertEquals(0, dao.getGraphsURIs("space1").size());
-		dao.shutdown();
+		final String space = "space1";
+		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		this.dao.clear();
+		assertEquals(0, this.dao.getGraphsURIs(space).size());
 	}
 	
 	@Test
 	public void testGetGraphsURI() throws Exception {
-		final SQLiteDAO dao = new SQLiteDAO();
-		dao.startup();
-		dao.clear();
-		assertEquals(0, dao.getGraphsURIs("space1").size());
-		dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
-		assertEquals(1, dao.getGraphsURIs("space1").size());
-		dao.insertGraph("space1","graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
-		assertEquals(2, dao.getGraphsURIs("space1").size());
-		dao.shutdown();
+		final String space = "space1";
+		assertEquals(0, this.dao.getGraphsURIs(space).size());
+		this.dao.insertGraph(space,"graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		assertEquals(1, this.dao.getGraphsURIs(space).size());
+		this.dao.insertGraph(space,"graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
+		assertEquals(2, this.dao.getGraphsURIs(space).size());
 	}
 	
 	@Test
 	public void testDeleteGraph() throws Exception {
-		final SQLiteDAO dao = new SQLiteDAO();
-		dao.startup();
-		dao.clear();
-		dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
-		dao.insertGraph("space1","graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
-		assertEquals(2, dao.getGraphsURIs("space1").size());
-		dao.deleteGraph("space1","graph1");
-		assertEquals(1, dao.getGraphsURIs("space1").size());
-		dao.deleteGraph("space1","graph2");
-		assertEquals(0, dao.getGraphsURIs("space1").size());
-		dao.shutdown();
+		final String space = "space1";
+		this.dao.insertGraph(space,"graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		this.dao.insertGraph(space,"graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
+		assertEquals(2, this.dao.getGraphsURIs(space).size());
+		this.dao.deleteGraph(space,"graph1");
+		assertEquals(1, this.dao.getGraphsURIs(space).size());
+		this.dao.deleteGraph(space,"graph2");
+		assertEquals(0, this.dao.getGraphsURIs(space).size());
 	}
 }

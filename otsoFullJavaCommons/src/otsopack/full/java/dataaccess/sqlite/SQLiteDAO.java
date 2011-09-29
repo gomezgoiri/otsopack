@@ -34,8 +34,10 @@ public class SQLiteDAO {
 	private Connection conn;
 	private PreparedStatement getSpecificGraph;
 	private PreparedStatement getGraphsURIs;
-	private PreparedStatement insertGraph;
-	private PreparedStatement deleteGraph;
+	protected PreparedStatement insertGraph; // protected for the test
+	protected PreparedStatement deleteGraph; // protected for the test
+	
+	private boolean ownAutocommit = true;
 
 	public SQLiteDAO() throws PersistenceException {
 		try {
@@ -141,9 +143,14 @@ public class SQLiteDAO {
 			this.insertGraph.setString(2,spaceuri);
 			this.insertGraph.setString(3,graph.getFormat().getName());
 			this.insertGraph.setBytes(4,graph.getData().getBytes());
-			// automatically closed in the next creation
-			final int updated = this.insertGraph.executeUpdate();
-			if (updated==0) throw new PersistenceException("Graphs could not be stored.");
+			
+			if (this.ownAutocommit) {
+				// automatically closed in the next creation
+				final int updated = this.insertGraph.executeUpdate();
+				if (updated==0) throw new PersistenceException("Graphs could not be stored.");
+			} else {
+				this.insertGraph.addBatch();
+			}
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
 		}
@@ -153,7 +160,12 @@ public class SQLiteDAO {
 		try {
 			this.deleteGraph.setString(1,spaceuri);
 			this.deleteGraph.setString(2,graphuri);
-			this.deleteGraph.executeUpdate();
+			
+			if (this.ownAutocommit) {
+				this.deleteGraph.executeUpdate();
+			} else {
+				this.deleteGraph.addBatch();
+			}
 		} catch (SQLException e) {
 			throw new PersistenceException("Graph removal statement could not be executed.");
 		}
@@ -194,6 +206,38 @@ public class SQLiteDAO {
 			this.conn.close();
 		} catch (SQLException e) {
 			throw new PersistenceException("Connection with sqlite database could not be closed.");
+		}
+	}
+	
+	public void setAutoCommit(boolean autocommit) throws PersistenceException {
+		if(autocommit && !this.ownAutocommit) {
+			commit();
+		}
+		try {
+			this.ownAutocommit = autocommit;
+			this.conn.setAutoCommit(autocommit);
+		} catch (SQLException e) {
+			throw new PersistenceException("The autocommit could not be enabled.");
+		}
+	}
+	
+	public void commit() throws PersistenceException {
+		try {
+			this.deleteGraph.executeBatch();
+			this.insertGraph.executeBatch();
+			//this.conn.commit();
+		} catch (SQLException e) {
+			throw new PersistenceException("The commit could not be performed.");
+		}
+	}
+
+	public void rollback() throws PersistenceException {
+		try {
+			this.deleteGraph.clearBatch();
+			this.insertGraph.clearBatch();
+			//this.conn.rollback();
+		} catch (SQLException e) {
+			throw new PersistenceException("The rollback could not be performed.");
 		}
 	}
 }

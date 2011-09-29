@@ -13,6 +13,8 @@
  */
 package otsopack.full.java.dataaccess.sqlite;
 
+import java.util.Set;
+
 import junit.framework.TestCase;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -22,9 +24,10 @@ import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
-import otsopack.full.java.dataaccess.sqlite.SQLiteDataAccess;
+import otsopack.commons.util.Util;
 
 public class SQLiteDataAccessTest extends TestCase {
 	
@@ -581,11 +584,8 @@ public class SQLiteDataAccessTest extends TestCase {
 		}
 	}
 	
-	public void testRollback() throws Exception {
-		final String spaceuri1 = "ts://spaceRead5";
-		final User user1 = new User("http://aitor.myopenid.com");
-		final User user2 = new User("http://pablo.myopenid.com");
-		
+	public void testCommit() throws Exception {
+		final String spaceuri1 = "ts://spaceRollback";		
 		final String[] graphuris = new String[this.models.length];
 		
 		this.da.startup();
@@ -595,36 +595,51 @@ public class SQLiteDataAccessTest extends TestCase {
 		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
 		this.da.setAutoCommit(false);
 		
-		graphuris[1] = this.da.write(spaceuri1,this.models[1],user1);
-		//this.da.
-		graphuris[2] = this.da.write(spaceuri1,this.models[2],user2);
+		graphuris[1] = this.da.write(spaceuri1,this.models[1]);
 		
+		graphuris[2] = this.da.write(spaceuri1,this.models[2]);
 		
+		this.da.take(spaceuri1, graphuris[0], SemanticFormat.NTRIPLES);
 		
-		assertNotAuthorizedTake(spaceuri1,graphuris[1],null);
-		assertNotAuthorizedTake(spaceuri1,graphuris[2],null);
-		assertNotAuthorizedTake(spaceuri1,graphuris[2],user1);
-		assertNotAuthorizedTake(spaceuri1,graphuris[1],user2);
-		
-		final Graph retGraph1 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES );
-		final Graph retGraph2 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph3 = this.da.take( spaceuri1, graphuris[0], SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph4 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph5 = this.da.take( spaceuri1, graphuris[1], SemanticFormat.NTRIPLES, user1 );
-		final Graph retGraph6 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
-		final Graph retGraph7 = this.da.take( spaceuri1, graphuris[2], SemanticFormat.NTRIPLES, user2 );
-		
-		assertGraphContains(retGraph1, new int[] {0,1,2});
-		assertGraphContains(retGraph4, new int[] {3,4,5});
-		assertGraphContains(retGraph6, new int[] {6,7,8});
-		
-		// those graphs were taken before
-		assertNull(retGraph2);
-		assertNull(retGraph3);
-		assertNull(retGraph5);
-		assertNull(retGraph7);
+		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
+		this.da.commit();
+		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
 		
 		this.da.leaveSpace(spaceuri1);
 		this.da.shutdown();
+	}
+	
+	
+	public void testRollback() throws Exception {
+		final String spaceuri1 = "ts://spaceRollback";		
+		final String[] graphuris = new String[this.models.length];
+		
+		this.da.startup();
+		this.da.createSpace(spaceuri1);
+		this.da.joinSpace(spaceuri1);
+		
+		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
+		this.da.setAutoCommit(false);
+		
+		graphuris[1] = this.da.write(spaceuri1,this.models[1]);
+		
+		graphuris[2] = this.da.write(spaceuri1,this.models[2]);
+		
+		this.da.take(spaceuri1, graphuris[0], SemanticFormat.NTRIPLES);
+		
+		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
+		this.da.rollback();
+		assertDAOContains(spaceuri1,graphuris[0]);
+		
+		this.da.leaveSpace(spaceuri1);
+		this.da.shutdown();
+	}
+	
+	private void assertDAOContains(String spaceuri, String... graphUrisContained) throws PersistenceException {
+		final Set<String> uris = this.da.dao.getGraphsURIs(Util.normalizeSpaceURI(spaceuri, ""));
+		assertEquals(uris.size(), graphUrisContained.length);
+		for(String graphuri: graphUrisContained) {
+			assertTrue(uris.contains(graphuri));
+		}
 	}
 }

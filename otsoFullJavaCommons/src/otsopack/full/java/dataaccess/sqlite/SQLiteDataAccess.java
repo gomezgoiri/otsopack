@@ -13,6 +13,13 @@
  */
 package otsopack.full.java.dataaccess.sqlite;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,19 +76,78 @@ public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentD
 	
 	@Override
 	public void rollback() throws PersistenceException  {
-		if (this.autocommit) throw new PersistenceException("Autocommit enabled."); 
+		if (this.autocommit) throw new PersistenceException("Autocommit enabled.");
 		
+		final Map<String,Set<String>> toUndelete = new HashMap<String,Set<String>>();
+		final Map<String,Set<String>> toDelete = new HashMap<String,Set<String>>();
 		synchronized(this.commitLock) {
-			//todo remove all the graphs not stored
+			this.dao.rollback();
+			for(SpaceMem space: this.spaces.values()) {
+				final List<String> graphsInMemory = Arrays.asList(space.getLocalGraphs());
+				// exception thrown => rollback stopped
+				final Set<String> graphurisStored = this.dao.getGraphsURIs(space.getSpaceURI());
+				
+				toUndelete.put(space.getSpaceURI(), substract(graphurisStored, graphsInMemory));
+				toDelete.put(space.getSpaceURI(), substract(graphsInMemory, graphurisStored));
+			}
+			// exception thrown => rollback stopped
+			loadInMemory(toUndelete);
+			// exception not thrown, if it reach this point, the rollback is stopped
+			removeFromMemory(toDelete);
+		}
+	}
+
+	protected Set<String> substract(Collection<String> set1, Collection<String> set2) {
+		final Set<String> result = new HashSet<String>(set1);
+	    result.removeAll(set2);
+	    return result;
+	}
+	
+	class GraphToAdd {
+		String spaceuri;
+		String graphuri;
+		Graph graph;
+	}
+
+	private void loadInMemory(Map<String,Set<String>> toUndelete) throws PersistenceException {
+		final Set<GraphToAdd> graphs = new HashSet<GraphToAdd>();
+		
+		for(String spaceuri: toUndelete.keySet()) {
+			final Set<String> undel = toUndelete.get(spaceuri);
+			for(String graphuri: undel) {
+				final GraphToAdd graph = new GraphToAdd();
+				graph.spaceuri = spaceuri;
+				graph.graphuri = graphuri;
+				// exception thrown => rollback stopped
+				graph.graph = this.dao.getGraph(spaceuri, graphuri);
+				graphs.add(graph);
+			}
+		}
+		
+		// we do the adding in two steps because if an error with the dao is
+		// detected, the whole rollback will be stoped (thanks to PersistenceException)
+		for(GraphToAdd gr: graphs) {
+			final SpaceMem mem = this.spaces.get(gr.spaceuri);
+			mem.take(gr.graphuri);
+		}
+	}
+	
+	private void removeFromMemory(Map<String,Set<String>> toDelete) {
+		for(String spaceuri: toDelete.keySet()) {
+			final Set<String> undel = toDelete.get(spaceuri);
+			final SpaceMem mem = this.spaces.get(spaceuri);
+			for(String graphuri: undel) {
+				mem.take(graphuri);
+			}
 		}
 	}
 
 	@Override
 	public void commit() throws PersistenceException {
-		if (this.autocommit) throw new PersistenceException("Autocommit enabled."); 
-
+		if (this.autocommit) throw new PersistenceException("Autocommit enabled.");
+		
 		synchronized(this.commitLock) {
-			// disable autocommit in the store and perform all in one commit
+			this.dao.commit(); // the memory is currently in the same state!
 		}
 	}
 
@@ -139,12 +205,11 @@ public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentD
 		final SpaceMem space = getSpace(spaceURI);
 		final String graphuri = generateUniqueURIbasedOnContent(spaceURI,triples.getData().getBytes());
 		
-		if( this.autocommit ) {
-			final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
-			this.dao.insertGraph(normalizedURI, graphuri, triples);
-			// consistency kept, if the exception does not do the following write in memory
-			space.write(new ModelImpl(triples), graphuri);
-		}
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		this.dao.insertGraph(normalizedURI, graphuri, triples);
+		// consistency kept, if the exception does not do the following write in memory
+		space.write(new ModelImpl(triples), graphuri);
+			
 		return graphuri;
 	}
 	
@@ -181,17 +246,15 @@ public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentD
 	public Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException, PersistenceException {
 		final SpaceMem space = getSpace(spaceURI);
 		final GraphMem graph = space.take(template, checker);
-		if (this.autocommit) {
-			if (graph!=null) {
-				try {
-					final String normalizedgraphuri = Util.normalizeSpaceURI(graph.getUri(), "");
-					final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
-					this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
-				} catch(PersistenceException e) {
-					// writing if sth has gone wrong, we ensure the space consistency
-					space.write(graph.getModel(), graph.getUri());
-					throw e;
-				}
+		if (graph!=null) {
+			try {
+				final String normalizedgraphuri = Util.normalizeSpaceURI(graph.getUri(), "");
+				final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
+				this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
+			} catch(PersistenceException e) {
+				// writing if sth has gone wrong, we ensure the space consistency
+				space.write(graph.getModel(), graph.getUri());
+				throw e;
 			}
 		}
 		return convertToGraph(graph,outputFormat);
@@ -203,13 +266,10 @@ public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentD
 	public Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException, PersistenceException {
 		final SpaceMem space = getSpace(spaceURI);
 		final String normalizedgraphuri = Util.normalizeSpaceURI(graphURI, "");
-			
-		if( this.autocommit ) {
-			final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
-			this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
-			// space consistency kept, if this.dao throws an exception does not reach here
-			return convertToGraph(space.take(normalizedgraphuri),outputFormat);
-		}
+		
+		final String normalizedspaceuri = Util.normalizeSpaceURI(spaceURI, "");
+		this.dao.deleteGraph(normalizedspaceuri, normalizedgraphuri);
+		// space consistency kept, if this.dao throws an exception does not reach here
 		return convertToGraph(space.take(normalizedgraphuri),outputFormat);
 	}
 }
