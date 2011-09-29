@@ -57,6 +57,7 @@ syntax: regexp
 ^otsoRestletCommons/bin
 ^otsoRestletCommons/build
 
+^otsoSE/dbOtsoPack
 ^otsoSE/bin
 ^otsoSE/dist
 ^otsoSE/libs
