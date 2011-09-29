@@ -13,8 +13,6 @@
  */
 package otsopack.full.java.dataaccess.sqlite;
 
-import java.util.Set;
-
 import junit.framework.TestCase;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -24,10 +22,8 @@ import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
-import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
-import otsopack.commons.util.Util;
 
 public class SQLiteDataAccessTest extends TestCase {
 	
@@ -40,9 +36,7 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		this.da = new SQLiteDataAccess();
 		this.da.startup();
-		this.da.setAutoCommit(false);
 		this.da.clear();
-		this.da.setAutoCommit(true);
 		this.da.shutdown();
 		
 		
@@ -581,65 +575,6 @@ public class SQLiteDataAccessTest extends TestCase {
 			fail();
 		} catch(AuthorizationException ae) {
 			//always thrown
-		}
-	}
-	
-	public void testCommit() throws Exception {
-		final String spaceuri1 = "ts://spaceRollback";		
-		final String[] graphuris = new String[this.models.length];
-		
-		this.da.startup();
-		this.da.createSpace(spaceuri1);
-		this.da.joinSpace(spaceuri1);
-		
-		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
-		this.da.setAutoCommit(false);
-		
-		graphuris[1] = this.da.write(spaceuri1,this.models[1]);
-		
-		graphuris[2] = this.da.write(spaceuri1,this.models[2]);
-		
-		this.da.take(spaceuri1, graphuris[0], SemanticFormat.NTRIPLES);
-		
-		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
-		this.da.commit();
-		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
-		
-		this.da.leaveSpace(spaceuri1);
-		this.da.shutdown();
-	}
-	
-	
-	public void testRollback() throws Exception {
-		final String spaceuri1 = "ts://spaceRollback";		
-		final String[] graphuris = new String[this.models.length];
-		
-		this.da.startup();
-		this.da.createSpace(spaceuri1);
-		this.da.joinSpace(spaceuri1);
-		
-		graphuris[0] = this.da.write(spaceuri1,this.models[0]);
-		this.da.setAutoCommit(false);
-		
-		graphuris[1] = this.da.write(spaceuri1,this.models[1]);
-		
-		graphuris[2] = this.da.write(spaceuri1,this.models[2]);
-		
-		this.da.take(spaceuri1, graphuris[0], SemanticFormat.NTRIPLES);
-		
-		assertDAOContains(spaceuri1,graphuris[1],graphuris[2]);
-		this.da.rollback();
-		assertDAOContains(spaceuri1,graphuris[0]);
-		
-		this.da.leaveSpace(spaceuri1);
-		this.da.shutdown();
-	}
-	
-	private void assertDAOContains(String spaceuri, String... graphUrisContained) throws PersistenceException {
-		final Set<String> uris = this.da.dao.getGraphsURIs(Util.normalizeSpaceURI(spaceuri, ""));
-		assertEquals(uris.size(), graphUrisContained.length);
-		for(String graphuri: graphUrisContained) {
-			assertTrue(uris.contains(graphuri));
 		}
 	}
 }
