@@ -12,7 +12,7 @@
  * Author: FILLME
  *
  */
-package otso.se.kernel;
+package otsopack.se.kernel;
 
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;

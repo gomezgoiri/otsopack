@@ -12,7 +12,7 @@
  * Author: FILLME
  *
  */
-package otsopack.full.java.dataaccess;
+package otsopack.full.java.dataaccess.simplestore;
 
 import java.util.Set;
 

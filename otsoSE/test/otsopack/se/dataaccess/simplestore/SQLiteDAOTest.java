@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.dataaccess.sqlite;
+package otsopack.se.dataaccess.simplestore;
 
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
-import otsopack.full.java.dataaccess.ISimpleStore;
+import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
 public class SQLiteDAOTest {
 	

@@ -7,6 +7,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/sesame-runtime-osgi-2.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-nop-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/sqlitejdbc-v056.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoFullJavaCommons"/>
 	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
