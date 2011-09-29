@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.java.dataaccess.sqlite;
+package otsopack.full.java.dataaccess;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,16 +32,22 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.Util;
-import otsopack.full.java.dataaccess.IPersistentDataAccess;
+import otsopack.full.java.dataaccess.sqlite.SQLiteDAO;
 
-public class SQLiteDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
+/**
+ * This class defines a really simple persistent data access which stores graphs.
+ * 
+ * It should be only used when other more complex DataAccess such as Sesame
+ * or Jena based ones cannot be used.
+ */
+public class SimplePersistentDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
 	
 	ConcurrentHashMap<String,SpaceMem> spaces = null;
-	SQLiteDAO dao;
+	ISimpleStore dao;
 	
 	private final Object commitLock = new Object();
 	
-	public SQLiteDataAccess() throws TSException {
+	public SimplePersistentDataAccess() throws TSException {
 		this.dao = new SQLiteDAO();
 		this.spaces = new ConcurrentHashMap<String,SpaceMem>();
 	}

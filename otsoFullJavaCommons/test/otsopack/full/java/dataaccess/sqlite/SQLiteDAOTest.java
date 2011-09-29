@@ -22,10 +22,11 @@ import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.full.java.dataaccess.ISimpleStore;
 
 public class SQLiteDAOTest {
 	
-	SQLiteDAO dao;
+	ISimpleStore dao;
 	
 	@Before
 	public void setUp() throws Exception {

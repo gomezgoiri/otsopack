@@ -26,8 +26,9 @@ import java.util.Set;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.PersistenceException;
+import otsopack.full.java.dataaccess.ISimpleStore;
 
-public class SQLiteDAO {
+public class SQLiteDAO implements ISimpleStore {
 	// everything in the same table (we just use sqlite to persist info...)
 	private final String TABLE_NAME = "Graphs";
 	
@@ -45,6 +46,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#startup()
+	 */
+	@Override
 	public void startup() throws PersistenceException {
 		try {
 			// TODO become this database location configurable?
@@ -120,6 +125,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#getGraphsURIs(java.lang.String)
+	 */
+	@Override
 	public Set<String> getGraphsURIs(String spaceuri) throws PersistenceException {
 		try {
 			final Set<String> ret = new HashSet<String>();
@@ -135,6 +144,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#insertGraph(java.lang.String, java.lang.String, otsopack.commons.data.Graph)
+	 */
+	@Override
 	public void insertGraph(String spaceuri, String graphuri, Graph graph) throws PersistenceException {
 		try {
 			this.insertGraph.setString(1,graphuri);
@@ -152,6 +165,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#deleteGraph(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void deleteGraph(String spaceuri, String graphuri) throws PersistenceException {
 		try {
 			this.deleteGraph.setString(1,spaceuri);
@@ -164,6 +181,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#getGraph(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public Graph getGraph(String spaceuri, String graphuri) throws PersistenceException {
 		try {
 			this.getSpecificGraph.setString(1,spaceuri);
@@ -178,6 +199,10 @@ public class SQLiteDAO {
 		throw new PersistenceException("Graphs not found in the database.");
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#clear()
+	 */
+	@Override
 	public void clear() throws PersistenceException {
 		try {
 			final Statement stmt = this.conn.createStatement();
@@ -189,6 +214,10 @@ public class SQLiteDAO {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#shutdown()
+	 */
+	@Override
 	public void shutdown() throws PersistenceException {
 		try {
 			this.getSpecificGraph.close();

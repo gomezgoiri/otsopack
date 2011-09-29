@@ -24,17 +24,18 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
+import otsopack.full.java.dataaccess.SimplePersistentDataAccess;
 
 public class SQLiteDataAccessTest extends TestCase {
 	
-	SQLiteDataAccess da;
+	SimplePersistentDataAccess da;
 	final Graph[] models = new Graph[3];
 	final String[] triples = new String[9];
 	
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		this.da = new SQLiteDataAccess();
+		this.da = new SimplePersistentDataAccess();
 		this.da.startup();
 		this.da.clear();
 		this.da.shutdown();
