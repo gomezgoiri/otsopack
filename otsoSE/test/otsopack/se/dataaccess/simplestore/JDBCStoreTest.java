@@ -24,13 +24,13 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
-public class SQLiteDAOTest {
+public class JDBCStoreTest {
 	
 	ISimpleStore dao;
 	
 	@Before
 	public void setUp() throws Exception {
-		this.dao = new SQLiteDAO();
+		this.dao = new JDBCStore();
 		this.dao.startup();
 		this.dao.clear();
 	}

@@ -28,7 +28,7 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.PersistenceException;
 import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
-public class SQLiteDAO implements ISimpleStore {
+public class JDBCStore implements ISimpleStore {
 	// everything in the same table (we just use sqlite to persist info...)
 	private final String TABLE_NAME = "Graphs";
 	
@@ -38,7 +38,7 @@ public class SQLiteDAO implements ISimpleStore {
 	private PreparedStatement insertGraph;
 	private PreparedStatement deleteGraph;
 
-	public SQLiteDAO() throws PersistenceException {
+	public JDBCStore() throws PersistenceException {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {

@@ -25,7 +25,7 @@ import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
 import otsopack.full.java.dataaccess.simplestore.SimplePersistentDataAccess;
-import otsopack.se.dataaccess.simplestore.SQLiteDAO;
+import otsopack.se.dataaccess.simplestore.JDBCStore;
 
 public class SQLiteDataAccessTest extends TestCase {
 	
@@ -36,7 +36,7 @@ public class SQLiteDataAccessTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		this.da = new SimplePersistentDataAccess(new SQLiteDAO());
+		this.da = new SimplePersistentDataAccess(new JDBCStore());
 		this.da.startup();
 		this.da.clear();
 		this.da.shutdown();
