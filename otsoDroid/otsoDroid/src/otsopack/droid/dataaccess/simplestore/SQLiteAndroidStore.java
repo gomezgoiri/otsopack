@@ -12,16 +12,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 
 public class SQLiteAndroidStore implements ISimpleStore {
 	
 	private Context dbContext;
-	private SQLiteDatabase db;
-	private SQLiteStatement getSpecificGraph;
-	private SQLiteStatement getGraphsURIs; 
-	private SQLiteStatement insertGraph; 
-	private SQLiteStatement deleteGraph; 
+	private SQLiteDatabase db = null;
 	
 	public SQLiteAndroidStore(Context dbContext) {
 		this.dbContext = dbContext;
@@ -36,12 +31,8 @@ public class SQLiteAndroidStore implements ISimpleStore {
 	@Override
 	public void shutdown() throws PersistenceException {
 		try {
-			this.getSpecificGraph.close();
-			this.getGraphsURIs.close();
-			this.insertGraph.close();
-			this.deleteGraph.close();
-
 			this.db.close();
+			this.db = null;
 		} catch (SQLException e) {
 			throw new PersistenceException("Connection with sqlite database could not be closed.");
 		}
@@ -49,6 +40,7 @@ public class SQLiteAndroidStore implements ISimpleStore {
 
 	@Override
 	public void clear() throws PersistenceException {
+		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
 		try {
 			this.db.execSQL("DELETE FROM " + OtsobaseOpenHelper.TABLE_NAME);
 		} catch (SQLException e) {
@@ -58,12 +50,12 @@ public class SQLiteAndroidStore implements ISimpleStore {
 
 	@Override
 	public Set<String> getGraphsURIs(String spaceuri) throws PersistenceException {
+		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
 		try {
-			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri"},"spaceuri=?s AND graphuri=?s", new String[] {spaceuri}, null, null, null);
+			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
 			final Set<String> ret = new HashSet<String>();
-			while (!c.isAfterLast()) {
-				ret.add(c.getString(1));
-				c.moveToNext();
+			while (c.moveToNext()) {
+				ret.add(c.getString(0));
 			}
 			return ret;
 		} catch (SQLException e) {
@@ -73,10 +65,11 @@ public class SQLiteAndroidStore implements ISimpleStore {
 
 	@Override
 	public void insertGraph(String spaceuri, String graphuri, Graph graph) throws PersistenceException {
+		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
 		try {
 			final ContentValues cv = new ContentValues();
 			cv.put("graphuri", graphuri);
-			cv.put("spaceuri", graphuri);
+			cv.put("spaceuri", spaceuri);
 			cv.put("format", graph.getFormat().getName());
 			cv.put("data", graph.getData().getBytes());
 			long updated = this.db.insert(OtsobaseOpenHelper.TABLE_NAME,null,cv);
@@ -88,8 +81,9 @@ public class SQLiteAndroidStore implements ISimpleStore {
 
 	@Override
 	public void deleteGraph(String spaceuri, String graphuri) throws PersistenceException {
+		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
 		try {
-			this.db.delete(OtsobaseOpenHelper.TABLE_NAME,"spaceuri=?s AND graphuri=?s", new String[] {spaceuri,graphuri});
+			this.db.delete(OtsobaseOpenHelper.TABLE_NAME,"spaceuri=? AND graphuri=?", new String[] {spaceuri,graphuri});
 		} catch (SQLException e) {
 			throw new PersistenceException("Graph removal statement could not be executed.");
 		}
@@ -97,10 +91,11 @@ public class SQLiteAndroidStore implements ISimpleStore {
 
 	@Override
 	public Graph getGraph(String spaceuri, String graphuri) throws PersistenceException {
+		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
 		try {
 			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"format","data"},"spaceuri=?s AND graphuri=?s", new String[] {spaceuri, graphuri}, null, null, null);
-			if (!c.isAfterLast()) {
-				return new Graph(new String(c.getBlob(2)), SemanticFormat.getSemanticFormat(c.getString(1)));
+			if (c.getCount()>0) {
+				return new Graph(new String(c.getBlob(1)), SemanticFormat.getSemanticFormat(c.getString(0)));
 			}
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
