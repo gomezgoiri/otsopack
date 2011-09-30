@@ -1,4 +1,3 @@
-package otsopack.droid.kernel;
 /*
  * Copyright (C) 2008-2011 University of Deusto
  * 
@@ -10,10 +9,10 @@ package otsopack.droid.kernel;
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Pablo Orduña <pablo.orduna@deusto.es>
+ * 			Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-
+package otsopack.droid.kernel;
 
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
