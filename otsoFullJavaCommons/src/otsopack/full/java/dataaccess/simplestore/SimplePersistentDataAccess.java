@@ -33,7 +33,6 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.util.Util;
-import otsopack.full.java.dataaccess.IPersistentDataAccess;
 
 /**
  * This class defines a really simple persistent data access which stores graphs.
@@ -41,21 +40,18 @@ import otsopack.full.java.dataaccess.IPersistentDataAccess;
  * It should be only used when other more complex DataAccess such as Sesame
  * or Jena based ones cannot be used.
  */
-public class SimplePersistentDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
+public class SimplePersistentDataAccess extends AbstractDataAccess {
 	
 	public static enum OpenMode {PRELOAD, LOAD_ON_JOIN, CLEAR_OLD_CONTENT};  
 	
-	ConcurrentHashMap<String,SpaceMem> spaces = null;
-	ConcurrentHashMap<String,SpaceMem> preloadedSpaces = null;
+	ConcurrentHashMap<String,SpaceMem> spaces = new ConcurrentHashMap<String,SpaceMem>();
+	ConcurrentHashMap<String,SpaceMem> preloadedSpaces = new ConcurrentHashMap<String,SpaceMem>();
 	ISimpleStore dao;
 	final OpenMode selectedMode;
-	
-	private final Object commitLock = new Object();
 	
 	public SimplePersistentDataAccess(ISimpleStore simple, OpenMode open) {
 		this.dao = simple;
 		this.selectedMode = open;
-		this.spaces = new ConcurrentHashMap<String,SpaceMem>();
 	}
 	
 	@Override
@@ -76,16 +72,6 @@ public class SimplePersistentDataAccess extends AbstractDataAccess implements IP
 	@Override
 	public void shutdown() throws TSException {
 		this.dao.shutdown();
-	}
-
-	// TODO Maybe a clear(space) could be more useful
-	@Override
-	public void clear() throws PersistenceException {		
-		synchronized(this.commitLock) {
-			//delete all database
-			this.dao.clear();
-			this.spaces.clear();
-		}
 	}
 	
 	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
