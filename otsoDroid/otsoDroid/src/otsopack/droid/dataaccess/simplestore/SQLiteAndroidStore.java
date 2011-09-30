@@ -19,6 +19,7 @@ import java.util.Set;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.PersistenceException;
+import otsopack.full.java.dataaccess.simplestore.DatabaseTuple;
 import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 import android.content.ContentValues;
 import android.content.Context;
@@ -101,18 +102,47 @@ public class SQLiteAndroidStore implements ISimpleStore {
 			throw new PersistenceException("Graph removal statement could not be executed.");
 		}
 	}
+	
 
+
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.simplestore.ISimpleStore#getGraphs()
+	 */
 	@Override
-	public Graph getGraph(String spaceuri, String graphuri) throws PersistenceException {
-		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
+	public Set<DatabaseTuple> getGraphs() throws PersistenceException {
+		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
 		try {
-			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"format","data"},"spaceuri=?s AND graphuri=?s", new String[] {spaceuri, graphuri}, null, null, null);
-			if (c.getCount()>0) {
-				return new Graph(new String(c.getBlob(1)), SemanticFormat.getSemanticFormat(c.getString(0)));
+			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"spaceuri","graphuri","data","format"}, null, null, null, null, null);
+			while (c.moveToNext()) {
+				tuples.add(new DatabaseTuple(
+						c.getString(0), c.getString(1),
+						new Graph(new String(c.getBlob(2)), SemanticFormat.getSemanticFormat(c.getString(3)))
+				));
 			}
+			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
 		}
-		throw new PersistenceException("Graphs not found in the database.");
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.simplestore.ISimpleStore#getGraphsFromSpace(java.lang.String)
+	 */
+	@Override
+	public Set<DatabaseTuple> getGraphsFromSpace(String spaceuri)
+			throws PersistenceException {
+		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		try {
+			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri","data","format"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
+			while (c.moveToNext()) {
+				tuples.add(new DatabaseTuple(
+						spaceuri, c.getString(0),
+						new Graph(new String(c.getBlob(1)), SemanticFormat.getSemanticFormat(c.getString(2)))
+				));
+			}
+			return tuples;
+		} catch (SQLException e) {
+			throw new PersistenceException("Graphs selection statement could not be executed.");
+		}
 	}
 }
