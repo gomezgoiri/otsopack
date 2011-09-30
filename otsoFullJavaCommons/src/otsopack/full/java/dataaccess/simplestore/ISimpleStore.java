@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.full.java.dataaccess.simplestore;
 
@@ -39,7 +38,10 @@ public interface ISimpleStore {
 
 	public abstract void deleteGraph(String spaceuri, String graphuri)
 			throws PersistenceException;
-
-	public abstract Graph getGraph(String spaceuri, String graphuri)
+	
+	public abstract Set<DatabaseTuple> getGraphs()
+			throws PersistenceException;
+	
+	public abstract Set<DatabaseTuple> getGraphsFromSpace(String spaceuri)
 			throws PersistenceException;
 }

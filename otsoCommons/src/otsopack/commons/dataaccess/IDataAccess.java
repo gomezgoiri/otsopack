@@ -42,7 +42,7 @@ public interface IDataAccess extends ILayer {
 	 * join the space with spaceURI
 	 * @param spaceURI
 	 */
-	public void joinSpace(String spaceURI) throws SpaceNotExistsException;
+	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException;
 	
 	/**
 	 * leave a space

@@ -13,6 +13,7 @@
  */
 package otsopack.full.java.dataaccess.simplestore;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,19 +43,34 @@ import otsopack.full.java.dataaccess.IPersistentDataAccess;
  */
 public class SimplePersistentDataAccess extends AbstractDataAccess implements IPersistentDataAccess {
 	
+	public static enum OpenMode {PRELOAD, LOAD_ON_JOIN, CLEAR_OLD_CONTENT};  
+	
 	ConcurrentHashMap<String,SpaceMem> spaces = null;
+	ConcurrentHashMap<String,SpaceMem> preloadedSpaces = null;
 	ISimpleStore dao;
+	final OpenMode selectedMode;
 	
 	private final Object commitLock = new Object();
 	
-	public SimplePersistentDataAccess(ISimpleStore simple) {
+	public SimplePersistentDataAccess(ISimpleStore simple, OpenMode open) {
 		this.dao = simple;
+		this.selectedMode = open;
 		this.spaces = new ConcurrentHashMap<String,SpaceMem>();
 	}
 	
 	@Override
 	public void startup() throws TSException {
 		this.dao.startup();
+		if (this.selectedMode==OpenMode.CLEAR_OLD_CONTENT) {
+			this.dao.clear();
+		} else if (this.selectedMode==OpenMode.PRELOAD) {
+			final Set<DatabaseTuple> tuples = this.dao.getGraphs();
+			for(DatabaseTuple tuple: tuples) {
+				this.preloadedSpaces.putIfAbsent(tuple.getSpaceuri(),MemoryFactory.createSpace(tuple.getSpaceuri()));
+				final SpaceMem space = this.preloadedSpaces.get(tuple.getSpaceuri());
+				space.write(new ModelImpl(tuple.getGraph()), tuple.getGraphuri());
+			}
+		}
 	}
 	
 	@Override
@@ -83,17 +99,36 @@ public class SimplePersistentDataAccess extends AbstractDataAccess implements IP
 	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		if (this.spaces.containsKey(normalizedURI)) throw new SpaceAlreadyExistsException();
+		
+		if (this.selectedMode==OpenMode.PRELOAD) {
+			if(this.preloadedSpaces.containsKey(normalizedURI)) {
+				this.spaces.putIfAbsent(normalizedURI,this.preloadedSpaces.get(normalizedURI));
+			}
+		}
+		// "putIfAbsent" ensures that it's just going to be created if it has not been preloaded...
 		this.spaces.putIfAbsent(normalizedURI,MemoryFactory.createSpace(normalizedURI));
 	}
 	
 	@Override
-	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
-		// load if not loaded?
+	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException {
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		
+		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException();
+		
+		if (this.selectedMode==OpenMode.LOAD_ON_JOIN) {
+			final Set<DatabaseTuple> tuples = this.dao.getGraphsFromSpace(normalizedURI);
+			for(DatabaseTuple tuple: tuples) {
+				final SpaceMem space = this.spaces.get(tuple.getSpaceuri());
+				space.write(new ModelImpl(tuple.getGraph()), tuple.getGraphuri());
+			}
+		}
 	}
 	
 	@Override
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
-		// commit?
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		
+		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException();
 	}
 	
 	@Override
