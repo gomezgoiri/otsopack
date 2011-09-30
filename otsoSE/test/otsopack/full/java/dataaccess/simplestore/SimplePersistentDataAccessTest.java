@@ -11,9 +11,21 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.full.dataaccess.simplestore;
+package otsopack.full.java.dataaccess.simplestore;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
@@ -24,23 +36,19 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
-import otsopack.full.java.dataaccess.simplestore.SimplePersistentDataAccess;
+import otsopack.full.java.dataaccess.simplestore.SimplePersistentDataAccess.OpenMode;
 import otsopack.se.dataaccess.simplestore.JDBCStore;
 
-public class SQLiteDataAccessTest extends TestCase {
+public class SimplePersistentDataAccessTest {
 	
 	SimplePersistentDataAccess da;
 	final Graph[] models = new Graph[3];
 	final String[] triples = new String[9];
 	
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		this.da = new SimplePersistentDataAccess(new JDBCStore());
+	@Before
+	public void setUp() throws Exception {
+		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.CLEAR_OLD_CONTENT);
 		this.da.startup();
-		this.da.clear();
-		this.da.shutdown();
-		
 		
 		final MicrojenaFactory factory = new MicrojenaFactory();
 		SemanticFactory.initialize(factory);
@@ -67,9 +75,12 @@ public class SQLiteDataAccessTest extends TestCase {
 		this.models[2] = new Graph(graph,SemanticFormat.NTRIPLES);
 	}
 	
-	public void tearDown() {
+	@After
+	public void tearDown() throws Exception {
+		this.da.shutdown();
 	}
 	
+	@Test
 	public void testCreateSpace() throws Exception {
 		try {
 			this.da.createSpace("ts://espacio");
@@ -79,6 +90,7 @@ public class SQLiteDataAccessTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCreateSpaceFailure() throws Exception {
 		try {
 			this.da.createSpace("ts://espacio");
@@ -88,8 +100,10 @@ public class SQLiteDataAccessTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testJoinSpace() {}
 
+	@Test
 	public void testLeaveSpace() throws Exception {
 		try {
 			this.da.createSpace("ts://espacio");
@@ -105,6 +119,7 @@ public class SQLiteDataAccessTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testLeaveSpaceFailure() throws Exception {
 		try {
 			this.da.createSpace("ts://espacio");
@@ -121,9 +136,9 @@ public class SQLiteDataAccessTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testWriteGraphs() throws Exception {
 		final String spaceuri = "ts://spaceWrite3";
-		this.da.startup();
 		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		
@@ -152,12 +167,12 @@ public class SQLiteDataAccessTest extends TestCase {
 				assertFalse( checkedGraph.getData().contains(this.triples[i]) );
 		}
 	}
-
+	
+	@Test
 	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
 		final String spaceuri2 = "ts://spaceQuery2";
-		this.da.startup();
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		this.da.createSpace(spaceuri2);
@@ -184,13 +199,12 @@ public class SQLiteDataAccessTest extends TestCase {
 	}
 	
 	// Authorized query
+	@Test
 	public void testQueryUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
-		
-		this.da.startup();
 		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
@@ -206,15 +220,14 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertGraphContains(retGraph1, new int[] {0});
 		assertGraphContains(retGraph2, new int[] {0,3});
 		assertGraphContains(retGraph3, new int[] {0,6});
-		
-		this.da.shutdown();
 	}
 	
+	@Test
 	public void testReadTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceRead1";
 		final String spaceuri2 = "ts://spaceRead2";
-		this.da.startup();
+		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		this.da.createSpace(spaceuri2);
@@ -245,17 +258,15 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		this.da.leaveSpace(spaceuri1);
 		this.da.leaveSpace(spaceuri2);
-		this.da.shutdown();
 	}
 	
 	// Authorized read(template)
+	@Test
 	public void testReadTemplateUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
-		
-		this.da.startup();
 		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
@@ -288,14 +299,13 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph6);
 		assertNull(retGraph7);
 		assertNull(retGraph8);
-		
-		this.da.shutdown();
 	}
 	
+	@Test
 	public void testReadURI() throws Exception {
 		final String spaceuri1 = "ts://spaceRead3";
 		final String spaceuri2 = "ts://spaceRead4";
-		this.da.startup();
+		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		this.da.createSpace(spaceuri2);
@@ -324,15 +334,14 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		this.da.leaveSpace(spaceuri1);
 		this.da.leaveSpace(spaceuri2);
-		this.da.shutdown();
 	}
 	
+	@Test
 	public void testReadURIUser() throws Exception {
 		final String spaceuri1 = "ts://spaceRead5";
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.startup();
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		
@@ -361,7 +370,6 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertGraphContains(retGraph5, new int[] {6,7,8});
 		
 		this.da.leaveSpace(spaceuri1);
-		this.da.shutdown();
 	}
 	
 	private void assertNotAuthorizedRead(String spaceuri, String graphuri, User user) throws SpaceNotExistsException {
@@ -372,12 +380,13 @@ public class SQLiteDataAccessTest extends TestCase {
 			//always thrown
 		}
 	}
-
+	
+	@Test
 	public void testTakeTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceTake1";
 		final String spaceuri2 = "ts://spaceTake2";
-		this.da.startup();
+		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		this.da.createSpace(spaceuri2);
@@ -431,17 +440,15 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		this.da.leaveSpace(spaceuri1);
 		this.da.leaveSpace(spaceuri2);
-		this.da.shutdown();
 	}
 	
+	@Test
 	// Authorized read(template)
 	public void testTakeTemplateUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
-		
-		this.da.startup();
 		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
@@ -475,14 +482,13 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph5);
 		assertNull(retGraph7);
 		assertNull(retGraph8);
-		
-		this.da.shutdown();
 	}
 	
+	@Test
 	public void testTakeURI() throws Exception {
 		final String spaceuri1 = "ts://spaceTake3";
 		final String spaceuri2 = "ts://spaceTake4";
-		this.da.startup();
+		
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		this.da.createSpace(spaceuri2);
@@ -527,15 +533,14 @@ public class SQLiteDataAccessTest extends TestCase {
 		
 		this.da.leaveSpace(spaceuri1);
 		this.da.leaveSpace(spaceuri2);
-		this.da.shutdown();
 	}
 	
+	@Test
 	public void testTakeURIUser() throws Exception {
 		final String spaceuri1 = "ts://spaceRead5";
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.startup();
 		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		
@@ -568,7 +573,6 @@ public class SQLiteDataAccessTest extends TestCase {
 		assertNull(retGraph7);
 		
 		this.da.leaveSpace(spaceuri1);
-		this.da.shutdown();
 	}
 	
 	private void assertNotAuthorizedTake(String spaceuri, String graphuri, User user) throws Exception {
@@ -577,6 +581,60 @@ public class SQLiteDataAccessTest extends TestCase {
 			fail();
 		} catch(AuthorizationException ae) {
 			//always thrown
+		}
+	}
+	
+	@Test
+	public void testConstructPreload() throws Exception {
+		final String spaceuri = "ts://spacePreload/";
+		
+		// write in the database and close connection
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		for(int i=0; i<this.models.length; i++) {
+			this.da.write(spaceuri,this.models[i]);
+		}
+		this.da.leaveSpace(spaceuri);
+		this.da.shutdown();
+		
+		// new connection to test if everything is loaded
+		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.PRELOAD);
+		this.da.startup();
+		assertTrue(this.da.preloadedSpaces.contains(spaceuri));
+		assertFalse(this.da.spaces.contains(spaceuri));
+		
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		assertTrue(this.da.preloadedSpaces.contains(spaceuri));
+		assertTrue(this.da.spaces.contains(spaceuri));
+	}
+
+	@Test
+	public void testConstructLoadOnJoin() throws Exception {
+		final String spaceuri = "ts://spaceLoadOnJoin/";
+		
+		// write in the database and close connection
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		final String[] graphuris = new String[this.models.length];
+		for(int i=0; i<this.models.length; i++) {
+			this.da.write(spaceuri,this.models[i]);
+		}
+		this.da.leaveSpace(spaceuri);
+		this.da.shutdown();
+		
+		// new connection to test if everything is loaded
+		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.LOAD_ON_JOIN);
+		this.da.startup();
+		assertFalse(this.da.preloadedSpaces.contains(spaceuri));
+		assertFalse(this.da.spaces.contains(spaceuri));
+		
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		assertTrue(this.da.spaces.contains(spaceuri));
+		final List<String> loadedUris = Arrays.asList(this.da.spaces.get(spaceuri).getLocalGraphs());
+		for(String uri: graphuris) {
+			assertTrue(loadedUris.contains(uri));
 		}
 	}
 }

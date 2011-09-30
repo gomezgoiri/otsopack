@@ -26,6 +26,7 @@ import java.util.Set;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.exceptions.PersistenceException;
+import otsopack.full.java.dataaccess.simplestore.DatabaseTuple;
 import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
 public class JDBCStore implements ISimpleStore {
@@ -33,10 +34,11 @@ public class JDBCStore implements ISimpleStore {
 	private final String TABLE_NAME = "Graphs";
 	
 	private Connection conn;
-	private PreparedStatement getSpecificGraph;
+	private PreparedStatement getGraphsFromSpace;
 	private PreparedStatement getGraphsURIs;
 	private PreparedStatement insertGraph;
 	private PreparedStatement deleteGraph;
+	private PreparedStatement getAllGraphs;
 
 	public JDBCStore() throws PersistenceException {
 		try {
@@ -109,9 +111,11 @@ public class JDBCStore implements ISimpleStore {
 	
 	protected void createPreparedStatements() throws PersistenceException {
 		try {
-			this.getSpecificGraph = this.conn.prepareStatement(
-					"SELECT format, data FROM " + this.TABLE_NAME + " WHERE " +
-					"spaceuri=? AND graphuri=?" );
+			this.getAllGraphs = this.conn.prepareStatement(
+					"SELECT spaceuri, graphuri, data, format FROM " + this.TABLE_NAME );
+			this.getGraphsFromSpace = this.conn.prepareStatement(
+					"SELECT spaceuri, graphuri, data, format FROM " +
+					this.TABLE_NAME + " WHERE spaceuri=?" );
 			this.getGraphsURIs = this.conn.prepareStatement(
 					"SELECT graphuri FROM " + this.TABLE_NAME + " WHERE " +
 					"spaceuri=?" );
@@ -181,22 +185,47 @@ public class JDBCStore implements ISimpleStore {
 		}
 	}
 	
+
 	/* (non-Javadoc)
-	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#getGraph(java.lang.String, java.lang.String)
+	 * @see otsopack.full.java.dataaccess.simplestore.ISimpleStore#getGraphs()
 	 */
 	@Override
-	public Graph getGraph(String spaceuri, String graphuri) throws PersistenceException {
+	public Set<DatabaseTuple> getGraphs() throws PersistenceException {
+		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
 		try {
-			this.getSpecificGraph.setString(1,spaceuri);
-			this.getSpecificGraph.setString(2,graphuri);
-			final ResultSet rs = this.getSpecificGraph.executeQuery();
-			if (rs.next()) {
-				return new Graph(new String(rs.getBytes(2)), SemanticFormat.getSemanticFormat(rs.getString(1)));
+			final ResultSet rs = this.getAllGraphs.executeQuery();
+			while (rs.next()) {
+				tuples.add(new DatabaseTuple(
+						rs.getString(1), rs.getString(2),
+						new Graph(new String(rs.getBytes(3)), SemanticFormat.getSemanticFormat(rs.getString(4)))
+				));
 			}
+			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
 		}
-		throw new PersistenceException("Graphs not found in the database.");
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.full.java.dataaccess.simplestore.ISimpleStore#getGraphsFromSpace(java.lang.String)
+	 */
+	@Override
+	public Set<DatabaseTuple> getGraphsFromSpace(String spaceuri)
+			throws PersistenceException {
+		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		try {
+			this.getGraphsFromSpace.setString(1,spaceuri);
+			final ResultSet rs = this.getGraphsFromSpace.executeQuery();
+			while (rs.next()) {
+				tuples.add(new DatabaseTuple(
+						rs.getString(1), rs.getString(2),
+						new Graph(new String(rs.getBytes(3)), SemanticFormat.getSemanticFormat(rs.getString(4)))
+				));
+			}
+			return tuples;
+		} catch (SQLException e) {
+			throw new PersistenceException("Graphs selection statement could not be executed.");
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -220,7 +249,7 @@ public class JDBCStore implements ISimpleStore {
 	@Override
 	public void shutdown() throws PersistenceException {
 		try {
-			this.getSpecificGraph.close();
+			this.getGraphsFromSpace.close();
 			this.getGraphsURIs.close();
 			this.insertGraph.close();
 			this.deleteGraph.close();

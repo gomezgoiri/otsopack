@@ -74,4 +74,28 @@ public class JDBCStoreTest {
 		this.dao.deleteGraph(space,"graph2");
 		assertEquals(0, this.dao.getGraphsURIs(space).size());
 	}
+	
+	@Test
+	public void testGetGraphs() throws Exception {
+		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		this.dao.insertGraph("space1","graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
+		this.dao.insertGraph("space2","graph3", new Graph("<http://s3> <http://p3> <http://o3> .", SemanticFormat.NTRIPLES));
+		this.dao.shutdown();
+		
+		this.dao = new JDBCStore();
+		this.dao.startup();
+		assertEquals(3, this.dao.getGraphs().size());
+	}
+	
+	@Test
+	public void testGetGraphsFromSpace() throws Exception {
+		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		this.dao.insertGraph("space1","graph2", new Graph("<http://s2> <http://p2> <http://o2> .", SemanticFormat.NTRIPLES));
+		this.dao.insertGraph("space2","graph3", new Graph("<http://s3> <http://p3> <http://o3> .", SemanticFormat.NTRIPLES));
+		this.dao.shutdown();
+		
+		this.dao = new JDBCStore();
+		this.dao.startup();
+		assertEquals(2, this.dao.getGraphsFromSpace("space1").size());
+	}
 }
