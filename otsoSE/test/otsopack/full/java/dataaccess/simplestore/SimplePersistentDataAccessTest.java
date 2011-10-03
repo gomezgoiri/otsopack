@@ -600,13 +600,13 @@ public class SimplePersistentDataAccessTest {
 		// new connection to test if everything is loaded
 		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.PRELOAD);
 		this.da.startup();
-		assertTrue(this.da.preloadedSpaces.contains(spaceuri));
-		assertFalse(this.da.spaces.contains(spaceuri));
+		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
+		assertFalse(this.da.spaces.containsKey(spaceuri));
 		
 		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
-		assertTrue(this.da.preloadedSpaces.contains(spaceuri));
-		assertTrue(this.da.spaces.contains(spaceuri));
+		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
+		assertTrue(this.da.spaces.containsKey(spaceuri));
 	}
 
 	@Test
@@ -618,7 +618,7 @@ public class SimplePersistentDataAccessTest {
 		this.da.joinSpace(spaceuri);
 		final String[] graphuris = new String[this.models.length];
 		for(int i=0; i<this.models.length; i++) {
-			this.da.write(spaceuri,this.models[i]);
+			graphuris[i] = this.da.write(spaceuri,this.models[i]);
 		}
 		this.da.leaveSpace(spaceuri);
 		this.da.shutdown();
@@ -631,7 +631,7 @@ public class SimplePersistentDataAccessTest {
 		
 		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
-		assertTrue(this.da.spaces.contains(spaceuri));
+		assertTrue(this.da.spaces.containsKey(spaceuri));
 		final List<String> loadedUris = Arrays.asList(this.da.spaces.get(spaceuri).getLocalGraphs());
 		for(String uri: graphuris) {
 			assertTrue(loadedUris.contains(uri));
