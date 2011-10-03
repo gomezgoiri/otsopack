@@ -95,7 +95,7 @@ public class OtsoServerManager {
 		
 		this.multicastProvider = multicastProvider;
 		
-		this.rs = new OtsoRestServer(otsoTestingPort, this.controller, signer, null, multicastProvider);
+		this.rs = new OtsoRestServer(otsoTestingPort, this.controller, signer, /* null, */ multicastProvider);
 	}
 	
 	public void start() throws Exception {

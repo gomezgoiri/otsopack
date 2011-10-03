@@ -14,6 +14,8 @@
 package otsopack.full.java.network.coordination.discovery.http.server;
 
 import org.restlet.Component;
+import org.restlet.Context;
+import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 public class DiscoveryRestServer {
@@ -27,7 +29,14 @@ public class DiscoveryRestServer {
 		this.port = port;
 		
 	    this.component = new Component();
-	    this.component.getServers().add(Protocol.HTTP, this.port);
+	    final Server server = new Server(Protocol.HTTP, this.port);
+	    final Context ctx = new Context();
+        ctx.getParameters().add("lowThreads", "15");
+        ctx.getParameters().add("maxThreads", "40");
+        ctx.getParameters().add("maxQueued", "-1");
+	    ctx.getParameters().add("persistingConnections","false");
+	    server.setContext(ctx);
+	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsopackHttpDiscoveryApplication();
 	    this.application.setController(controller);
