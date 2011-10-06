@@ -30,16 +30,24 @@ import android.database.sqlite.SQLiteDatabase;
 public class SQLiteAndroidStore implements ISimpleStore {
 	
 	private Context dbContext;
-	private SQLiteDatabase db = null;
+	private SQLiteDatabase db;
 	
 	public SQLiteAndroidStore(Context dbContext) {
 		this.dbContext = dbContext;
+		this.db = null;
+	}
+	
+	public SQLiteAndroidStore(SQLiteDatabase db) {
+		this.db = db;
+		this.dbContext = null;
 	}
 	
 	@Override
 	public void startup() throws PersistenceException {
-		OtsobaseOpenHelper helper = new OtsobaseOpenHelper(dbContext);
-		this.db = helper.getWritableDatabase();
+		if (this.db==null) {
+			final OtsobaseOpenHelper helper = new OtsobaseOpenHelper(dbContext);
+			this.db = helper.getWritableDatabase();
+		}
 	}
 
 	@Override
