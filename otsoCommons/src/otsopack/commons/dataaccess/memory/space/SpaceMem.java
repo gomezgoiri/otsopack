@@ -29,13 +29,13 @@ public class SpaceMem {
 	final String spaceURI;
 	final Vector/*<GraphMem>*/ graphs;
 	
-	
 	protected SpaceMem(String spaceURI) {
 		this.spaceURI = spaceURI;
 		this.graphs = new Vector();
 	}
 	
-	protected boolean containsGraph(String graphuri) {
+	// Purpouse: testing
+	public boolean containsGraph(String graphuri) {
 		for(int i=0; i<graphs.size(); i++) {
 			String uri = ((GraphMem) graphs.elementAt(i)).getUri();
 			if( uri.equals(graphuri) ) return true;
