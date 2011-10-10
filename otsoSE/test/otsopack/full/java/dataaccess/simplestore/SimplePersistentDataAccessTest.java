@@ -150,6 +150,35 @@ public class SimplePersistentDataAccessTest {
 		this.da.shutdown();
 	}
 	
+	@Test
+	public void testPersistentWrite() throws Exception {	
+		final String spaceuri = "ts://spacePreload/";
+		final String[] graphuri = new String[this.models.length]; 
+		
+		// write in the database and close connection
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		for(int i=0; i<this.models.length; i++) {
+			graphuri[i] = this.da.write(spaceuri,this.models[i]);
+		}
+		//this.da.leaveSpace(spaceuri);
+		
+		//comment the next shutdown to check how abrupt closing does
+		//not persist the graphs written :-S
+		this.da.shutdown();
+		
+		// new connection to test if everything is loaded
+		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.PRELOAD);
+		this.da.startup();
+		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
+		assertTrue(this.da.preloadedSpaces.get(spaceuri).containsGraph(graphuri[1]));
+		
+		this.da.createSpace(spaceuri);
+		this.da.joinSpace(spaceuri);
+		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
+		assertTrue(this.da.spaces.containsKey(spaceuri));
+	}
+	
 	private boolean contains(int[] contains, int num) {
 		for(int i=0; i<contains.length; i++)
 			if( contains[i]==num ) return true;
