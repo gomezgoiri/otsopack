@@ -33,19 +33,22 @@ public class JDBCStore implements ISimpleStore {
 	// everything in the same table (we just use sqlite to persist info...)
 	private final String TABLE_NAME = "Graphs";
 	
-	private Connection conn;
-	private PreparedStatement getGraphsFromSpace;
-	private PreparedStatement getGraphsURIs;
-	private PreparedStatement insertGraph;
-	private PreparedStatement deleteGraph;
-	private PreparedStatement getAllGraphs;
-
 	public JDBCStore() throws PersistenceException {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
 			throw new PersistenceException("sqlite driver could not be found.");
 		}
+	}
+	
+	// maybe in the future a connection pool could be used
+	protected Connection openConnection() throws SQLException {
+		return DriverManager.getConnection("jdbc:sqlite:dbOtsoPack");
+	}
+	
+	// maybe in the future a connection pool could be used
+	protected void closeConnection(Connection conn) throws SQLException {
+		conn.close();
 	}
 	
 	/* (non-Javadoc)
@@ -55,13 +58,13 @@ public class JDBCStore implements ISimpleStore {
 	public void startup() throws PersistenceException {
 		try {
 			// TODO become this database location configurable?
-			this.conn = DriverManager.getConnection("jdbc:sqlite:dbOtsoPack");
-			if( !doesTableExists() ) {
-				final Statement stmt = this.conn.createStatement();
+			final Connection conn = openConnection();
+			if( !doesTableExists(conn) ) {
+				final Statement stmt = conn.createStatement();
 				createTable(stmt);
 				stmt.close();
 			}
-			createPreparedStatements();
+			closeConnection(conn);
 		} catch (SQLException e) {
 			throw new PersistenceException("Connection with sqlite database could not be stablished.");
 		}
@@ -85,9 +88,9 @@ public class JDBCStore implements ISimpleStore {
 		}
 	}*/
 	
-	protected boolean doesTableExists() throws PersistenceException {
+	protected boolean doesTableExists(Connection conn) throws PersistenceException {
 		try {
-			final DatabaseMetaData meta = this.conn.getMetaData();
+			final DatabaseMetaData meta = conn.getMetaData();
 	        final ResultSet rs = meta.getTables(null, null, this.TABLE_NAME, null);
 	        return rs.next();
 		} catch(SQLException e) {
@@ -109,42 +112,35 @@ public class JDBCStore implements ISimpleStore {
 		}
 	}
 	
-	protected void createPreparedStatements() throws PersistenceException {
-		try {
-			this.getAllGraphs = this.conn.prepareStatement(
-					"SELECT spaceuri, graphuri, data, format FROM " + this.TABLE_NAME );
-			this.getGraphsFromSpace = this.conn.prepareStatement(
-					"SELECT spaceuri, graphuri, data, format FROM " +
-					this.TABLE_NAME + " WHERE spaceuri=?" );
-			this.getGraphsURIs = this.conn.prepareStatement(
-					"SELECT graphuri FROM " + this.TABLE_NAME + " WHERE " +
-					"spaceuri=?" );
-			this.insertGraph = this.conn.prepareStatement(
-					"INSERT INTO " + this.TABLE_NAME + " VALUES(?,?,?,?)" );
-			this.deleteGraph = this.conn.prepareStatement(
-					"DELETE FROM " + this.TABLE_NAME + " WHERE " +
-					"spaceuri=? AND graphuri=?" );
-		} catch (SQLException e) {
-			throw new PersistenceException("Prepared statement could not be created.");
-		}
-	}
-	
 	/* (non-Javadoc)
 	 * @see otsopack.full.java.dataaccess.sqlite.ISimplePersistentStrategy#getGraphsURIs(java.lang.String)
 	 */
 	@Override
 	public Set<String> getGraphsURIs(String spaceuri) throws PersistenceException {
+		Connection conn = null;
 		try {
 			final Set<String> ret = new HashSet<String>();
-			this.getGraphsURIs.setString(1,spaceuri);
+			conn = openConnection();
+			final PreparedStatement getGraphsURIs = conn.prepareStatement(
+														"SELECT graphuri FROM " + this.TABLE_NAME + " WHERE " +
+														"spaceuri=?" );
+			getGraphsURIs.setString(1,spaceuri);
 			// automatically closed in the next creation
-			final ResultSet rs = this.getGraphsURIs.executeQuery();
+			final ResultSet rs = getGraphsURIs.executeQuery();
 			while (rs.next()) {
 				ret.add( rs.getString(1) );
 			}
 			return ret;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
 	
@@ -153,19 +149,32 @@ public class JDBCStore implements ISimpleStore {
 	 */
 	@Override
 	public void insertGraph(String spaceuri, String graphuri, Graph graph) throws PersistenceException {
+		Connection conn = null;
 		try {
-			this.insertGraph.setString(1,graphuri);
-			this.insertGraph.setString(2,spaceuri);
-			this.insertGraph.setString(3,graph.getFormat().getName());
-			this.insertGraph.setBytes(4,graph.getData().getBytes());
+			conn = openConnection();
+			
+			final PreparedStatement insertGraph = conn.prepareStatement(
+									"INSERT INTO " + this.TABLE_NAME + " VALUES(?,?,?,?)" );
+			insertGraph.setString(1,graphuri);
+			insertGraph.setString(2,spaceuri);
+			insertGraph.setString(3,graph.getFormat().getName());
+			insertGraph.setBytes(4,graph.getData().getBytes());
 			
 			// automatically closed in the next creation
-			final int updated = this.insertGraph.executeUpdate();
+			final int updated = insertGraph.executeUpdate();
 			//TODO if it takes too long to do a simple write, we can persist it later using...
 			//this.insertGraph.addBatch();
 			if (updated==0) throw new PersistenceException("Graphs could not be stored.");
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
 	
@@ -174,17 +183,31 @@ public class JDBCStore implements ISimpleStore {
 	 */
 	@Override
 	public void deleteGraph(String spaceuri, String graphuri) throws PersistenceException {
+		Connection conn = null;
 		try {
-			this.deleteGraph.setString(1,spaceuri);
-			this.deleteGraph.setString(2,graphuri);
-			this.deleteGraph.executeUpdate();
+			conn = openConnection();
+			
+			final PreparedStatement deleteGraph = conn.prepareStatement(
+										"DELETE FROM " + this.TABLE_NAME + " WHERE " +
+										"spaceuri=? AND graphuri=?" );
+			
+			deleteGraph.setString(1,spaceuri);
+			deleteGraph.setString(2,graphuri);
+			deleteGraph.executeUpdate();
 			//TODO if it takes too long to do a simple take, we can persist it later using...
 			//this.deleteGraph.addBatch();
 		} catch (SQLException e) {
 			throw new PersistenceException("Graph removal statement could not be executed.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see otsopack.full.java.dataaccess.simplestore.ISimpleStore#getGraphs()
@@ -192,8 +215,15 @@ public class JDBCStore implements ISimpleStore {
 	@Override
 	public Set<DatabaseTuple> getGraphs() throws PersistenceException {
 		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		
+		Connection conn = null;
 		try {
-			final ResultSet rs = this.getAllGraphs.executeQuery();
+			conn = openConnection();
+			
+			final PreparedStatement getAllGraphs = conn.prepareStatement(
+					"SELECT spaceuri, graphuri, data, format FROM " + this.TABLE_NAME );
+			
+			final ResultSet rs = getAllGraphs.executeQuery();
 			while (rs.next()) {
 				tuples.add(new DatabaseTuple(
 						rs.getString(1), rs.getString(2),
@@ -203,6 +233,14 @@ public class JDBCStore implements ISimpleStore {
 			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
 
@@ -213,9 +251,17 @@ public class JDBCStore implements ISimpleStore {
 	public Set<DatabaseTuple> getGraphsFromSpace(String spaceuri)
 			throws PersistenceException {
 		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		
+		Connection conn = null;
 		try {
-			this.getGraphsFromSpace.setString(1,spaceuri);
-			final ResultSet rs = this.getGraphsFromSpace.executeQuery();
+			conn = openConnection();
+			
+			final PreparedStatement getGraphsFromSpace = conn.prepareStatement(
+					"SELECT spaceuri, graphuri, data, format FROM " +
+					this.TABLE_NAME + " WHERE spaceuri=?" );
+			
+			getGraphsFromSpace.setString(1,spaceuri);
+			final ResultSet rs = getGraphsFromSpace.executeQuery();
 			while (rs.next()) {
 				tuples.add(new DatabaseTuple(
 						rs.getString(1), rs.getString(2),
@@ -225,6 +271,14 @@ public class JDBCStore implements ISimpleStore {
 			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
 	
@@ -233,13 +287,24 @@ public class JDBCStore implements ISimpleStore {
 	 */
 	@Override
 	public void clear() throws PersistenceException {
+		Connection conn = null;
 		try {
-			final Statement stmt = this.conn.createStatement();
+			conn = openConnection();
+			
+			final Statement stmt = conn.createStatement();
 			// not prepared because it won't be usual
 			stmt.executeUpdate("DELETE FROM " + this.TABLE_NAME);
 			stmt.close();
 		} catch (SQLException e) {
 			throw new PersistenceException("Database could not be cleared.");
+		} finally {
+			if (conn!=null) {
+				try {
+					closeConnection(conn);
+				} catch (SQLException e) {
+					throw new PersistenceException("Database connection could not be closed.");
+				}
+			}
 		}
 	}
 	
@@ -248,15 +313,6 @@ public class JDBCStore implements ISimpleStore {
 	 */
 	@Override
 	public void shutdown() throws PersistenceException {
-		try {
-			this.getGraphsFromSpace.close();
-			this.getGraphsURIs.close();
-			this.insertGraph.close();
-			this.deleteGraph.close();
 
-			this.conn.close();
-		} catch (SQLException e) {
-			throw new PersistenceException("Connection with sqlite database could not be closed.");
-		}
 	}
 }

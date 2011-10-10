@@ -163,9 +163,8 @@ public class SimplePersistentDataAccessTest {
 		}
 		//this.da.leaveSpace(spaceuri);
 		
-		//comment the next shutdown to check how abrupt closing does
-		//not persist the graphs written :-S
-		this.da.shutdown();
+		// despite of the abrupt closing, data is persisted!
+		//this.da.shutdown();
 		
 		// new connection to test if everything is loaded
 		this.da = new SimplePersistentDataAccess(new JDBCStore(), OpenMode.PRELOAD);
