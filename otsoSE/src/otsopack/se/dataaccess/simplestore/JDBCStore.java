@@ -37,7 +37,7 @@ public class JDBCStore implements ISimpleStore {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
-			throw new PersistenceException("sqlite driver could not be found.");
+			throw new PersistenceException("sqlite driver could not be found: " + e.getMessage());
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class JDBCStore implements ISimpleStore {
 			}
 			closeConnection(conn);
 		} catch (SQLException e) {
-			throw new PersistenceException("Connection with sqlite database could not be stablished.");
+			throw new PersistenceException("Connection with sqlite database could not be stablished: " + e.getMessage());
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class JDBCStore implements ISimpleStore {
 	        final ResultSet rs = meta.getTables(null, null, this.TABLE_NAME, null);
 	        return rs.next();
 		} catch(SQLException e) {
-			throw new PersistenceException("The existence of the table could not be checked.");
+			throw new PersistenceException("The existence of the table could not be checked: " + e.getMessage());
 		}
 	}
 	
@@ -108,7 +108,7 @@ public class JDBCStore implements ISimpleStore {
 	    try {
 			stmt.executeUpdate(tableCreationSQL);
 		} catch (SQLException e) {
-			throw new PersistenceException("Main table could not be created.");
+			throw new PersistenceException("Main table could not be created: " + e.getMessage());
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class JDBCStore implements ISimpleStore {
 			}
 			return ret;
 		} catch (SQLException e) {
-			throw new PersistenceException("Graphs selection statement could not be executed.");
+			throw new PersistenceException("Graphs selection statement could not be executed:" + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
@@ -164,7 +164,7 @@ public class JDBCStore implements ISimpleStore {
 			final int updated = insertGraph.executeUpdate();
 			//TODO if it takes too long to do a simple write, we can persist it later using...
 			//this.insertGraph.addBatch();
-			if (updated==0) throw new PersistenceException("Graphs could not be stored.");
+			if (updated==0) throw new PersistenceException("Graphs could not be stored: zero updates found");
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
 		} finally {
@@ -197,7 +197,7 @@ public class JDBCStore implements ISimpleStore {
 			//TODO if it takes too long to do a simple take, we can persist it later using...
 			//this.deleteGraph.addBatch();
 		} catch (SQLException e) {
-			throw new PersistenceException("Graph removal statement could not be executed.");
+			throw new PersistenceException("Graph removal statement could not be executed: " + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
@@ -232,7 +232,7 @@ public class JDBCStore implements ISimpleStore {
 			}
 			return tuples;
 		} catch (SQLException e) {
-			throw new PersistenceException("Graphs selection statement could not be executed.");
+			throw new PersistenceException("Graphs selection statement could not be executed: " + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
@@ -270,7 +270,7 @@ public class JDBCStore implements ISimpleStore {
 			}
 			return tuples;
 		} catch (SQLException e) {
-			throw new PersistenceException("Graphs selection statement could not be executed.");
+			throw new PersistenceException("Graphs selection statement could not be executed: " + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
@@ -296,7 +296,7 @@ public class JDBCStore implements ISimpleStore {
 			stmt.executeUpdate("DELETE FROM " + this.TABLE_NAME);
 			stmt.close();
 		} catch (SQLException e) {
-			throw new PersistenceException("Database could not be cleared.");
+			throw new PersistenceException("Database could not be cleared: " + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
