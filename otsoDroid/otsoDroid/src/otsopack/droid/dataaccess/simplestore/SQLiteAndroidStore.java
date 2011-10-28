@@ -73,8 +73,9 @@ public class SQLiteAndroidStore implements ISimpleStore {
 	@Override
 	public Set<String> getGraphsURIs(String spaceuri) throws PersistenceException {
 		if (this.db==null) throw new PersistenceException("The database should be opened before any other operation.");
+		Cursor c = null;
 		try {
-			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
+			c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
 			final Set<String> ret = new HashSet<String>();
 			while (c.moveToNext()) {
 				ret.add(c.getString(0));
@@ -82,6 +83,10 @@ public class SQLiteAndroidStore implements ISimpleStore {
 			return ret;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		}finally{
+			if (c != null){
+				c.close();
+			}
 		}
 	}
 
@@ -119,8 +124,9 @@ public class SQLiteAndroidStore implements ISimpleStore {
 	@Override
 	public Set<DatabaseTuple> getGraphs() throws PersistenceException {
 		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		Cursor c = null;
 		try {
-			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"spaceuri","graphuri","data","format"}, null, null, null, null, null);
+			c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"spaceuri","graphuri","data","format"}, null, null, null, null, null);
 			while (c.moveToNext()) {
 				tuples.add(new DatabaseTuple(
 						c.getString(0), c.getString(1),
@@ -130,6 +136,10 @@ public class SQLiteAndroidStore implements ISimpleStore {
 			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (c != null){
+				c.close();
+			}
 		}
 	}
 
@@ -140,8 +150,9 @@ public class SQLiteAndroidStore implements ISimpleStore {
 	public Set<DatabaseTuple> getGraphsFromSpace(String spaceuri)
 			throws PersistenceException {
 		final Set<DatabaseTuple> tuples = new HashSet<DatabaseTuple>();
+		Cursor c = null;
 		try {
-			final Cursor c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri","data","format"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
+			c = this.db.query(OtsobaseOpenHelper.TABLE_NAME, new String[] {"graphuri","data","format"},"spaceuri=?", new String[] {spaceuri}, null, null, null);
 			while (c.moveToNext()) {
 				tuples.add(new DatabaseTuple(
 						spaceuri, c.getString(0),
@@ -151,6 +162,10 @@ public class SQLiteAndroidStore implements ISimpleStore {
 			return tuples;
 		} catch (SQLException e) {
 			throw new PersistenceException("Graphs selection statement could not be executed.");
+		} finally {
+			if (c != null){
+				c.close();
+			}
 		}
 	}
 }
