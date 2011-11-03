@@ -31,6 +31,7 @@ import otsopack.commons.IController;
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.network.ICommunication;
 import otsopack.full.java.network.communication.session.UserSession;
+import otsopack.restlet.commons.OtsoRestletUtils;
 
 public class OtsoRestServer {
 	public static final int DEFAULT_PORT = 8182;
@@ -50,12 +51,7 @@ public class OtsoRestServer {
 		this.port = port;
 	    this.component = new Component();
 	    final Server server = new Server(Protocol.HTTP, this.port);
-	    final Context ctx = new Context();
-        ctx.getParameters().add("lowThreads", "15");
-        ctx.getParameters().add("maxThreads", "40");
-        ctx.getParameters().add("maxQueued", "-1");
-	    ctx.getParameters().add("persistingConnections","false");
-	    server.setContext(ctx);
+	    server.setContext(OtsoRestletUtils.createContext());
 	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsopackApplication(multicastProvider, signer);
