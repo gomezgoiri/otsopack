@@ -20,6 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import otsopack.full.java.network.communication.comet.event.Event;
 import otsopack.full.java.network.communication.comet.event.EventPetition;
 
+/**
+ * This class executes user's pending tasks in the server side.
+ */
 public class EventExecutorTask implements Runnable {
 
 	private final EventExecutor executor;
