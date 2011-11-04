@@ -15,6 +15,7 @@ package otsopack.se.dataaccess.simplestore;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +23,7 @@ import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
 public class JDBCStoreTest {
@@ -43,6 +45,18 @@ public class JDBCStoreTest {
 	@Test
 	public void testInsertGraph() throws Exception {
 		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+	}
+	
+	@Test
+	public void testInsertGraphTwice() throws Exception {
+		this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+		assertEquals(1, this.dao.getGraphs().size());
+		try {
+			this.dao.insertGraph("space1","graph1", new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES));
+			fail();
+		} catch(PersistenceException e) {
+			assertEquals(1, this.dao.getGraphs().size());
+		}
 	}
 	
 	@Test

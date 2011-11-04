@@ -100,7 +100,7 @@ public class JDBCStore implements ISimpleStore {
 	
 	protected void createTable(Statement stmt) throws PersistenceException {
 	    final String tableCreationSQL = "CREATE TABLE " + this.TABLE_NAME + " (" +
-	      					"	graphuri VARCHAR(1000)," +
+	      					"	graphuri VARCHAR(1000) UNIQUE," +
 	      					"	spaceuri VARCHAR(1000)," +
 	      					"	format VARCHAR(100)," +
 	      					"	data BLOB" +
@@ -166,7 +166,7 @@ public class JDBCStore implements ISimpleStore {
 			//this.insertGraph.addBatch();
 			if (updated==0) throw new PersistenceException("Graphs could not be stored.");
 		} catch (SQLException e) {
-			throw new PersistenceException("Graphs selection statement could not be executed.");
+			throw new PersistenceException("Graphs selection statement could not be executed.\n" + e.getMessage());
 		} finally {
 			if (conn!=null) {
 				try {
