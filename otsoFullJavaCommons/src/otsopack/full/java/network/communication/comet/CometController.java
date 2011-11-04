@@ -107,8 +107,9 @@ public class CometController implements ICometController {
 		this.server2userQueues.remove(sessionId);
 		
 		final Queue<Event> events = this.user2serverQueues.remove(sessionId);
-		for(Event event : events)
-			this.userRequests.remove(new EventPetition(sessionId, event));
+		if (events!=null)
+			for(Event event : events)
+				this.userRequests.remove(new EventPetition(sessionId, event));
 	}
 
 	private void clearExpiredSessions(){
