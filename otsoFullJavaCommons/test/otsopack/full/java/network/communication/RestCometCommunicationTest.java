@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RestCometCommunicationTest extends AbstractCometRestServerTesting {
@@ -35,91 +36,109 @@ public class RestCometCommunicationTest extends AbstractCometRestServerTesting {
 		super.tearDown();
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testReadStringStringSemanticFormatFilterArrayLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testReadStringStringSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testReadStringTemplateSemanticFormatFilterArrayLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testReadStringTemplateSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testTakeStringStringSemanticFormatFilterArrayLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testTakeStringStringSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testTakeStringTemplateSemanticFormatFilterArrayLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testTakeStringTemplateSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testQueryStringTemplateSemanticFormatFilterArrayLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testQueryStringTemplateSemanticFormatLong() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testSubscribe() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testUnsubscribe() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testAdvertise() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testUnadvertise() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testDemand() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testSuggest() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testCallbackIfIHaveResponsabilityOverThisKnowlege() {
 		fail("Not yet implemented");
 	}
 
+	@Ignore("comet not implemented")
 	@Test
 	public void testHasAnyPeerResponsabilityOverThisKnowlege() {
 		fail("Not yet implemented");
