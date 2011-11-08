@@ -25,7 +25,7 @@ public class OtsobaseOpenHelper extends SQLiteOpenHelper {
 	static protected final String TABLE_NAME = "Graphs";
 	
     final String CREATE_TABLE_SQL = "CREATE TABLE " + TABLE_NAME + " (" +
-		"	graphuri VARCHAR(1000)," +
+		"	graphuri VARCHAR(1000) UNIQUE," +
 		"	spaceuri VARCHAR(1000)," +
 		"	format VARCHAR(100)," +
 		"	data BLOB" +

@@ -32,6 +32,9 @@ import otsopack.full.java.network.communication.comet.event.EventPetition;
 import otsopack.restlet.commons.sessions.ISessionManager;
 import otsopack.restlet.commons.sessions.memory.MemorySessionManager;
 
+/**
+ * This is the controller needed in the server part.
+ */
 public class CometController implements ICometController {
 
 	public static final int THREADS      = 5;
@@ -43,6 +46,7 @@ public class CometController implements ICometController {
 	private final EventExecutor eventExecutor;
 	
 	private final ConcurrentHashMap<String, Queue<Event>> server2userQueues = new ConcurrentHashMap<String, Queue<Event>>();
+	// This Map seems to be unnecessary since nobody fills it up (TODO check it before deleting!)
 	private final ConcurrentHashMap<String, Queue<Event>> user2serverQueues = new ConcurrentHashMap<String, Queue<Event>>();
 	private final Queue<EventPetition> userRequests = new ConcurrentLinkedQueue<EventPetition>();
 
@@ -103,8 +107,9 @@ public class CometController implements ICometController {
 		this.server2userQueues.remove(sessionId);
 		
 		final Queue<Event> events = this.user2serverQueues.remove(sessionId);
-		for(Event event : events)
-			this.userRequests.remove(new EventPetition(sessionId, event));
+		if (events!=null)
+			for(Event event : events)
+				this.userRequests.remove(new EventPetition(sessionId, event));
 	}
 
 	private void clearExpiredSessions(){

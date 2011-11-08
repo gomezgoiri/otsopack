@@ -156,11 +156,14 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 		final SpaceMem space = getSpace(spaceURI);
 		final String graphuri = generateUniqueURIbasedOnContent(spaceURI,triples.getData().getBytes());
 		
-		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
-		this.dao.insertGraph(normalizedURI, graphuri, triples);
-		// consistency kept, if the exception does not do the following write in memory
-		space.write(new ModelImpl(triples), graphuri);
-			
+		//If this exact graph was already stored in the past, why we should write it again?
+		if (!space.containsGraph(graphuri)) {
+			final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+			this.dao.insertGraph(normalizedURI, graphuri, triples);
+			// consistency kept, if the exception does not do the following write in memory
+			space.write(new ModelImpl(triples), graphuri);
+		}
+		
 		return graphuri;
 	}
 	
