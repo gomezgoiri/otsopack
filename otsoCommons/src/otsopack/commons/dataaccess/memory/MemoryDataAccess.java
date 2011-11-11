@@ -14,6 +14,7 @@
 
 package otsopack.commons.dataaccess.memory;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import otsopack.commons.data.Graph;
@@ -25,14 +26,14 @@ import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.dataaccess.memory.space.GraphMem;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
+import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
-import otsopack.commons.util.Util;
 
 public class MemoryDataAccess extends AbstractDataAccess {
 	
-	private Vector spaces = null;
+	private Vector/*<SpaceMem>*/ spaces = null;
 	
 	public MemoryDataAccess() {
 		this.spaces = new Vector();
@@ -53,12 +54,27 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
 		// we mustn't do nothing special
 	}
+	
+	// thread unsafe
+	public String[] getJoinedSpaces() throws PersistenceException {
+		final String[] joined = new String[this.spaces.size()];
+		final Iterator spcsIt = this.spaces.iterator();
+		int i=0;
+		while (spcsIt.hasNext()) {
+			joined[i++] = ((SpaceMem) spcsIt.next()).getSpaceURI();
+		}
+		return joined;
+	}
 
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
-		// destroy this model
-		// we mustn't do nothing special
-		/*if( !removeSpace(spaceURI) )
-			throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");*/
+		for(int i=0; i<this.spaces.size(); i++) {
+			final String spc = ((SpaceMem)this.spaces.get(i)).getSpaceURI();
+			if( spaceURI.equals(spc) ) {
+				this.spaces.remove(i);
+				return;
+			}
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
 	}
 	
 	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
@@ -67,7 +83,6 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 	
 	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
-		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		for(int i=0; i<spaces.size(); i++) {
 			if(((SpaceMem)spaces.elementAt(i)).getSpaceURI().equals(spaceURI))
 				return (SpaceMem)spaces.elementAt(i);
@@ -76,7 +91,6 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 	
 	protected void addSpace(String spaceURI) {
-		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		spaces.addElement( MemoryFactory.createSpace(spaceURI) );
 	}
 	
@@ -86,7 +100,6 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	 */
 	protected boolean removeSpace(String spaceURI) {
 		boolean exit = false;
-		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		for(int i=0; i<spaces.size() && !exit; i++) {
 			if(((SpaceMem)spaces.elementAt(i)).getSpaceURI().equals(spaceURI)) {
 				spaces.removeElementAt(i);

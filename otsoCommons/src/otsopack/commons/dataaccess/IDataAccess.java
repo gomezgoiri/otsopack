@@ -45,6 +45,12 @@ public interface IDataAccess extends ILayer {
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException;
 	
 	/**
+	 * @return
+	 *  Returns the spaces the node belongs to.
+	 */
+	public String[] getJoinedSpaces() throws PersistenceException;
+	
+	/**
 	 * leave a space
 	 * @param spaceURI
 	 */
