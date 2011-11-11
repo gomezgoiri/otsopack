@@ -61,8 +61,10 @@ public class OtsopackApplication extends Application {
 	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){
-		for(String uri : roots.keySet())
+		for(String uri : roots.keySet()) {
 			PATHS.put(uri, roots.get(uri));
+			PATHS.put(uri + "/", roots.get(uri));
+		}
 	}
 	
 	public OtsopackApplication(){
