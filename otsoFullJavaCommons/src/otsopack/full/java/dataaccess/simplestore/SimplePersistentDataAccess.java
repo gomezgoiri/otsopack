@@ -111,6 +111,11 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	}
 	
 	@Override
+	public String[] getJoinedSpaces() {
+		return this.spaces.keySet().toArray(new String[this.spaces.keySet().size()]);
+	}
+	
+	@Override
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		
