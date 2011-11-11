@@ -26,7 +26,6 @@ import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.dataaccess.memory.space.GraphMem;
 import otsopack.commons.dataaccess.memory.space.MemoryFactory;
 import otsopack.commons.dataaccess.memory.space.SpaceMem;
-import otsopack.commons.exceptions.PersistenceException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -56,7 +55,7 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 	
 	// thread unsafe
-	public String[] getJoinedSpaces() throws PersistenceException {
+	public String[] getJoinedSpaces() {
 		final String[] joined = new String[this.spaces.size()];
 		final Iterator spcsIt = this.spaces.iterator();
 		int i=0;
