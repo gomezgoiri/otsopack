@@ -19,7 +19,6 @@ import otsopack.commons.kernel.AbstractKernel;
 import otsopack.full.java.network.RestNetwork;
 import otsopack.full.java.network.coordination.IRegistry;
 import otsopack.full.java.network.coordination.bulletinboard.BulletinBoardsManager;
-import otsopack.full.java.network.coordination.bulletinboard.LocalBulletinBoard;
 
 public class HttpKernel extends AbstractKernel {
 

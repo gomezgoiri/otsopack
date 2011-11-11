@@ -120,6 +120,8 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		
 		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException();
+		
+		this.spaces.remove(spaceURI);
 	}
 	
 	@Override

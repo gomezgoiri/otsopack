@@ -17,8 +17,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +36,6 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -109,46 +110,40 @@ public class SimplePersistentDataAccessTest {
 	@Test
 	public void testGetJoinSpace() throws Exception {
 		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
-		final MemoryDataAccess memo = new MemoryDataAccess();
 		
 		for(int i=0; i<spaces.length; i++) {
-			memo.createSpace(spaces[i]);
+			this.da.createSpace(spaces[i]);
 		}
 		for(int i=0; i<spaces.length; i++) {
-			memo.joinSpace(spaces[i]);
+			this.da.joinSpace(spaces[i]);
 		}
 		
-		final String[] joinedSp = memo.getJoinedSpaces();
+		final String[] joinedSp = this.da.getJoinedSpaces();
 		assertEquals(3, joinedSp.length);
 		for(int i=0; i<spaces.length; i++) {
 			assertEquals(spaces[i], joinedSp[i]);
 		}
 		
-		memo.leaveSpace(spaces[2]);
-		final String[] joinedSp2 = memo.getJoinedSpaces();
-		assertEquals(2, joinedSp2.length);
-		for(int i=0; i<spaces.length-1; i++) {
-			assertEquals(spaces[i], joinedSp2[i]);
-		}
-		
-		memo.shutdown();
+		this.da.leaveSpace(spaces[2]);
+		final List<String> joinedSp2 = Arrays.asList(this.da.getJoinedSpaces());
+		assertEquals(2, joinedSp2.size());
+		assertThat(joinedSp2, hasItem(spaces[0]));
+		assertThat(joinedSp2, hasItem(spaces[1]));
 	}
 
 	@Test
 	public void testLeaveSpace() throws Exception {
-		final MemoryDataAccess memo = new MemoryDataAccess();
-		memo.createSpace("ts://espacio");
-		memo.joinSpace("ts://espacio");
-		memo.leaveSpace("ts://espacio");
+		this.da.createSpace("ts://espacio");
+		this.da.joinSpace("ts://espacio");
+		this.da.leaveSpace("ts://espacio");
 	}
 	
 	@Test
 	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
-		final MemoryDataAccess memo = new MemoryDataAccess();
-		memo.createSpace("ts://espacio");
+		this.da.createSpace("ts://espacio");
 		
 		try {
-			memo.leaveSpace("ts://espacio2");
+			this.da.leaveSpace("ts://espacio2");
 			fail();
 		} catch (SpaceNotExistsException e) {
 			// the exception should have been thrown
