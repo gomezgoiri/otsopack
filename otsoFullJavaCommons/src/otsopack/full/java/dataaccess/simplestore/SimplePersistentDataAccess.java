@@ -13,6 +13,8 @@
  */
 package otsopack.full.java.dataaccess.simplestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +51,8 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	ISimpleStore dao;
 	final OpenMode selectedMode;
 	
+	public static boolean DEBUG = false;
+	
 	public SimplePersistentDataAccess(ISimpleStore simple, OpenMode open) {
 		this.dao = simple;
 		this.selectedMode = open;
@@ -74,15 +78,28 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 		this.dao.shutdown();
 	}
 	
-	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
-		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
-		final SpaceMem ret = this.spaces.get(normalizedURI);
-		if (ret==null) throw new SpaceNotExistsException(); 
-		return ret;
+	private void dbg(String message) {
+		if(DEBUG) {
+			System.err.print(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS ").format(new Date()));
+			System.err.print(SimplePersistentDataAccess.class.getSimpleName());
+			System.err.print(": ");
+			System.err.println(message);
+		}
 	}
 
+	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
+		dbg("Get space " + spaceURI + " instance: " + this);
+		
+		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
+		final SpaceMem ret = this.spaces.get(normalizedURI);
+		if (ret==null) throw new SpaceNotExistsException("The space \"" + spaceURI + "\" could not be found"); 
+		return ret;
+	}
+	
 	@Override
 	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
+		dbg("Create space " + spaceURI + " instance: " + this);
+		
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		if (this.spaces.containsKey(normalizedURI)) throw new SpaceAlreadyExistsException();
 		
@@ -97,9 +114,11 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	
 	@Override
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException {
+		dbg("Join space " + spaceURI + " instance: " + this);
+		
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		
-		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException();
+		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException("The space \"" + spaceURI + "\" could not be found");
 		
 		if (this.selectedMode==OpenMode.LOAD_ON_JOIN) {
 			final Set<DatabaseTuple> tuples = this.dao.getGraphsFromSpace(normalizedURI);
@@ -117,10 +136,11 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	
 	@Override
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
+		dbg("Leave space " + spaceURI + " instance: " + this);
+		
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
 		
-		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException();
-		
+		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException("The space \"" + spaceURI + "\" could not be found");
 		this.spaces.remove(spaceURI);
 	}
 	

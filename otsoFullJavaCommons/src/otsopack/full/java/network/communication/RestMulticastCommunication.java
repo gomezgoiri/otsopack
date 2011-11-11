@@ -73,7 +73,8 @@ public class RestMulticastCommunication implements ICommunication {
 			re.printStackTrace();
 			throw new RestCommunicationException("Could not start " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
 		}
-		this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
+		// this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
+		this.executor = Executors.newCachedThreadPool();
 	}
 
 	@Override

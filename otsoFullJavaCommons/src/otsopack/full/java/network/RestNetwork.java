@@ -62,6 +62,7 @@ public class RestNetwork implements INetwork {
 			this.comm.startup();
 			this.rs.startup();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new TSException("Rest server could not be started. " + e.getMessage());
 		}
 		this.joinedSpaces.clear();

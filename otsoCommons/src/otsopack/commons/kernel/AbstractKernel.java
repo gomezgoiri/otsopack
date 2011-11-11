@@ -109,17 +109,21 @@ public abstract class AbstractKernel implements ITripleSpace {
 	}
 	
 	public void shutdown() throws TSException {
-		if (this.dataAccessService != null)
-			getDataAccessService().shutdown();
-		
-		if (this.networkService != null)
-			getNetworkService().shutdown();
-		
-		this.setController(null);
-		this.dataAccessService = null;
-		this.networkService = null;
-		
-		this.connected = false;
+		try{
+			if (this.dataAccessService != null)
+				getDataAccessService().shutdown();
+		}finally{
+			try{
+				if (this.networkService != null)
+					getNetworkService().shutdown();
+			}finally{
+				this.setController(null);
+				this.dataAccessService = null;
+				this.networkService = null;
+				
+				this.connected = false;
+			}
+		}
 	}	
 
 	public void createSpace(String spaceURI) throws TSException {
