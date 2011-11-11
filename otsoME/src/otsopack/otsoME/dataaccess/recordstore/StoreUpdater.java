@@ -53,7 +53,7 @@ public class StoreUpdater implements Runnable {
 				and the are some graphs may not be saved.
 			*/
 			synchronized( storeManager.lockJoinedSpaces ) {
-				Vector spaces = storeManager.getJoinedSpaces();
+				Vector spaces = storeManager.joinedSpaces;
 				for(int i=0; spaces!=null && i<spaces.size(); i++) {
 						SpaceRecord sr = (SpaceRecord) spaces.elementAt(i);
 						try {

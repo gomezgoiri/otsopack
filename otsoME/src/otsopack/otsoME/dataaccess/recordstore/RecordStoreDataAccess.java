@@ -79,8 +79,10 @@ public class RecordStoreDataAccess implements IDataAccess {
 		throw new SpaceNotExistsException();
 	}
 	
-	public Vector getJoinedSpaces() {
-		return (joinedSpaces.size()==0)?null:joinedSpaces;
+	public String[] getJoinedSpaces() {
+		final String[] ret = new String[joinedSpaces.size()];
+		joinedSpaces.copyInto(ret);
+		return ret;
 	}
 	
 		//TODO check!
