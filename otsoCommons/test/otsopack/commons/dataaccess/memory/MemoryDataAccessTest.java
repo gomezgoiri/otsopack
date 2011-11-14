@@ -85,37 +85,50 @@ public class MemoryDataAccessTest extends TestCase {
 	}
 
 	public void testJoinSpace() {}
-
-	public void testLeaveSpace() {
+	
+	public void testGetJoinSpace() throws Exception {
+		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
 		final MemoryDataAccess memo = new MemoryDataAccess();
-		try {
-			memo.createSpace("ts://espacio");
-		} catch (Exception e) {
-			assertTrue(false);
+		
+		for(int i=0; i<spaces.length; i++) {
+			memo.createSpace(spaces[i]);
+		}
+		for(int i=0; i<spaces.length; i++) {
+			memo.joinSpace(spaces[i]);
 		}
 		
-		try {
-			memo.leaveSpace("ts://espacio");
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
+		final String[] joinedSp = memo.getJoinedSpaces();
+		assertEquals(3, joinedSp.length);
+		for(int i=0; i<spaces.length; i++) {
+			assertEquals(spaces[i], joinedSp[i]);
 		}
+		
+		memo.leaveSpace(spaces[2]);
+		final String[] joinedSp2 = memo.getJoinedSpaces();
+		assertEquals(2, joinedSp2.length);
+		for(int i=0; i<spaces.length-1; i++) {
+			assertEquals(spaces[i], joinedSp2[i]);
+		}
+		
+		memo.shutdown();
+	}
+
+	public void testLeaveSpace() throws Exception {
+		final MemoryDataAccess memo = new MemoryDataAccess();
+		memo.createSpace("ts://espacio");
+		memo.joinSpace("ts://espacio");
+		memo.leaveSpace("ts://espacio");
 	}
 	
-	public void testLeaveSpaceFailure() {
+	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
 		final MemoryDataAccess memo = new MemoryDataAccess();
-		try {
-			memo.createSpace("ts://espacio");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		memo.createSpace("ts://espacio");
 		
 		try {
 			memo.leaveSpace("ts://espacio2");
-			// assertTrue(false);
-            // TODO: what should be the behaviour?
-		} catch (Exception e) {
-			assertTrue(true);
+			fail();
+		} catch (SpaceNotExistsException e) {
+			// the exception should have been thrown
 		}
 	}
 	

@@ -27,6 +27,7 @@ import otsopack.commons.data.Graph;
 
 public class HTMLEncoder {
 	String properties = null;
+	String subresources = null;
 	String roots = null;
 	String graph = null;
 	String otherContent = null;
@@ -59,9 +60,31 @@ public class HTMLEncoder {
 		builder.append("</a></li>\n");
 	}
 	
+	public void appendSubResources(String[] urls) {
+		this.appendSubResources("Resources", urls);
+	}
+	
+	public void appendSubResources(String resourceName, String[] urls) {
+		if (urls!=null) {
+			final StringBuilder builder = new StringBuilder();
+			Arrays.sort(urls);
+			
+			builder.append("\t<p>"+resourceName+"</p>\n");
+			builder.append("\t<ul>\n");
+			
+			// Add other systems
+			for(String root : urls)
+				addChild(builder, root);
+			
+			builder.append("\t</ul>\n");
+			
+			this.subresources = builder.toString();
+		}
+	}
+	
 	public void appendRoots(Set<String> uris) {
-		final StringBuilder builder = new StringBuilder();
 		if (uris!=null) {
+			final StringBuilder builder = new StringBuilder();
 			final String [] rootURIs = uris.toArray(new String[]{});
 			Arrays.sort(rootURIs);
 			
@@ -102,6 +125,7 @@ public class HTMLEncoder {
 		builder.append("<html>\n").append("<body>\n");
 		
 		if( this.properties!=null ) builder.append(this.properties);
+		if( this.subresources!=null ) builder.append(this.subresources);
 		if( this.roots!=null ) builder.append(this.roots);
 		if( this.graph!=null ) builder.append(this.graph);
 		if( this.otherContent!=null ) builder.append(this.otherContent);

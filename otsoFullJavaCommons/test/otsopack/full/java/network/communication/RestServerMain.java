@@ -29,8 +29,12 @@ import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 public class RestServerMain {
 	public static void main(String [] args) throws Exception {
 		final IController controller = EasyMock.createMock(IController.class);
-		final IDataAccess mockda = new MemoryDataAccess();
-		EasyMock.expect(controller.getDataAccessService()).andReturn(mockda).anyTimes();
+		final IDataAccess dataAccess = new MemoryDataAccess();
+		for(int i=0; i<4; i++) {
+			dataAccess.createSpace("http://space"+i);
+			dataAccess.joinSpace("http://space"+i);
+		}
+		EasyMock.expect(controller.getDataAccessService()).andReturn(dataAccess).anyTimes();
 		EasyMock.replay(controller);
 		
 		final OtsoRestServer rs = new OtsoRestServer(controller);

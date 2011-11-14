@@ -14,16 +14,18 @@
 
 package otsopack.full.java.network.communication.resources.spaces;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.representation.Representation;
-import org.restlet.resource.ServerResource;
 
+import otsopack.full.java.network.communication.resources.AbstractServerResource;
 import otsopack.full.java.network.communication.util.HTMLEncoder;
 import otsopack.full.java.network.communication.util.JSONEncoder;
 
-public class SpacesResource extends ServerResource implements ISpaceResource {
+public class SpacesResource extends AbstractServerResource implements ISpaceResource {
 
 	public static final String ROOT = "/spaces";
 	
@@ -38,7 +40,24 @@ public class SpacesResource extends ServerResource implements ISpaceResource {
 	public Representation toHtml() {
 		final HTMLEncoder encoder = new HTMLEncoder();
 		encoder.appendRoots(getRoots().keySet());
+		encoder.appendSubResources(
+				"Spaces: ",
+				generateLinks(getController().getDataAccessService().getJoinedSpaces())
+		);
 		return encoder.getHtmlRepresentation();
+	}
+	
+	protected String[] generateLinks(String[] spaceUrls) {
+		final String[] links = new String[spaceUrls.length];
+		for(int i=0; i<spaceUrls.length; i++) {
+			try {
+				links[i] = SpacesResource.ROOT + "/" + URLEncoder.encode(spaceUrls[i],"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// This cannot happen since UTF-8 is always supported!
+				e.printStackTrace();
+			}
+		}
+		return links;
 	}
 
 	@Override

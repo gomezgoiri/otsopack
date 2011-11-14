@@ -13,11 +13,14 @@
  */
 package otsopack.full.java.dataaccess.simplestore;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +37,7 @@ import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.exceptions.AuthorizationException;
+import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
 import otsopack.full.java.dataaccess.simplestore.SimplePersistentDataAccess.OpenMode;
@@ -102,37 +106,47 @@ public class SimplePersistentDataAccessTest {
 
 	@Test
 	public void testJoinSpace() {}
+	
+	@Test
+	public void testGetJoinSpace() throws Exception {
+		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
+		
+		for(int i=0; i<spaces.length; i++) {
+			this.da.createSpace(spaces[i]);
+		}
+		for(int i=0; i<spaces.length; i++) {
+			this.da.joinSpace(spaces[i]);
+		}
+		
+		final String[] joinedSp = this.da.getJoinedSpaces();
+		assertEquals(3, joinedSp.length);
+		for(int i=0; i<spaces.length; i++) {
+			assertEquals(spaces[i], joinedSp[i]);
+		}
+		
+		this.da.leaveSpace(spaces[2]);
+		final List<String> joinedSp2 = Arrays.asList(this.da.getJoinedSpaces());
+		assertEquals(2, joinedSp2.size());
+		assertThat(joinedSp2, hasItem(spaces[0]));
+		assertThat(joinedSp2, hasItem(spaces[1]));
+	}
 
 	@Test
 	public void testLeaveSpace() throws Exception {
-		try {
-			this.da.createSpace("ts://espacio");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		
-		try {
-			this.da.leaveSpace("ts://espacio");
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		this.da.createSpace("ts://espacio");
+		this.da.joinSpace("ts://espacio");
+		this.da.leaveSpace("ts://espacio");
 	}
 	
 	@Test
-	public void testLeaveSpaceFailure() throws Exception {
-		try {
-			this.da.createSpace("ts://espacio");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
+		this.da.createSpace("ts://espacio");
 		
 		try {
 			this.da.leaveSpace("ts://espacio2");
-			// assertTrue(false);
-            // TODO: what should be the behaviour?
-		} catch (Exception e) {
-			assertTrue(true);
+			fail();
+		} catch (SpaceNotExistsException e) {
+			// the exception should have been thrown
 		}
 	}
 	
