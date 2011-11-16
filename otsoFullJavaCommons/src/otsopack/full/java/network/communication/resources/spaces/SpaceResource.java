@@ -14,8 +14,12 @@
 
 package otsopack.full.java.network.communication.resources.spaces;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.restlet.representation.Representation;
 
@@ -40,7 +44,14 @@ public class SpaceResource extends AbstractServerResource implements ISpaceResou
 	@Override
 	public Representation toHtml() {
 		final HTMLEncoder encoder = new HTMLEncoder();
-		encoder.appendRoots(getRoots().keySet());
+		final Set<String> roots = new HashSet<String>();
+		for(String root : getRoots().keySet())
+			try {
+				roots.add(root.replace("{space}", URLEncoder.encode(getArgument("space"), "UTF-8")));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		encoder.appendRoots(roots);
 		return encoder.getHtmlRepresentation();
 	}
 	
