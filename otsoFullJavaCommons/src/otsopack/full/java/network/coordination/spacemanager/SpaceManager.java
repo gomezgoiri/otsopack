@@ -95,7 +95,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		if(node.isReachable())
 			this.checkingNodes.put(secret, new NodeCheckingStatus(node));
 		
-		if(node.mustPoll())
+		if(node.isMustPoll())
 			this.pollingNodes.put(secret, new NodePollingStatus(node, secret));
 		
 		return secret;

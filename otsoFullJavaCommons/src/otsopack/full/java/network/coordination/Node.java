@@ -62,7 +62,7 @@ public class Node implements Serializable {
 		this.reachable = reachable;
 	}
 
-	public boolean mustPoll() {
+	public boolean isMustPoll() {
 		return this.mustPoll;
 	}
 
