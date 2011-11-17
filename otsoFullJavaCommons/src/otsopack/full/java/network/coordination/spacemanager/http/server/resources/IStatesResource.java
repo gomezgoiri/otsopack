@@ -19,6 +19,6 @@ import org.restlet.resource.Post;
 public interface IStatesResource {
 	
 	@Post("json")
-	public String createState();
+	public String createState(String data);
 	
 }

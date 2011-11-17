@@ -43,7 +43,7 @@ public class StateResource extends ServerResource implements IStateResource {
 	 * @see otsopack.full.java.network.coordination.spacemanager.http.server.resources.IStateResource#update(java.lang.String)
 	 */
 	@Override
-	public void updateNode() {
+	public void updateNode(String data) {
 		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
 		try {
 			spaceManager.poll(getSecret());

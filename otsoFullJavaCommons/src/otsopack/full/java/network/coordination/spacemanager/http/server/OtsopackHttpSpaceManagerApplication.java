@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
+import otsopack.full.java.network.coordination.spacemanager.http.server.resources.StatesResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsopackHttpSpaceManagerApplication extends AbstractOtsopackApplication<ISpaceManagerController> {
@@ -26,6 +27,7 @@ public class OtsopackHttpSpaceManagerApplication extends AbstractOtsopackApplica
 	
 	static{
 		addPaths(NodesResource.getRoots());
+		addPaths(StatesResource.getRoots());
 	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){

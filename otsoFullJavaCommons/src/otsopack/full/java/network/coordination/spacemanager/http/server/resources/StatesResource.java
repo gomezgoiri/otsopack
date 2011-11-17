@@ -14,7 +14,6 @@
  */
 package otsopack.full.java.network.coordination.spacemanager.http.server.resources;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,15 +41,14 @@ public class StatesResource extends ServerResource implements IStatesResource {
 	}
 	
 	@Override
-	public String createState() {
+	public String createState(String data) {
 		final ISpaceManager spaceManager = ((OtsopackHttpSpaceManagerApplication)getApplication()).getController().getSpaceManager();
 		
 		final Node node;
 		
 		try {
-			final String provided = getRequestEntity().getText();
-			node = JSONDecoder.decode(provided, Node.class);
-		} catch (IOException e) {
+			node = JSONDecoder.decode(data, Node.class);
+		} catch (ResourceException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Could not parse node information");
 		}
 		

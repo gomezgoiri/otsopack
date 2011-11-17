@@ -20,7 +20,7 @@ import org.restlet.resource.Put;
 public interface IStateResource {
 
 	@Put("json")
-	public void updateNode();
+	public void updateNode(String data);
 	
 	@Delete("json")
 	public void deleteNode();

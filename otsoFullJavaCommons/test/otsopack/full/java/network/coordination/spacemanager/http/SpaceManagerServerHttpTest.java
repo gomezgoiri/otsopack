@@ -15,6 +15,7 @@
 package otsopack.full.java.network.coordination.spacemanager.http;
 
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
@@ -24,12 +25,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
+import otsopack.full.java.network.coordination.spacemanager.HttpSpaceManager;
+import otsopack.full.java.network.coordination.spacemanager.SpaceManagerException;
 
 public class SpaceManagerServerHttpTest {
 	private int PORT = 18086;
-	private ISpaceManager client;
+	private HttpSpaceManager client;
 	private SpaceManagerManager manager;
 
 	@Before
@@ -45,6 +47,23 @@ public class SpaceManagerServerHttpTest {
 		this.manager.stopSpaceManagerServer();
 	}
 
+	@Test
+	public void testJoinLeave() throws Exception {
+		final String secret = this.client.selfJoin(12345, false, true);
+		this.client.poll(secret);
+		this.client.leave(secret);
+		
+		// If it does not exist anymore, there should be no problem
+		this.client.leave(secret);
+		
+		try{
+			this.client.poll(secret);
+			fail(SpaceManagerException.class.getName() + " expected");
+		}catch(SpaceManagerException e) {
+			// ok
+		}
+	}
+	
 	@Test
 	public void testGetNodes() throws Exception {
 		final List<Node> nodes = Arrays.asList(this.client.getNodes());

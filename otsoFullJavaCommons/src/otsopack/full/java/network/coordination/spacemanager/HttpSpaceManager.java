@@ -24,6 +24,7 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -115,7 +116,7 @@ public class HttpSpaceManager implements ISpaceManager {
 		try{
 			final Representation repr;
 			try{
-				repr = client.post(encodedNode, MediaType.APPLICATION_JSON);
+				repr = client.post(new StringRepresentation(encodedNode, MediaType.APPLICATION_JSON, null, null), MediaType.APPLICATION_JSON);
 			}catch(ResourceException e){
 				throw new SpaceManagerException("Could not join to space manager " + this.uri + ": " + e.getMessage(), e);
 			}
@@ -185,7 +186,7 @@ public class HttpSpaceManager implements ISpaceManager {
 		final ClientResource client = new ClientResource(this.uri + StatesResource.ROOT + "/" + secret);
 		try{
 			try{
-				client.put("", MediaType.APPLICATION_JSON);
+				client.put(new StringRepresentation("", MediaType.APPLICATION_JSON), MediaType.APPLICATION_JSON);
 			}catch(ResourceException e){
 				throw new SpaceManagerException("Could not poll space manager " + this.uri + ": " + e.getMessage(), e);
 			}

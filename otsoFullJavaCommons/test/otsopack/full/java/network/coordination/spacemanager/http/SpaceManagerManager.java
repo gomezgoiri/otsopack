@@ -44,7 +44,7 @@ public class SpaceManagerManager {
 		this.spaceManager.start();
 	}
 	
-	public ISpaceManager createClient(){
+	public HttpSpaceManager createClient(){
 		return new HttpSpaceManager(createClientAddress());
 	}
 
