@@ -14,6 +14,8 @@
  */
 package otsopack.full.java.network.coordination.spacemanager;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
@@ -196,6 +198,12 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		return 100;
 	}
 
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSS");
+	
+	private String now() {
+		return " " + this.dateFormat.format(Calendar.getInstance().getTime()) + " ";
+	}
+	
 	/**
 	 * Check a particular node that is reachable, if we have not checked in a long time.
 	 */
@@ -222,9 +230,9 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			
 			if(DEBUG){
 				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
 				}else if(!this.currentNodes.containsKey(secret)){
-					System.out.println("[recovered] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					System.out.println("[recovered] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
 				}
 			}
 			this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
@@ -232,10 +240,10 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		}catch(ResourceException re){
 			if(DEBUG){
 				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
 					re.printStackTrace();
 				}else if(this.currentNodes.containsKey(secret)){
-					System.out.println("[fail] " + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+					System.out.println("[fail] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
 					re.printStackTrace();
 				}
 			}
