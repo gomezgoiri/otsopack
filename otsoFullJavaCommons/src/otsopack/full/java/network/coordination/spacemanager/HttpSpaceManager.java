@@ -15,6 +15,11 @@
 package otsopack.full.java.network.coordination.spacemanager;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.MediaType;
@@ -123,6 +128,53 @@ public class HttpSpaceManager implements ISpaceManager {
 			client.release();
 		}
 		return JSONDecoder.decode(serializedSecret, String.class);
+	}
+	
+	public static String getIpAddress() {
+		try{
+			final Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+	        for (NetworkInterface netIf : Collections.list(nets)) {
+	        	// If the network is active
+	            if(netIf.isUp()){
+	                Enumeration<InetAddress> addresses = netIf.getInetAddresses();
+	                for(InetAddress addr : Collections.list(addresses)) 
+	                	// If the IP address is IPv4 and it's not the local address, store it
+	                    if(addr.getAddress().length == 4 && !addr.isLoopbackAddress())
+	                    	return addr.getHostAddress();
+	            }
+	        }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String generateBaseUrl(int port, String basePath) throws SpaceManagerException {
+		final String myIpAddress = getIpAddress();
+		if(myIpAddress == null)
+			throw new SpaceManagerException("No ip address obtained: use join(Node)");
+		return "http://" + myIpAddress + ":" + port + basePath;
+	}
+	
+	public String selfJoin(int port) throws SpaceManagerException {
+		return selfJoin(port, true, false);
+	}
+
+	public String selfJoin(int port, String uuid) throws SpaceManagerException {
+		return selfJoin(port, uuid, true, false);
+	}
+	
+	public String selfJoin(int port, boolean reachable, boolean mustPoll) throws SpaceManagerException {
+		return selfJoin(port, UUID.randomUUID().toString(), reachable, mustPoll);
+	}
+
+	public String selfJoin(int port, String uuid, boolean reachable, boolean mustPoll) throws SpaceManagerException {
+		return selfJoin(port, "/", uuid, reachable, mustPoll);
+	}
+
+	public String selfJoin(int port, String basePath, String uuid, boolean reachable, boolean mustPoll) throws SpaceManagerException {
+		final Node node = new Node(generateBaseUrl(port, basePath), uuid, reachable, mustPoll);
+		return join(node);
 	}
 
 	/* (non-Javadoc)
