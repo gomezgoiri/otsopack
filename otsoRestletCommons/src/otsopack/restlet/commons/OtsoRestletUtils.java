@@ -18,9 +18,10 @@ import org.restlet.Context;
 public class OtsoRestletUtils {
 	public static Context createContext() {
 		final Context ctx = new Context();
-        ctx.getParameters().add("lowThreads", "15");
+        /*ctx.getParameters().add("lowThreads", "15");
         ctx.getParameters().add("maxThreads", "200");
         ctx.getParameters().add("maxQueued", "-1");
+		ctx.getParameters().add("threadMaxIdleTimeMs", "10000");*/
         ctx.getParameters().add("persistingConnections","false");
         return ctx;
 	}
