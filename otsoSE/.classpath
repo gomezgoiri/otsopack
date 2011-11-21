@@ -15,5 +15,7 @@
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/lib/json-me-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.ext.simple.jar"/>
+	<classpathentry kind="lib" path="/otsoRestletCommons/lib/simple-4.1.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
