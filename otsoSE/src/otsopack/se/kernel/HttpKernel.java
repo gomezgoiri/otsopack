@@ -25,6 +25,7 @@ public class HttpKernel extends AbstractKernel {
 	private final int port;
 	private final IEntity signer;
 	private final IRegistry registry;
+	private RestNetwork restNetwork;
 	
 	public HttpKernel(int port, IEntity signer, IRegistry registry){
 		this.port     = port;
@@ -39,8 +40,13 @@ public class HttpKernel extends AbstractKernel {
 			// TODO define by default IBulletinBoard
 			final BulletinBoardsManager bbMngr = new BulletinBoardsManager();
 			//LocalBulletinBoard lbb = new LocalBulletinBoard(registry);
-			this.setNetworkService(new RestNetwork(getController(), port, signer, registry, bbMngr));
+			this.restNetwork = new RestNetwork(getController(), port, signer, registry, bbMngr);
+			this.setNetworkService(this.restNetwork);
 		}
 	}
-
+	
+	public RestNetwork getRestNetworkService() {
+		return this.restNetwork;
+	}
+	
 }

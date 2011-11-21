@@ -19,7 +19,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.restlet.Component;
-import org.restlet.Context;
 import org.restlet.Server;
 import org.restlet.data.CookieSetting;
 import org.restlet.data.Protocol;
@@ -40,6 +39,7 @@ public class OtsoRestServer {
 	private final Component component;
 	private final OtsopackApplication application;
 	private final OtsoAuthnApplication authnApp;
+	private final Server server;
 	//TODO redesign
 	//private final AbstractOtsopackApplication<IBulletinBoardController> bulletinApp;
 	
@@ -50,9 +50,9 @@ public class OtsoRestServer {
 	public OtsoRestServer(int port, IController controller, IEntity signer, /*TODO BulletinBoardsManager bbMngr,*/ ICommunication multicastProvider) {
 		this.port = port;
 	    this.component = new Component();
-	    final Server server = new Server(Protocol.HTTP, this.port);
-	    server.setContext(OtsoRestletUtils.createContext());
-	    this.component.getServers().add(server);
+	    this.server = new Server(Protocol.HTTP, this.port);
+	    this.server.setContext(OtsoRestletUtils.createContext());
+	    this.component.getServers().add(this.server);
 	    
 	    this.application = new OtsopackApplication(multicastProvider, signer);
 	    this.application.setController(controller);
@@ -104,6 +104,10 @@ public class OtsoRestServer {
 	
 	public OtsopackApplication getApplication(){
 		return this.application;
+	}
+	
+	public Server getServer() {
+		return this.server;
 	}
 	
 	public void startup() throws Exception {

@@ -55,6 +55,10 @@ public class RestNetwork implements INetwork {
 		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
 		this.rs.getApplication().setController(controller);
 	}
+	
+	public OtsoRestServer getRestServer() {
+		return this.rs;
+	}
 
 	@Override
 	public void startup() throws TSException {
