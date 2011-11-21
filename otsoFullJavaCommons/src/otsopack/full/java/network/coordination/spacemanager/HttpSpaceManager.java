@@ -17,7 +17,6 @@ package otsopack.full.java.network.coordination.spacemanager;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.UUID;
@@ -132,27 +131,12 @@ public class HttpSpaceManager implements ISpaceManager {
 		return JSONDecoder.decode(serializedSecret, String.class);
 	}
 	
-	private static boolean isUp(NetworkInterface netIf) throws SocketException {
-		try {
-			// In Android <= 8, the method isUp is not available. Therefore, this code will compile
-			// but will not work. We check if it's available or not before calling it
-			NetworkInterface.class.getDeclaredMethod("isUp");
-		} catch (SecurityException e) {
-			// We can't know: we assume that it's up
-			return true;
-		} catch (NoSuchMethodException e) {
-			// We can't know: we assume that it's up
-			return true;
-		}
-		return netIf.isUp();
-	}
-	
 	public static String getIpAddress() {
 		try{
 			final Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
 	        for (NetworkInterface netIf : Collections.list(nets)) {
 	        	// If the network is active
-	            if(isUp(netIf)){
+	            if(netIf.isUp()){
 	                Enumeration<InetAddress> addresses = netIf.getInetAddresses();
 	                for(InetAddress addr : Collections.list(addresses)) 
 	                	// If the IP address is IPv4 and it's not the local address, store it

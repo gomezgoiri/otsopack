@@ -14,6 +14,9 @@
  */
 package otsopack.droid.kernel;
 
+import org.restlet.engine.Engine;
+import org.restlet.ext.net.HttpClientHelper;
+
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
 import otsopack.full.java.network.RestNetwork;
@@ -29,8 +32,15 @@ public class HttpKernel extends AbstractKernel {
 		this.port     = port;
 		this.signer   = signer;
 		this.registry = registry;
+		
+		configureRestletExtensions();
 	}
 	
+	private void configureRestletExtensions() {
+		Engine.getInstance().getRegisteredClients().clear();
+		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+	}
+
 	protected void buildKernel(){
 		super.buildKernel();
 		

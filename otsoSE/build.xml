@@ -76,6 +76,8 @@
 			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
 			<zipgroupfileset dir="dist" includes="otsoSE-sources.jar" excludes="" />
 			<zipgroupfileset dir="../otsoFullJavaCommons/dist" includes="otsoFullJavaCommons-all.jar" excludes="" />
+			<zipgroupfileset dir="../otsoRestletCommons/lib" includes="org.restlet.ext.simple.jar" excludes="" />
+			<zipgroupfileset dir="../otsoRestletCommons/lib" includes="simple-4.1.21.jar" excludes="" />
 			<manifest>
 				<attribute name="Class-Path" value="${mf.classpath}" />
 			</manifest>
