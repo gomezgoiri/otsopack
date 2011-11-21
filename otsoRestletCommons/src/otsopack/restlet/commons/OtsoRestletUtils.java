@@ -21,6 +21,7 @@ public class OtsoRestletUtils {
     public static int maxThreads                = 200;
     public static int maxQueued                 = -1;
     public static boolean persistingConnections = false;
+    public static int threadMaxIdleTimeMs       = 60000;
     
     public static int getLowThreads() {
         return lowThreads;
@@ -54,11 +55,20 @@ public class OtsoRestletUtils {
         OtsoRestletUtils.persistingConnections = persistingConnections;
     }
 
-    public static Context createContext() {
+    public static int getThreadMaxIdleTimeMs() {
+		return threadMaxIdleTimeMs;
+	}
+
+	public static void setThreadMaxIdleTimeMs(int threadMaxIdleTimeMs) {
+		OtsoRestletUtils.threadMaxIdleTimeMs = threadMaxIdleTimeMs;
+	}
+
+	public static Context createContext() {
         final Context ctx = new Context();
         ctx.getParameters().add("lowThreads",            Integer.toString(lowThreads));
         ctx.getParameters().add("maxThreads",            Integer.toString(maxThreads));
         ctx.getParameters().add("maxQueued",             Integer.toString(maxQueued));
+        ctx.getParameters().add("threadMaxIdleTimeMs",   Integer.toString(threadMaxIdleTimeMs));
         ctx.getParameters().add("persistingConnections", Boolean.toString(persistingConnections));
         return ctx;
     }
