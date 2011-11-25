@@ -830,6 +830,8 @@ public class EnrichedClientResource extends ClientResource {
     			response.getEntity().getText();
     		} catch (IOException e) {
     			e.printStackTrace();
+    		} catch (Throwable t) {
+    			// no prob
     		}
             throw new ResourceException(response.getStatus());
         } else {
