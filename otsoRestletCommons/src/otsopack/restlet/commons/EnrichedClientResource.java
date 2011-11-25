@@ -38,12 +38,12 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.ClientProxy;
+import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Result;
-import org.restlet.resource.UniformResource;
 import org.restlet.util.Series;
 
-public class EnrichedClientResource extends UniformResource {
+public class EnrichedClientResource extends ClientResource {
 
     /**
      * Creates a client resource that proxy calls to the given Java interface
