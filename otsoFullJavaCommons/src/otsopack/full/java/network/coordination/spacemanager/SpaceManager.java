@@ -27,6 +27,7 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
+import otsopack.restlet.commons.EnrichedClientResource;
 
 public abstract class SpaceManager extends Thread implements ISpaceManager {
 	
@@ -258,7 +259,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	 * For testing purposes
 	 */
 	protected ClientResource createClientResource(String uri) {
-		return new ClientResource(uri);
+		return new EnrichedClientResource(uri);
 	}
 
 	/**

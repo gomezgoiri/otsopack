@@ -35,6 +35,7 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.Node;
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.NodesResource;
 import otsopack.full.java.network.coordination.spacemanager.http.server.resources.StatesResource;
+import otsopack.restlet.commons.EnrichedClientResource;
 
 public class HttpSpaceManager implements ISpaceManager {
 	
@@ -46,9 +47,13 @@ public class HttpSpaceManager implements ISpaceManager {
 		this.references = new String[]{"[http]" + uri};
 	}
 
+	protected ClientResource createClientResource(String uriToGo){
+		return new EnrichedClientResource(uriToGo);
+	}
+	
 	@Override
 	public Node[] getNodes() throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.uri + NodesResource.ROOT);
+		final ClientResource client = createClientResource(this.uri + NodesResource.ROOT);
 		String serializedSpaceManagers;
 		try{
 			final Representation repr;
@@ -111,7 +116,7 @@ public class HttpSpaceManager implements ISpaceManager {
 	 */
 	@Override
 	public String join(Node node) throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.uri + StatesResource.ROOT);
+		final ClientResource client = createClientResource(this.uri + StatesResource.ROOT);
 		final String encodedNode = JSONEncoder.encode(node);
 		final String serializedSecret;
 		try{
@@ -199,7 +204,7 @@ public class HttpSpaceManager implements ISpaceManager {
 	 */
 	@Override
 	public void poll(String secret) throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.uri + StatesResource.ROOT + "/" + secret);
+		final ClientResource client = createClientResource(this.uri + StatesResource.ROOT + "/" + secret);
 		try{
 			try{
 				client.put(new StringRepresentation("", MediaType.APPLICATION_JSON), MediaType.APPLICATION_JSON);
@@ -216,7 +221,7 @@ public class HttpSpaceManager implements ISpaceManager {
 	 */
 	@Override
 	public void leave(String secret) throws SpaceManagerException {
-		final ClientResource client = new ClientResource(this.uri + StatesResource.ROOT + "/" + secret);
+		final ClientResource client = createClientResource(this.uri + StatesResource.ROOT + "/" + secret);
 		try{
 			try{
 				client.delete(MediaType.APPLICATION_JSON);
