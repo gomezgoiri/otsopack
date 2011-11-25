@@ -826,6 +826,11 @@ public class EnrichedClientResource extends UniformResource {
         Response response = handle(request);
 
         if (response.getStatus().isError()) {
+        	try {
+    			response.getEntity().getText();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
             throw new ResourceException(response.getStatus());
         } else {
             result = (response == null) ? null : response.getEntity();
