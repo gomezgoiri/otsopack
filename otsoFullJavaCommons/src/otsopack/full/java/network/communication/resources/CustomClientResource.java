@@ -18,13 +18,13 @@ import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.data.CookieSetting;
 import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 import otsopack.full.java.network.communication.resources.cookies.ICookieAdder;
+import otsopack.restlet.commons.EnrichedClientResource;
 
-public class CustomClientResource extends ClientResource {
+public class CustomClientResource extends EnrichedClientResource {
 	final private ICookieAdder adder;
 	
 	public CustomClientResource(String uri, ICookieAdder adder) {
