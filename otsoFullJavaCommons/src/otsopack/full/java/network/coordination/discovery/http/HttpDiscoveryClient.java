@@ -31,6 +31,7 @@ import otsopack.full.java.network.coordination.ISpaceManager;
 import otsopack.full.java.network.coordination.discovery.DiscoveryException;
 import otsopack.full.java.network.coordination.discovery.http.server.resources.DiscoveryResource;
 import otsopack.full.java.network.coordination.spacemanager.SpaceManagerFactory;
+import otsopack.restlet.commons.EnrichedClientResource;
 
 public class HttpDiscoveryClient implements IDiscovery {
 
@@ -50,7 +51,7 @@ public class HttpDiscoveryClient implements IDiscovery {
 			} catch (UnsupportedEncodingException e) {
 				throw new DiscoveryException("Could not encode space URI: " + e.getMessage(), e);
 			}
-			final ClientResource client = new ClientResource(uri + "?"+ DiscoveryResource.SPACEURI_ARGUMENT + "=" + encodedSpace);
+			final ClientResource client = new EnrichedClientResource(uri + "?"+ DiscoveryResource.SPACEURI_ARGUMENT + "=" + encodedSpace);
 			String serializedSpaceManagers;
 			try{
 				final Representation repr = client.get(MediaType.APPLICATION_JSON);
