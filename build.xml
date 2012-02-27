@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tsdit" default="dist">
+<project name="otsopack" default="dist">
     <target name="clean">
         <ant antfile="build.xml" dir="otsoSE"                  target="clean" />
+	<ant antfile="build.xml" dir="otsoCommons"             target="clean" />
         <ant antfile="build.xml" dir="otsoAuthentication"      target="clean" />
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="clean" />
-        <ant antfile="build.xml" dir="otsoCommons"             target="clean" />
     </target>
 
     <target name="dist">
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
-        <ant antfile="build.xml" dir="otsoCommons"             target="dist" />
         <ant antfile="build.xml" dir="otsoAuthentication"      target="dist" />
+        <ant antfile="build.xml" dir="otsoCommons"             target="dist" />
         <ant antfile="build.xml" dir="otsoSE"                  target="dist" />
     </target>
 
