@@ -5,15 +5,11 @@
 	<property name="testreportdir" value="build" />
 	<property name="otso.restlet.commons.libs" location="../otsoRestletCommons/lib/" />
 	<property name="otso.authn.libs" location="../otsoAuthentication/lib/" />
-	<property name="otso.full.java.commons.jar" location="../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" />
+	<property name="otso.commons.jar" location="../otsoCommons/dist/otsoCommons-sources.jar" />
 	
 	<path id="project.class.path">
-		<pathelement location="../otsoCommons/dist/otsoCommons-sources.jar" />
-		<pathelement location="../otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar" />
+		<pathelement location="${otso.commons.jar}" />
 		<fileset dir="../otsoCommons/lib/">
-			<include name="*.jar" />
-		</fileset>
-		<fileset dir="../otsoFullJavaCommons/lib/">
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="lib">
@@ -22,14 +18,14 @@
 	</path>
 	
 	<path id="project.class.path.test">
-		<pathelement location="dist/otsoSE-sources.jar" />
+		<pathelement location="dist/otsoSE-all.jar" />
 		<path refid="project.class.path" />
 	</path>
 	
-	<fail message="${otso.full.java.commons.jar} not found. Run ant dist in that directory.">
+	<fail message="${otso.commons.jar} not found. Run ant dist in that directory.">
 		<condition>
 			<not>
-				<available file="${otso.full.java.commons.jar}" />
+				<available file="${otso.commons.jar}" />
 			</not>
 		</condition>
 	</fail>
@@ -75,7 +71,7 @@
 			<zipgroupfileset dir="bin" includes="*.class" />
 			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
 			<zipgroupfileset dir="dist" includes="otsoSE-sources.jar" excludes="" />
-			<zipgroupfileset dir="../otsoFullJavaCommons/dist" includes="otsoFullJavaCommons-all.jar" excludes="" />
+			<zipgroupfileset dir="../otsoCommons/dist" includes="otsoCommons-all.jar" excludes="" />
 			<zipgroupfileset dir="../otsoRestletCommons/lib" includes="org.restlet.ext.simple.jar" excludes="" />
 			<zipgroupfileset dir="../otsoRestletCommons/lib" includes="simple-4.1.21.jar" excludes="" />
 			<manifest>
@@ -98,7 +94,7 @@
 		</mapper>
 	</pathconvert>
 
-	<target name="test" depends="javac">
+	<target name="test" depends="dist">
 		<mkdir dir="${testreportdir}" />
 		<javac srcdir="test" destdir="${testreportdir}">
 			<classpath refid="project.class.path.test" />
