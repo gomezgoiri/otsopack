@@ -1,9 +1,7 @@
 17 otsoAuthentication/lib
-22 otsoCommons/lib
+30 otsoCommons/lib
 25 otsoDroid/otsoDroid/lib
 18 otsoDroid/otsoDroidJxta/lib
-17 otsoFullJavaCommons/lib
 17 otsoIdentityProvider/lib
-17 otsoME/lib
 28 otsoRestletCommons/lib
 24 otsoSE/lib

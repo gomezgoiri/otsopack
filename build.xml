@@ -2,7 +2,6 @@
 <project name="tsdit" default="dist">
     <target name="clean">
         <ant antfile="build.xml" dir="otsoSE"                  target="clean" />
-        <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="clean" />
         <ant antfile="build.xml" dir="otsoAuthentication"      target="clean" />
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="clean" />
         <ant antfile="build.xml" dir="otsoCommons"             target="clean" />
@@ -12,14 +11,12 @@
         <ant antfile="build.xml" dir="otsoCommons"             target="dist" />
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
         <ant antfile="build.xml" dir="otsoAuthentication"      target="dist" />
-        <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="dist" />
         <ant antfile="build.xml" dir="otsoSE"                  target="dist" />
     </target>
 
     <target name="test">
         <ant antfile="build.xml" dir="otsoCommons"             target="test" />
         <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
-        <ant antfile="build.xml" dir="otsoFullJavaCommons"     target="test" />
         <ant antfile="build.xml" dir="otsoME"                  target="test" />
 	    <ant antfile="build.xml" dir="otsoDroid/otsoDroid"     target="release" />
 	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="release" />

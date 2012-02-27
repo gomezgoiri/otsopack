@@ -9,6 +9,7 @@ syntax: regexp
 ^otsoCommons/bin
 ^otsoCommons/build
 ^otsoCommons/dist
+^otsoCommons/libs
 
 ^otsoDroid/otsoDroid/gen
 ^otsoDroid/otsoDroid/local\.properties$
@@ -31,27 +32,7 @@ syntax: regexp
 ^otsoDroid/otsoDroidTest/bin
 ^otsoDroid/otsoDroidTest/libs
 
-^otsoFullJavaCommons/dist
-^otsoFullJavaCommons/bin
-^otsoFullJavaCommons/build
-^otsoFullJavaCommons/libs
-
 ^otsoIdentityProvider/bin
-
-^otsoME/classes_cldc_unverified
-^otsoME/classes_cldc
-^otsoME/bin
-^otsoME/\.processed/
-^otsoME/.externalToolBuilders
-^otsoME/test_jmunit_results
-^otsoME/dist/alltests.jad$
-^otsoME/dist/alltests.jar$
-^otsoME/dist/otsoME.jar$
-^otsoME/.mtj.tmp/emulation/*
-^otsoME/.mtj.tmp/verified/*
-^otsoME/.mtj.tmp/verified/required-classes/*
-^otsoME/.mtj.tmp/verified/required-libs/*
-^otsoME/.settings/org.eclipse.core.resources.prefs$
 
 ^otsoRestletCommons/dist
 ^otsoRestletCommons/bin
