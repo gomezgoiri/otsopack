@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
-	<classpathentry kind="lib" path="/otsoFullJavaCommons/dist/otsoFullJavaCommons-sources.jar"/>
 	<classpathentry kind="lib" path="/otsoCommons/lib/microjena.jar"/>
 	<classpathentry kind="lib" path="/otsoCommons/lib/json-me-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.net.jar"/>

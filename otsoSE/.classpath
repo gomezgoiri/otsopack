@@ -8,13 +8,13 @@
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-nop-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v056.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otsoFullJavaCommons"/>
 	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar"/>
-	<classpathentry exported="true" kind="lib" path="/otsoFullJavaCommons/lib/rdf2go.api-4.7.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="/otsoCommons/dist/otsoCommons-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/simple-4.1.21.jar"/>
 	<classpathentry kind="lib" path="/otsoCommons/lib/json-me-1.0.jar"/>
+	<classpathentry kind="lib" path="/otsoCommons/lib/rdf2go.api-4.7.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/otsoCommons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
