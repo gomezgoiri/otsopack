@@ -17,7 +17,8 @@ package otsopack.commons.data.impl.microjena;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
 import it.polimi.elet.contextaddict.microjena.rdf.model.RDFNode;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.SemanticFormat;
@@ -31,14 +32,14 @@ public class MicrojenaFactory implements ISemanticFactory {
 
 	private static final SemanticFormat [] INPUT_SUPPORTED_FORMATS  = new SemanticFormat[]{ SemanticFormat.NTRIPLES };
 	private static final SemanticFormat [] OUTPUT_SUPPORTED_FORMATS = INPUT_SUPPORTED_FORMATS;
-	static final Hashtable/*<String, String>*/ OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS = new Hashtable();
+	static final Map<SemanticFormat, String> OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS = new HashMap<SemanticFormat, String>();
 	
 	static{
 		OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.put(SemanticFormat.NTRIPLES, "N-TRIPLE");
 	}
 	
 	static String getMicroJenaFormat(SemanticFormat semanticFormat){
-		final String microjenaFormat = (String)OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.get(semanticFormat);
+		final String microjenaFormat = OTSOPACK_SEMANTIC_FORMATS_2_MICROJENA_SEMANTIC_FORMATS.get(semanticFormat);
 		if(microjenaFormat == null)
 			throw new IllegalArgumentException("Semantic format " + semanticFormat + " not available in " + MicrojenaFactory.class.getName());
 		return microjenaFormat;

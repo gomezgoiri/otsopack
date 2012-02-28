@@ -13,7 +13,8 @@
  */
 package otsopack.commons.data.impl;
 
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFormatConversor;
@@ -21,26 +22,22 @@ import otsopack.commons.data.SemanticFormat;
 
 public class SemanticFormatsManager implements ISemanticFormatConversor {
 
-	private static final Vector/*<ISemanticFormatConversor>*/ conversors = new Vector/*<ISemanticFormatConversor>*/();
+	private static final Set<ISemanticFormatConversor> conversors = new HashSet<ISemanticFormatConversor>();
 	
 	public static void initialize(ISemanticFormatConversor [] conversors){
-		SemanticFormatsManager.conversors.removeAllElements();
+		SemanticFormatsManager.conversors.clear();
 		addSemanticFormatConversors(conversors);
 	}
 	
-	public static void addSemanticFormatConversors(ISemanticFormatConversor [] conversors){
-		for(int i = 0; i < conversors.length; ++i)
-			SemanticFormatsManager.conversors.addElement(conversors[i]);
-	}
-	
-	public static void clear(){
-		conversors.removeAllElements();
+	public static void addSemanticFormatConversors(ISemanticFormatConversor[] conversors){
+		for(ISemanticFormatConversor conversor: conversors)
+			SemanticFormatsManager.conversors.add(conversor);
 	}
 	
 	private ISemanticFormatConversor getConversor(SemanticFormat inputFormat, SemanticFormat outputFormat){
-		for(int i = 0; i < conversors.size(); ++i)
-			if(((ISemanticFormatConversor)conversors.elementAt(i)).canConvert(inputFormat, outputFormat))
-				return (ISemanticFormatConversor)conversors.elementAt(i);
+		for(ISemanticFormatConversor conversor: conversors)
+			if(conversor.canConvert(inputFormat, outputFormat))
+				return conversor;
 		return null;
 	}
 	
