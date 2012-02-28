@@ -14,9 +14,16 @@
 
 package otsopack.commons.dataaccess.memory.space;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Model;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Statement;
-import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import otsopack.commons.data.ISemanticFactory;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
@@ -26,13 +33,13 @@ import otsopack.commons.data.impl.microjena.TripleImpl;
 import otsopack.commons.dataaccess.authz.IAuthorizationChecker;
 import otsopack.commons.sampledata.Example;
 
-public class SpaceMemTest extends TestCase {
+public class SpaceMemTest {
 
 	final ModelImpl[] models = new ModelImpl[3];
 	final TripleImpl[] triples = new TripleImpl[9];
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		final MicrojenaFactory factory = new MicrojenaFactory();
 		SemanticFactory.initialize(factory);
 		
@@ -69,6 +76,7 @@ public class SpaceMemTest extends TestCase {
 		return triple.asStatement();
 	}
 	
+	@Test
 	public void testWrite() {
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/write3/");
 		
@@ -82,7 +90,8 @@ public class SpaceMemTest extends TestCase {
 			assertTrue(space.containsGraph(graphuris[i]));
 		}
 	}
-
+	
+	@Test
 	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/query1/");
@@ -104,6 +113,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph3 );
 	}
 
+	@Test
 	public void testRead1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/read1/");
@@ -138,6 +148,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph3 );
 	}
 
+	@Test
 	public void testRead2() {
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/read2/");
 		
@@ -181,6 +192,7 @@ public class SpaceMemTest extends TestCase {
 		assertNull( retGraph4 );
 	}
 
+	@Test
 	public void testTake1() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take1/");
@@ -229,7 +241,7 @@ public class SpaceMemTest extends TestCase {
 			} else fail("At least one graph must be returned.");
 		}
 	
-	
+	@Test
 	public void testTake2() {
 		final SpaceMem space = MemoryFactory.createSpace("http://graph/take2/");
 		

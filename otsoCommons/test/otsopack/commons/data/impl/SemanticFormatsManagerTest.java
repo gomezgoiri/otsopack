@@ -14,11 +14,17 @@
 
 package otsopack.commons.data.impl;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import otsopack.commons.data.ISemanticFormatConversor;
 import otsopack.commons.data.SemanticFormat;
 
-public class SemanticFormatsManagerTest extends TestCase {
+public class SemanticFormatsManagerTest {
 	
 	private SemanticFormatsManager formats;
 	private final SemanticFormat ENGLISH = new SemanticFormat("english");
@@ -71,10 +77,12 @@ public class SemanticFormatsManagerTest extends TestCase {
 		}
 	};
 	
+	@Before
 	public void setUp(){
 		this.formats = new SemanticFormatsManager();
 	}
 	
+	@Test
 	public void testCanConvert(){
 		SemanticFormatsManager.initialize(new ISemanticFormatConversor[]{spanish2english, english2spanish});
 		assertTrue(this.formats.canConvert(ENGLISH, SPANISH));
@@ -83,6 +91,7 @@ public class SemanticFormatsManagerTest extends TestCase {
 		assertFalse(this.formats.canConvert(FRENCH,  SPANISH));
 	}
 	
+	@Test
 	public void testConvert(){
 		SemanticFormatsManager.initialize(new ISemanticFormatConversor[]{spanish2english, english2spanish});
 		assertEquals("hola",  this.formats.convert(ENGLISH, "hello", SPANISH));

@@ -14,10 +14,14 @@
  */
 package otsopack.commons.data;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class SerializingTemplatesTest extends TestCase {
+import org.junit.Test;
+
+public class SerializingTemplatesTest {
 	
+	@Test
 	public void testWrongJSON(){
 		try{
 			SerializableTemplateFactory.create("foo");
@@ -27,6 +31,7 @@ public class SerializingTemplatesTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testWrongCode(){
 		try{
 			SerializableTemplateFactory.create("{ \"type\" : \"foo\" }");
@@ -36,24 +41,28 @@ public class SerializingTemplatesTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testWildcardUriTemplate() throws Exception{
 		WildcardTemplate tpl = WildcardTemplate.createWithURI("foo", "bar", "http://foo/bar");
 		SerializableTemplate tpl2 = SerializableTemplateFactory.create(tpl.serialize());
 		assertEquals(tpl, tpl2);
 	}
 	
+	@Test
 	public void testWildcardNullTemplate() throws Exception{
 		WildcardTemplate tpl = WildcardTemplate.createWithNull("foo", "bar");
 		SerializableTemplate tpl2 = SerializableTemplateFactory.create(tpl.serialize());
 		assertEquals(tpl, tpl2);
 	}
 	
+	@Test
 	public void testWildcardStringLiteralTemplate() throws Exception{
 		WildcardTemplate tpl = WildcardTemplate.createWithLiteral("foo", "bar", "foobar");
 		SerializableTemplate tpl2 = SerializableTemplateFactory.create(tpl.serialize());
 		assertEquals(tpl, tpl2);
 	}
 	
+	@Test
 	public void testWildcardNumberLiteralTemplate() throws Exception{
 		WildcardTemplate tpl = WildcardTemplate.createWithLiteral("foo", "bar", new Integer(5));
 		SerializableTemplate tpl2 = SerializableTemplateFactory.create(tpl.serialize());

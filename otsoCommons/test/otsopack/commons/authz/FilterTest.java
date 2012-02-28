@@ -14,12 +14,17 @@
 
 package otsopack.commons.authz;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 import otsopack.commons.authz.asserts.ContainsURIAssert;
 import otsopack.commons.authz.entities.User;
 
-public class FilterTest extends TestCase {
+public class FilterTest {
 	
+	@Test
 	public void testInvalid(){
 		try{
 			Filter.create("foo");
@@ -29,6 +34,7 @@ public class FilterTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testFilter() throws AuthzException{
 		final ContainsURIAssert containsAssert = new ContainsURIAssert("http://sample/");
 		final User user = new User("pablo");

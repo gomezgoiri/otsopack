@@ -14,10 +14,13 @@
 
 package otsopack.commons.authz.asserts;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class DataAssertFactoryTest extends TestCase {
-	
+import org.junit.Test;
+
+public class DataAssertFactoryTest {
+	@Test
 	public void testInvalid(){
 		try{
 			DataAssertFactory.create("foo");
@@ -27,10 +30,10 @@ public class DataAssertFactoryTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testContainsURI() throws AssertDecodingException{
 		final ContainsURIAssert containsAssert = new ContainsURIAssert("http://sample/");
 		final IDataAssertSerializable serializableAssert = DataAssertFactory.create(containsAssert.serialize());
 		assertEquals(containsAssert, serializableAssert);
 	}
-	
 }

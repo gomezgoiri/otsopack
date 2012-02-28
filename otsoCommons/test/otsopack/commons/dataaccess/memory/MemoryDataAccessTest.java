@@ -14,12 +14,16 @@
 
 package otsopack.commons.dataaccess.memory;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,14 +42,13 @@ import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
 
-public class MemoryDataAccessTest extends TestCase {
+public class MemoryDataAccessTest {
 	
 	final Graph[] models = new Graph[3];
 	final String[] triples = new String[9];
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		final MicrojenaFactory factory = new MicrojenaFactory();
 		SemanticFactory.initialize(factory);
 		

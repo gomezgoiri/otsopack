@@ -14,7 +14,14 @@
 
 package otsopack.commons.dataaccess.memory.space;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.impl.SemanticFactory;
@@ -22,10 +29,10 @@ import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.data.impl.microjena.ModelImpl;
 import otsopack.commons.sampledata.Example;
 
-public class GraphMemTest extends TestCase {
+public class GraphMemTest {
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		SemanticFactory.initialize(new MicrojenaFactory());
 	}
 	
@@ -34,6 +41,7 @@ public class GraphMemTest extends TestCase {
 			fail("Expected different to: " + expected + "; actual: " + actual);
 	}
 	
+	@Test
 	public void testHashcode() {
 		GraphMem mem1 = new GraphMem("http://graph1");
 		GraphMem mem2 = new GraphMem("http://graph1");
@@ -43,6 +51,7 @@ public class GraphMemTest extends TestCase {
 		assertNotEquals(mem2.hashCode(),mem3.hashCode());
 	}
 
+	@Test
 	public void testWrite() {
 		/*Graph graph = Factory.createDefaultGraph();
 		graph.add( new Triple(Example.tsubj1, Example.tprop1, Example.tobj3) );
@@ -57,6 +66,7 @@ public class GraphMemTest extends TestCase {
 		mem3.write(graph);
 	}
 
+	@Test
 	public void testContains() throws Exception {
 		final SemanticFactory sf = new SemanticFactory();
 		final String triples =	"<"+Example.subj1+"> <"+Example.prop1+"> <"+Example.obj3+"> .\n" +

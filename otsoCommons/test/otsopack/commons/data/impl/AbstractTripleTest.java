@@ -14,24 +14,29 @@
 
 package otsopack.commons.data.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class AbstractTripleTest extends TestCase {
+public class AbstractTripleTest {
 	
+	@Test
 	public void testSplitSpace_empty(){
 		final Vector splitted = AbstractTriple.splitSpace("");
 		assertEquals(1, splitted.size());
 		assertEquals("", splitted.get(0));
 	}
 	
+	@Test
 	public void testSplitSpace_1word(){
 		final Vector splitted = AbstractTriple.splitSpace("asdf");
 		assertEquals(1, splitted.size());
 		assertEquals("asdf", splitted.get(0));
 	}
 	
+	@Test
 	public void testSplitSpace_2word(){
 		final Vector splitted = AbstractTriple.splitSpace("asdf fdsa");
 		assertEquals(2, splitted.size());
@@ -39,6 +44,7 @@ public class AbstractTripleTest extends TestCase {
 		assertEquals("fdsa", splitted.get(1));
 	}
 	
+	@Test
 	public void testSplitSpace_2wordStartingBySpace(){
 		final Vector splitted = AbstractTriple.splitSpace(" asdf fdsa");
 		assertEquals(3,      splitted.size());
@@ -47,6 +53,7 @@ public class AbstractTripleTest extends TestCase {
 		assertEquals("fdsa", splitted.get(2));
 	}
 	
+	@Test
 	public void testSplitSpace_2wordWithTwoSpaces(){
 		final Vector splitted = AbstractTriple.splitSpace("asdf  fdsa");
 		assertEquals(3,      splitted.size());
@@ -55,6 +62,7 @@ public class AbstractTripleTest extends TestCase {
 		assertEquals("fdsa", splitted.get(2));
 	}
 	
+	@Test
 	public void testSplitSpace_4words(){
 		final Vector splitted = AbstractTriple.splitSpace("asdf fdsa foo bar");
 		assertEquals(4, splitted.size());
@@ -64,6 +72,7 @@ public class AbstractTripleTest extends TestCase {
 		assertEquals("bar", splitted.get(3));
 	}
 	
+	@Test
 	public void testSplitSpace_1space(){
 		final Vector splitted = AbstractTriple.splitSpace(" ");
 		assertEquals(2, splitted.size());
@@ -71,6 +80,7 @@ public class AbstractTripleTest extends TestCase {
 		assertEquals("", splitted.get(1));
 	}
 	
+	@Test
 	public void testSplitSpace_2spaces(){
 		final Vector splitted = AbstractTriple.splitSpace("  ");
 		assertEquals(3, splitted.size());

@@ -14,11 +14,11 @@
 
 package otsopack.commons.util.uuid;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-
-public class UUIDFactoryTest extends TestCase {
+public class UUIDFactoryTest {
 	
+	@Test
 	public void testGenerateUUIDs() {
 		System.out.println(UUIDFactory.newUUID().toString());
 		System.out.println(UUIDFactory.newUUID().toString());

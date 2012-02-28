@@ -14,10 +14,14 @@
 
 package otsopack.commons.authz.entities;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class EntityFactoryTest extends TestCase {
+import org.junit.Test;
+
+public class EntityFactoryTest {
 	
+	@Test
 	public void testInvalid(){
 		try{
 			EntityFactory.create("foo");
@@ -27,12 +31,14 @@ public class EntityFactoryTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testUser() throws EntityDecodingException{
 		final User userEntity = new User("pablo");
 		final IEntity serializableEntity = EntityFactory.create(userEntity.serialize());
 		assertEquals(userEntity, serializableEntity);
 	}
 	
+	@Test
 	public void testAnonymous() throws EntityDecodingException{
 		final IEntity anonymousEntity = AnonymousEntity.ANONYMOUS;
 		final IEntity serializableEntity = EntityFactory.create(anonymousEntity.serialize());
