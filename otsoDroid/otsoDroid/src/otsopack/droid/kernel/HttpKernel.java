@@ -19,8 +19,8 @@ import org.restlet.ext.net.HttpClientHelper;
 
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
-import otsopack.full.java.network.RestNetwork;
-import otsopack.full.java.network.coordination.IRegistry;
+import otsopack.commons.network.RestNetwork;
+import otsopack.commons.network.coordination.IRegistry;
 
 public class HttpKernel extends AbstractKernel {
 
