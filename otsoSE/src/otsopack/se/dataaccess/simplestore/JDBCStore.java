@@ -25,9 +25,9 @@ import java.util.Set;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.dataaccess.simplestore.DatabaseTuple;
+import otsopack.commons.dataaccess.simplestore.ISimpleStore;
 import otsopack.commons.exceptions.PersistenceException;
-import otsopack.full.java.dataaccess.simplestore.DatabaseTuple;
-import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
 public class JDBCStore implements ISimpleStore {
 	// everything in the same table (we just use sqlite to persist info...)

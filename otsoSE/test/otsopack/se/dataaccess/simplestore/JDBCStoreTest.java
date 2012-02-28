@@ -23,8 +23,8 @@ import org.junit.Test;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
+import otsopack.commons.dataaccess.simplestore.ISimpleStore;
 import otsopack.commons.exceptions.PersistenceException;
-import otsopack.full.java.dataaccess.simplestore.ISimpleStore;
 
 public class JDBCStoreTest {
 	

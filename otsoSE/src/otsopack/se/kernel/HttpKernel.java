@@ -16,9 +16,9 @@ package otsopack.se.kernel;
 
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
-import otsopack.full.java.network.RestNetwork;
-import otsopack.full.java.network.coordination.IRegistry;
-import otsopack.full.java.network.coordination.bulletinboard.BulletinBoardsManager;
+import otsopack.commons.network.RestNetwork;
+import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.bulletinboard.BulletinBoardsManager;
 
 public class HttpKernel extends AbstractKernel {
 

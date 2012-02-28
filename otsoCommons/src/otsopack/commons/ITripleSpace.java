@@ -21,7 +21,6 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
-import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public interface ITripleSpace extends ILayer {
@@ -278,17 +277,6 @@ public interface ITripleSpace extends ILayer {
 	 * @param advertisement
 	 */
 	public void unadvertise(String spaceURI, String advertisementURI) throws TSException;
-
-	//extended
-	/**
-	 * @param spaceURI
-	 * @param template
-	 * @param leaseTime
-	 * 		How often will the demand will be remembered to other peers?
-	 * @param callback
-	 * 		A method to call back when a IGraph which matches the template is suggested.
-	 */
-	public void demand(String spaceURI, Template template, long leaseTime, ISuggestionCallback callback) throws TSException;
 
 	public abstract Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat)
 			throws TSException;

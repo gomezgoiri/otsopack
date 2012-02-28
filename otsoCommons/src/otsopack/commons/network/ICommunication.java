@@ -22,10 +22,8 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
-import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
-import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 /**
@@ -256,41 +254,4 @@ public interface ICommunication extends ILayer {
 	 * @param advertisement
 	 */
 	public void unadvertise(String spaceURI, String advertisementURI) throws SpaceNotExistsException;
-	
-	/**
-	 * Claims that this peer has the responsibility over this knowledge.
-	 * @param spaceURI
-	 * @param template
-	 * 		Graphs which match this template will be responsibility of this peer.
-	 * @param leaseTime
-	 * @param callback
-	 * 		The class that knows what to do to change the knowledge.
-	 * @throws TSException
-	 */
-	public void demand(String spaceURI, Template template, long leaseTime, ISuggestionCallback callback) throws TSException;
-	
-	/**
-	 * Suggest to other peers that this knowledge should be like that.
-	 * @param spaceURI
-	 * @param graph
-	 * 		Knowledge to possibly be changed.
-	 * @throws TSException
-	 */
-	public void suggest(String spaceURI, Graph graph) throws TSException;
-	
-	/**
-	 * Checks whether this peer has responsibility over the specified knowledge
-	 * and if it has, callback to its demand's callback method
-	 * @param spaceURI
-	 * @param graph
-	 */
-	public boolean callbackIfIHaveResponsabilityOverThisKnowlege(String spaceURI, Graph triples) throws TSException;
-	
-	/**
-	 * Checks whether other peers have responsibility over the specified knowledge.
-	 * @param spaceURI
-	 * @param graph
-	 * @return 
-	 */
-	public boolean hasAnyPeerResponsabilityOverThisKnowlege(String spaceURI, Graph triples) throws TSException;
 }

@@ -27,7 +27,6 @@ import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.INetwork;
-import otsopack.commons.network.communication.demand.local.ISuggestionCallback;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.stats.Statistics;
 import otsopack.commons.util.Util;
@@ -378,18 +377,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 			if( !networkService.getJoinedSpaces().contains(spaceURI) ) {
 				new TSException("space " + spaceURI + " must be joined before write can be performed").printStackTrace();
 			}
-			
-			//new implementation of write primitive
-			if( networkService.callbackIfIHaveResponsabilityOverThisKnowlege(spaceURI, triples) ) {
-				ret = null;
-			} else if( networkService.hasAnyPeerResponsabilityOverThisKnowlege(spaceURI, triples) ) {
-				// should be call it even if local callbacks have been performed?
-				networkService.suggest(spaceURI, triples);
-				ret = null;
-			} else {
-				/*URI graphURI = */
-				ret = dataAccessService.write(spaceURI, triples);
-			}
+			ret = dataAccessService.write(spaceURI, triples);
 			final long timeneeded = System.currentTimeMillis() - start;
 			Statistics.addMeasure("write", timeneeded, System.currentTimeMillis());
 			return ret;
@@ -423,9 +411,4 @@ public abstract class AbstractKernel implements ITripleSpace {
 	protected IController getController() {
 		return controller;
 	}
-
-	public void demand(String spaceURI, Template template, long leaseTime,
-			ISuggestionCallback callback) throws TSException {
-		networkService.demand(spaceURI, template, leaseTime, callback);
-	}	
 }
