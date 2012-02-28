@@ -13,14 +13,16 @@
  */
 package otsopack.commons.dataaccess.authz;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import otsopack.commons.authz.entities.User;
-import otsopack.commons.util.collections.HashMap;
 
 public class AuthorizedGraphs {
-	HashMap authorization;
+	Map<String, User> authorization;
 	
 	public AuthorizedGraphs() {
-		this.authorization = new HashMap();
+		this.authorization = new HashMap<String, User>();
 	}
 	
 	public void add(String graphuri, User user) {
@@ -28,7 +30,7 @@ public class AuthorizedGraphs {
 	}
 	
 	public boolean isUserAuthorized(String resourceuri, User user) {
-		final User authUser = (User) this.authorization.get(resourceuri);
+		final User authUser = this.authorization.get(resourceuri);
 		// if does not exist or is not specified, then all the people has access
 		if( authUser==null ) return true;
 		return authUser.equals(user);

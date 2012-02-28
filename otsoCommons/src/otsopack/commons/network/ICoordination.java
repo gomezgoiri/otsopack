@@ -14,11 +14,12 @@
 
 package otsopack.commons.network;
 
+import java.util.Set;
+
 import otsopack.commons.ILayer;
 import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.coordination.IPeerInformationHolder;
-import otsopack.commons.util.collections.Set;
 
 /**
  * network coordination layer interface
@@ -29,13 +30,13 @@ public interface ICoordination extends ILayer, IPeerInformationHolder {
 	 * get all spaces
 	 * @return spaces
 	 */
-	public Set getSpaces();
+	public Set<String> getSpaces();
 	
 	/**
 	 * get joined spaces
 	 * @return spaces
 	 */
-	public Set getJoinedSpaces();
+	public Set<String> getJoinedSpaces();
 	
 	/**
 	 * create a new space

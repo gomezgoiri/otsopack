@@ -13,6 +13,9 @@
  */
 package otsopack.commons.network;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import otsopack.commons.IController;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.IEntity;
@@ -30,14 +33,12 @@ import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.bulletinboard.BulletinBoardsManager;
-import otsopack.commons.util.collections.HashSet;
-import otsopack.commons.util.collections.Set;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
 	private ICommunication comm;
-	private Set/*<String>*/ joinedSpaces = new HashSet/*<String>*/();
+	private Set<String> joinedSpaces = new HashSet<String>();
 	private BulletinBoardsManager bulletinBoards;
 	
 	public RestNetwork(IController controller) {
