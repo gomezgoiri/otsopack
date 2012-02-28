@@ -14,8 +14,9 @@
 
 package otsopack.commons.dataaccess.memory;
 
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -32,91 +33,57 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
 
 public class MemoryDataAccess extends AbstractDataAccess {
 	
-	private Vector/*<SpaceMem>*/ spaces = null;
+	private Map<String,SpaceMem> spaces = null;
 	
 	public MemoryDataAccess() {
-		this.spaces = new Vector();
+		this.spaces = new HashMap<String,SpaceMem>();
 	}
 	
 	public void startup() {}
 	public void shutdown() {}
 
 	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
-		try {
-			getSpace(spaceURI);
+		if (this.spaces.containsKey(spaceURI)) 
 			throw new SpaceAlreadyExistsException();
-		} catch(SpaceNotExistsException e) {
-			addSpace(spaceURI);
-		}
+		spaces.put(spaceURI, MemoryFactory.createSpace(spaceURI));
 	}
 
 	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
-		// we mustn't do nothing special
+		// we must not do nothing special
 	}
 	
 	// thread unsafe
-	public String[] getJoinedSpaces() {
-		final String[] joined = new String[this.spaces.size()];
-		final Iterator spcsIt = this.spaces.iterator();
-		int i=0;
-		while (spcsIt.hasNext()) {
-			joined[i++] = ((SpaceMem) spcsIt.next()).getSpaceURI();
-		}
-		return joined;
+	public Set<String> getJoinedSpaces() {
+		return this.spaces.keySet();
 	}
 
 	public void leaveSpace(String spaceURI) throws SpaceNotExistsException {
-		for(int i=0; i<this.spaces.size(); i++) {
-			final String spc = ((SpaceMem)this.spaces.get(i)).getSpaceURI();
-			if( spaceURI.equals(spc) ) {
-				this.spaces.remove(i);
-				return;
-			}
+		if (this.spaces.containsKey(spaceURI)) {
+			this.spaces.remove(spaceURI);
+		} else
+			throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
+	}
+	
+	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
+		if (this.spaces.containsKey(spaceURI)) {
+			return this.spaces.get(spaceURI).getLocalGraphs();
 		}
 		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
 	}
 	
-	public String[] getLocalGraphs(String spaceURI) throws SpaceNotExistsException {
-		final SpaceMem espacio = getSpace(spaceURI);
-		return espacio.getLocalGraphs();
-	}
-	
-	protected SpaceMem getSpace(String spaceURI) throws SpaceNotExistsException {
-		for(int i=0; i<spaces.size(); i++) {
-			if(((SpaceMem)spaces.elementAt(i)).getSpaceURI().equals(spaceURI))
-				return (SpaceMem)spaces.elementAt(i);
-		}
-		throw new SpaceNotExistsException();
-	}
-	
-	protected void addSpace(String spaceURI) {
-		spaces.addElement( MemoryFactory.createSpace(spaceURI) );
-	}
-	
-	/**
-	 * @param spaceURI
-	 * @return true when any space has been removed from the vector of spaces, false otherwise.
-	 */
-	protected boolean removeSpace(String spaceURI) {
-		boolean exit = false;
-		for(int i=0; i<spaces.size() && !exit; i++) {
-			if(((SpaceMem)spaces.elementAt(i)).getSpaceURI().equals(spaceURI)) {
-				spaces.removeElementAt(i);
-				exit = true;
-			}
-		}
-		return exit;
-	}
-	
 	public String write(String spaceURI, Graph triples) throws SpaceNotExistsException {
-		final SpaceMem space = getSpace(spaceURI);
-		return space.write(new ModelImpl(triples));
+		if (this.spaces.containsKey(spaceURI)) {
+			return this.spaces.get(spaceURI).write(new ModelImpl(triples));
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
 	}
 	
 	public Graph concreteQuery(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		final SpaceMem space = getSpace(spaceURI);
-		final ModelImpl ret = space.query(template,checker);
-		return (ret==null)? null: ret.write(outputFormat);
+		if (this.spaces.containsKey(spaceURI)) {
+			final ModelImpl ret = this.spaces.get(spaceURI).query(template,checker);
+			return (ret==null)? null: ret.write(outputFormat);
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");		
 	}
 	
 	protected Graph convertToGraph(GraphMem graphmem, SemanticFormat outputFormat) {
@@ -125,28 +92,36 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	}
 
 	public Graph concreteRead(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		final SpaceMem space = getSpace(spaceURI);
-		return convertToGraph(space.read(template,checker),outputFormat);
+		if (this.spaces.containsKey(spaceURI)) {
+			return convertToGraph(this.spaces.get(spaceURI).read(template,checker),outputFormat);
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");	
 	}
 
 	/**
 	 * Already authorized in AbstractDataAccess
 	 */
 	public Graph concreteRead(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		final SpaceMem space = getSpace(spaceURI);
-		return convertToGraph(space.read(graphURI),outputFormat);
+		if (this.spaces.containsKey(spaceURI)) {
+			return convertToGraph(this.spaces.get(spaceURI).read(graphURI),outputFormat);
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
 	}
 	
 	public Graph concreteTake(String spaceURI, Template template, SemanticFormat outputFormat, IAuthorizationChecker checker) throws SpaceNotExistsException, UnsupportedTemplateException {
-		final SpaceMem space = getSpace(spaceURI);	
-		return convertToGraph(space.take(template,checker),outputFormat);
+		if (this.spaces.containsKey(spaceURI)) {
+			return convertToGraph(this.spaces.get(spaceURI).take(template,checker),outputFormat);
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");	
 	}
 	
 	/**
 	 * Already authorized in AbstractDataAccess
 	 */
 	public Graph concreteTake(String spaceURI, String graphURI, SemanticFormat outputFormat) throws SpaceNotExistsException {
-		final SpaceMem space = getSpace(spaceURI);
-		return convertToGraph(space.take(graphURI),outputFormat);
+		if (this.spaces.containsKey(spaceURI)) {
+			return convertToGraph(this.spaces.get(spaceURI).take(graphURI),outputFormat);
+		}
+		throw new SpaceNotExistsException("The space you are trying to remove, doesn't exist.");
 	}
 }

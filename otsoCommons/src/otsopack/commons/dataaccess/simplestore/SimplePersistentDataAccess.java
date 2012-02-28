@@ -130,8 +130,8 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	}
 	
 	@Override
-	public String[] getJoinedSpaces() {
-		return this.spaces.keySet().toArray(new String[this.spaces.keySet().size()]);
+	public Set<String> getJoinedSpaces() {
+		return this.spaces.keySet();
 	}
 	
 	@Override

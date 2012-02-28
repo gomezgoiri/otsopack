@@ -14,6 +14,8 @@
 
 package otsopack.commons.dataaccess;
 
+import java.util.Set;
+
 import otsopack.commons.ILayer;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -48,7 +50,7 @@ public interface IDataAccess extends ILayer {
 	 * @return
 	 *  Returns the spaces the node belongs to.
 	 */
-	public String[] getJoinedSpaces();
+	public Set<String> getJoinedSpaces();
 	
 	/**
 	 * leave a space

@@ -27,12 +27,6 @@ import otsopack.commons.network.coordination.IPeerInformationHolder;
  */
 public interface ICoordination extends ILayer, IPeerInformationHolder {
 	/**
-	 * get all spaces
-	 * @return spaces
-	 */
-	public Set<String> getSpaces();
-	
-	/**
 	 * get joined spaces
 	 * @return spaces
 	 */

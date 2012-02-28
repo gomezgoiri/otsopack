@@ -14,6 +14,8 @@
 
 package otsopack.commons;
 
+import java.util.Set;
+
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
@@ -23,26 +25,7 @@ import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
-public interface ITripleSpace extends ILayer {
-	
-	/**
-	 * get all known spaces
-	 * @return set of spaces 
-	 */
-	//public Set<URI> getSpaces();
-	
-	/**
-	 * get all joined spaces
-	 * @return set of spaces 
-	 */
-	//public Set<URI> getJoinedSpaces();
-	
-	/**
-	 * get the network id
-	 * @return network id
-	 */
-	//public URI getNetworkID();
-	
+public interface ITripleSpace extends ILayer {	
 	/**
 	 * create a new space
 	 * @throws TSException
@@ -57,18 +40,6 @@ public interface ITripleSpace extends ILayer {
 	 * @param spaceURI
 	 */
 	public void joinSpace(String spaceURI) throws TSException;
-
-	/**
-	 * joins a space with initial File (backup, onology or initial dataset)
-	 * writes the ITriples contained in the file to specified space as one IGraph
-	 * 
-	 * NOTE the created IGraph is as big as the file - consider network overload
-	 * using the read operation
-	 * @throws ITripleParseException TSException  
-	 * @param spaceURI
-	 * @param filename
-	 */
-	//public void joinSpace(URI spaceURI, String filename) throws ITripleParseException, TSException;
 	
 	/**
 	 * leave a space 
@@ -77,6 +48,12 @@ public interface ITripleSpace extends ILayer {
 	 * @param spaceURI
 	 */
 	public void leaveSpace(String spaceURI) throws TSException;
+	
+	/**
+	 * get all joined spaces
+	 * @return set of spaces 
+	 */
+	public Set<String> getJoinedSpaces();
 
 	// # # # //
 	

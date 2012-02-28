@@ -14,6 +14,8 @@
 
 package otsopack.commons.kernel;
 
+import java.util.Set;
+
 import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
 import otsopack.commons.authz.Filter;
@@ -187,6 +189,10 @@ public abstract class AbstractKernel implements ITripleSpace {
 				dataAccessService.leaveSpace(spaceURI);
 			}
 		} else throw new SpaceNotExistsException("space must not be null");
+	}
+	
+	public Set<String> getSpaces() {
+		return this.networkService.getJoinedSpaces();
 	}
 	
 	public void unsubscribe(String spaceURI, String subscriptionURI) throws TSException {

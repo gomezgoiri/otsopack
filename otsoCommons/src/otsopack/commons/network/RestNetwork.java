@@ -13,8 +13,8 @@
  */
 package otsopack.commons.network;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import otsopack.commons.IController;
 import otsopack.commons.authz.Filter;
@@ -38,7 +38,7 @@ public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
 	private ICommunication comm;
-	private Set<String> joinedSpaces = new HashSet<String>();
+	private Set<String> joinedSpaces = new CopyOnWriteArraySet<String>();
 	private BulletinBoardsManager bulletinBoards;
 	
 	public RestNetwork(IController controller) {
@@ -167,13 +167,7 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public Set getSpaces() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set getJoinedSpaces() {
+	public Set<String> getJoinedSpaces() {
 		return this.joinedSpaces;
 	}
 

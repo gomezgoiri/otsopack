@@ -14,7 +14,17 @@
 
 package otsopack.commons.dataaccess.memory;
 
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+
+import java.util.Set;
+
 import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.ISemanticFactory;
@@ -33,6 +43,7 @@ public class MemoryDataAccessTest extends TestCase {
 	final Graph[] models = new Graph[3];
 	final String[] triples = new String[9];
 	
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		final MicrojenaFactory factory = new MicrojenaFactory();
@@ -60,9 +71,11 @@ public class MemoryDataAccessTest extends TestCase {
 		models[2] = new Graph(graph,SemanticFormat.NTRIPLES);
 	}
 	
+	@After
 	public void tearDown() {
 	}
 	
+	@Test
 	public void testCreateSpace() {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		try {
@@ -73,6 +86,7 @@ public class MemoryDataAccessTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCreateSpaceFailure() {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		try {
@@ -84,8 +98,11 @@ public class MemoryDataAccessTest extends TestCase {
 		}
 	}
 
+	// it does nothing
+	@Test
 	public void testJoinSpace() {}
 	
+	@Test
 	public void testGetJoinSpace() throws Exception {
 		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
 		final MemoryDataAccess memo = new MemoryDataAccess();
@@ -97,22 +114,23 @@ public class MemoryDataAccessTest extends TestCase {
 			memo.joinSpace(spaces[i]);
 		}
 		
-		final String[] joinedSp = memo.getJoinedSpaces();
-		assertEquals(3, joinedSp.length);
+		final Set<String> joinedSp = memo.getJoinedSpaces();
+		assertEquals(3, joinedSp.size());
 		for(int i=0; i<spaces.length; i++) {
-			assertEquals(spaces[i], joinedSp[i]);
+			assertThat(joinedSp, hasItem(spaces[i]));
 		}
 		
 		memo.leaveSpace(spaces[2]);
-		final String[] joinedSp2 = memo.getJoinedSpaces();
-		assertEquals(2, joinedSp2.length);
+		final Set<String> joinedSp2 = memo.getJoinedSpaces();
+		assertEquals(2, joinedSp2.size());
 		for(int i=0; i<spaces.length-1; i++) {
-			assertEquals(spaces[i], joinedSp2[i]);
+			assertThat(joinedSp2, hasItem(spaces[i]));
 		}
 		
 		memo.shutdown();
 	}
 
+	@Test
 	public void testLeaveSpace() throws Exception {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.createSpace("ts://espacio");
@@ -120,6 +138,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.leaveSpace("ts://espacio");
 	}
 	
+	@Test
 	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.createSpace("ts://espacio");
@@ -132,6 +151,7 @@ public class MemoryDataAccessTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testWriteGraphs() throws SpaceAlreadyExistsException, SpaceNotExistsException {
 		final String spaceuri = "ts://spaceWrite3";
 		final MemoryDataAccess memo = new MemoryDataAccess();
@@ -164,7 +184,8 @@ public class MemoryDataAccessTest extends TestCase {
 				assertFalse( checkedGraph.getData().contains(triples[i]) );
 		}
 	}
-
+	
+	@Test
 	public void testQuery() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
@@ -197,6 +218,7 @@ public class MemoryDataAccessTest extends TestCase {
 	}
 	
 	// Authorized query
+	@Test
 	public void testQueryUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
@@ -224,6 +246,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	@Test
 	public void testReadTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceRead1";
@@ -264,6 +287,7 @@ public class MemoryDataAccessTest extends TestCase {
 	}
 	
 	// Authorized read(template)
+	@Test
 	public void testReadTemplateUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
@@ -308,6 +332,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	@Test
 	public void testReadURI() throws Exception {
 		final String spaceuri1 = "ts://spaceRead3";
 		final String spaceuri2 = "ts://spaceRead4";
@@ -344,6 +369,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	@Test
 	public void testReadURIUser() throws Exception {
 		final String spaceuri1 = "ts://spaceRead5";
 		final User user1 = new User("http://aitor.myopenid.com");
@@ -390,7 +416,8 @@ public class MemoryDataAccessTest extends TestCase {
 			//always thrown
 		}
 	}
-
+	
+	@Test
 	public void testTakeTemplate() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceTake1";
@@ -454,6 +481,7 @@ public class MemoryDataAccessTest extends TestCase {
 	}
 	
 	// Authorized read(template)
+	@Test
 	public void testTakeTemplateUser() throws Exception {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery3";
@@ -499,6 +527,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	@Test
 	public void testTakeURI() throws Exception {
 		final String spaceuri1 = "ts://spaceTake3";
 		final String spaceuri2 = "ts://spaceTake4";
@@ -551,6 +580,7 @@ public class MemoryDataAccessTest extends TestCase {
 		memo.shutdown();
 	}
 	
+	@Test
 	public void testTakeURIUser() throws Exception {
 		final String spaceuri1 = "ts://spaceRead5";
 		final User user1 = new User("http://aitor.myopenid.com");

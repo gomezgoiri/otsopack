@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.restlet.representation.Representation;
 
@@ -47,15 +48,17 @@ public class SpacesResource extends AbstractServerResource implements ISpaceReso
 		return encoder.getHtmlRepresentation();
 	}
 	
-	protected String[] generateLinks(String[] spaceUrls) {
-		final String[] links = new String[spaceUrls.length];
-		for(int i=0; i<spaceUrls.length; i++) {
+	protected String[] generateLinks(Set<String> spaceUrls) {
+		final String[] links = new String[spaceUrls.size()];
+		int i = 0;
+		for(String spaceUrl: spaceUrls) {
 			try {
-				links[i] = SpacesResource.ROOT + "/" + URLEncoder.encode(spaceUrls[i],"UTF-8");
+				links[i] = SpacesResource.ROOT + "/" + URLEncoder.encode(spaceUrl,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// This cannot happen since UTF-8 is always supported!
 				e.printStackTrace();
 			}
+			i++;
 		}
 		return links;
 	}
