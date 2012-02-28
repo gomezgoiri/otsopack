@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -42,14 +42,9 @@ public class MemoryDataAccess extends AbstractDataAccess {
 	public void startup() {}
 	public void shutdown() {}
 
-	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
-		if (this.spaces.containsKey(spaceURI)) 
-			throw new SpaceAlreadyExistsException();
+	public void joinSpace(String spaceURI) throws SpaceAlreadyExistsException {
+		if (this.spaces.containsKey(spaceURI)) throw new SpaceAlreadyExistsException();
 		spaces.put(spaceURI, MemoryFactory.createSpace(spaceURI));
-	}
-
-	public void joinSpace(String spaceURI) throws SpaceNotExistsException {
-		// we must not do nothing special
 	}
 	
 	// thread unsafe

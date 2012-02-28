@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -47,7 +47,6 @@ public class GraphsResourceTest extends AbstractRestServerTesting {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		this.controller.getDataAccessService().createSpace(this.sampleSpace);
 		this.controller.getDataAccessService().joinSpace(this.sampleSpace);
 		
 		this.writtenGraphs.add( this.controller.getDataAccessService().write(this.sampleSpace, new Graph("<http://s1> <http://p1> <http://o1> .", SemanticFormat.NTRIPLES)) );

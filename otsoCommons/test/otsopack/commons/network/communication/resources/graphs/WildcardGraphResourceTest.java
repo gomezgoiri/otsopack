@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -43,7 +43,6 @@ public class WildcardGraphResourceTest extends AbstractRestServerTesting {
 		SemanticFactory.initialize(new MicrojenaFactory());
 		
 		this.controller.getDataAccessService().startup();
-		this.controller.getDataAccessService().createSpace(this.spaceURI);
 		this.controller.getDataAccessService().joinSpace(this.spaceURI);
 		
 		this.graph = new Graph(

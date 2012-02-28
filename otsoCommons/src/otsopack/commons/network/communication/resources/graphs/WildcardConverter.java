@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *

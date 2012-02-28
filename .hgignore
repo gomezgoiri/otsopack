@@ -40,7 +40,9 @@ syntax: regexp
 
 ^otsoSE/dbOtsoPack
 ^otsoSE/bin
+^otsoSE/build
 ^otsoSE/dist
 ^otsoSE/libs
+
 
 ^otsoSecurityIntegrationTest/bin

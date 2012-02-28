@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -33,18 +33,11 @@ import otsopack.commons.exceptions.UnsupportedTemplateException;
  * @author Aitor Gómez Goiri
  */
 public interface IDataAccess extends ILayer {
-	
-	/**
-	 * create a new space
-	 * @param spaceURI
-	 */
-	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException;
-
 	/**
 	 * join the space with spaceURI
 	 * @param spaceURI
 	 */
-	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException;
+	public void joinSpace(String spaceURI) throws SpaceAlreadyExistsException, PersistenceException;
 	
 	/**
 	 * @return

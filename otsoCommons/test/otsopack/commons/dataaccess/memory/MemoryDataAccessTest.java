@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -76,40 +76,28 @@ public class MemoryDataAccessTest extends TestCase {
 	}
 	
 	@Test
-	public void testCreateSpace() {
+	public void testJoinSpace() throws SpaceAlreadyExistsException {
 		final MemoryDataAccess memo = new MemoryDataAccess();
-		try {
-			memo.createSpace("ts://espacio");
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		memo.joinSpace("ts://espacio");
 	}
 	
 	@Test
-	public void testCreateSpaceFailure() {
+	public void testJoinSpaceFailure() throws SpaceAlreadyExistsException {
 		final MemoryDataAccess memo = new MemoryDataAccess();
+		memo.joinSpace("ts://espacio");
 		try {
-			memo.createSpace("ts://espacio");
-			memo.createSpace("ts://espacio");
-			assertTrue(false);
+			memo.joinSpace("ts://espacio");
+			fail();
 		} catch (Exception e) {
-			assertTrue(true);
+			// everything went OK
 		}
 	}
-
-	// it does nothing
-	@Test
-	public void testJoinSpace() {}
 	
 	@Test
 	public void testGetJoinSpace() throws Exception {
 		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		
-		for(int i=0; i<spaces.length; i++) {
-			memo.createSpace(spaces[i]);
-		}
 		for(int i=0; i<spaces.length; i++) {
 			memo.joinSpace(spaces[i]);
 		}
@@ -133,7 +121,6 @@ public class MemoryDataAccessTest extends TestCase {
 	@Test
 	public void testLeaveSpace() throws Exception {
 		final MemoryDataAccess memo = new MemoryDataAccess();
-		memo.createSpace("ts://espacio");
 		memo.joinSpace("ts://espacio");
 		memo.leaveSpace("ts://espacio");
 	}
@@ -141,7 +128,7 @@ public class MemoryDataAccessTest extends TestCase {
 	@Test
 	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
 		final MemoryDataAccess memo = new MemoryDataAccess();
-		memo.createSpace("ts://espacio");
+		memo.joinSpace("ts://espacio");
 		
 		try {
 			memo.leaveSpace("ts://espacio2");
@@ -156,7 +143,6 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri = "ts://spaceWrite3";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri);
 		memo.joinSpace(spaceuri);
 		
 		for(int i=0; i<models.length; i++) {
@@ -192,9 +178,7 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri2 = "ts://spaceQuery2";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
-		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
 		memo.write( spaceuri1, models[0]);
@@ -228,7 +212,6 @@ public class MemoryDataAccessTest extends TestCase {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
 		
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
 				
 		memo.write(spaceuri1, models[0]);
@@ -253,9 +236,7 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri2 = "ts://spaceRead2";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
-		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
 		memo.write( spaceuri1, models[0]);
@@ -297,7 +278,6 @@ public class MemoryDataAccessTest extends TestCase {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
 		
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
 				
 		memo.write(spaceuri1, models[0]);
@@ -338,9 +318,7 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri2 = "ts://spaceRead4";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
-		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
 		final String[] graphuris = new String[models.length];
@@ -377,7 +355,6 @@ public class MemoryDataAccessTest extends TestCase {
 		
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[models.length];
@@ -424,9 +401,7 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri2 = "ts://spaceTake2";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
-		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
 		memo.write( spaceuri1, models[0]);
@@ -491,7 +466,6 @@ public class MemoryDataAccessTest extends TestCase {
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
 		
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
 				
 		memo.write(spaceuri1, models[0]);
@@ -533,9 +507,7 @@ public class MemoryDataAccessTest extends TestCase {
 		final String spaceuri2 = "ts://spaceTake4";
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
-		memo.createSpace(spaceuri2);
 		memo.joinSpace(spaceuri2);
 		
 		String[] graphuris = new String[models.length];
@@ -588,7 +560,6 @@ public class MemoryDataAccessTest extends TestCase {
 		
 		final MemoryDataAccess memo = new MemoryDataAccess();
 		memo.startup();
-		memo.createSpace(spaceuri1);
 		memo.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[models.length];

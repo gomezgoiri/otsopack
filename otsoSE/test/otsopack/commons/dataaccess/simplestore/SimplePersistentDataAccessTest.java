@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -24,6 +24,7 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,10 +37,8 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.dataaccess.simplestore.SimplePersistentDataAccess;
 import otsopack.commons.dataaccess.simplestore.SimplePersistentDataAccess.OpenMode;
 import otsopack.commons.exceptions.AuthorizationException;
-import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.sampledata.Example;
 import otsopack.se.dataaccess.simplestore.JDBCStore;
@@ -86,47 +85,36 @@ public class SimplePersistentDataAccessTest {
 	}
 	
 	@Test
-	public void testCreateSpace() throws Exception {
-		try {
-			this.da.createSpace("ts://espacio");
-			assertTrue(true);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+	public void testJoinSpace() throws Exception {
+		this.da.joinSpace("ts://espacio");
 	}
 	
 	@Test
-	public void testCreateSpaceFailure() throws Exception {
+	public void testJoinSpaceFailure() throws Exception {
+		this.da.joinSpace("ts://espacio");
 		try {
-			this.da.createSpace("ts://espacio");
-			this.da.createSpace("ts://espacio");
+			this.da.joinSpace("ts://espacio");
 			fail();
 		} catch (Exception e) {
 		}
 	}
-
-	@Test
-	public void testJoinSpace() {}
 	
 	@Test
 	public void testGetJoinSpace() throws Exception {
 		final String[] spaces = {"ts://sp1/","ts://sp2/","ts://sp3/"};
 		
 		for(int i=0; i<spaces.length; i++) {
-			this.da.createSpace(spaces[i]);
-		}
-		for(int i=0; i<spaces.length; i++) {
 			this.da.joinSpace(spaces[i]);
 		}
 		
-		final String[] joinedSp = this.da.getJoinedSpaces();
-		assertEquals(3, joinedSp.length);
+		final Set<String> joinedSp = this.da.getJoinedSpaces();
+		assertEquals(3, joinedSp.size());
 		for(int i=0; i<spaces.length; i++) {
-			assertEquals(spaces[i], joinedSp[i]);
+			assertThat(joinedSp, hasItem(spaces[i]));
 		}
 		
 		this.da.leaveSpace(spaces[2]);
-		final List<String> joinedSp2 = Arrays.asList(this.da.getJoinedSpaces());
+		final Set<String> joinedSp2 = this.da.getJoinedSpaces();
 		assertEquals(2, joinedSp2.size());
 		assertThat(joinedSp2, hasItem(spaces[0]));
 		assertThat(joinedSp2, hasItem(spaces[1]));
@@ -134,15 +122,13 @@ public class SimplePersistentDataAccessTest {
 
 	@Test
 	public void testLeaveSpace() throws Exception {
-		this.da.createSpace("ts://espacio");
 		this.da.joinSpace("ts://espacio");
 		this.da.leaveSpace("ts://espacio");
 	}
 	
 	@Test
-	public void testLeaveSpaceFailure() throws SpaceAlreadyExistsException {
-		this.da.createSpace("ts://espacio");
-		
+	public void testLeaveSpaceFailure() throws Exception {
+		this.da.joinSpace("ts://espacio");
 		try {
 			this.da.leaveSpace("ts://espacio2");
 			fail();
@@ -154,7 +140,6 @@ public class SimplePersistentDataAccessTest {
 	@Test
 	public void testWriteGraphs() throws Exception {
 		final String spaceuri = "ts://spaceWrite3";
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		
 		for(int i=0; i<this.models.length; i++) {
@@ -171,7 +156,6 @@ public class SimplePersistentDataAccessTest {
 		final String[] graphuri = new String[this.models.length]; 
 		
 		// write in the database and close connection
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		for(int i=0; i<this.models.length; i++) {
 			graphuri[i] = this.da.write(spaceuri,this.models[i]);
@@ -187,7 +171,6 @@ public class SimplePersistentDataAccessTest {
 		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
 		assertTrue(this.da.preloadedSpaces.get(spaceuri).containsGraph(graphuri[1]));
 		
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
 		assertTrue(this.da.spaces.containsKey(spaceuri));
@@ -216,9 +199,7 @@ public class SimplePersistentDataAccessTest {
 		final ISemanticFactory sf = new SemanticFactory();
 		final String spaceuri1 = "ts://spaceQuery1";
 		final String spaceuri2 = "ts://spaceQuery2";
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
-		this.da.createSpace(spaceuri2);
 		this.da.joinSpace(spaceuri2);
 		
 		this.da.write( spaceuri1, this.models[0]);
@@ -249,7 +230,6 @@ public class SimplePersistentDataAccessTest {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 				
 		this.da.write(spaceuri1, this.models[0]);
@@ -271,9 +251,7 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri1 = "ts://spaceRead1";
 		final String spaceuri2 = "ts://spaceRead2";
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
-		this.da.createSpace(spaceuri2);
 		this.da.joinSpace(spaceuri2);
 		
 		this.da.write( spaceuri1, this.models[0]);
@@ -311,7 +289,6 @@ public class SimplePersistentDataAccessTest {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 				
 		this.da.write(spaceuri1, this.models[0]);
@@ -349,9 +326,7 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri1 = "ts://spaceRead3";
 		final String spaceuri2 = "ts://spaceRead4";
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
-		this.da.createSpace(spaceuri2);
 		this.da.joinSpace(spaceuri2);
 		
 		final String[] graphuris = new String[this.models.length];
@@ -385,7 +360,6 @@ public class SimplePersistentDataAccessTest {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[this.models.length];
@@ -430,9 +404,7 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri1 = "ts://spaceTake1";
 		final String spaceuri2 = "ts://spaceTake2";
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
-		this.da.createSpace(spaceuri2);
 		this.da.joinSpace(spaceuri2);
 		
 		this.da.write(spaceuri1, this.models[0]);
@@ -493,7 +465,6 @@ public class SimplePersistentDataAccessTest {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 				
 		this.da.write(spaceuri1, this.models[0]);
@@ -532,9 +503,7 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri1 = "ts://spaceTake3";
 		final String spaceuri2 = "ts://spaceTake4";
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
-		this.da.createSpace(spaceuri2);
 		this.da.joinSpace(spaceuri2);
 		
 		String[] graphuris = new String[this.models.length];
@@ -584,7 +553,6 @@ public class SimplePersistentDataAccessTest {
 		final User user1 = new User("http://aitor.myopenid.com");
 		final User user2 = new User("http://pablo.myopenid.com");
 		
-		this.da.createSpace(spaceuri1);
 		this.da.joinSpace(spaceuri1);
 		
 		final String[] graphuris = new String[this.models.length];
@@ -632,7 +600,6 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri = "ts://spacePreload/";
 		
 		// write in the database and close connection
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		for(int i=0; i<this.models.length; i++) {
 			this.da.write(spaceuri,this.models[i]);
@@ -646,7 +613,6 @@ public class SimplePersistentDataAccessTest {
 		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
 		assertFalse(this.da.spaces.containsKey(spaceuri));
 		
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		assertTrue(this.da.preloadedSpaces.containsKey(spaceuri));
 		assertTrue(this.da.spaces.containsKey(spaceuri));
@@ -657,7 +623,6 @@ public class SimplePersistentDataAccessTest {
 		final String spaceuri = "ts://spaceLoadOnJoin/";
 		
 		// write in the database and close connection
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		final String[] graphuris = new String[this.models.length];
 		for(int i=0; i<this.models.length; i++) {
@@ -672,7 +637,6 @@ public class SimplePersistentDataAccessTest {
 		assertFalse(this.da.preloadedSpaces.contains(spaceuri));
 		assertFalse(this.da.spaces.contains(spaceuri));
 		
-		this.da.createSpace(spaceuri);
 		this.da.joinSpace(spaceuri);
 		assertTrue(this.da.spaces.containsKey(spaceuri));
 		final List<String> loadedUris = Arrays.asList(this.da.spaces.get(spaceuri).getLocalGraphs());

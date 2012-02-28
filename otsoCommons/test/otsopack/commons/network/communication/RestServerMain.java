@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -37,7 +37,6 @@ public class RestServerMain {
 		final IController controller = EasyMock.createMock(IController.class);
 		final IDataAccess dataAccess = new MemoryDataAccess();
 		for(int i=0; i<4; i++) {
-			dataAccess.createSpace("http://space"+i);
 			dataAccess.joinSpace("http://space"+i);
 			Graph graph = new Graph(
 					"<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> . \n" +

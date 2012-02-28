@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -53,7 +53,7 @@ public interface ITripleSpace extends ILayer {
 	 * get all joined spaces
 	 * @return set of spaces 
 	 */
-	public Set<String> getJoinedSpaces();
+	public Set<String> getSpaces();
 
 	// # # # //
 	

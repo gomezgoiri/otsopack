@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -65,18 +65,22 @@ public abstract class AbstractKernel implements ITripleSpace {
 		}
 	}
 	
+	@Override
 	public int getDefaultTimeout(){
 		return this.defaultTimeout;
 	}
 	
+	@Override
 	public SemanticFormat getDefaultSemanticFormat(){
 		return this.defaultSemanticFormat;
 	}
 	
+	@Override
 	public void setDefaultTimeout(int timeout){
 		this.defaultTimeout = timeout;
 	}
 	
+	@Override
 	public void setDefaultSemanticFormat(SemanticFormat format){
 		this.defaultSemanticFormat = format;
 	}
@@ -99,6 +103,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 //		} else networkService = new es.deusto.tecnologico.tscME.network.jxme.withproxy.JxmeNetwork(controller);
 //	}
 	
+	@Override
 	public void startup() throws TSException {
 		this.buildKernel();
 
@@ -109,6 +114,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		this.connected = true;
 	}
 	
+	@Override
 	public void shutdown() throws TSException {
 		try{
 			if (this.dataAccessService != null)
@@ -125,18 +131,20 @@ public abstract class AbstractKernel implements ITripleSpace {
 				this.connected = false;
 			}
 		}
-	}	
-
+	}
+	
+	@Override
 	public void createSpace(String spaceURI) throws TSException {
 		if (spaceURI != null) {
 			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 			networkService.createSpace(spaceURI);
-			dataAccessService.createSpace(spaceURI);			
+			//dataAccessService.createSpace(spaceURI);			
 		} else {
 			throw new TSException("Space must not be null");
 		}	
 	}
-
+	
+	@Override
 	public void joinSpace(String spaceURI) throws TSException {
 		if (spaceURI != null) {
 			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
@@ -191,46 +199,56 @@ public abstract class AbstractKernel implements ITripleSpace {
 		} else throw new SpaceNotExistsException("space must not be null");
 	}
 	
+	@Override
 	public Set<String> getSpaces() {
 		return this.networkService.getJoinedSpaces();
 	}
 	
+	@Override
 	public void unsubscribe(String spaceURI, String subscriptionURI) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		networkService.unsubscribe(spaceURI, subscriptionURI);
-	}	
+	}
 
+	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		return networkService.subscribe(spaceURI, template, listener);
 	}
 	
+	@Override
 	public String advertise(String spaceURI, NotificableTemplate template) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		return networkService.advertise(spaceURI, template);
 	}
 	
+	@Override
 	public void unadvertise(String spaceURI, String advertisementURI) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		networkService.unadvertise(spaceURI, advertisementURI);
 	}
 
+	@Override
 	public Graph query(String spaceURI, Template template) throws TSException {
 		return query(spaceURI, template, this.defaultSemanticFormat, this.defaultTimeout);
 	}
 
+	@Override
 	public Graph query(String spaceURI, Template template, long timeout) throws TSException {
 		return query(spaceURI, template, this.defaultSemanticFormat, timeout);
 	}
 	
+	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
 		return query(spaceURI, template, outputFormat, this.defaultTimeout);
 	}
 	
+	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return query(spaceURI, template, outputFormat, null, timeout);
 	}
 	
+	@Override
 	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		Graph ret = null;
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
@@ -257,22 +275,27 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return ret;
 	}
 
+	@Override
 	public Graph read(String spaceURI, Template template) throws TSException {
 		return read(spaceURI,template, this.defaultSemanticFormat, this.defaultTimeout);
 	}
 	
+	@Override
 	public Graph read(String spaceURI, Template template, long timeout) throws TSException {
 		return read(spaceURI,template, this.defaultSemanticFormat, timeout);
 	}
 
+	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
 		return read(spaceURI,template,outputFormat, this.defaultTimeout);
 	}
 	
+	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return read(spaceURI,template,outputFormat,null,timeout);
 	}
 	
+	@Override
 	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		
@@ -286,23 +309,27 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return networkService.read(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
-
+	@Override
 	public Graph read(String spaceURI, String graphURI) throws TSException {
 		return read(spaceURI,graphURI, this.defaultSemanticFormat);
 	}
 	
+	@Override
 	public Graph read(String spaceURI, String graphURI, long timeout) throws TSException {
 		return read(spaceURI,graphURI, this.defaultSemanticFormat,timeout);
 	}
-
+	
+	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat) throws TSException {
 		return read(spaceURI,graphURI,outputFormat,this.defaultTimeout);
 	}
 
+	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return read(spaceURI,graphURI,outputFormat,null,timeout);
 	}
 	
+	@Override
 	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
@@ -316,22 +343,27 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return networkService.read(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, Template template) throws TSException {
 		return take(spaceURI,template,this.defaultSemanticFormat);
 	}
 
+	@Override
 	public Graph take(String spaceURI, Template template, long timeout) throws TSException {
 		return take(spaceURI,template,this.defaultSemanticFormat,timeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat) throws TSException {
 		return take(spaceURI,template,outputFormat,this.defaultTimeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException {
 		return take(spaceURI,template,outputFormat,null,timeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		final Graph ret = dataAccessService.take(spaceURI, template, outputFormat);
@@ -344,22 +376,27 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return networkService.take(spaceURI, template, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, String graphURI) throws TSException {
 		return take(spaceURI,graphURI,this.defaultSemanticFormat, this.defaultTimeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, String graphURI, long timeout) throws TSException {
 		return take(spaceURI,graphURI,this.defaultSemanticFormat,timeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat) throws TSException {
 		return take(spaceURI,graphURI,outputFormat,this.defaultTimeout);
 	}
 
+	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException {
 		return take(spaceURI,graphURI,outputFormat,null,timeout);
 	}
 	
+	@Override
 	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		//graphURI = Util.normalizeSpaceURI(graphURI, "");
@@ -374,6 +411,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		return networkService.take(spaceURI, graphURI, SemanticFormat.NTRIPLES, filters, timeout);
 	}
 
+	@Override
 	public String write(String spaceURI, Graph triples) throws TSException {
 		//TODO ### db:24002008 writing to a space without joining it? data is now there - locally - but no one can find it, temporary join space and write data?! therefore new write method in networkService...
 		final long start = System.currentTimeMillis();
@@ -394,7 +432,6 @@ public abstract class AbstractKernel implements ITripleSpace {
 	public IDataAccess getDataAccessService() {
 		return dataAccessService;
 	}
-	
 	public INetwork getNetworkService() {
 		return networkService;
 	}

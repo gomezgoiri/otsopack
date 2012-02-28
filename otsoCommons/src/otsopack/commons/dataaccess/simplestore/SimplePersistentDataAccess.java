@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -96,8 +96,7 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 		return ret;
 	}
 	
-	@Override
-	public void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
+	private void createSpace(String spaceURI) throws SpaceAlreadyExistsException {
 		dbg("Create space " + spaceURI + " instance: " + this);
 		
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
@@ -113,12 +112,12 @@ public class SimplePersistentDataAccess extends AbstractDataAccess {
 	}
 	
 	@Override
-	public void joinSpace(String spaceURI) throws SpaceNotExistsException, PersistenceException {
+	public void joinSpace(String spaceURI) throws SpaceAlreadyExistsException, PersistenceException {
+		createSpace(spaceURI);
+		
 		dbg("Join space " + spaceURI + " instance: " + this);
 		
 		final String normalizedURI = Util.normalizeSpaceURI(spaceURI, "");
-		
-		if (!this.spaces.containsKey(normalizedURI)) throw new SpaceNotExistsException("The space \"" + spaceURI + "\" could not be found");
 		
 		if (this.selectedMode==OpenMode.LOAD_ON_JOIN) {
 			final Set<DatabaseTuple> tuples = this.dao.getGraphsFromSpace(normalizedURI);

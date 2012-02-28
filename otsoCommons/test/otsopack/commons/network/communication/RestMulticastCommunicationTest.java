@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 University of Deusto
+ * Copyright (C) 2008 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -139,12 +139,10 @@ public class RestMulticastCommunicationTest {
 		// Add information to 2 stores
 		
 		this.controllers[3].getDataAccessService().startup();
-		this.controllers[3].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[3].getDataAccessService().joinSpace(this.spaceURI);
 		final String graphUriPablo = this.controllers[3].getDataAccessService().write(this.spaceURI, PABLO_GRAPH);
 		
 		this.controllers[8].getDataAccessService().startup();
-		this.controllers[8].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[8].getDataAccessService().joinSpace(this.spaceURI);
 		final String graphUriAitor = this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 		
@@ -190,10 +188,8 @@ public class RestMulticastCommunicationTest {
 		// Add information to 2 stores
 		
 		this.controllers[3].getDataAccessService().startup();
-		this.controllers[3].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[3].getDataAccessService().joinSpace(this.spaceURI);
 		this.controllers[8].getDataAccessService().startup();
-		this.controllers[8].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[8].getDataAccessService().joinSpace(this.spaceURI);
 		
 		final String graphUriPablo = this.controllers[3].getDataAccessService().write(this.spaceURI, PABLO_GRAPH);
@@ -249,12 +245,10 @@ public class RestMulticastCommunicationTest {
 		// Add information to 2 stores
 		
 		this.controllers[3].getDataAccessService().startup();
-		this.controllers[3].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[3].getDataAccessService().joinSpace(this.spaceURI);
 		this.controllers[3].getDataAccessService().write(this.spaceURI, PABLO_GRAPH);
 		
 		this.controllers[8].getDataAccessService().startup();
-		this.controllers[8].getDataAccessService().createSpace(this.spaceURI);
 		this.controllers[8].getDataAccessService().joinSpace(this.spaceURI);
 		this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 				
