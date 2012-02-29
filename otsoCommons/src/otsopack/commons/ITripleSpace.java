@@ -25,14 +25,8 @@ import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
-public interface ITripleSpace extends ILayer {	
-	/**
-	 * create a new space
-	 * @throws TSException
-	 * @param spaceURI
-	 */
-	public void createSpace(String spaceURI) throws TSException;
-
+public interface ITripleSpace extends ILayer {
+	
 	/**
 	 * join an existing space
 	 * create access log for space

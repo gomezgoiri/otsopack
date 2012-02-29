@@ -172,12 +172,6 @@ public class RestNetwork implements INetwork {
 	}
 
 	@Override
-	public void createSpace(String spaceURI) throws TSException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void joinSpace(String spaceURI) throws TSException {
 		this.joinedSpaces.add(spaceURI);
 	}

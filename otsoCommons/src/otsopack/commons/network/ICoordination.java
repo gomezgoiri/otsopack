@@ -17,7 +17,6 @@ package otsopack.commons.network;
 import java.util.Set;
 
 import otsopack.commons.ILayer;
-import otsopack.commons.exceptions.SpaceAlreadyExistsException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.coordination.IPeerInformationHolder;
 
@@ -32,14 +31,6 @@ public interface ICoordination extends ILayer, IPeerInformationHolder {
 	 */
 	public Set<String> getJoinedSpaces();
 	
-	/**
-	 * create a new space
-	 * @throws SpaceAlreadyExistsException 
-	 * @param spaceURI
-	 * @throws TSException 
-	 */	
-	public void createSpace(String spaceURI) throws TSException;
-
 	/**
 	 * join a space
 	 * @param spaceURI
