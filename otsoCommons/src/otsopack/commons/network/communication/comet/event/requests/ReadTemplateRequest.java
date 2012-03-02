@@ -35,7 +35,7 @@ public class ReadTemplateRequest extends ReadRequest implements HasTemplateReque
 	
 	@Override
 	public Graph read(String spaceURI, ICommunication comm) throws TSException {
-		return comm.read(spaceURI, getTemplate(this), getOutputFormat(), getTimeout());
+		return comm.read(spaceURI, getTemplate(this), getArguments());
 	}
 
 	public String getSerializedTemplate() {

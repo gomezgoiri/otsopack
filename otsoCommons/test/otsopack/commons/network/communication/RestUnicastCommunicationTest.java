@@ -21,15 +21,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
-import otsopack.commons.network.communication.RestUnicastCommunication;
 
 public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	final private String spaceURI = "http://space1/";
+	private final Arguments arguments = new Arguments().setOutputFormat(SemanticFormat.NTRIPLES).setTimeout(3000);
+	
 	private RestUnicastCommunication ruc;
 	private String[] graphuri;
 	
@@ -85,8 +87,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	public void testQuery() throws Exception {
 		final Graph [] graphs = this.ruc.query(this.spaceURI,
 								WildcardTemplate.createWithNull(null,"http://xmlns.com/foaf/0.1/title"),
-								SemanticFormat.NTRIPLES,
-								3000);
+								this.arguments);
 		assertEquals(1, graphs.length);
 		final Graph graph = graphs[0];
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
@@ -101,8 +102,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	public void testReadStringTemplateSemanticFormatLong() throws Exception {
 		final Graph graph = this.ruc.read(this.spaceURI,
 				WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
-											SemanticFormat.NTRIPLES,
-											3000);
+				this.arguments);
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 	}
@@ -115,8 +115,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	public void testReadStringStringSemanticFormatLong() throws Exception {
 		final Graph graph = this.ruc.read(this.spaceURI,
 											this.graphuri[0],
-											SemanticFormat.NTRIPLES,
-											3000);
+											this.arguments);
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://aitor.gomezgoiri.net/me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>") );
 	}
@@ -128,8 +127,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	public void testTakeStringTemplateSemanticFormatLong() throws Exception {
 		Graph graph = this.ruc.take(this.spaceURI,
 									WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
-									SemanticFormat.NTRIPLES,
-									3000);
+									this.arguments);
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 		
@@ -137,14 +135,12 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 		//TODO decide what to do in this case
 		graph = this.ruc.take(this.spaceURI,
 									WildcardTemplate.createWithURI("http://facebook.com/user/yoda","http://xmlns.com/foaf/0.1/homepage","http://yodaknowsit.com"),
-									SemanticFormat.NTRIPLES,
-									3000);
+									this.arguments);
 		assertNull( graph );
 		
 		graph = this.ruc.take(this.spaceURI,
 				WildcardTemplate.createWithURI("http://aitor.gomezgoiri.net/me","http://xmlns.com/foaf/0.1/homepage","http://aitor.gomezgoiri.net"),
-				SemanticFormat.NTRIPLES,
-				3000);
+				this.arguments);
 		
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net>") );
@@ -158,8 +154,7 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 	public void testTakeStringStringSemanticFormatLong() throws Exception {
 		Graph graph = this.ruc.take(this.spaceURI,
 									this.graphuri[1],
-									SemanticFormat.NTRIPLES,
-									3000);
+									this.arguments);
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://facebook.com/user/yoda> <http://xmlns.com/foaf/0.1/homepage> <http://yodaknowsit.com>") );
 		
@@ -167,15 +162,13 @@ public class RestUnicastCommunicationTest extends AbstractRestServerTesting {
 		//TODO decide what to do in this case
 		graph = this.ruc.take(this.spaceURI,
 								this.graphuri[1],
-								SemanticFormat.NTRIPLES,
-								3000);
+								this.arguments);
 		assertNull( graph );
 		
 		
 		graph = this.ruc.take(this.spaceURI,
 								this.graphuri[0],
-								SemanticFormat.NTRIPLES,
-								3000);
+								this.arguments);
 		
 		assertEquals( SemanticFormat.NTRIPLES, graph.getFormat() );
 		assertTrue( graph.getData().contains("<http://aitor.gomezgoiri.net/me> <http://xmlns.com/foaf/0.1/homepage> <http://aitor.gomezgoiri.net>") );

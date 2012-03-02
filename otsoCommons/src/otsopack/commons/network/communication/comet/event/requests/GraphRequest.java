@@ -16,6 +16,7 @@ package otsopack.commons.network.communication.comet.event.requests;
 
 import java.io.Serializable;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SerializableTemplateFactory;
 import otsopack.commons.data.Template;
@@ -48,6 +49,10 @@ public abstract class GraphRequest implements Serializable {
 	protected Template getTemplate(HasTemplateRequest request) throws TemplateDeserializingException {
 		final String serializedTemplate = request.getSerializedTemplate();
 		return (Template)SerializableTemplateFactory.create(serializedTemplate);
+	}
+	
+	public Arguments getArguments() {
+		return new Arguments().setOutputFormat(getOutputFormat()).setTimeout(getTimeout());
 	}
 	
 	public long getTimeout() {

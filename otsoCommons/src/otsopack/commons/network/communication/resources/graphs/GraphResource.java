@@ -20,6 +20,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.IController;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -67,7 +68,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			}
 			
 			if( isMulticastProvider() ){
-				final Graph multicastGraph = getMulticastProvider().read(space, graphuri, outputFormat, getTimeout());
+				final Graph multicastGraph = getMulticastProvider().read(space, graphuri, new Arguments().setOutputFormat(outputFormat));
 				if(multicastGraph != null)
 					return multicastGraph;
 			}
@@ -113,7 +114,7 @@ public class GraphResource extends AbstractServerResource implements IGraphResou
 			}
 			
 			if( isMulticastProvider() ) {
-				final Graph multicastGraph = getMulticastProvider().take(space, graphuri, outputFormat, getTimeout());
+				final Graph multicastGraph = getMulticastProvider().take(space, graphuri, new Arguments().setOutputFormat(outputFormat));
 				if(multicastGraph != null)
 					return multicastGraph;
 			}

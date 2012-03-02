@@ -25,13 +25,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.IController;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
-import otsopack.commons.network.communication.OtsoRestServer;
-import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.discovery.SimpleDiscovery;
@@ -41,6 +40,7 @@ import otsopack.commons.network.coordination.spacemanager.SimpleSpaceManager;
 public class RestMulticastCommunicationTest {
 
 	private final String spaceURI = "http://space1/";
+	private final Arguments arguments = new Arguments().setOutputFormat(SemanticFormat.NTRIPLES).setTimeout(100);
 	
 	private static final int STARTING_PORT = 9050;
 	private static final int SERVERS = 10;
@@ -130,10 +130,10 @@ public class RestMulticastCommunicationTest {
 		assertTrue(SERVERS > 8);
 		
 		// Check when it is wrong
-		final Graph emptyByUriGraph = this.comm.read(this.spaceURI, "http://foo/bar", SemanticFormat.NTRIPLES, 100);
+		final Graph emptyByUriGraph = this.comm.read(this.spaceURI, "http://foo/bar", this.arguments);
 		assertEquals(null, emptyByUriGraph);
 		
-		final Graph emptyByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), SemanticFormat.NTRIPLES, 100);
+		final Graph emptyByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), this.arguments);
 		assertEquals(null, emptyByTemplateGraph);
 		
 		// Add information to 2 stores
@@ -147,21 +147,21 @@ public class RestMulticastCommunicationTest {
 		final String graphUriAitor = this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 		
 		// Access by graph
-		final Graph pabloByUriGraph = this.comm.read(this.spaceURI, graphUriPablo, SemanticFormat.NTRIPLES, 100);
+		final Graph pabloByUriGraph = this.comm.read(this.spaceURI, graphUriPablo, this.arguments);
 		assertGraphEquals(PABLO_GRAPH, pabloByUriGraph);
 		
-		final Graph aitorByUriGraph = this.comm.read(this.spaceURI, graphUriAitor, SemanticFormat.NTRIPLES, 100);
+		final Graph aitorByUriGraph = this.comm.read(this.spaceURI, graphUriAitor, this.arguments);
 		assertGraphEquals(AITOR_GRAPH, aitorByUriGraph);
 		
 		// Access by template
-		final Graph pabloByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph pabloByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), this.arguments);
 		assertGraphEquals(PABLO_GRAPH, pabloByTemplateGraph);
 		
-		final Graph aitorByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph aitorByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), this.arguments);
 		assertGraphEquals(AITOR_GRAPH, aitorByTemplateGraph);
 		
 		// Access any of them by template
-		final Graph anyByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithNull(null, null), SemanticFormat.NTRIPLES, 100);
+		final Graph anyByTemplateGraph = this.comm.read(this.spaceURI, WildcardTemplate.createWithNull(null, null), this.arguments);
 		assertNotNull(anyByTemplateGraph);
 		// It is Pablo...
 		try{
@@ -179,10 +179,10 @@ public class RestMulticastCommunicationTest {
 		assertTrue(SERVERS > 8);
 		
 		// Check when it is wrong
-		final Graph emptyByUriGraph = this.comm.take(this.spaceURI, "http://foo/bar", SemanticFormat.NTRIPLES, 100);
+		final Graph emptyByUriGraph = this.comm.take(this.spaceURI, "http://foo/bar", this.arguments);
 		assertEquals(null, emptyByUriGraph);
 		
-		final Graph emptyByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), SemanticFormat.NTRIPLES, 100);
+		final Graph emptyByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), this.arguments);
 		assertEquals(null, emptyByTemplateGraph);
 		
 		// Add information to 2 stores
@@ -196,25 +196,25 @@ public class RestMulticastCommunicationTest {
 		final String graphUriAitor = this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 		
 		// Access by graph
-		final Graph pabloByUriGraph = this.comm.take(this.spaceURI, graphUriPablo, SemanticFormat.NTRIPLES, 100);
+		final Graph pabloByUriGraph = this.comm.take(this.spaceURI, graphUriPablo, this.arguments);
 		assertGraphEquals(PABLO_GRAPH, pabloByUriGraph);		
 		this.controllers[3].getDataAccessService().write(this.spaceURI, PABLO_GRAPH);
 		
-		final Graph aitorByUriGraph = this.comm.take(this.spaceURI, graphUriAitor, SemanticFormat.NTRIPLES, 100);
+		final Graph aitorByUriGraph = this.comm.take(this.spaceURI, graphUriAitor, this.arguments);
 		assertGraphEquals(AITOR_GRAPH, aitorByUriGraph);
 		this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 
 		// Access by template
-		final Graph pabloByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph pabloByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), this.arguments);
 		assertGraphEquals(PABLO_GRAPH, pabloByTemplateGraph);
 		this.controllers[3].getDataAccessService().write(this.spaceURI, PABLO_GRAPH);
 		
-		final Graph aitorByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph aitorByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), this.arguments);
 		assertGraphEquals(AITOR_GRAPH, aitorByTemplateGraph);
 		this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 		
 		// Access any of them by template
-		final Graph anyByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithNull(null, null), SemanticFormat.NTRIPLES, 100);
+		final Graph anyByTemplateGraph = this.comm.take(this.spaceURI, WildcardTemplate.createWithNull(null, null), this.arguments);
 		assertNotNull(anyByTemplateGraph);
 		// It is Pablo or Aitor.
 		try{
@@ -239,7 +239,7 @@ public class RestMulticastCommunicationTest {
 		assertTrue(SERVERS > 8);
 		
 		// Check when it is wrong
-		final Graph [] emptyByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), SemanticFormat.NTRIPLES, 100);
+		final Graph [] emptyByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, "http://this.does.not.exist"), this.arguments);
 		assertArrayEquals(null, emptyByTemplateGraph);
 		
 		// Add information to 2 stores
@@ -253,18 +253,18 @@ public class RestMulticastCommunicationTest {
 		this.controllers[8].getDataAccessService().write(this.spaceURI, AITOR_GRAPH);
 				
 		// Access by template
-		final Graph [] pabloByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph [] pabloByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, PABLO_DEPICTION), this.arguments);
 		assertNotNull(pabloByTemplateGraph);
 		assertEquals(1, pabloByTemplateGraph.length);
 		assertGraphEquals(PABLO_DEPICTION_GRAPH, pabloByTemplateGraph[0]);
 		
-		final Graph [] aitorByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph [] aitorByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithURI(null, null, AITOR_DEPICTION), this.arguments);
 		assertNotNull(aitorByTemplateGraph);
 		assertEquals(1, aitorByTemplateGraph.length);
 		assertGraphEquals(AITOR_DEPICTION_GRAPH, aitorByTemplateGraph[0]);
 		
 		// Access any of them by template
-		final Graph [] anyByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithNull(null, DEPICTION), SemanticFormat.NTRIPLES, 100);
+		final Graph [] anyByTemplateGraph = this.comm.query(this.spaceURI, WildcardTemplate.createWithNull(null, DEPICTION), this.arguments);
 		assertNotNull(anyByTemplateGraph);
 		assertEquals(2, anyByTemplateGraph.length);
 		// It is Pablo and Aitor...

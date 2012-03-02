@@ -15,7 +15,9 @@
 package otsopack.commons.network.communication.comet.event.requests;
 
 import java.util.Arrays;
+import java.util.Set;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -31,21 +33,26 @@ public class QueryWithFiltersRequest extends QueryRequest {
 	public QueryWithFiltersRequest() {
 	}
 
-	public QueryWithFiltersRequest(long timeout, SemanticFormat outputFormat, String serializedTemplate, Filter [] filters) {
+	public QueryWithFiltersRequest(long timeout, SemanticFormat outputFormat, String serializedTemplate, Set<Filter> filters) {
 		super(timeout, outputFormat, serializedTemplate);
-		this.filters = filters;
+		setFilters(filters);
 	}
 	
 	public Graph [] query(String spaceURI, ICommunication comm) throws TSException {
-		return comm.query(spaceURI, getTemplate(this), getOutputFormat(), this.filters, getTimeout());
+		return comm.query(spaceURI, getTemplate(this), getArguments());
 	}
 
+	@Override
+	public Arguments getArguments() {
+		return super.getArguments().setFilters(getFilters());
+	}
+	
 	public Filter[] getFilters() {
 		return this.filters;
 	}
 
-	public void setFilters(Filter[] filters) {
-		this.filters = filters;
+	public void setFilters(Set<Filter> filters) {
+		this.filters = filters.toArray(new Filter[filters.size()]);
 	}
 
 	@Override

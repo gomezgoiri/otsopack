@@ -81,6 +81,7 @@ public class AbstractServerResource extends ServerResource {
 		return getOtsopackApplication().getSigner();
 	}
 	
+	// TODO specify in the arguments class!
 	protected int getTimeout(){
 		return getOtsopackApplication().getTimeout();
 	}

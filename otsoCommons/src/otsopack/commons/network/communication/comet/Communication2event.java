@@ -14,6 +14,7 @@
  */
 package otsopack.commons.network.communication.comet;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
@@ -56,32 +57,21 @@ public class Communication2event implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, AuthorizationException,
-			UnsupportedSemanticFormatException {
-		
-		final GraphRequest request = new ReadUriWithFiltersRequest(timeout, outputFormat, graphURI, filters);
-		Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI_FILTERS, request, spaceURI);
-		
-		return null;
-	}
-
-	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException,
-			UnsupportedSemanticFormatException {
-		
-		final GraphRequest request = new ReadUriRequest(timeout, outputFormat, graphURI);
-		Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI, request, spaceURI);
+	public Graph read(String spaceURI, String graphURI, Arguments configuration)
+			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
+		if (configuration.getFilters()!=null && !configuration.getFilters().isEmpty()) {
+			final GraphRequest request = new ReadUriWithFiltersRequest(configuration.getTimeout(), configuration.getOutputFormat(), graphURI, configuration.getFilters());
+			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI_FILTERS, request, spaceURI);
+		} else {
+			final GraphRequest request = new ReadUriRequest(configuration.getTimeout(), configuration.getOutputFormat(), graphURI);
+			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI, request, spaceURI);
+		}
 		
 		return null;
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException,
 			UnsupportedSemanticFormatException {
 
@@ -94,65 +84,35 @@ public class Communication2event implements ICommunication {
 				tse.printStackTrace();
 				return null;
 			}
-				
-			final GraphRequest request = new ReadTemplateWithFiltersRequest(timeout, outputFormat, serializedTemplate, filters);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_TEMPLATE_FILTERS, request, spaceURI);
-		}
-		
-		return null;
-	}
-
-	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		
-		if(template instanceof SerializableTemplate){
-			final SerializableTemplate serializableTemplate = (SerializableTemplate)template;
-			final String serializedTemplate;
-			try{
-				serializedTemplate = serializableTemplate.serialize();
-			}catch(TemplateSerializingException tse){
-				tse.printStackTrace();
-				return null;
+			
+			if (configuration.getFilters()!=null && !configuration.getFilters().isEmpty()) {
+				final GraphRequest request = new ReadTemplateWithFiltersRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate, configuration.getFilters());
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_TEMPLATE_FILTERS, request, spaceURI);
+			} else {
+				final GraphRequest request = new ReadTemplateRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate);
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_TEMPLATE, request, spaceURI);
 			}
-				
-			final GraphRequest request = new ReadTemplateRequest(timeout, outputFormat, serializedTemplate);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_TEMPLATE, request, spaceURI);
 		}
 		
-		
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph take(String spaceURI, String graphURI, Arguments configuration)
 			throws SpaceNotExistsException, AuthorizationException,
 			UnsupportedSemanticFormatException {
-		
-		final GraphRequest request = new TakeUriWithFiltersRequest(timeout, outputFormat, graphURI, filters);
-		Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI_FILTERS, request, spaceURI);
-		
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException,
-			UnsupportedSemanticFormatException {
-		
-		final GraphRequest request = new TakeUriRequest(timeout, outputFormat, graphURI);
-		Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI_FILTERS, request, spaceURI);
-		
+		if (configuration.getFilters()!=null && !configuration.getFilters().isEmpty()) {
+			final GraphRequest request = new TakeUriWithFiltersRequest(configuration.getTimeout(), configuration.getOutputFormat(), graphURI, configuration.getFilters());
+			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI_FILTERS, request, spaceURI);
+		} else {
+			final GraphRequest request = new TakeUriRequest(configuration.getTimeout(), configuration.getOutputFormat(), graphURI);
+			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.READ_URI, request, spaceURI);
+		}
 		return null;
 	}
 	
 	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph take(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException,
 			UnsupportedSemanticFormatException {
 		
@@ -165,17 +125,21 @@ public class Communication2event implements ICommunication {
 				tse.printStackTrace();
 				return null;
 			}
-				
-			final GraphRequest request = new TakeTemplateWithFiltersRequest(timeout, outputFormat, serializedTemplate, filters);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.TAKE_TEMPLATE_FILTERS, request, spaceURI);
+			
+			if (configuration.getFilters()!=null && !configuration.getFilters().isEmpty()) {
+				final GraphRequest request = new TakeTemplateWithFiltersRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate, configuration.getFilters());
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.TAKE_TEMPLATE_FILTERS, request, spaceURI);
+			} else {
+				final GraphRequest request = new TakeTemplateRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate);
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.TAKE_TEMPLATE, request, spaceURI);
+			}
 		}
 		
 		return null;
 	}
 
 	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
+	public Graph[] query(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException,
 			UnsupportedSemanticFormatException {
 		
@@ -188,55 +152,14 @@ public class Communication2event implements ICommunication {
 				tse.printStackTrace();
 				return null;
 			}
-				
-			final GraphRequest request = new TakeTemplateRequest(timeout, outputFormat, serializedTemplate);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.TAKE_TEMPLATE, request, spaceURI);
-		}
-		
-		return null;
-	}
-
-	@Override
-	public Graph[] query(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		
-		if(template instanceof SerializableTemplate){
-			final SerializableTemplate serializableTemplate = (SerializableTemplate)template;
-			final String serializedTemplate;
-			try{
-				serializedTemplate = serializableTemplate.serialize();
-			}catch(TemplateSerializingException tse){
-				tse.printStackTrace();
-				return null;
+			
+			if (configuration.getFilters()!=null && !configuration.getFilters().isEmpty()) {
+				final GraphRequest request = new QueryWithFiltersRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate, configuration.getFilters());
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.QUERY_TEMPLATE_FILTERS, request, spaceURI);
+			} else {
+				final GraphRequest request = new QueryRequest(configuration.getTimeout(), configuration.getOutputFormat(), serializedTemplate);
+				Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.QUERY_TEMPLATE, request, spaceURI);
 			}
-				
-			final GraphRequest request = new QueryWithFiltersRequest(timeout, outputFormat, serializedTemplate, filters);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.QUERY_TEMPLATE_FILTERS, request, spaceURI);
-		}
-		
-		return null;
-	}
-
-	@Override
-	public Graph[] query(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		
-		if(template instanceof SerializableTemplate){
-			final SerializableTemplate serializableTemplate = (SerializableTemplate)template;
-			final String serializedTemplate;
-			try{
-				serializedTemplate = serializableTemplate.serialize();
-			}catch(TemplateSerializingException tse){
-				tse.printStackTrace();
-				return null;
-			}
-				
-			final GraphRequest request = new QueryRequest(timeout, outputFormat, serializedTemplate);
-			Event event = new Event(Event.TYPE_REQUEST, Event.generateEventId(), CometEvents.QUERY_TEMPLATE, request, spaceURI);
 		}
 		
 		return null;

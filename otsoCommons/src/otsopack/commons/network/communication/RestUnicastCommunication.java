@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.restlet.data.CookieSetting;
@@ -33,6 +34,7 @@ import otsopack.authn.client.AuthenticationClient;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.authn.client.exc.AuthenticationException;
 import otsopack.authn.resources.SessionRequestResource;
+import otsopack.commons.Arguments;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -143,7 +145,7 @@ public class RestUnicastCommunication implements ICommunication {
 		return originalURL;
 	}
 	
-	protected Graph filterResults(Graph graph, Filter[] filters) {
+	protected Graph filterResults(Graph graph, Set<Filter> filters) {
 		if( graph !=null ){
 			for(Filter filter: filters) 
 				if( filter.getAssert().evaluate(graph) ) 
@@ -153,7 +155,7 @@ public class RestUnicastCommunication implements ICommunication {
 		return graph;
 	}
 	
-	protected Graph [] filterResults(Graph [] graphs, Filter[] filters) {
+	protected Graph [] filterResults(Graph [] graphs, Set<Filter> filters) {
 		if(graphs == null)
 			return null;
 		final List<Graph> resultingGraphs = new Vector<Graph>(graphs.length);
@@ -166,15 +168,10 @@ public class RestUnicastCommunication implements ICommunication {
 	}
 	
 	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(String spaceURI, String graphURI, Arguments configuration)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
-		final Graph graph = read(spaceURI, graphURI, outputFormat, timeout);
-		return filterResults(graph, filters);
-	}
-
-	@Override
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
+		Graph ret = null;
+		
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
@@ -182,19 +179,18 @@ public class RestUnicastCommunication implements ICommunication {
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"/graphs/"+URLEncoder.encode(graphURI, "utf-8");
 			try {
-				return tryGet(originalURL,timeout);
+				ret = tryGet(originalURL, configuration.getTimeout());
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
 					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					final String redirectionURL = authenticateStoringCookies(originalURL, dataProviderAuthenticationURL);
-					return tryGet(redirectionURL, timeout); //retry
-				}
-				throw e;
+					ret = tryGet(redirectionURL, configuration.getTimeout()); //retry
+				} else throw e;
 			}
 		} catch (UnsupportedEncodingException e2) {
 			e2.printStackTrace();
 		}
-		return null;
+		return filterResults(ret, configuration.getFilters());
 	}
 	
 		private Graph tryGet(String originalURL, long timeout) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
@@ -228,31 +224,23 @@ public class RestUnicastCommunication implements ICommunication {
 			return null;
 		}
 
-
 	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
-		final Graph graph = read(spaceURI, template, outputFormat, timeout);
-		return filterResults(graph, filters);
-	}
-
-	@Override
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		Graph ret = null;
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final String originalURL = getBaseURI(spaceURI)+"/graphs/wildcards/"+relativeURI;
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL, timeout );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( originalURL, configuration.getTimeout() );
 				try {
 					final Representation rep = cr.get(NTriplesRepresentation.class);
-					return createGraph(cr, rep);
+					ret = createGraph(cr, rep);
 				} catch (ResourceException e) {
 					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
 							throw new SpaceNotExistsException(e.getMessage());
 						}
-						return null; // Graph not found, it returns nothing
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST) ||
 							e.getStatus().equals(Status.SERVER_ERROR_INTERNAL)) {
 						throw new UnsupportedTemplateException(e.getMessage());
@@ -272,39 +260,32 @@ public class RestUnicastCommunication implements ICommunication {
 				e.printStackTrace();
 			}
 		}
-		return null;
-	}
-	
-	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
-		final Graph graph = take(spaceURI, graphURI, outputFormat, timeout);
-		return filterResults(graph, filters);
+		return filterResults(ret, configuration.getFilters());
 	}
 
 	@Override
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
+	public Graph take(String spaceURI, String graphURI, Arguments configuration)
 			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException {
 		/*
 		 * 	final MediaType [] clientMediaTypes = SemanticFormatRepresentationRegistry.getMediaTypes(SemanticFormat.NTRIPLES, SemanticFormat.TURTLE);  
 		 *	OtsopackConverter.setEnabledVariants(clientMediaTypes);
 		 */
+		Graph ret = null;
 		try {
 			final String originalURL = getBaseURI(spaceURI)+"/graphs/"+URLEncoder.encode(graphURI, "utf-8");
 			try {
-				return tryDelete(originalURL);
+				ret = tryDelete(originalURL);
 			} catch (ResourceException e) {
 				if(e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
 					final String dataProviderAuthenticationURL = this.baseRESTServer + SessionRequestResource.PUBLIC_ROOT;
 					final String redirectionURL = authenticateStoringCookies(originalURL, dataProviderAuthenticationURL);
-					return tryDelete(redirectionURL); //retry
-				}
-				throw e;
+					ret = tryDelete(redirectionURL); //retry
+				} else throw e;
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return filterResults(ret, configuration.getFilters());
 	}	
 	
 		private Graph tryDelete(String originalURL) throws UnsupportedSemanticFormatException, SpaceNotExistsException, AuthorizationException {
@@ -337,31 +318,25 @@ public class RestUnicastCommunication implements ICommunication {
 			}
 			return null;
 		}
-	
-	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
-		final Graph graph = take(spaceURI, template, outputFormat, timeout);
-		return filterResults(graph, filters);
-	}
 
 	@Override
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+	public Graph take(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		Graph ret = null;
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/graphs/wildcards/"+relativeURI, timeout );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/graphs/wildcards/"+relativeURI, configuration.getTimeout() );
 				
 				try {
 					final Representation rep = cr.delete(NTriplesRepresentation.class);
-					return createGraph(cr, rep);
+					ret = createGraph(cr, rep);
 				} catch (ResourceException e) {
 					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
 							throw new SpaceNotExistsException(e.getMessage());
 						}
-						return null; // Graph not found, it returns nothing
+						// Graph not found, it returns nothing
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST) ||
 							e.getStatus().equals(Status.SERVER_ERROR_INTERNAL)) {
 						throw new UnsupportedTemplateException(e.getMessage());
@@ -381,32 +356,27 @@ public class RestUnicastCommunication implements ICommunication {
 				e.printStackTrace();
 			}
 		}
-		return null;
-	}
-	
-	@Override
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
-		final Graph [] graphs = query(spaceURI, template, outputFormat, timeout);
-		return filterResults(graphs, filters);
+		return filterResults(ret, configuration.getFilters());
 	}
 
 	@Override
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
+	public Graph[] query(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
+		Graph[] ret = null;
+		
 		if( template instanceof WildcardTemplate ) {
 			try {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
-				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/query/wildcards/"+relativeURI, timeout );
+				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/query/wildcards/"+relativeURI, configuration.getTimeout() );
 				try {
 					final Representation rep = cr.get(NTriplesRepresentation.class);
-					return createGraphs(cr, rep);
+					ret = createGraphs(cr, rep);
 				} catch (ResourceException e) {
 					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
 							throw new SpaceNotExistsException(e.getMessage());
 						}
-						return null; // Graph not found, it returns nothing
+						// Graph not found, it returns nothing
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_BAD_REQUEST)) {
 						throw new UnsupportedTemplateException(e.getMessage());
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
@@ -423,7 +393,7 @@ public class RestUnicastCommunication implements ICommunication {
 				e.printStackTrace();
 			}
 		}
-		return new Graph[]{};
+		return filterResults(ret, configuration.getFilters());
 	}
 	
 	/**

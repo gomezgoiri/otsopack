@@ -18,10 +18,9 @@ import java.io.IOException;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
-import otsopack.commons.authz.Filter;
+import otsopack.commons.Arguments;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
-import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -83,8 +82,7 @@ public class RestCometCommunication implements ICommunication {
 
 	// http://restlet-code.1609877.n2.nabble.com/Push-data-from-server-using-a-live-HTTP-connection-td2906563.html
 	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph read(String spaceURI, String graphURI, Arguments configuration)
 			throws SpaceNotExistsException, AuthorizationException,
 			UnsupportedSemanticFormatException {
 		final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI() + "events", DEFAULT_TIMEOUT_CONNECTION );
@@ -104,8 +102,15 @@ public class RestCometCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, long timeout)
+	public Graph read(String spaceURI, Template template, Arguments configuration)
+			throws SpaceNotExistsException, UnsupportedTemplateException,
+			UnsupportedSemanticFormatException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Graph take(String spaceURI, String graphURI, Arguments configuration)
 			throws SpaceNotExistsException, AuthorizationException,
 			UnsupportedSemanticFormatException {
 		// TODO Auto-generated method stub
@@ -113,8 +118,7 @@ public class RestCometCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
+	public Graph take(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException,
 			UnsupportedSemanticFormatException {
 		// TODO Auto-generated method stub
@@ -122,62 +126,7 @@ public class RestCometCommunication implements ICommunication {
 	}
 
 	@Override
-	public Graph read(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, AuthorizationException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, String graphURI,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph take(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph[] query(String spaceURI, Template template,
-			SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException,
-			UnsupportedSemanticFormatException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graph[] query(String spaceURI, Template template,
-			SemanticFormat outputFormat, long timeout)
+	public Graph[] query(String spaceURI, Template template, Arguments configuration)
 			throws SpaceNotExistsException, UnsupportedTemplateException,
 			UnsupportedSemanticFormatException {
 		// TODO Auto-generated method stub

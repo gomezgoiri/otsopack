@@ -14,11 +14,10 @@
 
 package otsopack.commons.network;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.ILayer;
-import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
-import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -56,173 +55,66 @@ public interface ICommunication extends ILayer {
 	/** messages of type take */
 	public static final int TAKE_TEMPLATE = 207;
 	
+	
+	/**
+	 * read one graph using its identifying URI.
+	 * @param spaceURI
+	 * @param graphURI
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
+	 * @return set of triples or null if nothing is found
+	 * @throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException
+	 */
+	public Graph read(String spaceURI, String graphURI, Arguments configuration)
+		throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
+	
+	/**
+	 * read one graph using its identifying URI.
+	 * @param spaceURI
+	 * @param template
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
+	 * @return set of triples or null if nothing is found
+	 * @throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException
+	 */
+	public Graph read(String spaceURI, Template template, Arguments configuration)
+		throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
+	
+	/**
+	 * Take a graph by using its identifying URI.
+	 * @param spaceURI
+	 * @param graphURI
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
+	 * @return set of ITriples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException
+	 */
+	public Graph take(String spaceURI, String graphURI, Arguments configuration)
+		throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
 
 	/**
-	 * get communication ids without coordination id
-	 * @param spaceURI
-	 * @return ids
-	 */
-	//public Set<URI> getIDs(URI spaceURI);
-	
-	/**
-	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @param spaceURI
-	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 * @throws SpaceNotExistsException, AuthorizationException
-	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * read one graph by using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @param spaceURI
-	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 * @throws SpaceNotExistsException, AuthorizationException
-	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * read one graph by using a template. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
+	 * Take a graph using a template. Wait the specified timeout or until a response is received.
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
+	 * @return set of ITriples or null if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException
 	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
+	public Graph take(String spaceURI, Template template, Arguments configuration)
+		throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
-	 * read one graph by using a template. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
+	 * query a set of triples using a template and wait a maximum timeout
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
-
-	/**
-	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @param spaceURI
-	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 * @throws SpaceNotExistsException, AuthorizationException
-	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * Takes a graph using its identifying URI. Wait the specified timeout or until a response is received.
-	 * @param spaceURI
-	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 * @throws SpaceNotExistsException, AuthorizationException
-	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, AuthorizationException, UnsupportedSemanticFormatException;
-
-	/**
-	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
-	 * @param spaceURI
-	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * Takes a graph using a template. Wait the specified timeout or until a response is received.
-	 * @throws SpaceNotExistsException
-	 * @param spaceURI
-	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
-	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * query triples by using a template waiting a maximum timeout
-	 * @throws SpaceNotExistsException
-	 * @param spaceURI
-	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 * 		If timeout is equals to 0, it waits until a response is received.
-	 * 		Otherwise, it wait for responses during the specified timeout.
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
 	 * @return set of triples or set of triples with size 0 if nothing found
+	 * @throws SpaceNotExistsException, AuthorizationException
 	 */
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
-
-	/**
-	 * query triples by using a template waiting a maximum timeout
-	 * @throws SpaceNotExistsException
-	 * @param spaceURI
-	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 * 		If timeout is equals to 0, it waits until a response is received.
-	 * 		Otherwise, it wait for responses during the specified timeout.
-	 * @return set of triples or set of triples with size 0 if nothing found
-	 */
-	public Graph [] query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout)
-			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
+	public Graph[] query(String spaceURI, Template template, Arguments configuration)
+		throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
 	
 	/**
 	 * subscribe to one template

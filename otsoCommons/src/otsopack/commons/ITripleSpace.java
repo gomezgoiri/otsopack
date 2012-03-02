@@ -15,11 +15,8 @@
 package otsopack.commons;
 
 import java.util.Set;
-
-import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.NotificableTemplate;
-import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
@@ -52,156 +49,114 @@ public interface ITripleSpace extends ILayer {
 	// # # # //
 	
 	/**
-	 * read one graph using its identifying URI. Wait the specified timeout or until a response is received.
+	 * read one graph using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing is found
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph read(String spaceURI, String graphURI) throws TSException;
+	public Graph read(String graphURI) throws TSException;
 	
 	/**
-	 * read one graph using its identifying URI. Wait the specified timeout or until a response is received.
+	 * read one graph using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
 	 * @return set of triples or null if nothing is found
 	 */
-	public Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph read(String spaceURI, String graphURI, Arguments configuration) throws TSException;
+	public Graph read(String graphURI, Arguments configuration) throws TSException;
 	
 	/**
-	 * read one graph using a template. Wait the specified timeout or until a response is received.
+	 * read one graph using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of triples or null if nothing is found
 	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
-
+	public Graph read(String spaceURI, Template template) throws TSException;
+	public Graph read(Template template) throws TSException;
+	
 	/**
-	 * read one graph using a template. Wait the specified timeout or until a response is received.
+	 * read one graph using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
-	 * @return set of triples or null if nothing found
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
+	 * @return set of triples or null if nothing is found
 	 */
-	public Graph read(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph read(String spaceURI, Template template, Arguments configuration) throws TSException;
+	public Graph read(Template template, Arguments configuration) throws TSException;
 	
 	/**
-	 * Take a graph by using its identifying URI. Wait the specified timeout or until a response is received.
+	 * Take a graph by using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph take(String spaceURI, String graphURI) throws TSException;
+	public Graph take(String graphURI) throws TSException;
 
 	/**
-	 * Take a graph by using its identifying URI. Wait the specified timeout or until a response is received.
+	 * Take a graph by using its identifying URI.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param graphURI
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph take(String spaceURI, String graphURI, Arguments configuration) throws TSException;
+	public Graph take(String graphURI, Arguments configuration) throws TSException;
 	
 	/**
 	 * Take a graph using a template. Wait the specified timeout or until a response is received.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
+	public Graph take(String spaceURI, Template template) throws TSException;
+	public Graph take(Template template) throws TSException;
 
 	/**
 	 * Take a graph using a template. Wait the specified timeout or until a response is received.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 *  	If the timeout is greater than 0, it waits the specified timeout.
-	 *  	It the timeout is 0, it waits until a response is received.
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
 	 * @return set of ITriples or null if nothing found
 	 */
-	public Graph take(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph take(String spaceURI, Template template, Arguments configuration) throws TSException;
+	public Graph take(Template template, Arguments configuration) throws TSException;
 	
 	/**
 	 * query a set of triples using a template and wait a maximum timeout
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param timeout
-	 * 		If timeout is equals to 0, it waits until a response is received.
-	 * 		Otherwise, it wait for responses during the specified timeout.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, long timeout) throws TSException;
-
+	public Graph query(String spaceURI, Template template) throws TSException;
+	public Graph query(Template template) throws TSException;
+	
 	/**
 	 * query a set of triples using a template and wait a maximum timeout
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
 	 * @param template
-	 * @param outputFormat
-	 * 		Preferred output format.
-	 * @param filters
-	 * 		It applies these filters to the result.
-	 * @param timeout
-	 * 		If timeout is equals to 0, it waits until a response is received.
-	 * 		Otherwise, it wait for responses during the specified timeout.
+	 * @param configuration
+	 * 		Used to specify the timeout, semantic output format or filters.
 	 * @return set of triples or set of triples with size 0 if nothing found
 	 */
-	public Graph query(String spaceURI, Template template, SemanticFormat outputFormat, Filter[] filters, long timeout) throws TSException;
+	public Graph query(String spaceURI, Template template, Arguments configuration) throws TSException;
+	public Graph query(Template template, Arguments configuration) throws TSException;
 	
 	/**
 	 * write ITriples into specified space
@@ -211,6 +166,7 @@ public interface ITripleSpace extends ILayer {
 	 * @return IGraph uri
 	 */
 	public String write(String spaceURI, Graph ITriples) throws TSException;
+	public String write(Graph ITriples) throws TSException;
 	
 	// # # # //
 		
@@ -223,6 +179,7 @@ public interface ITripleSpace extends ILayer {
 	 * @return subscription uri
 	 */
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws TSException;
+	public String subscribe(NotificableTemplate template, INotificationListener listener) throws TSException;
 
 	/**
 	 * unsubscribe a certain subscription
@@ -231,6 +188,7 @@ public interface ITripleSpace extends ILayer {
 	 * @param subscription
 	 */
 	public void unsubscribe(String spaceURI, String subscriptionURI) throws TSException;
+	public void unsubscribe(String subscriptionURI) throws TSException;
 
 	/**
 	 * advertise a certain template to which can be subscribed
@@ -240,6 +198,7 @@ public interface ITripleSpace extends ILayer {
 	 * @return advertisement uri
 	 */
 	public String advertise(String spaceURI, NotificableTemplate template) throws TSException;
+	public String advertise(NotificableTemplate template) throws TSException;
 
 	/**
 	 * unadvertise a certain advertisement
@@ -248,52 +207,12 @@ public interface ITripleSpace extends ILayer {
 	 * @param advertisement
 	 */
 	public void unadvertise(String spaceURI, String advertisementURI) throws TSException;
+	public void unadvertise(String advertisementURI) throws TSException;
 
-	public abstract Graph take(String spaceURI, String graphURI, SemanticFormat outputFormat)
-			throws TSException;
-
-	public abstract Graph take(String spaceURI, String graphURI, long timeout)
-			throws TSException;
-
-	public abstract Graph take(String spaceURI, String graphURI) throws TSException;
-
-	public abstract Graph take(String spaceURI, Template template, SemanticFormat outputFormat)
-			throws TSException;
-
-	public abstract Graph take(String spaceURI, Template template, long timeout)
-			throws TSException;
-
-	public abstract Graph take(String spaceURI, Template template) throws TSException;
-
-	public abstract Graph read(String spaceURI, String graphURI, SemanticFormat outputFormat)
-			throws TSException;
-
-	public abstract Graph read(String spaceURI, String graphURI, long timeout)
-			throws TSException;
-
-	public abstract Graph read(String spaceURI, String graphURI) throws TSException;
-
-	public abstract Graph read(String spaceURI, Template template, SemanticFormat outputFormat)
-			throws TSException;
-
-	public abstract Graph read(String spaceURI, Template template, long timeout)
-			throws TSException;
-
-	public abstract Graph read(String spaceURI, Template template) throws TSException;
-
-	public abstract Graph query(String spaceURI, Template template, SemanticFormat outputFormat)
-			throws TSException;
-
-	public abstract Graph query(String spaceURI, Template template, long timeout)
-			throws TSException;
-
-	public abstract Graph query(String spaceURI, Template template) throws TSException;
-
-	public abstract void setDefaultSemanticFormat(SemanticFormat format);
-
-	public abstract void setDefaultTimeout(int timeout);
-
-	public abstract SemanticFormat getDefaultSemanticFormat();
-
-	public abstract int getDefaultTimeout();
+	
+	public abstract void setDefaultConfigurationArguments(Arguments configuration);
+	public abstract Arguments getDefaultConfigurationArguments();
+	
+	public abstract void setDefaultSpace(String spaceURI);
+	public abstract String getDefaultSpace();
 }

@@ -35,7 +35,7 @@ public class TakeTemplateRequest extends TakeRequest implements HasTemplateReque
 	
 	@Override
 	public Graph take(String spaceURI, ICommunication comm) throws TSException {
-		return comm.take(spaceURI, getTemplate(this), getOutputFormat(), getTimeout());
+		return comm.take(spaceURI, getTemplate(this), getArguments());
 	}
 
 	public String getSerializedTemplate() {

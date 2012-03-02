@@ -35,7 +35,7 @@ public class QueryRequest extends GraphRequest implements HasTemplateRequest {
 	}
 	
 	public Graph [] query(String spaceURI, ICommunication comm) throws TSException {
-		return comm.query(spaceURI, getTemplate(this), getOutputFormat(), getTimeout());
+		return comm.query(spaceURI, getTemplate(this), getArguments());
 	}
 
 	public String getSerializedTemplate() {

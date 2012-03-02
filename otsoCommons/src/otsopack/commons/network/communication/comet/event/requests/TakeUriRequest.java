@@ -34,7 +34,7 @@ public class TakeUriRequest extends TakeRequest {
 	
 	@Override
 	public Graph take(String spaceURI, ICommunication comm) throws TSException {
-		return comm.take(spaceURI, this.uri, getOutputFormat(), getTimeout());
+		return comm.take(spaceURI, this.uri, getArguments());
 	}
 
 	public String getUri() {

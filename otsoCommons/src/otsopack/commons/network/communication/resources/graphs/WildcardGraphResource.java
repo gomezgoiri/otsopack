@@ -19,6 +19,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.IController;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -79,7 +80,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			}
 			
 			if(isMulticastProvider()){
-				final Graph multicastGraph = getMulticastProvider().read(space, tpl, outputFormat, getTimeout());
+				final Graph multicastGraph = getMulticastProvider().read(space, tpl, new Arguments().setOutputFormat(outputFormat));
 				if(multicastGraph != null)
 					return multicastGraph;
 			}
@@ -113,7 +114,7 @@ public class WildcardGraphResource extends AbstractServerResource implements IWi
 			}
 
 			if(isMulticastProvider()){
-				final Graph multicastGraph = getMulticastProvider().take(space, tpl, outputFormat, getTimeout());
+				final Graph multicastGraph = getMulticastProvider().take(space, tpl, new Arguments().setOutputFormat(outputFormat));
 				if(multicastGraph != null)
 					return multicastGraph;
 			}

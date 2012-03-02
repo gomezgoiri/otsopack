@@ -15,7 +15,9 @@
 package otsopack.commons.network.communication.comet.event.requests;
 
 import java.util.Arrays;
+import java.util.Set;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
@@ -30,23 +32,27 @@ public class ReadUriWithFiltersRequest extends ReadUriRequest {
 	
 	public ReadUriWithFiltersRequest(){ }
 	
-	public ReadUriWithFiltersRequest(long timeout, SemanticFormat outputFormat, String uri, Filter [] filters) {
+	public ReadUriWithFiltersRequest(long timeout, SemanticFormat outputFormat, String uri, Set<Filter> filters) {
 		super(timeout, outputFormat, uri);
-		this.filters = filters;
+		setFilters(filters);
 	}
 	
 	@Override
 	public Graph read(String spaceURI, ICommunication comm) throws TSException {
-		return comm.read(spaceURI, getUri(), getOutputFormat(), getFilters(), getTimeout());
+		return comm.read(spaceURI, getUri(), getArguments());
 	}
-
+	
+	@Override
+	public Arguments getArguments() {
+		return super.getArguments().setFilters(getFilters());
+	}
 	
 	public Filter[] getFilters() {
 		return this.filters;
 	}
 
-	public void setFilters(Filter[] filters) {
-		this.filters = filters;
+	public void setFilters(Set<Filter> filters) {
+		this.filters = filters.toArray(new Filter[filters.size()]);
 	}
 
 	@Override

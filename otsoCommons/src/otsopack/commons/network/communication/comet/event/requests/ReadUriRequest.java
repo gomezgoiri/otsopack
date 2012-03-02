@@ -34,7 +34,7 @@ public class ReadUriRequest extends ReadRequest {
 
 	@Override
 	public Graph read(String spaceURI, ICommunication comm) throws TSException {
-		return comm.read(spaceURI, this.uri, getOutputFormat(), getTimeout());
+		return comm.read(spaceURI, this.uri, getArguments());
 	}
 
 	public String getUri() {

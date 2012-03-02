@@ -21,6 +21,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.Arguments;
 import otsopack.commons.IController;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
@@ -85,7 +86,7 @@ public class WildcardQueryResource extends AbstractServerResource implements IWi
 			Graph [] graphs = new Graph[]{};
 			
 			if( isMulticastProvider() ){
-				final Graph [] queried = getMulticastProvider().query(space, tpl, outputFormat, getTimeout());
+				final Graph [] queried = getMulticastProvider().query(space, tpl, new Arguments().setOutputFormat(outputFormat));
 				if(queried != null)
 					graphs = queried;
 			}
