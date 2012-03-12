@@ -11,20 +11,22 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.full.java.network.communication;
+package otsopack.commons.network.communication;
 
 import org.junit.After;
 import org.junit.Before;
 
+import otsopack.commons.AbstractRestServerIntegrationTesting;
+import otsopack.commons.OtsoServerManager;
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.data.impl.microjena.MicrojenaFactory;
 import otsopack.commons.network.ICommunication;
-import otsopack.full.java.AbstractRestServerIntegrationTesting;
-import otsopack.full.java.OtsoServerManager;
-import otsopack.full.java.network.coordination.IRegistry;
-import otsopack.full.java.network.coordination.Node;
-import otsopack.full.java.network.coordination.registry.SimpleRegistry;
+import otsopack.commons.network.communication.RestMulticastCommunication;
+import otsopack.commons.network.communication.RestUnicastCommunication;
+import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.Node;
+import otsopack.commons.network.coordination.registry.SimpleRegistry;
 
 public abstract class AbstractOtsopackRestMulticastIntegrationTest extends AbstractRestServerIntegrationTesting {
 

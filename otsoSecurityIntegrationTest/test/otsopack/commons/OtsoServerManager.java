@@ -11,7 +11,7 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.full.java;
+package otsopack.commons;
 
 import java.util.List;
 import java.util.Vector;
@@ -26,8 +26,8 @@ import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ICommunication;
-import otsopack.full.java.network.communication.OtsoRestServer;
-import otsopack.full.java.network.communication.resources.prefixes.PrefixesStorage;
+import otsopack.commons.network.communication.OtsoRestServer;
+import otsopack.commons.network.communication.resources.prefixes.PrefixesStorage;
 
 public class OtsoServerManager {
 	
@@ -110,7 +110,6 @@ public class OtsoServerManager {
 	
 	public void prepareSemanticRepository() throws TSException {
 		this.controller.getDataAccessService().startup();
-		this.controller.getDataAccessService().createSpace(SPACE);
 		this.controller.getDataAccessService().joinSpace(SPACE);
 	}
 	

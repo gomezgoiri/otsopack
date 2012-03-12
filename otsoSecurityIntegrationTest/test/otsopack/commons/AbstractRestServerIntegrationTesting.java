@@ -12,7 +12,7 @@
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 
-package otsopack.full.java;
+package otsopack.commons;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

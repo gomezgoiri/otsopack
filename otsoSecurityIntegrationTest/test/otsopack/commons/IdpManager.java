@@ -11,7 +11,7 @@
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
  */
-package otsopack.full.java;
+package otsopack.commons;
 
 import java.util.HashMap;
 import java.util.Map;

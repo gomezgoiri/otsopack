@@ -1,4 +1,4 @@
-package otsopack.full.java;
+package otsopack.commons;
 
 import org.junit.After;
 import org.junit.Before;
