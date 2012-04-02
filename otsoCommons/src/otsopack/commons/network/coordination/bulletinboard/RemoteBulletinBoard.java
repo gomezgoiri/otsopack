@@ -13,6 +13,7 @@
  */
 package otsopack.commons.network.coordination.bulletinboard;
 
+import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
@@ -46,8 +47,9 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	public String subscribe(Subscription s) {
 		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
 		// where is stored the node's reference?
-		subJson.setNode(new Node()); //XXX TODO take from somewhere!
-		final String subscriptionId = this.client.subscribe(subJson);
+		subJson.setNode(new Node("http://aitor.gomezgoiri.net", "aitor")); //XXX TODO take from somewhere!
+		final String subscriptionId = JSONDecoder.decode(this.client.subscribe(subJson), String.class);
+		
 		this.mySubscriptions.subscribe(Subscription.createNamedSubcription(subscriptionId, s.getExpiration(), s.getTemplate(), s.getListener()));
 		return subscriptionId;
 	}

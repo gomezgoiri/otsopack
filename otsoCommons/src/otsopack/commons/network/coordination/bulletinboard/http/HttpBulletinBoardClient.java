@@ -16,6 +16,7 @@ package otsopack.commons.network.coordination.bulletinboard.http;
 import java.io.IOException;
 
 import org.restlet.data.MediaType;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -69,9 +70,9 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
-				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				repr = client.post(JSONEncoder.encode(advJson), MediaType.APPLICATION_JSON);
+				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
+				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				repr = client.post(json, MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -92,9 +93,9 @@ public class HttpBulletinBoardClient {
 			final Representation repr;
 			try {
 				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
-				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				// final JsonRepresentation json = new JsonRepresentation(advJson);
-				repr = client.put(JSONEncoder.encode(advJson), MediaType.APPLICATION_JSON);
+				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				//final JsonRepresentation json = new JsonRepresentation(advJson);
+				repr = client.put(json, MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {
@@ -132,9 +133,9 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(subJson));
 				// final JsonRepresentation json = new JsonRepresentation(subJson);
-				repr = client.post(JSONEncoder.encode(subJson), MediaType.APPLICATION_JSON);
+				repr = client.post(json, MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -154,10 +155,10 @@ public class HttpBulletinBoardClient {
 		try{
 			final Representation repr;
 			try {
-				SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
-				//JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+				final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(sub);
+				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(subJson));
 				// JsonRepresentation json = new JsonRepresentation(subJson);
-				repr = client.put(JSONEncoder.encode(subJson), MediaType.APPLICATION_JSON);
+				repr = client.put(json, MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();
 			} catch (IOException e) {

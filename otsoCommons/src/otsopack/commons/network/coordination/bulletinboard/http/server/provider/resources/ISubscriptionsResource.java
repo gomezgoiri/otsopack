@@ -18,12 +18,9 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
 public interface ISubscriptionsResource {
-	@Get("html")	
-	Representation toHtml();
-	
-	@Get("json")
-	String toJson();
+	/*@Get("html")	
+	Representation toHtml();*/
 	
 	@Post("json")
-	Representation createSubscription();
+	Representation createSubscription(Representation rep);
 }

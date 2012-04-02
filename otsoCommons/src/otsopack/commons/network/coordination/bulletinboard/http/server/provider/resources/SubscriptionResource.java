@@ -38,11 +38,11 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	}
 	
 	@Override
-	public Representation modifySubscription() {
+	public Representation modifySubscription(Representation rep) {
 		try {
-			final String subID = getArgument("subscribe");
+			final String subID = this.getArgument("subscribe");
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-			final String provided = getRequestEntity().getText();
+			final String provided = rep.getText();
 			final SubscribeJSON subjson = JSONDecoder.decode(provided, SubscribeJSON.class);
 			bulletinBoard.updateSubscription(subID, subjson.getExpiration());
 			return new StringRepresentation(subID);

@@ -19,12 +19,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.restlet.data.Status;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
-import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.coordination.IBulletinBoard;
@@ -43,22 +42,17 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 		return graphsRoots;
 	}
 
-	@Override
+	/*@Override
 	public Representation toHtml() {
 		final HTMLEncoder encoder = new HTMLEncoder();
 		encoder.appendRoots(getRoots().keySet());
 		return encoder.getHtmlRepresentation();
-	}
+	}*/
 
 	@Override
-	public String toJson() {
-		return JSONEncoder.encodeSortedURIs(getRoots().keySet());
-	}
-
-	@Override
-	public Representation createSubscription() {
+	public Representation createSubscription(Representation rep) {
 		try {
-			final String argument = getRequestEntity().getText();
+			final String argument = rep.getText();
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final SubscribeJSON subjson = JSONDecoder.decode(argument, SubscribeJSON.class);
 			
@@ -66,7 +60,8 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 			subjson.setId(uuid);
 			
 			bulletinBoard.subscribe( JSONSerializableConversors.convertFromSerializable(subjson) );
-			return new StringRepresentation(uuid);
+			
+			return new JsonRepresentation(JSONEncoder.encode(uuid));
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
 		}

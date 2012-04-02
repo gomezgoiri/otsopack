@@ -16,8 +16,8 @@ package otsopack.commons.network.coordination.bulletinboard.http.server.provider
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.JSONEncoder;
@@ -49,7 +49,7 @@ public class AdvertisesManagerResource extends ServerResource implements IAdvert
 	public Representation getAdvertises() {
 		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 		final AdvertiseJSON[] advertises = JSONSerializableConversors.convertToSerializable(bulletinBoard.getAdvertisements());
-		return new StringRepresentation(JSONEncoder.encode(advertises));
+		return new JsonRepresentation(JSONEncoder.encode(advertises));
 	}
 
 	@Override
