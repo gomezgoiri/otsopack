@@ -18,13 +18,6 @@ syntax: regexp
 ^otsoDroid/otsoDroid/bin
 ^otsoDroid/otsoDroid/libs
 
-^otsoDroid/otsoDroidJxta/gen
-^otsoDroid/otsoDroidJxta/local\.properties$
-^otsoDroid/otsoDroidJxta/debug\.keystore$
-^otsoDroid/otsoDroidJxta/build\.properties$
-^otsoDroid/otsoDroidJxta/bin
-^otsoDroid/otsoDroidJxta/libs
-
 ^otsoDroid/otsoDroidTest/gen
 ^otsoDroid/otsoDroidTest/local\.properties$
 ^otsoDroid/otsoDroidTest/debug\.keystore$
