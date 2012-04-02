@@ -31,6 +31,6 @@ public class RemoteNotificationListener implements INotificationListener {
 	@Override
 	public void notifyEvent(EventNotification notification) {
 		// TODO submit notification task
-		
+		// TODO check BulletinBoardConsumerResource
 	}
 }

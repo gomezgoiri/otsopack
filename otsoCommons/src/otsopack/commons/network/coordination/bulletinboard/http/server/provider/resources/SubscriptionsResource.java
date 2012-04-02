@@ -27,6 +27,7 @@ import org.restlet.resource.ServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.coordination.IBulletinBoard;
+import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.BulletinBoardProviderResource;
@@ -55,6 +56,8 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 			final String argument = rep.getText();
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final SubscribeJSON subjson = JSONDecoder.decode(argument, SubscribeJSON.class);
+			final Node n = subjson.getNode();
+			n.getBaseURI().replace("fakeip", this.getRequest().getClientInfo().getAddress() );
 			
 			final String uuid = UUID.randomUUID().toString();
 			subjson.setId(uuid);

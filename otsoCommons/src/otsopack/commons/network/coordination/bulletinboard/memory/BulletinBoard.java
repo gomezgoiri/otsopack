@@ -101,9 +101,20 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		}
 	}
 	
+	protected void checkSubscriptionNotification(Advertisement adv) {
+		for(Subscription s: subscriptions.values()) {
+			/*if(s.isNotificable(adv)) { // TODO
+				//s.getListener().notifyEvent(notification); //TODO
+			}*/
+		}
+		
+	}
+	
 	@Override
 	public String advertise(Advertisement adv) {
 		this.advertisements.put(adv.getID(),adv);
+		
+		checkSubscriptionNotification(adv);
 		
 		this.lock.lock();
 		try {

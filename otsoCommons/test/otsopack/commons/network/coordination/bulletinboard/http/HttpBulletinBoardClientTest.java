@@ -124,7 +124,8 @@ public class HttpBulletinBoardClientTest {
 		final Subscription sentSub = Subscription.createUnnamedSubcription(
 										System.currentTimeMillis()+60000,
 										WildcardTemplate.createWithNull(null, null),
-										new RemoteNotificationListener(new Node("http://baseuri1","uuid1")) );
+										// kids, don't do this at home!
+										new RemoteNotificationListener(new Node("http://fakeip:"+this.PORT,"uuid1")) );
 		final String uuid = this.client.subscribe(sentSub);
 		final Subscription createdSubs = Subscription.createNamedSubcription(uuid, 0, null, null);
 		
