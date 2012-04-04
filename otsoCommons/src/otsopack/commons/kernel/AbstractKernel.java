@@ -193,25 +193,14 @@ public abstract class AbstractKernel implements ITripleSpace {
 	}
 	
 	@Override
-	public String advertise(NotificableTemplate template) throws TSException {
-		return this.advertise(this.defaultSpace, template);
+	public void notify(NotificableTemplate template) throws TSException {
+		this.notify(this.defaultSpace, template);
 	}
 
 	@Override
-	public String advertise(String spaceURI, NotificableTemplate template) throws TSException {
+	public void notify(String spaceURI, NotificableTemplate template) throws TSException {
 		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		return networkService.advertise(spaceURI, template);
-	}
-	
-	@Override
-	public void unadvertise(String advertisementURI) throws TSException {
-		this.unadvertise(this.defaultSpace, advertisementURI);
-	}
-	
-	@Override
-	public void unadvertise(String spaceURI, String advertisementURI) throws TSException {
-		spaceURI = Util.normalizeSpaceURI(spaceURI, "");
-		networkService.unadvertise(spaceURI, advertisementURI);
+		networkService.notify(spaceURI, template);
 	}
 	
 	

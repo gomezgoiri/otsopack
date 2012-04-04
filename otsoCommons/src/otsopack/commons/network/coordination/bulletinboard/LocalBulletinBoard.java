@@ -53,28 +53,10 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	}
 	
 	@Override
-	public String advertise(Advertisement adv) {
-		final String advId = this.bulletinBoard.advertise(adv);
+	public void notify(Advertisement adv) {
+		this.bulletinBoard.notify(adv);
 		//this.registry.getBulletinBoards()
-		// TODO propagate to other bulletin boards
-		return advId;
-	}
-		
-	@Override
-	public void updateAdvertisement(String advId, long extratime) {
-		this.bulletinBoard.updateAdvertisement(advId, extratime);
-		// TODO propagate to other bulletin boards
-	}
-
-	@Override
-	public void unadvertise(String advId) {
-		this.bulletinBoard.unadvertise(advId);
-		// TODO propagate to other bulletin boards
-	}
-
-	@Override
-	public Advertisement[] getAdvertisements() {
-		return this.bulletinBoard.getAdvertisements();
+		// TODO propagate to other bulletin boards if it fails
 	}
 	
 	/* for testing purpouses in HttpBulletinBoardClient */

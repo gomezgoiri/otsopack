@@ -189,19 +189,8 @@ public class Communication2event implements ICommunication {
 	 * @see otsopack.commons.network.ICommunication#advertise(java.lang.String, otsopack.commons.data.NotificableTemplate)
 	 */
 	@Override
-	public String advertise(String spaceURI, NotificableTemplate template)
+	public void notify(String spaceURI, NotificableTemplate template)
 			throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.network.ICommunication#unadvertise(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void unadvertise(String spaceURI, String advertisementURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -76,7 +76,7 @@ public class HttpBulletinBoardClientTest {
 		final long timestamp1 = System.currentTimeMillis()+60000;
 		final long timestamp2 = System.currentTimeMillis()+360000;
 		final Advertisement sentAdv = new  Advertisement(null, timestamp1, WildcardTemplate.createWithNull(null, null));
-		final String uuid = this.client.advertise(sentAdv);
+		final String uuid = this.client.notify(sentAdv);
 		
 		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
 		assertEquals(3, advertises.size());
@@ -102,7 +102,7 @@ public class HttpBulletinBoardClientTest {
 	@Test
 	public void testUnadvertise() {
 		final Advertisement sentAdv = new  Advertisement(null, System.currentTimeMillis()+60000, WildcardTemplate.createWithNull(null, null));
-		final String uuid = this.client.advertise(sentAdv);
+		final String uuid = this.client.notify(sentAdv);
 		final Advertisement createdAdv = new  Advertisement(uuid,0, null);
 		
 		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());

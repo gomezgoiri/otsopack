@@ -138,12 +138,5 @@ public interface ICommunication extends ILayer {
 	 * @param template
 	 * @return advertisement uri
 	 */
-	public String advertise(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
-
-	/**
-	 * unadvertise one advertisement
-	 * @param spaceURI
-	 * @param advertisement
-	 */
-	public void unadvertise(String spaceURI, String advertisementURI) throws SpaceNotExistsException;
+	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
 }

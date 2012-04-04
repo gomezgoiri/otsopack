@@ -28,7 +28,6 @@ import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.commons.network.coordination.bulletinboard.http.server.commons.resources.AdvertiseResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.commons.resources.AdvertisesResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionsResource;
@@ -73,49 +72,6 @@ public class HttpBulletinBoardClient {
 				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 				repr = client.post(json, MediaType.APPLICATION_JSON);
-				return repr.getText();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} finally {
-			client.release();
-		}
-		return null;
-	}
-	
-
-	//@Override
-	public String updateAdvertise(Advertisement adv) {
-		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",adv.getID());
-		final ClientResource client = new ClientResource(url);
-		try{
-			final Representation repr;
-			try {
-				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
-				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				//final JsonRepresentation json = new JsonRepresentation(advJson);
-				repr = client.put(json, MediaType.APPLICATION_JSON);
-				// TODO check if json is generated!
-				return repr.getText();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} finally {
-			client.release();
-		}
-		return null;
-	}
-	
-	//@Override
-	public String unadvertise(String advId) {
-		final String url = (this.remoteBB.getURI() + AdvertiseResource.ROOT).replace("{advertise}",advId);
-		final ClientResource client = new ClientResource(url);
-		try {
-			final Representation repr;
-			try {
-				repr = client.delete(MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

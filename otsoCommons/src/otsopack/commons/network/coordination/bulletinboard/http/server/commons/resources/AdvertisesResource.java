@@ -38,7 +38,6 @@ public class AdvertisesResource extends ServerResource implements IAdvertisesRes
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
 		graphsRoots.put(ROOT, AdvertisesResource.class);
-		graphsRoots.putAll(AdvertiseResource.getRoots());
 		return graphsRoots;
 	}
 	
@@ -64,7 +63,7 @@ public class AdvertisesResource extends ServerResource implements IAdvertisesRes
 			final String uuid = UUID.randomUUID().toString();
 			advjson.setId(uuid);
 			
-			bulletinBoard.advertise( JSONSerializableConversors.convertFromSerializable(advjson) );
+			bulletinBoard.notify( JSONSerializableConversors.convertFromSerializable(advjson) );
 			return new StringRepresentation(uuid);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

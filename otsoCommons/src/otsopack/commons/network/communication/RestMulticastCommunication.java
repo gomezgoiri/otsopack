@@ -421,15 +421,8 @@ public class RestMulticastCommunication implements ICommunication {
 	}
 
 	@Override
-	public String advertise(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
+	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unadvertise(String spaceURI, String advertisementURI) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	private static abstract class TakeArguments{

@@ -21,9 +21,5 @@ public interface IBulletinBoard {
 	void updateSubscription(String subscriptionId, long extratime);
 	void unsubscribe(String subscriptionId);
 	
-	String advertise(Advertisement adv);
-	void updateAdvertisement(String advId, long extratime);
-	void unadvertise(String advId);
-	
-	Advertisement[] getAdvertisements();
+	void notify(Advertisement adv);
 }

@@ -35,7 +35,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	protected Map<String, Subscription> subscriptions
 					= new ConcurrentHashMap<String,Subscription>();
 	protected Map<String, Advertisement> advertisements
-					= new ConcurrentHashMap<String,Advertisement>();
+					= new ConcurrentHashMap<String,Advertisement>(); // TODO remove, no longer stored
 	
 	// auxiliar list to store subscriptions and advertisements
 	// ordered by their expiration date
@@ -111,7 +111,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 	
 	@Override
-	public String advertise(Advertisement adv) {
+	public void notify(Advertisement adv) {
 		this.advertisements.put(adv.getID(),adv);
 		
 		checkSubscriptionNotification(adv);
@@ -127,46 +127,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		synchronized(this.lockElementAdded) {
 			this.lockElementAdded.notifyAll();
 		}
-		return adv.getID();
-	}
-
-	@Override
-	public void updateAdvertisement(String advId, long extratime) {
-		final Advertisement adv = this.advertisements.get(advId);
-		
-		if( adv!=null ) {
-			adv.setExpiration( extratime );
-			
-			this.lock.lock();
-			try {
-				// TODO check whether sortedSet already takes into account the changes in the object.
-				// treated as completely new adv
-				this.expirableElements.remove(adv);
-				this.expirableElements.add(adv);
-				//TODO could it be better just calling to Collections.sort()?
-		     } finally {
-		         this.lock.unlock();
-		     }
-		}
-	}
-	
-	@Override
-	public void unadvertise(String advId) {
-		final Advertisement adv = this.advertisements.remove(advId);
-		
-		if( adv!=null ) {
-			this.lock.lock();
-			try {
-				this.expirableElements.remove(adv);
-		     } finally {
-		         this.lock.unlock();
-		     }
-		}
-	}
-	
-	@Override
-	public Advertisement[] getAdvertisements() {
-		return this.advertisements.values().toArray((new Advertisement[0]));
 	}
 	
 	/* for testing purpouses in HttpBulletinBoardClient */

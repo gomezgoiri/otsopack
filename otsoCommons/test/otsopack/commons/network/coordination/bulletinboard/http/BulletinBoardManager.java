@@ -41,8 +41,8 @@ public class BulletinBoardManager {
 		
 		// TODO create registry
 		this.server = new BulletinBoardRestServer(this.port, registry);
-		this.server.getApplication().getController().getBulletinBoard().advertise(this.ADV1);
-		this.server.getApplication().getController().getBulletinBoard().advertise(this.ADV2);
+		this.server.getApplication().getController().getBulletinBoard().notify(this.ADV1);
+		this.server.getApplication().getController().getBulletinBoard().notify(this.ADV2);
 		this.server.startup();
 	}
 	
