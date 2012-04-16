@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.bulletinboard.data.AbstractNotificableElement;
 import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
@@ -35,8 +36,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	protected Map<String, Subscription> subscriptions
 					= new ConcurrentHashMap<String,Subscription>();
 	
-	// auxiliar list to store subscriptions and advertisements
-	// ordered by their expiration date
+	// auxiliar list to store subscriptions ordered by their expiration date
 	protected SortedSet<AbstractNotificableElement> expirableElements
 					= new ConcurrentSkipListSet<AbstractNotificableElement>();
 	//guards expirableElement
@@ -99,29 +99,12 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		}
 	}
 	
-	protected void checkSubscriptionNotification(Advertisement adv) {
-		for(Subscription s: subscriptions.values()) {
-			/*if(s.isNotificable(adv)) { // TODO
-				//s.getListener().notifyEvent(notification); //TODO
-			}*/
-		}
-		
-	}
-	
 	@Override
 	public void notify(Advertisement adv) {		
-		checkSubscriptionNotification(adv);
-		
-		this.lock.lock();
-		try {
-			this.expirableElements.add(adv);
-	     } finally {
-	         this.lock.unlock();
-	     }
-		
-	    // Just in case the added advertisement is the first one
-		synchronized(this.lockElementAdded) {
-			this.lockElementAdded.notifyAll();
+		for(Subscription s: subscriptions.values()) {
+			if(s.isNotificable(adv.getTemplate())) {
+				s.getListener().notifyEvent(new EventNotification(adv.getTemplate()));
+			}
 		}
 	}
 	

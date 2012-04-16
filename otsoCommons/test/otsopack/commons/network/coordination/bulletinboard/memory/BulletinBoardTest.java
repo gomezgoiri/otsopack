@@ -14,7 +14,11 @@
 package otsopack.commons.network.coordination.bulletinboard.memory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +26,9 @@ import org.junit.Test;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.commons.network.communication.event.listener.EventNotification;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
 public class BulletinBoardTest {
@@ -147,6 +154,48 @@ public class BulletinBoardTest {
 		Thread.sleep(extraTime);
 		for(int i=0; i<4; i++) {
 			assertNull(this.bb.subscriptions.get(uuid[i]));
+		}
+	}
+	
+	@Test
+	public void testNotify() throws InterruptedException {
+		assertTrue( notify(	WildcardTemplate.createWithURI("http://s", "http://p", "http://o"),
+						WildcardTemplate.createWithURI("http://s", "http://p", "http://o")) );
+		assertTrue( notify( WildcardTemplate.createWithNull("http://s", "http://p"),
+					 	WildcardTemplate.createWithURI("http://s", "http://p", "http://o")) );
+		assertTrue( notify( WildcardTemplate.createWithNull("http://s", "http://p"),
+				 WildcardTemplate.createWithLiteral("http://s", "http://p", new Integer(21))) );
+		assertFalse( notify(	WildcardTemplate.createWithURI("http://s", "http://p", "http://o"),
+						WildcardTemplate.createWithNull("http://s", "http://p")) );
+	}
+	
+	public boolean notify(NotificableTemplate subscribed, NotificableTemplate notified) throws InterruptedException {
+		final int EXPIRATIONTIME = 50;
+		final long currentTime = System.currentTimeMillis();
+		
+		final TestListener list = new TestListener();
+		final Subscription sub = Subscription.createNamedSubcription("uuid1", currentTime+EXPIRATIONTIME, subscribed, list);
+		this.bb.subscribe(sub);
+		
+		this.bb.notify(new Advertisement("http://nomatter", currentTime+EXPIRATIONTIME, notified));
+		if (list.notified.get()) { // JIC it needs time...
+			synchronized (list.lock) {
+				list.lock.wait(10);
+			}
+		}
+		return list.notified.get();
+	}
+}
+
+class TestListener implements INotificationListener {
+	final protected Object lock = new Object();
+	protected AtomicBoolean notified = new AtomicBoolean(false);
+	
+	@Override
+	public void notifyEvent(EventNotification notification) {
+		notified.set(true);
+		synchronized (this.lock) {
+			this.lock.notifyAll();
 		}
 	}
 }

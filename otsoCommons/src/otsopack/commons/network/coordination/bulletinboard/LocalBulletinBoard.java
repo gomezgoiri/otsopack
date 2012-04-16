@@ -24,7 +24,7 @@ import otsopack.commons.network.coordination.bulletinboard.memory.BulletinBoard;
 /**
  * This class can be accessed both from local processes or
  * by remote request (through BulletinBoardController) to
- * store subscriptions and advertisements.
+ * store subscriptions and perform notifications.
  */
 public class LocalBulletinBoard implements IBulletinBoard {
 	final IRegistry registry;

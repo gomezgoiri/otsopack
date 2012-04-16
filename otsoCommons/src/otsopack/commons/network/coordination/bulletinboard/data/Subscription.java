@@ -35,4 +35,15 @@ public class Subscription extends AbstractNotificableElement {
 	public static Subscription createNamedSubcription(String identifier, long expiration, NotificableTemplate template, INotificationListener listener) {
 		return new Subscription(identifier, expiration, template, listener);
 	}
+
+	/**
+	 * @param tpl
+	 * 	The template being notified to the space.
+	 * @return
+	 * 	The node subscribed to "this" template should be notified when "tpl" is notified to the space?
+	 * 	Returns true if the subscription template is subsumed by "tpl"
+	 */
+	public boolean isNotificable(NotificableTemplate tpl) {
+		return this.tpl.match(tpl);
+	}
 }
