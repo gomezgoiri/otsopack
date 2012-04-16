@@ -34,8 +34,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	
 	protected Map<String, Subscription> subscriptions
 					= new ConcurrentHashMap<String,Subscription>();
-	protected Map<String, Advertisement> advertisements
-					= new ConcurrentHashMap<String,Advertisement>(); // TODO remove, no longer stored
 	
 	// auxiliar list to store subscriptions and advertisements
 	// ordered by their expiration date
@@ -111,9 +109,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 	
 	@Override
-	public void notify(Advertisement adv) {
-		this.advertisements.put(adv.getID(),adv);
-		
+	public void notify(Advertisement adv) {		
 		checkSubscriptionNotification(adv);
 		
 		this.lock.lock();
@@ -156,7 +152,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 						
 						// It should be in one of these collections
 						this.subscriptions.remove(element.getID());
-						this.advertisements.remove(element.getID());
 					}
 			     } finally {
 			         this.lock.unlock();
