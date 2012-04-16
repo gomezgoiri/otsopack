@@ -48,7 +48,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 			return new StringRepresentation(subID);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
-		}		
+		}
 	}
 	
 	@Override

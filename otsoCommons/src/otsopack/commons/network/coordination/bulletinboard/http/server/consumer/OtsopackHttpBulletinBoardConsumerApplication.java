@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import otsopack.commons.network.coordination.bulletinboard.http.server.IBulletinBoardController;
+import otsopack.commons.network.coordination.bulletinboard.http.server.consumer.resources.NotificationCallbackResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsopackHttpBulletinBoardConsumerApplication extends AbstractOtsopackApplication<IBulletinBoardController> {
@@ -26,7 +27,7 @@ public class OtsopackHttpBulletinBoardConsumerApplication extends AbstractOtsopa
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
 	static{
-		addPaths(BulletinBoardConsumerResource.getRoots());
+		addPaths(NotificationCallbackResource.getRoots());
 	}
 	
 	private static void addPaths(Map<String, Class<?>> roots){
