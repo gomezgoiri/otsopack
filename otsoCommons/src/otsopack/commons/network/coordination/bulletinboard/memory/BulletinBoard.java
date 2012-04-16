@@ -21,10 +21,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.bulletinboard.data.AbstractNotificableElement;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
 public class BulletinBoard implements IBulletinBoard, Runnable {
@@ -100,10 +100,10 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 	}
 	
 	@Override
-	public void notify(Advertisement adv) {		
+	public void notify(NotificableTemplate adv) {		
 		for(Subscription s: subscriptions.values()) {
-			if(s.isNotificable(adv.getTemplate())) {
-				s.getListener().notifyEvent(new EventNotification(adv.getTemplate()));
+			if(s.isNotificable(adv)) {
+				s.getListener().notifyEvent(new EventNotification(adv));
 			}
 		}
 	}

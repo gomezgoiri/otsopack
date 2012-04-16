@@ -81,7 +81,7 @@ public class SubscribeJSON implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AdvertiseJSON other = (AdvertiseJSON) obj;
+		SubscribeJSON other = (SubscribeJSON) obj;
 		if (this.id == null) {
 			if (other.id != null)
 				return false;

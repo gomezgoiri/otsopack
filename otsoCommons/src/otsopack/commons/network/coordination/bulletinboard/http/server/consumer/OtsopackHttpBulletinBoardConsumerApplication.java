@@ -26,11 +26,11 @@ public class OtsopackHttpBulletinBoardConsumerApplication extends AbstractOtsopa
 	
 	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
 	
-	static{
+	static {
 		addPaths(NotificationCallbackResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots){
+	private static void addPaths(Map<String, Class<?>> roots) {
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}

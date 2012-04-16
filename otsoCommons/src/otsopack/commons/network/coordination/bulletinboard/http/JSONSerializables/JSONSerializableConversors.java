@@ -13,10 +13,10 @@
  */
 package otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables;
 
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.TripleLiteralObject;
 import otsopack.commons.data.TripleURIObject;
 import otsopack.commons.data.WildcardTemplate;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.RemoteNotificationListener;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
@@ -59,27 +59,27 @@ public class JSONSerializableConversors {
 		return new SubscribeJSON(adv.getID(), tpl, adv.getExpiration(), null);
 	}
 	
-	public static Advertisement convertFromSerializable(AdvertiseJSON adv) {
-		final WildcardTemplate tpl;
-		if (adv.tpl==null) {
-			tpl = null;
+	public static NotificableTemplate convertFromSerializable(TemplateJSON adv) {
+		final WildcardTemplate ret;
+		if (adv==null) {
+			ret = null;
 		} else {
-			if (adv.tpl.object==null) {
-				tpl = WildcardTemplate.createWithNull(adv.tpl.subject, adv.tpl.predicate);
-			} else if (adv.tpl.object.startsWith("http://")){
-				tpl = WildcardTemplate.createWithURI(adv.tpl.subject, adv.tpl.predicate, adv.tpl.object);
+			if (adv.object==null) {
+				ret = WildcardTemplate.createWithNull(adv.subject, adv.predicate);
+			} else if (adv.object.startsWith("http://")){
+				ret = WildcardTemplate.createWithURI(adv.subject, adv.predicate, adv.object);
 			} else {
-				tpl = WildcardTemplate.createWithLiteral(adv.tpl.subject, adv.tpl.predicate, adv.tpl.object);
+				ret = WildcardTemplate.createWithLiteral(adv.subject, adv.predicate, adv.object);
 			}
 		}
-		return new Advertisement(adv.id, adv.expiration, tpl);
+		return ret;
 	}
 	
-	public static AdvertiseJSON convertToSerializable(Advertisement adv) {
-		final WildcardTemplate wtpl = (WildcardTemplate) adv.getTemplate();
-		final TemplateJSON tpl;
+	public static TemplateJSON convertToSerializable(NotificableTemplate adv) {
+		final WildcardTemplate wtpl = (WildcardTemplate) adv;
+		final TemplateJSON ret;
 		if (wtpl==null) {
-			tpl = null;
+			ret = null;
 		} else {
 			final String obj;
 			if (wtpl.getObject()==null) {
@@ -89,24 +89,24 @@ public class JSONSerializableConversors {
 			} else {
 				obj = ((TripleURIObject)wtpl.getObject()).getURI();
 			}
-			tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
+			ret = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		}
-		return new AdvertiseJSON(adv.getID(), tpl, adv.getExpiration());
+		return ret;
 	}
 	
-	public static Advertisement[] convertFromSerializable(AdvertiseJSON[] advs) {
-		final Advertisement[] ret = new Advertisement[advs.length];
+	public static NotificableTemplate[] convertFromSerializable(TemplateJSON[] advs) {
+		final NotificableTemplate[] ret = new NotificableTemplate[advs.length];
 		int i=0;
-		for(AdvertiseJSON adv: advs) {
+		for(TemplateJSON adv: advs) {
 			ret[i++] = convertFromSerializable(adv);
 		}
 		return ret;
 	}
 	
-	public static AdvertiseJSON[] convertToSerializable(Advertisement[] advs) {
-		final AdvertiseJSON[] ret = new AdvertiseJSON[advs.length];
+	public static TemplateJSON[] convertToSerializable(NotificableTemplate[] advs) {
+		final TemplateJSON[] ret = new TemplateJSON[advs.length];
 		int i=0;
-		for(Advertisement adv: advs) {
+		for(NotificableTemplate adv: advs) {
 			ret[i++] = convertToSerializable(adv);
 		}
 		return ret;

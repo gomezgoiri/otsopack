@@ -21,14 +21,14 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.coordination.bulletinboard.RemoteBulletinBoard;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
-import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.commons.network.coordination.bulletinboard.http.server.commons.resources.AdvertisesResource;
+import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.TemplateJSON;
+import otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources.NotificationResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources.SubscriptionsResource;
 
@@ -64,10 +64,10 @@ public class HttpBulletinBoardClient {
 	}*/
 
 	//@Override
-	public void notify(Advertisement adv) {
-		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertisesResource.ROOT);
+	public void notify(NotificableTemplate adv) {
+		final ClientResource client = new ClientResource(this.remoteBB.getURI() + NotificationResource.ROOT);
 		try{
-			final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
+			final TemplateJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
 			final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
 			/*final Representation repr = */client.post(json, MediaType.APPLICATION_JSON);
 			//return repr.getText();

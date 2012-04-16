@@ -28,7 +28,6 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
 public class BulletinBoardTest {
@@ -177,7 +176,7 @@ public class BulletinBoardTest {
 		final Subscription sub = Subscription.createNamedSubcription("uuid1", currentTime+EXPIRATIONTIME, subscribed, list);
 		this.bb.subscribe(sub);
 		
-		this.bb.notify(new Advertisement("http://nomatter", currentTime+EXPIRATIONTIME, notified));
+		this.bb.notify(notified);
 		if (list.notified.get()) { // JIC it needs time...
 			synchronized (list.lock) {
 				list.lock.wait(10);

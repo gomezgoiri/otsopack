@@ -13,10 +13,10 @@
  */
 package otsopack.commons.network.coordination.bulletinboard;
 
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 import otsopack.commons.network.coordination.bulletinboard.http.HttpBulletinBoardClient;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
@@ -67,7 +67,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public void notify(Advertisement adv) {
+	public void notify(NotificableTemplate adv) {
 		this.client.notify(adv);
 	}
 

@@ -16,7 +16,6 @@ package otsopack.commons.network.coordination.bulletinboard.http.server.consumer
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -26,9 +25,8 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.coordination.IBulletinBoard;
-import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.AdvertiseJSON;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.coordination.bulletinboard.http.server.provider.BulletinBoardProviderResource;
+import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.TemplateJSON;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 /**
@@ -38,7 +36,7 @@ import otsopack.commons.network.coordination.bulletinboard.http.server.provider.
  * 		+ notifications
  */
 public class NotificationCallbackResource extends ServerResource implements INotificationCallbackResource {
-	public static final String ROOT = BulletinBoardProviderResource.ROOT + "/notifications";
+	public static final String ROOT = "/notifications";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
@@ -51,13 +49,10 @@ public class NotificationCallbackResource extends ServerResource implements INot
 		try {
 			final String argument = rep.getText();
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-			final AdvertiseJSON advjson = JSONDecoder.decode(argument, AdvertiseJSON.class);
-			
-			final String uuid = UUID.randomUUID().toString();
-			advjson.setId(uuid);
-			
+			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
+						
 			bulletinBoard.notify( JSONSerializableConversors.convertFromSerializable(advjson) );
-			return new StringRepresentation(uuid);
+			return new StringRepresentation("200 OK.");
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
 		}

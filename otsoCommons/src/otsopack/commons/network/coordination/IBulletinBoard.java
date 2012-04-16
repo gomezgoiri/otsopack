@@ -13,7 +13,7 @@
  */
 package otsopack.commons.network.coordination;
 
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
 public interface IBulletinBoard {
@@ -21,5 +21,5 @@ public interface IBulletinBoard {
 	void updateSubscription(String subscriptionId, long extratime);
 	void unsubscribe(String subscriptionId);
 	
-	void notify(Advertisement adv);
+	void notify(NotificableTemplate adv);
 }

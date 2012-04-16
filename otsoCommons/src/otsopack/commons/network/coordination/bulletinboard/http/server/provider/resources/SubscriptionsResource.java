@@ -30,11 +30,10 @@ import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.coordination.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.commons.network.coordination.bulletinboard.http.server.provider.BulletinBoardProviderResource;
 import otsopack.commons.network.coordination.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionsResource extends ServerResource implements ISubscriptionsResource {
-	public static final String ROOT = BulletinBoardProviderResource.ROOT + "/subscribes";
+	public static final String ROOT = "/subscribes";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();

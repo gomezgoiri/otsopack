@@ -15,9 +15,9 @@ package otsopack.commons.network.coordination.bulletinboard;
 
 import java.util.Collection;
 
+import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.coordination.IBulletinBoard;
 import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 import otsopack.commons.network.coordination.bulletinboard.memory.BulletinBoard;
 
@@ -53,7 +53,7 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	}
 	
 	@Override
-	public void notify(Advertisement adv) {
+	public void notify(NotificableTemplate adv) {
 		this.bulletinBoard.notify(adv);
 		//this.registry.getBulletinBoards()
 		// TODO propagate to other bulletin boards if it fails

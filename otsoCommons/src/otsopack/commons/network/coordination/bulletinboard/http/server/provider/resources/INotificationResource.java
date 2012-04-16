@@ -11,9 +11,16 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.commons.network.coordination.bulletinboard.http.server.commons.resources;
+package otsopack.commons.network.coordination.bulletinboard.http.server.provider.resources;
 
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
-public interface IBulletinBoardResource {
+public interface INotificationResource {
+	@Get("html")	
+	Representation toHtml();
 
+	@Post("json")
+	Representation addAdvertise(Representation rep);
 }

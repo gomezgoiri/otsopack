@@ -15,19 +15,14 @@ package otsopack.commons.network.coordination.bulletinboard.http;
 
 import java.util.Collection;
 
-import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.coordination.bulletinboard.RemoteBulletinBoard;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 import otsopack.commons.network.coordination.bulletinboard.http.server.BulletinBoardRestServer;
 import otsopack.commons.network.coordination.registry.SimpleRegistry;
 
 public class BulletinBoardManager {
-	public final Advertisement ADV1 = new Advertisement("adv1", System.currentTimeMillis()+3600000, WildcardTemplate.createWithURI("http://subj1","http://predicate1","http://obj1"));
-	public final Advertisement ADV2 = new Advertisement("adv2", System.currentTimeMillis()+3600000, WildcardTemplate.createWithNull(null,"http://predicate2"));
-	
 	private BulletinBoardRestServer server;
 	private int port;
 	
@@ -41,8 +36,6 @@ public class BulletinBoardManager {
 		
 		// TODO create registry
 		this.server = new BulletinBoardRestServer(this.port, registry);
-		this.server.getApplication().getController().getBulletinBoard().notify(this.ADV1);
-		this.server.getApplication().getController().getBulletinBoard().notify(this.ADV2);
 		this.server.startup();
 	}
 	
