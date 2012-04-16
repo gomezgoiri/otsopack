@@ -22,9 +22,7 @@ import org.junit.Test;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
-import otsopack.commons.network.coordination.bulletinboard.memory.BulletinBoard;
 
 public class BulletinBoardTest {
 	BulletinBoard bb;
@@ -40,52 +38,6 @@ public class BulletinBoardTest {
 	@After
 	public void tearDown() throws Exception {
 		this.bb.stop();
-	}
-	
-	@Test
-	public void testAdvertisements() throws InterruptedException {
-		final int EXPIRATIONTIME = 50;
-		final long currentTime = System.currentTimeMillis();
-		
-		final int ELEMNUM = 4;
-		final int[] expire = new int[ELEMNUM];
-		final String[] uuid = new String[ELEMNUM];
-		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
-		final Advertisement adv[] = new Advertisement[ELEMNUM];
-		for(int i=0; i<ELEMNUM; i++) {
-			expire[i] = (i+1) * 50;
-			uuid[i] = "uuid"+i;
-			nt[i] = WildcardTemplate.createWithNull(null,"http://p"+i);
-			adv[i] = new Advertisement(uuid[i], currentTime+expire[i], nt[i]);
-			this.bb.advertise(adv[i]);
-		}
-		
-		assertEquals(this.bb.advertisements.get(uuid[0]), adv[0]);
-		assertEquals(this.bb.advertisements.get(uuid[1]), adv[1]);
-		assertEquals(this.bb.advertisements.get(uuid[2]), adv[2]);
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv[3]);
-		
-		this.bb.unadvertise(uuid[2]);
-		this.bb.unadvertise(uuid[3]);
-		
-		this.bb.updateAdvertisement(uuid[1], currentTime+expire[3]);
-		
-		Thread.sleep(expire[0]+EXPIRATIONTIME);
-		assertNull(this.bb.advertisements.get(uuid[0]));
-		assertEquals(adv[1], this.bb.advertisements.get(uuid[1]));
-		assertNull(this.bb.advertisements.get(uuid[2]));
-		assertNull(this.bb.advertisements.get(uuid[3]));
-		
-		Thread.sleep(expire[1]-expire[0]);
-		assertNull(this.bb.advertisements.get(uuid[0]));
-		assertEquals(this.bb.advertisements.get(uuid[1]), adv[1]);
-		assertNull(this.bb.advertisements.get(uuid[2]));
-		assertNull(this.bb.advertisements.get(uuid[3]));
-		
-		Thread.sleep(expire[3]-expire[1]);
-		for(int i=0; i<4; i++) {
-			assertNull(this.bb.advertisements.get(uuid[i]));
-		}
 	}
 	
 	@Test
@@ -152,44 +104,44 @@ public class BulletinBoardTest {
 		final long currentTime = System.currentTimeMillis();
 		final Subscription sub1 = Subscription.createNamedSubcription(uuid[0], currentTime+expire[0], nt[0], null);
 		final Subscription sub2 = Subscription.createNamedSubcription(uuid[1], currentTime+expire[1], nt[1], null);
-		final Advertisement adv3 = new Advertisement(uuid[2], currentTime+expire[2], nt[2]);
-		final Advertisement adv4 = new Advertisement(uuid[3], currentTime+expire[3], nt[3]);
+		final Subscription sub3 = Subscription.createNamedSubcription(uuid[2], currentTime+expire[2], nt[2], null);
+		final Subscription sub4 = Subscription.createNamedSubcription(uuid[3], currentTime+expire[3], nt[3], null);
 		
 		this.bb.subscribe(sub1);
 		this.bb.subscribe(sub2);
-		this.bb.advertise(adv3);
-		this.bb.advertise(adv4);
+		this.bb.subscribe(sub3);
+		this.bb.subscribe(sub4);
 		
 		assertEquals(this.bb.subscriptions.get(uuid[0]), sub1);
 		assertEquals(this.bb.subscriptions.get(uuid[1]), sub2);
-		assertEquals(this.bb.advertisements.get(uuid[2]), adv3);
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
+		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
 		
 		Thread.sleep(expire[0]+EXPIRATIONTIME);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertEquals(this.bb.subscriptions.get(uuid[1]), sub2);
-		assertEquals(this.bb.advertisements.get(uuid[2]), adv3);
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
+		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
 		
 		Thread.sleep(expire[1]-expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
-		assertEquals(this.bb.advertisements.get(uuid[2]), adv3);
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
+		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
 				
 		Thread.sleep(expire[2]-expire[1]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
-		assertNull(this.bb.advertisements.get(uuid[2]));
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
-		this.bb.updateAdvertisement(uuid[3],currentTime+expire[3]+extraTime);
+		assertNull(this.bb.subscriptions.get(uuid[2]));
+		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		this.bb.updateSubscription(uuid[3],currentTime+expire[3]+extraTime);
 		
 		Thread.sleep(expire[3]-expire[2]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
-		assertNull(this.bb.advertisements.get(uuid[2]));
+		assertNull(this.bb.subscriptions.get(uuid[2]));
 		// it has not been deleted cause we have update the advertisement
-		assertEquals(this.bb.advertisements.get(uuid[3]), adv4);
+		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
 		
 		
 		Thread.sleep(extraTime);

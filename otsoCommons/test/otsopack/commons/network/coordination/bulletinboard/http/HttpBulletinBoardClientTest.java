@@ -17,9 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +26,6 @@ import org.junit.Test;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.bulletinboard.RemoteBulletinBoard;
-import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
 import otsopack.commons.network.coordination.bulletinboard.data.RemoteNotificationListener;
 import otsopack.commons.network.coordination.bulletinboard.data.Subscription;
 
@@ -48,75 +45,6 @@ public class HttpBulletinBoardClientTest {
 	@After
 	public void tearDown() throws Exception {
 		this.manager.stop();
-	}
-
-	@Test
-	public void testGetAdvertises() {
-		final List<Advertisement> advertises = Arrays.asList(this.client.getAdvertisements());
-		assertEquals(2, advertises.size());
-		assertThat(advertises, hasItem(this.manager.ADV1));
-		assertThat(advertises, hasItem(this.manager.ADV2));
-	}
-
-	@Test
-	public void testAdvertise() {
-		final Advertisement sentAdv = new  Advertisement(null, System.currentTimeMillis()+60000, WildcardTemplate.createWithNull(null, null));
-		final String uuid = this.client.advertise(sentAdv);
-		final Advertisement createdAdv = new  Advertisement(uuid,0, null);
-		// using manager instead of client, we avoid an HTTP request in the test
-		final List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
-		assertEquals(3, advertises.size());
-		assertThat(advertises, hasItem(this.manager.ADV1));
-		assertThat(advertises, hasItem(this.manager.ADV2));
-		assertThat(advertises, hasItem(createdAdv));
-	}
-	
-	@Test
-	public void testUpdateAdvertise() {
-		final long timestamp1 = System.currentTimeMillis()+60000;
-		final long timestamp2 = System.currentTimeMillis()+360000;
-		final Advertisement sentAdv = new  Advertisement(null, timestamp1, WildcardTemplate.createWithNull(null, null));
-		final String uuid = this.client.notify(sentAdv);
-		
-		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
-		assertEquals(3, advertises.size());
-		for(Advertisement advert: advertises) {
-			if( advert.getID().equals(uuid) ) {
-				assertEquals(timestamp1, advert.getExpiration());
-				break;
-			}
-		}
-
-		this.client.updateAdvertisement(uuid, timestamp2);
-		
-		advertises = Arrays.asList(this.manager.getAdvertisements());
-		assertEquals(3, advertises.size());
-		for(Advertisement advert: advertises) {
-			if( advert.getID().equals(uuid) ) {
-				assertEquals(timestamp2, advert.getExpiration());
-				break;
-			}
-		}
-	}
-	
-	@Test
-	public void testUnadvertise() {
-		final Advertisement sentAdv = new  Advertisement(null, System.currentTimeMillis()+60000, WildcardTemplate.createWithNull(null, null));
-		final String uuid = this.client.notify(sentAdv);
-		final Advertisement createdAdv = new  Advertisement(uuid,0, null);
-		
-		List<Advertisement> advertises = Arrays.asList(this.manager.getAdvertisements());
-		assertEquals(3, advertises.size());
-		assertThat(advertises, hasItem(this.manager.ADV1));
-		assertThat(advertises, hasItem(this.manager.ADV2));
-		assertThat(advertises, hasItem(createdAdv));
-
-		this.client.unadvertise(uuid);
-		
-		advertises = Arrays.asList(this.manager.getAdvertisements());
-		assertEquals(2, advertises.size());
-		assertThat(advertises, hasItem(this.manager.ADV1));
-		assertThat(advertises, hasItem(this.manager.ADV2));		
 	}
 
 	@Test

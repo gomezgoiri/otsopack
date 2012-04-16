@@ -58,10 +58,6 @@ public class BulletinBoardManager {
 		this.server.shutdown();
 	}
 	
-	protected Advertisement[] getAdvertisements() {
-		return this.server.getApplication().getController().getBulletinBoard().getAdvertisements();
-	}
-	
 	protected Collection<Subscription> getSubscriptions() {
 		return ((LocalBulletinBoard)this.server.getApplication().getController().getBulletinBoard()).getSubscriptions();
 	}

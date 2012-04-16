@@ -19,8 +19,8 @@ import org.restlet.data.MediaType;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
-import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.coordination.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.coordination.bulletinboard.data.Advertisement;
@@ -40,7 +40,7 @@ public class HttpBulletinBoardClient {
 	}
 	
 	//@Override
-	public Advertisement[] getAdvertises() {
+	/*public Advertisement[] getAdvertises() {
 		//TODO meter space en la url 
 		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertisesResource.ROOT);
 		try {
@@ -61,26 +61,23 @@ public class HttpBulletinBoardClient {
 			client.release();
 		}
 		return null;
-	}
+	}*/
 
 	//@Override
-	public String advertise(Advertisement adv) {
+	public void notify(Advertisement adv) {
 		final ClientResource client = new ClientResource(this.remoteBB.getURI() + AdvertisesResource.ROOT);
 		try{
-			final Representation repr;
-			try {
-				final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
-				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
-				repr = client.post(json, MediaType.APPLICATION_JSON);
-				return repr.getText();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			final AdvertiseJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
+			final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+			/*final Representation repr = */client.post(json, MediaType.APPLICATION_JSON);
+			//return repr.getText();
+		} catch (ResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			client.release();
 		}
-		return null;
+		//return null;
 	}
 	
 	//@Override
