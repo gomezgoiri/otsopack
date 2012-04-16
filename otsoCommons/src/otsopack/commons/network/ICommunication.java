@@ -17,13 +17,11 @@ package otsopack.commons.network;
 import otsopack.commons.Arguments;
 import otsopack.commons.ILayer;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 /**
  * network communication layer interface
@@ -115,28 +113,4 @@ public interface ICommunication extends ILayer {
 	 */
 	public Graph[] query(String spaceURI, Template template, Arguments configuration)
 		throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException;
-	
-	/**
-	 * subscribe to one template
-	 * @param spaceURI
-	 * @param template
-	 * @param listener
-	 * @return subscription uri
-	 */
-	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException;
-
-	/**
-	 * unsubscribe to subscription
-	 * @param spaceURI
-	 * @param subscription
-	 */
-	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException;
-
-	/**
-	 * advertise one template
-	 * @param spaceURI
-	 * @param template
-	 * @return advertisement uri
-	 */
-	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
 }

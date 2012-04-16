@@ -15,10 +15,7 @@
 package otsopack.commons.network.communication.comet;
 
 import otsopack.commons.Arguments;
-import otsopack.commons.authz.Filter;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
-import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SerializableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.data.TemplateSerializingException;
@@ -40,7 +37,6 @@ import otsopack.commons.network.communication.comet.event.requests.TakeTemplateR
 import otsopack.commons.network.communication.comet.event.requests.TakeTemplateWithFiltersRequest;
 import otsopack.commons.network.communication.comet.event.requests.TakeUriRequest;
 import otsopack.commons.network.communication.comet.event.requests.TakeUriWithFiltersRequest;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 
 public class Communication2event implements ICommunication {
 
@@ -163,34 +159,5 @@ public class Communication2event implements ICommunication {
 		}
 		
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.network.ICommunication#subscribe(java.lang.String, otsopack.commons.data.NotificableTemplate, otsopack.commons.network.communication.event.listener.INotificationListener)
-	 */
-	@Override
-	public String subscribe(String spaceURI, NotificableTemplate template,
-			INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.network.ICommunication#unsubscribe(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.network.ICommunication#advertise(java.lang.String, otsopack.commons.data.NotificableTemplate)
-	 */
-	@Override
-	public void notify(String spaceURI, NotificableTemplate template)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
 	}
 }

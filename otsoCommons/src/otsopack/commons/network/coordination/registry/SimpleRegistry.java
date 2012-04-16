@@ -19,14 +19,14 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import otsopack.commons.network.coordination.IDiscovery;
-import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.discovery.DiscoveryException;
 import otsopack.commons.network.coordination.discovery.SimpleDiscovery;
 import otsopack.commons.network.coordination.spacemanager.SpaceManagerException;
 
-public class SimpleRegistry extends Thread implements IRegistry {
+public class SimpleRegistry extends Thread implements IRegistryManager {
 	
 	public static final int DEFAULT_INTERVAL = 10 * 1000;
 
@@ -171,5 +171,14 @@ public class SimpleRegistry extends Thread implements IRegistry {
 	@Override
 	public Set<Node> getNodesBaseURLs() {
 		return this.nodes;
+	}
+	
+	@Override
+	public Set<Node> getBulletinBoards() {
+		final Set<Node> bbs = new HashSet<Node>();
+		for(Node node: this.nodes) {
+			if(node.isBulletinBoard()) bbs.add(node);
+		}
+		return bbs;
 	}
 }

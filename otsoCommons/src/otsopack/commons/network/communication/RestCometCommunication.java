@@ -20,7 +20,6 @@ import org.restlet.resource.ClientResource;
 
 import otsopack.commons.Arguments;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -28,7 +27,6 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.communication.resources.ClientResourceFactory;
 import otsopack.commons.network.communication.resources.cookies.CookieStore;
 import otsopack.commons.network.communication.util.JSONDecoder;
@@ -131,25 +129,5 @@ public class RestCometCommunication implements ICommunication {
 			UnsupportedSemanticFormatException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String subscribe(String spaceURI, NotificableTemplate template,
-			INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notify(String spaceURI, NotificableTemplate template)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
 	}
 }

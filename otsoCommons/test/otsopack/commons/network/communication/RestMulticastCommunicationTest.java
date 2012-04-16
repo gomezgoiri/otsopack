@@ -104,7 +104,7 @@ public class RestMulticastCommunicationTest {
 			this.restServers[i] = new OtsoRestServer(this.currentStartingPort + i, this.controllers[i], null, null);
 			this.restServers[i].startup();
 			
-			this.nodes[i] = new Node("http://localhost:" + (this.currentStartingPort + i) + "/", "node" + i, false, false);
+			this.nodes[i] = new Node("http://localhost:" + (this.currentStartingPort + i) + "/", "node" + i, false, false, false);
 		}
 
 		this.registry = new SimpleRegistry(this.spaceURI, new SimpleDiscovery(new SimpleSpaceManager(this.nodes)));

@@ -28,24 +28,24 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.OtsoRestServer;
+import otsopack.commons.network.communication.RestCommunicationException;
 import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
-import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.coordination.bulletinboard.BulletinBoardsManager;
+import otsopack.commons.network.coordination.IRegistryManager;
+import otsopack.commons.network.coordination.registry.RegistryException;
+import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
+	private IRegistryManager registry;
 	private ICommunication comm;
 	private Set<String> joinedSpaces = new CopyOnWriteArraySet<String>();
 	private BulletinBoardsManager bulletinBoards;
 	
-	public RestNetwork(IController controller) {
-		this.rs = new OtsoRestServer();
-		this.rs.getApplication().setController(controller);
-	}
 
-	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry, BulletinBoardsManager bbMngr) {
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistryManager registry, BulletinBoardsManager bbMngr) {
+		this.registry = registry;
 		this.comm = new RestMulticastCommunication(registry);
 		this.bulletinBoards = bbMngr;
 		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
@@ -59,6 +59,7 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void startup() throws TSException {
 		try {
+			this.registry.startup();
 			this.comm.startup();
 			this.rs.startup();
 		} catch (Exception e) {
@@ -66,11 +67,18 @@ public class RestNetwork implements INetwork {
 			throw new TSException("Rest server could not be started. " + e.getMessage());
 		}
 		this.joinedSpaces.clear();
+		try{
+			this.registry.shutdown();
+		}catch(RegistryException re){
+			re.printStackTrace();
+			throw new RestCommunicationException("Could not shutdown " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
+		}
 	}
 
 	@Override
 	public void shutdown() throws TSException {
 		try {
+			this.registry.shutdown();
 			this.comm.shutdown();
 			this.rs.shutdown();
 		} catch (Exception e) {

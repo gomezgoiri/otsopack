@@ -38,7 +38,6 @@ import otsopack.commons.Arguments;
 import otsopack.commons.authz.Filter;
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SignedGraph;
 import otsopack.commons.data.Template;
@@ -52,7 +51,6 @@ import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.OtsoFullJavaNetworkException;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.communication.representations.NTriplesRepresentation;
 import otsopack.commons.network.communication.representations.RdfMultipartRepresentation;
 import otsopack.commons.network.communication.representations.SemanticFormatRepresentation;
@@ -438,25 +436,5 @@ public class RestUnicastCommunication implements ICommunication {
 		return new Graph[]{ 
 			createGraph(clientResource, outputRepresentation)	
 		};
-	}
-
-	@Override
-	public String subscribe(String spaceURI, NotificableTemplate template,
-			INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void notify(String spaceURI, NotificableTemplate template)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
 	}
 }

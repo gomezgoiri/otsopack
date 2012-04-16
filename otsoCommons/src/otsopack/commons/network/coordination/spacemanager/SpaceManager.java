@@ -314,6 +314,16 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	}
 	
 	@Override
+	public Set<Node> getBulletinBoards() throws SpaceManagerException {
+		final Set<Node> bbs = new HashSet<Node>();
+		final Node[] nodes = getRegisteredNodes();
+		for(Node node : nodes)
+			if(node.isBulletinBoard())
+				bbs.add(node);
+		return bbs;
+	}
+	
+	@Override
 	public void startup(){
 		synchronized(this){
 			if(!this.started){

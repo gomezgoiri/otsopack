@@ -20,7 +20,7 @@ import otsopack.commons.ILayer;
  * network layer interface
  * @author Aitor Gómez Goiri
  */
-public interface INetwork extends ICommunication, ICoordination, ILayer {
+public interface INetwork extends ICommunication, ICoordination, ISubscriptions, ILayer {
 	
 	/**
 	 * get communication object

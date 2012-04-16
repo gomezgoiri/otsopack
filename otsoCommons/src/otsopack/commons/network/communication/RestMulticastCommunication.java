@@ -31,7 +31,6 @@ import org.restlet.resource.ResourceException;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.Arguments;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -39,10 +38,8 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.coordination.registry.RegistryException;
 
 public class RestMulticastCommunication implements ICommunication {
 
@@ -65,12 +62,6 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public void startup() throws TSException {
 		this.started = true;
-		try{
-			this.registry.startup();
-		}catch(RegistryException re){
-			re.printStackTrace();
-			throw new RestCommunicationException("Could not start " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
-		}
 		// this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
 		this.executor = Executors.newCachedThreadPool();
 	}
@@ -79,13 +70,6 @@ public class RestMulticastCommunication implements ICommunication {
 	public void shutdown() throws TSException {
 		this.started = false;
 		this.executor.shutdown();
-		
-		try{
-			this.registry.shutdown();
-		}catch(RegistryException re){
-			re.printStackTrace();
-			throw new RestCommunicationException("Could not shutdown " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
-		}
 	}
 	
 	@Override
@@ -405,24 +389,6 @@ public class RestMulticastCommunication implements ICommunication {
 			remainingGraph.cancel(true);
 
 		return finalGraph;
-	}
-
-
-	@Override
-	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
 	}
 	
 	private static abstract class TakeArguments{

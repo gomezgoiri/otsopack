@@ -23,18 +23,20 @@ public class Node implements Serializable {
 	private String uuid;
 	private String baseURI;
 	private boolean reachable;
+	private boolean bulletinBoard;
 	private boolean mustPoll;
 	
-	public Node(){}
+	public Node() {}
 	
-	public Node(String baseURI, String uuid){
-		this(baseURI, uuid, true, false);
+	public Node(String baseURI, String uuid) {
+		this(baseURI, uuid, true, false, false);
 	}
 
-	public Node(String baseURI, String uuid, boolean reachable, boolean mustPoll){
+	public Node(String baseURI, String uuid, boolean reachable, boolean bulletinBoard, boolean mustPoll){
 		this.baseURI = baseURI;
 		this.uuid = uuid;
 		this.reachable = reachable;
+		this.bulletinBoard =  bulletinBoard;
 		this.mustPoll  = mustPoll;
 	}
 
@@ -60,6 +62,14 @@ public class Node implements Serializable {
 
 	public void setReachable(boolean reachable) {
 		this.reachable = reachable;
+	}
+
+	public boolean isBulletinBoard() {
+		return bulletinBoard;
+	}
+
+	public void setBulletinBoard(boolean bulletinBoard) {
+		this.bulletinBoard = bulletinBoard;
 	}
 
 	public boolean isMustPoll() {

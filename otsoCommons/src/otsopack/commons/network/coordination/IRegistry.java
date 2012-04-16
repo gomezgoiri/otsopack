@@ -16,11 +16,8 @@ package otsopack.commons.network.coordination;
 
 import java.util.Set;
 
-import otsopack.commons.network.coordination.registry.RegistryException;
-
 public interface IRegistry {
-	public void startup() throws RegistryException;
 	public Set<ISpaceManager> getSpaceManagers();
 	public Set<Node> getNodesBaseURLs();
-	void shutdown() throws RegistryException;
+	public Set<Node> getBulletinBoards();
 }
