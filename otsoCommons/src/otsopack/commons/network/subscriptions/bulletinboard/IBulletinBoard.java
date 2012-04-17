@@ -20,6 +20,7 @@ public interface IBulletinBoard {
 	String subscribe(Subscription subscription);
 	void updateSubscription(String subscriptionId, long extratime);
 	void unsubscribe(String subscriptionId);
+	public Subscription getSubscription(String id);
 	
 	void notify(NotificableTemplate adv);
 }

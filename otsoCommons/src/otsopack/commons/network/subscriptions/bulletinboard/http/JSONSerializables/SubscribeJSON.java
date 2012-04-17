@@ -15,6 +15,7 @@ package otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializab
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Set;
 
 public class SubscribeJSON implements Serializable {
 	
@@ -26,6 +27,7 @@ public class SubscribeJSON implements Serializable {
 	protected TemplateJSON tpl;
 	protected long expiration;
 	protected URI callbackURL;
+	protected Set<String> nodesWhichAlreadyKnowTheSubscription; // their uuid's
 	
 	public SubscribeJSON() {
 		this(null, null, -1, null);
@@ -62,6 +64,16 @@ public class SubscribeJSON implements Serializable {
 	public void setCallbackURL(URI callbackURL) {
 		this.callbackURL = callbackURL;
 	}
+
+	public Set<String> getNodesWhichAlreadyKnowTheSubscription() {
+		return nodesWhichAlreadyKnowTheSubscription;
+	}
+
+	public void setNodesWhichAlreadyKnowTheSubscription(
+			Set<String> nodesWhichAlreadyKnowTheSubscription) {
+		this.nodesWhichAlreadyKnowTheSubscription = nodesWhichAlreadyKnowTheSubscription;
+	}
+	
 
 	@Override
 	public int hashCode() {

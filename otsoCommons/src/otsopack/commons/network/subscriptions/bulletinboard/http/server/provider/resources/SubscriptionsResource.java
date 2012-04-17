@@ -25,7 +25,7 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
@@ -51,10 +51,10 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	public Representation createSubscription(Representation rep) {
 		try {
 			final String argument = rep.getText();
-			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final LocalBulletinBoard bulletinBoard = (LocalBulletinBoard) ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final SubscribeJSON subjson = JSONDecoder.decode(argument, SubscribeJSON.class);
 			
-			bulletinBoard.subscribe( JSONSerializableConversors.convertFromSerializable(subjson) );
+			bulletinBoard.subscribe( JSONSerializableConversors.convertFromSerializable(subjson), subjson.getNodesWhichAlreadyKnowTheSubscription() );
 			
 			return new JsonRepresentation(JSONEncoder.encode(subjson.getId()));
 		} catch (IOException e) {

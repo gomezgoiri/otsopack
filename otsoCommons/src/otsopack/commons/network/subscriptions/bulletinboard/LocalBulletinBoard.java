@@ -14,10 +14,13 @@
 package otsopack.commons.network.subscriptions.bulletinboard;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
 import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard;
 
 /**
@@ -25,41 +28,68 @@ import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard
  * by remote request (through BulletinBoardController) to
  * store subscriptions and perform notifications.
  */
-public class LocalBulletinBoard implements IBulletinBoard {
-	final IRegistry registry;
+public class LocalBulletinBoard implements IBulletinBoard {	
+	final SubscriptionsPropagator propagator;
 	
 	// bulletin board for both local and remote subscriptions
-	final BulletinBoard bulletinBoard;
+	final BulletinBoard bulletinBoard = new BulletinBoard();
+	
 	
 	public LocalBulletinBoard(IRegistry registry) {
-		this.registry = registry;
-		this.bulletinBoard = new BulletinBoard();
+		propagator = new SubscriptionsPropagator(registry);
 	}
 
 	@Override
-	public String subscribe(Subscription subscription) {
-		return this.bulletinBoard.subscribe(subscription);
+	public String subscribe(Subscription subscription) {		
+		return subscribe(subscription, new HashSet<String>());
+	}
+	
+	// Just in LocalBulletinBoards!
+	public String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo) {
+		final String ret = this.bulletinBoard.subscribe(subscription);
+		
+		// propagate to other bulletin boards
+		this.propagator.propagate(subscription, alreadyPropagatedTo);
+		
+		return ret;
 	}
 	
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
+		updateSubscription(subscriptionId, extratime, new HashSet<String>());
+	}
+	
+	public void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo) {
 		this.bulletinBoard.updateSubscription(subscriptionId, extratime);
+		
+		// propagate to other bulletin boards
+		this.propagator.propagate(this.bulletinBoard.getSubscription(subscriptionId), alreadyPropagatedTo);
 	}
 	
 	@Override
 	public void unsubscribe(String subscriptionId) {
 		this.bulletinBoard.unsubscribe(subscriptionId);
+		
+		// TODO how to propagate subscription removal?
 	}
 	
 	@Override
 	public void notify(NotificableTemplate adv) {
 		this.bulletinBoard.notify(adv);
-		//this.registry.getBulletinBoards()
 		// TODO propagate to other bulletin boards if it fails
+		// TODO what if just 1 of the 100 callbacks activated fails?
 	}
 	
-	/* for testing purpouses in HttpBulletinBoardClient */
+	@Override
+	public Subscription getSubscription(String id) {
+		return this.bulletinBoard.getSubscription(id);
+	}
+
+	/*
+	 * For testing purposes in BulletinBoardManager and HttpBulletinBoardClientTest
+	 * 
+	 */
 	public Collection<Subscription> getSubscriptions() {
-		return this.bulletinBoard.getSubscription();
+		return this.bulletinBoard.getSubscriptions();
 	}
 }

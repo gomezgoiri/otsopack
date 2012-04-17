@@ -17,6 +17,7 @@ import java.net.URI;
 
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.network.subscriptions.bulletinboard.http.SingleNotificator;
 
 public class RemoteNotificationListener implements INotificationListener {
 	final URI callbackURL;
@@ -31,7 +32,6 @@ public class RemoteNotificationListener implements INotificationListener {
 
 	@Override
 	public void notifyEvent(EventNotification notification) {
-		// TODO submit notification task
-		// TODO check BulletinBoardConsumerResource
+		SingleNotificator.REMOTE.getInstance().sendNotification(callbackURL, notification);
 	}
 }

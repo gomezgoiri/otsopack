@@ -22,15 +22,14 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.ISubscriptions;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
 /* This class manages a set of bulletins boards
  * and intermediates between them and those interested
  * in using them.
  *
- * In few words, it manages possibly different kind
- * of bulletin boards for each space.
+ * In few words, it manages different kind of bulletin
+ * boards for each space.
  */
 public class BulletinBoardsManager implements ISubscriptions {
 	//TODO change it!

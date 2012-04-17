@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
-import otsopack.commons.network.subscriptions.bulletinboard.http.HttpBulletinBoardClient;
+import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulletinBoardClient;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.OtsopackHttpBulletinBoardConsumerApplication;
@@ -28,7 +28,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard
 
 public class RemoteBulletinBoard implements IBulletinBoard {
 	// client with the bulletin board server
-	final HttpBulletinBoardClient client;
+	final RandomHttpBulletinBoardClient client;
 	
 	// server to receive notifications
 	
@@ -50,7 +50,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 			e.printStackTrace();
 		}
 		// inconsistent during a lapse of time?
-		this.client = new HttpBulletinBoardClient(bbd);
+		this.client = new RandomHttpBulletinBoardClient(bbd);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 		final String ret = this.mySubscriptions.subscribe(s); // local callback stored
 		
 		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
-		subJson.setCallbackURL(this.callbackURL);
+		subJson.setCallbackURL(this.callbackURL); // the callbackURL was null
 		this.client.subscribe(subJson); // remote subscription
 		
 		return ret;
@@ -67,7 +67,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
 		this.mySubscriptions.updateSubscription(subscriptionId, extratime);
-		this.client.updateSubscription(Subscription.createSubcription(subscriptionId, extratime, null, null));
+		this.client.updateSubscription(subscriptionId, extratime);
 	}
 
 	@Override
@@ -89,5 +89,10 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	 */
 	public void receiveCallback(NotificableTemplate adv) {
 		this.mySubscriptions.notify(adv);
+	}
+	
+	@Override
+	public Subscription getSubscription(String id) {
+		return this.mySubscriptions.getSubscription(id);
 	}
 }

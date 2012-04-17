@@ -107,11 +107,7 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 			}
 		}
 	}
-	
-	/* for testing purpouses in HttpBulletinBoardClient */
-	public Collection<Subscription> getSubscription() {
-		return this.subscriptions.values();
-	}
+
 
 	@Override
 	public void run() {
@@ -154,5 +150,14 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Subscription getSubscription(String id) {
+		return this.subscriptions.get(id);
+	}
+	
+	public Collection<Subscription> getSubscriptions() {
+		return this.subscriptions.values();
 	}
 }
