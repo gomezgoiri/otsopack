@@ -65,10 +65,10 @@ public class BulletinBoardTest {
 			this.bb.subscribe(subs[i]);
 		}
 		
-		assertEquals(this.bb.subscriptions.get(uuid[0]), subs[0]);
-		assertEquals(this.bb.subscriptions.get(uuid[1]), subs[1]);
-		assertEquals(this.bb.subscriptions.get(uuid[2]), subs[2]);
-		assertEquals(this.bb.subscriptions.get(uuid[3]), subs[3]);
+		assertEquals(subs[0], this.bb.subscriptions.get(uuid[0]));
+		assertEquals(subs[1], this.bb.subscriptions.get(uuid[1]));
+		assertEquals(subs[2], this.bb.subscriptions.get(uuid[2]));
+		assertEquals(subs[3], this.bb.subscriptions.get(uuid[3]));
 		
 		this.bb.unsubscribe(uuid[2]);
 		this.bb.unsubscribe(uuid[3]);

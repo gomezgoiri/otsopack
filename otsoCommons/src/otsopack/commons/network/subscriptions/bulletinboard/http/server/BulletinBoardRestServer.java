@@ -39,7 +39,9 @@ public class BulletinBoardRestServer {
 	    
 	    this.application = new OtsopackHttpBulletinBoardProviderApplication();
 	    this.application.setController(controller);
-	    this.component.getDefaultHost().attach(this.application);
+	    // TODO made this configurable!
+	    this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+	    										this.application);
 	}
 	
 	public BulletinBoardRestServer(IBulletinBoardController controller){
