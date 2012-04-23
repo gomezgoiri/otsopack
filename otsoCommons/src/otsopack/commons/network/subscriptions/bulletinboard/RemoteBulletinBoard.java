@@ -78,14 +78,14 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 
 	@Override
 	/**
-	 * The client notifies the bulletin boards.
+	 * The client notifies the bulletin board.
 	 */
 	public void notify(NotificableTemplate adv) {
 		this.client.notify(adv);
 	}
 	
 	/**
-	 * The client notifies the bulletin boards.
+	 * A bulletin board has notified this client (subscriber).
 	 */
 	public void receiveCallback(NotificableTemplate adv) {
 		this.mySubscriptions.notify(adv);

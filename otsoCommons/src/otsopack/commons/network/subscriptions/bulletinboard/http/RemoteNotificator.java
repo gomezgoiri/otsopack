@@ -26,28 +26,21 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
-import otsopack.commons.ILayer;
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
 
-public class RemoteNotificator implements ILayer {
-	private volatile ExecutorService executor;
+public class RemoteNotificator {
+	private volatile ExecutorService executor = Executors.newCachedThreadPool();
 	final List<Future<Boolean>> submittedNotifications = new CopyOnWriteArrayList<Future<Boolean>>();
 	
 	protected RemoteNotificator() {}
 	
-	@Override
-	public void startup() {
-		// this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
-		this.executor = Executors.newCachedThreadPool();
-	}
-
-	@Override
+	/* TODO when is it shutted down?
 	public void shutdown() {
 		this.executor.shutdown();
-	}
+	}*/
 
 	/**
 	 * @param callbackURL
@@ -65,7 +58,7 @@ public class RemoteNotificator implements ILayer {
 					//return repr.getText();
 					return true;
 				} catch (ResourceException e) {
-					// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
+					// TODO with some kind of errors, if something went wrong, "chosen" can be set to null and try again!
 					e.printStackTrace();
 				} finally {
 					client.release();

@@ -27,7 +27,7 @@ import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
-import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
+import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.OtsopackHttpBulletinBoardConsumerApplication;
 
 /**
  * Class which represent the callback URI used by default with notifications.
@@ -48,7 +48,7 @@ public class NotificationCallbackResource extends ServerResource implements INot
 	public Representation notifyClientNode(Representation rep) {
 		try {
 			final String argument = rep.getText();
-			final RemoteBulletinBoard bulletinBoard = (RemoteBulletinBoard) ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final RemoteBulletinBoard bulletinBoard = (RemoteBulletinBoard) ((OtsopackHttpBulletinBoardConsumerApplication)getApplication()).getController().getBulletinBoard();
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
 						
 			bulletinBoard.receiveCallback( JSONSerializableConversors.convertFromSerializable(advjson) );
