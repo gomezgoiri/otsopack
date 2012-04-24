@@ -23,11 +23,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.EventNotification;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.data.AbstractNotificableElement;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
-public class BulletinBoard implements IBulletinBoard, Runnable {
+public class BulletinBoard implements Runnable {
 	final public long DEFAULT_LIFETIME = 3600000; // TODO 1h by default
 	
 	// cancel the thread which removes the expired notifications
@@ -47,7 +46,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		this.cancel = true;
 	}
 	
-	@Override
 	public String subscribe(Subscription subs) {
 		this.subscriptions.put(subs.getID(), subs);
 		
@@ -65,7 +63,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		return subs.getID();
 	}
 
-	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
 		final Subscription subs = this.subscriptions.get(subscriptionId);
 		
@@ -85,7 +82,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		}
 	}
 
-	@Override
 	public void unsubscribe(String subscriptionId) {
 		final Subscription subs = this.subscriptions.remove(subscriptionId);
 		
@@ -99,7 +95,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		}
 	}
 	
-	@Override
 	public void notify(NotificableTemplate adv) {		
 		for(Subscription s: subscriptions.values()) {
 			if(s.isNotificable(adv)) {
@@ -152,7 +147,6 @@ public class BulletinBoard implements IBulletinBoard, Runnable {
 		}
 	}
 	
-	@Override
 	public Subscription getSubscription(String id) {
 		return this.subscriptions.get(id);
 	}

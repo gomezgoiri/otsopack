@@ -75,10 +75,16 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	
 	@Override
 	public void notify(NotificableTemplate adv) {
-		this.bulletinBoard.notify(adv);
+		receiveCallback(adv); // or should it be called by a BB?
 		// TODO propagate to other bulletin boards if it fails
 		// TODO what if just 1 of the 100 callbacks activated fails?
 	}
+	
+	@Override
+	public void receiveCallback(NotificableTemplate adv) {
+		this.bulletinBoard.notify(adv);
+	}
+	
 	
 	@Override
 	public Subscription getSubscription(String id) {
@@ -87,7 +93,6 @@ public class LocalBulletinBoard implements IBulletinBoard {
 
 	/*
 	 * For testing purposes in BulletinBoardManager and HttpBulletinBoardClientTest
-	 * 
 	 */
 	public Collection<Subscription> getSubscriptions() {
 		return this.bulletinBoard.getSubscriptions();

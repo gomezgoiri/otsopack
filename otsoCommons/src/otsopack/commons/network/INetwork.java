@@ -33,4 +33,10 @@ public interface INetwork extends ICommunication, ICoordination, ISubscriptions,
 	 * @return coordination
 	 */
 	public ICoordination getCoordination();
+
+	/**
+	 * @return
+	 * 		Subscriptions layer
+	 */
+	ISubscriptions getSubscriptions();
 }

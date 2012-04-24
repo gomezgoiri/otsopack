@@ -29,10 +29,11 @@ import otsopack.authn.OtsoAuthnApplication;
 import otsopack.commons.IController;
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.network.ICommunication;
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.communication.session.UserSession;
 import otsopack.restlet.commons.OtsoRestletUtils;
 
-public class OtsoRestServer {
+public class OtsoRestServer implements IHTTPInformation {
 	public static final int DEFAULT_PORT = 8182;
 	
 	private final int port;
@@ -116,5 +117,13 @@ public class OtsoRestServer {
 	
 	public void shutdown() throws Exception {
 		this.component.stop();
+	}
+	
+	public String getAddress() {
+		return this.server.getAddress();
+	}
+	
+	public int getPort() {
+		return this.server.getPort();
 	}
 }

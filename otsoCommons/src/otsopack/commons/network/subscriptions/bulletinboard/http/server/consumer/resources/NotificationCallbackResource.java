@@ -21,13 +21,13 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
+import otsopack.commons.network.communication.resources.AbstractServerResource;
+import otsopack.commons.network.communication.resources.spaces.SpaceResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
-import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.OtsopackHttpBulletinBoardConsumerApplication;
 
 /**
  * Class which represent the callback URI used by default with notifications.
@@ -35,8 +35,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer
  * This resource exposes:
  * 		+ notifications
  */
-public class NotificationCallbackResource extends ServerResource implements INotificationCallbackResource {
-	public static final String ROOT = "/notifications";
+public class NotificationCallbackResource extends AbstractServerResource implements INotificationCallbackResource {
+	public static final String ROOT = SpaceResource.ROOT + "/notifications";
 	
 	public static Map<String, Class<?>> getRoots(){
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
@@ -47,8 +47,10 @@ public class NotificationCallbackResource extends ServerResource implements INot
 	@Override
 	public Representation notifyClientNode(Representation rep) {
 		try {
+			final String space = getArgument("space");
 			final String argument = rep.getText();
-			final RemoteBulletinBoard bulletinBoard = (RemoteBulletinBoard) ((OtsopackHttpBulletinBoardConsumerApplication)getApplication()).getController().getBulletinBoard();
+			
+			final IBulletinBoard bulletinBoard = getController().getSubscriber().getBulletinBoard(space);
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
 						
 			bulletinBoard.receiveCallback( JSONSerializableConversors.convertFromSerializable(advjson) );

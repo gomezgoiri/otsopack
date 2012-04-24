@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.TSException;
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.ISubscriptions;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
@@ -35,20 +36,30 @@ public class BulletinBoardsManager implements ISubscriptions {
 	//TODO change it!
 	final static private int EXPIRATION = 5000;
 	
+	final ConcurrentHashMap<String,IBulletinBoard> boards = new ConcurrentHashMap<String,IBulletinBoard>();
 	final private IRegistry registry;
-	ConcurrentHashMap<String,IBulletinBoard> boards;
+	final private IHTTPInformation infoHolder;
 	
-	public BulletinBoardsManager(IRegistry registry) {
+	
+	public BulletinBoardsManager(IRegistry registry, IHTTPInformation infoHolder) {
 		this.registry = registry;
+		this.infoHolder = infoHolder;
 	}
 	
 	public void addLocalBulletinBoard(String space, LocalBulletinBoard bb) {
-		boards.putIfAbsent(space, bb);
+		this.boards.putIfAbsent(space, bb);
 	}
 	
 	public void createBulletinBoard(String spaceURI) {
-		boards.putIfAbsent(spaceURI, new RemoteBulletinBoard(spaceURI, registry));		
+		this.boards.putIfAbsent(spaceURI, new RemoteBulletinBoard(this.infoHolder, spaceURI, registry));
 	}
+	
+	@Override
+	// Internal use!
+	public IBulletinBoard getBulletinBoard(String spaceURI) {
+		return this.boards.get(spaceURI);
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see otsopack.commons.ILayer#startup()

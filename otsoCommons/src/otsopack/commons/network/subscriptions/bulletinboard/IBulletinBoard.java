@@ -23,4 +23,13 @@ public interface IBulletinBoard {
 	public Subscription getSubscription(String id);
 	
 	void notify(NotificableTemplate adv);
+	
+	/**
+	 * Used when a bulletin board notifies this client (subscriber).
+	 * 
+	 * The main difference with notify is that the notification must not be propagated.
+	 * 
+	 * This method is never called by the TSC user!
+	 */
+	void receiveCallback(NotificableTemplate adv);
 }

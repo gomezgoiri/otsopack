@@ -132,7 +132,7 @@ public class HttpBulletinBoardClientTest {
 	}
 	
 	public boolean notify(NotificableTemplate subscribed, NotificableTemplate notified) throws Exception {
-		final int EXPIRATIONTIME = 2000;
+		final int EXPIRATIONTIME = 1000;
 		final long currentTime = System.currentTimeMillis();
 		
 		final LocalListenerTester list = new LocalListenerTester();

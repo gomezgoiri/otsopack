@@ -34,22 +34,23 @@ import otsopack.commons.network.communication.event.listener.INotificationListen
 import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.registry.RegistryException;
 import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
 	private IRegistryManager registry;
-	private ICommunication comm;
+	private RestMulticastCommunication comm;
 	private Set<String> joinedSpaces = new CopyOnWriteArraySet<String>();
 	private BulletinBoardsManager bulletinBoards;
 	
 
-	public RestNetwork(IController controller, int port, IEntity signer, IRegistryManager registry, BulletinBoardsManager bbMngr) {
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistryManager registry) {
 		this.registry = registry;
 		this.comm = new RestMulticastCommunication(registry);
-		this.bulletinBoards = bbMngr;
 		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
 		this.rs.getApplication().setController(controller);
+		this.bulletinBoards = new BulletinBoardsManager(registry, this.rs);
 	}
 	
 	public OtsoRestServer getRestServer() {
@@ -62,6 +63,7 @@ public class RestNetwork implements INetwork {
 			this.registry.startup();
 			this.comm.startup();
 			this.rs.startup();
+			this.bulletinBoards.startup();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TSException("Rest server could not be started. " + e.getMessage());
@@ -81,6 +83,7 @@ public class RestNetwork implements INetwork {
 			this.registry.shutdown();
 			this.comm.shutdown();
 			this.rs.shutdown();
+			this.bulletinBoards.shutdown();
 		} catch (Exception e) {
 			throw new TSException("Rest server could not be restarted. " + e.getMessage());
 		}
@@ -127,7 +130,7 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void notify(String spaceURI, NotificableTemplate template)
 			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
+		this.bulletinBoards.notify(spaceURI, template);
 	}
 
 	@Override
@@ -159,13 +162,22 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public ICommunication getCommunication() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm;
 	}
 
 	@Override
 	public ICoordination getCoordination() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public ISubscriptions getSubscriptions() {
+		return this.bulletinBoards;
+	}
+	
+	@Override
+	public IBulletinBoard getBulletinBoard(String spaceURI) {
+		return this.bulletinBoards.getBulletinBoard(spaceURI);
 	}
 }

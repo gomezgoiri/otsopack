@@ -18,6 +18,7 @@ import otsopack.commons.ILayer;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 
 /**
  * network communication layer interface
@@ -47,4 +48,11 @@ public interface ISubscriptions extends ILayer {
 	 * @return advertisement uri
 	 */
 	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
+
+	/**
+	 * @param spaceURI
+	 * @return
+	 * 		The IBulletinBoard used for the given space.
+	 */
+	public IBulletinBoard getBulletinBoard(String spaceURI);
 }
