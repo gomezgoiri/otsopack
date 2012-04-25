@@ -41,8 +41,6 @@ public class OtsoRestServer implements IHTTPInformation {
 	private final OtsopackApplication application;
 	private final OtsoAuthnApplication authnApp;
 	private final Server server;
-	//TODO redesign
-	//private final AbstractOtsopackApplication<IBulletinBoardController> bulletinApp;
 	
 	public OtsoRestServer(int port, IController controller, IEntity signer) {
 		this(port, controller, signer, null);
@@ -78,17 +76,6 @@ public class OtsoRestServer implements IHTTPInformation {
 	    
 	    this.component.getDefaultHost().attach(this.application);
 	    this.component.getDefaultHost().attach(OtsoAuthnApplication.AUTHN_ROOT_PATH,this.authnApp);
-	    
-	    // TODO redesign BulletinBoard
-	    /*if (bulletinboard instanceof LocalBulletinBoard) {
-	    	this.bulletinApp = new OtsopackHttpBulletinBoardProviderApplication();
-	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
-	    } else {
-	    	this.bulletinApp = new OtsopackHttpBulletinBoardConsumerApplication();
-	    	this.bulletinApp.setController(new BulletinBoardController(bulletinboard));
-	    	this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardConsumerApplication.BULLETIN_ROOT_PATH,this.bulletinApp);
-	    }*/
 	}
 	
 	public OtsoRestServer(IController controller){
