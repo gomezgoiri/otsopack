@@ -44,11 +44,11 @@ public class OtsoRestServer implements IHTTPInformation {
 	//TODO redesign
 	//private final AbstractOtsopackApplication<IBulletinBoardController> bulletinApp;
 	
-	public OtsoRestServer(int port, IController controller, IEntity signer/*, TODO BulletinBoardsManager bbMngr*/) {
-		this(port, controller, signer/*, bbMngr*/, null);
+	public OtsoRestServer(int port, IController controller, IEntity signer) {
+		this(port, controller, signer, null);
 	}
 	
-	public OtsoRestServer(int port, IController controller, IEntity signer, /*TODO BulletinBoardsManager bbMngr,*/ ICommunication multicastProvider) {
+	public OtsoRestServer(int port, IController controller, IEntity signer, ICommunication multicastProvider) {
 		this.port = port;
 	    this.component = new Component();
 	    this.server = new Server(Protocol.HTTP, this.port);

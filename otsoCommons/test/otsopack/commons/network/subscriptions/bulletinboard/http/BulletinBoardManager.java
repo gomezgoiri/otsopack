@@ -22,11 +22,11 @@ import org.easymock.EasyMock;
 import otsopack.commons.IController;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.communication.OtsoRestServer;
+import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.registry.RegistryException;
-import otsopack.commons.network.coordination.registry.SimpleRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
@@ -37,19 +37,26 @@ public class BulletinBoardManager {
 	protected String defaultSpace = "http://default";
 	
 	private BulletinBoardRestServer server;
+	protected Set<Node> otherBulletinBoards = new HashSet<Node>();
+	
 	private Set<OtsoRestServer> remoteListeners = new HashSet<OtsoRestServer>();
 	private int bbPort;
-	private int clientPort = OtsoRestServer.DEFAULT_PORT;
+	private int clientPort;
 	
 	public BulletinBoardManager(int port){
+		this(port, OtsoRestServer.DEFAULT_PORT);
+	}
+	
+	public BulletinBoardManager(int port, int clientPort){
 		this.bbPort = port;
+		this.clientPort = clientPort;
 	}
 	
 	public void start() throws Exception {
-		final Node[] nodes = new Node[0];
-		final SimpleRegistry registry = new SimpleRegistry("http://space", nodes);
+		final IRegistry registry = EasyMock.createMock(IRegistry.class);
+		EasyMock.expect(registry.getBulletinBoards()).andReturn(otherBulletinBoards).anyTimes();
+		EasyMock.replay(registry);
 		
-		// TODO create registry
 		this.server = new BulletinBoardRestServer(this.bbPort, registry);
 		this.server.startup();
 	}

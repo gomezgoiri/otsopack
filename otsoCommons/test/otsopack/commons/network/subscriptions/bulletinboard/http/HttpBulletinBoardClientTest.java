@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalListenerTester;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.data.RemoteNotificationListener;
@@ -120,7 +121,7 @@ public class HttpBulletinBoardClientTest {
 	}
 	
 	@Test
-	public void testNotify() throws Exception {
+	public void testNotifyUsingOneBulletinBoard() throws Exception {
 		assertTrue( notify(	WildcardTemplate.createWithURI("http://s", "http://p", "http://o"),
 						WildcardTemplate.createWithURI("http://s", "http://p", "http://o")) );
 		assertTrue( notify( WildcardTemplate.createWithNull("http://s", "http://p"),
@@ -131,7 +132,7 @@ public class HttpBulletinBoardClientTest {
 						WildcardTemplate.createWithNull("http://s", "http://p")) );
 	}
 	
-	public boolean notify(NotificableTemplate subscribed, NotificableTemplate notified) throws Exception {
+	private boolean notify(NotificableTemplate subscribed, NotificableTemplate notified) throws Exception {
 		final int EXPIRATIONTIME = 1000;
 		final long currentTime = System.currentTimeMillis();
 		
@@ -147,6 +148,49 @@ public class HttpBulletinBoardClientTest {
 				list.getLock().wait(EXPIRATIONTIME);
 			}
 		}
+		return list.isNotified();
+	}
+	
+	@Test
+	public void testNotifyUsingTwoBulletinBoards() throws Exception {
+		assertTrue( notifyUsingTwo(	WildcardTemplate.createWithURI("http://s", "http://p", "http://o"),
+						WildcardTemplate.createWithURI("http://s", "http://p", "http://o")) );
+		assertTrue( notifyUsingTwo( WildcardTemplate.createWithNull("http://s", "http://p"),
+					 	WildcardTemplate.createWithURI("http://s", "http://p", "http://o")) );
+		assertTrue( notifyUsingTwo( WildcardTemplate.createWithNull("http://s", "http://p"),
+				 		WildcardTemplate.createWithLiteral("http://s", "http://p", new Integer(21))) );
+		assertFalse( notifyUsingTwo(WildcardTemplate.createWithURI("http://s", "http://p", "http://o"),
+						WildcardTemplate.createWithNull("http://s", "http://p")) );
+	}
+	
+	private boolean notifyUsingTwo(NotificableTemplate subscribed, NotificableTemplate notified) throws Exception {
+		final int EXPIRATIONTIME = 1000;
+		final long currentTime = System.currentTimeMillis();
+		
+		final BulletinBoardManager manager2 = new BulletinBoardManager(this.PORT+1, this.PORT+1000);
+		manager2.start();
+		
+		// bulletinBoard0 knows bulletinBoard1
+		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT), "bboard0", true, true, false));
+		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1), "bboard1", true, true, false));
+		
+		manager2.otherBulletinBoards.add(new Node("http://localhost:"+this.PORT, "bboard0", true, true, false));
+		manager2.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1), "bboard1", true, true, false));
+		
+		final LocalListenerTester list = new LocalListenerTester();
+		final Subscription sub = Subscription.createSubcription("uuid1", currentTime+EXPIRATIONTIME, subscribed, list);
+		this.client.subscribe(sub);
+		
+		final RemoteBulletinBoard client2 = manager2.createClient();
+		client2.notify(notified);
+		
+		if (!list.isNotified()) { // it needs time...
+			synchronized (list.getLock()) {
+				list.getLock().wait(EXPIRATIONTIME);
+			}
+		}
+		
+		manager2.stop();
 		return list.isNotified();
 	}
 }

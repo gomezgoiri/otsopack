@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.restlet.resource.ResourceException;
@@ -32,7 +33,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializabl
 public class SubscriptionsPropagator {
 	final IRegistry registry;
 	
-	private volatile ExecutorService executor;
+	private volatile ExecutorService executor = Executors.newCachedThreadPool();
 	final List<Future<Boolean>> submittedSubscriptions = new CopyOnWriteArrayList<Future<Boolean>>();
 	
 	public SubscriptionsPropagator(IRegistry registry) {
@@ -68,7 +69,9 @@ public class SubscriptionsPropagator {
 			}
 		}
 		
-		subs.setNodesWhichAlreadyKnowTheSubscription(alreadyPropagatedTo);
+		for(String alreadyPropagatedToNode: alreadyPropagatedTo)
+			subs.addNodeWhichAlreadyKnowTheSubscription(alreadyPropagatedToNode);
+		
 		for(Node bbNode: newProp) {
 			sendSubscription(subs, SpecificHttpBulletinBoardClient.getDefaultBulletinBoardURI(bbNode.getBaseURI()), update);
 		}

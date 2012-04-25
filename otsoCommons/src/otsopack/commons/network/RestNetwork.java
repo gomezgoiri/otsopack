@@ -48,7 +48,7 @@ public class RestNetwork implements INetwork {
 	public RestNetwork(IController controller, int port, IEntity signer, IRegistryManager registry) {
 		this.registry = registry;
 		this.comm = new RestMulticastCommunication(registry);
-		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
+		this.rs = new OtsoRestServer(port, controller, signer);
 		this.rs.getApplication().setController(controller);
 		this.bulletinBoards = new BulletinBoardsManager(registry, this.rs);
 	}
