@@ -31,7 +31,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializabl
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionsResource extends ServerResource implements ISubscriptionsResource {
-	public static final String ROOT = "/subscribes";
+	public static final String ROOT = "/subscriptions";
 	
 	public static Map<String, Class<?>> getRoots() {
 		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();

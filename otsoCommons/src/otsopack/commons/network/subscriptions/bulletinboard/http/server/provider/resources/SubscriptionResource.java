@@ -22,10 +22,10 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.commons.network.subscriptions.bulletinboard.http.server.commons.resources.AbstractServerResource;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionResource extends AbstractServerResource implements ISubscriptionResource {
