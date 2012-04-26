@@ -17,39 +17,38 @@ import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
 
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 import otsopack.restlet.commons.OtsoRestletUtils;
 
-public class BulletinBoardRestServer {
+public class BulletinBoardRestServer implements IHTTPInformation {
 	public static final int DEFAULT_PORT = 8185;
 	
 	private final int port;
+	private final Server server;
 	private final Component component;
 	private final OtsopackHttpBulletinBoardProviderApplication application;
 
 
-	public BulletinBoardRestServer(int port, IBulletinBoardController controller) {
+	public BulletinBoardRestServer(int port) {
 		this.port = port;
 		
 	    this.component = new Component();
-	    final Server server = new Server(Protocol.HTTP, this.port);
-	    server.setContext(OtsoRestletUtils.createContext());
+	    this.server = new Server(Protocol.HTTP, this.port);
+	    this.server.setContext(OtsoRestletUtils.createContext());
 	    this.component.getServers().add(server);
 	    
 	    this.application = new OtsopackHttpBulletinBoardProviderApplication();
-	    this.application.setController(controller);
 	    // TODO made this configurable!
 	    this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 	    										this.application);
 	}
 	
-	public BulletinBoardRestServer(IBulletinBoardController controller){
-		this(DEFAULT_PORT, controller);
-	}
-	
 	public BulletinBoardRestServer(int port, IRegistry registry){
-		this(port, new BulletinBoardController(registry));
+		this(port);
+		final BulletinBoardController controller = new BulletinBoardController(registry, this);
+		this.application.setController(controller);
 	}
 	
 	public OtsopackHttpBulletinBoardProviderApplication getApplication(){
@@ -62,5 +61,16 @@ public class BulletinBoardRestServer {
 	
 	public void shutdown() throws Exception {
 		this.component.stop();
+	}
+	
+	@Override
+	public String getAddress() {
+		final String addr = server.getAddress();
+		return "http://" + ((addr==null)? "localhost": addr);
+	}
+	
+	@Override
+	public int getPort() {
+		return server.getPort();
 	}
 }

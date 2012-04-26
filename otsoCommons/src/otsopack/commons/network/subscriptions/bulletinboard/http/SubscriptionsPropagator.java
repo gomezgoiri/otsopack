@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
@@ -35,9 +36,11 @@ public class SubscriptionsPropagator {
 	
 	private volatile ExecutorService executor = Executors.newCachedThreadPool();
 	final List<Future<Boolean>> submittedSubscriptions = new CopyOnWriteArrayList<Future<Boolean>>();
+	final IHTTPInformation infoHolder;
 	
-	public SubscriptionsPropagator(IRegistry registry) {
+	public SubscriptionsPropagator(IRegistry registry, IHTTPInformation infoHolder) {
 		this.registry = registry;
+		this.infoHolder = infoHolder;
 	}
 	
 	/**
@@ -63,18 +66,25 @@ public class SubscriptionsPropagator {
 		
 		Set<Node> newProp = new HashSet<Node>();
 		for(Node bbNode: this.registry.getBulletinBoards()) {
-			if (!alreadyPropagatedTo.contains(bbNode.getUuid())) {
-				newProp.add(bbNode);
+			if ( !alreadyPropagatedTo.contains(bbNode.getUuid()) ) {
+				if ( !itsMe(bbNode) ) // don't sent to myself 
+					newProp.add(bbNode);
 				alreadyPropagatedTo.add(bbNode.getUuid());
 			}
 		}
 		
+		// next bulletin boards which are going to receive the message (or have already receive it, if it's me)
 		for(String alreadyPropagatedToNode: alreadyPropagatedTo)
 			subs.addNodeWhichAlreadyKnowTheSubscription(alreadyPropagatedToNode);
 		
 		for(Node bbNode: newProp) {
 			sendSubscription(subs, SpecificHttpBulletinBoardClient.getDefaultBulletinBoardURI(bbNode.getBaseURI()), update);
 		}
+	}
+	
+	private boolean itsMe(Node bbNode) {
+		final String myAddress = this.infoHolder.getAddress()+":"+this.infoHolder.getPort();
+		return bbNode.getBaseURI().startsWith(myAddress); 
 	}
 	
 	/**

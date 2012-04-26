@@ -13,6 +13,7 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard.http.server;
 
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
@@ -26,8 +27,8 @@ public class BulletinBoardController implements IBulletinBoardController {
 		this.local = localBulletinBoard;
 	}
 	
-	public BulletinBoardController(IRegistry registry) {
-		this(new LocalBulletinBoard(registry));
+	public BulletinBoardController(IRegistry registry, IHTTPInformation infoHolder) {
+		this(new LocalBulletinBoard(registry, infoHolder));
 	}
 	
 	@Override

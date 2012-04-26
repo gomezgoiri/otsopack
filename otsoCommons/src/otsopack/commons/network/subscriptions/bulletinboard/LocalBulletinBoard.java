@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
@@ -35,8 +36,8 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	final BulletinBoard bulletinBoard = new BulletinBoard();
 	
 	
-	public LocalBulletinBoard(IRegistry registry) {
-		propagator = new SubscriptionsPropagator(registry);
+	public LocalBulletinBoard(IRegistry registry, IHTTPInformation infoHolder) {
+		propagator = new SubscriptionsPropagator(registry, infoHolder);
 	}
 
 	@Override
