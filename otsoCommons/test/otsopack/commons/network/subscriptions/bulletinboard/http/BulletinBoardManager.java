@@ -32,6 +32,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.BulletinBoardRestServer;
+import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class BulletinBoardManager {
 	protected String defaultSpace = "http://default";
@@ -114,7 +115,8 @@ class FakeRegistry implements IRegistryManager {
 	@Override
 	public Set<Node> getBulletinBoards() {
 		final Set<Node> bbs = new HashSet<Node>();
-		bbs.add(new Node("http://localhost:"+this.port, "bboard0", true, true, false));
+		bbs.add(new Node("http://localhost:" + this.port + OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+						"bboard0", true, true, false));
 		return bbs;
 	}
 	@Override
@@ -132,7 +134,7 @@ class InfoHolder implements IHTTPInformation {
 	}
 	@Override
 	public String getAddress() {
-		return "http://localhost:"+this.port;
+		return "http://localhost:" + this.port;
 	}
 	@Override
 	public int getPort() {

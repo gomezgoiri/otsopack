@@ -113,7 +113,7 @@ public abstract class AbstractKernel implements ITripleSpace {
 		if (spaceURI != null) {
 			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 			networkService.joinSpace(spaceURI);
-			dataAccessService.joinSpace(spaceURI);			
+			dataAccessService.joinSpace(spaceURI);
 		} else {
 			throw new TSException("space must not be null");
 		}		

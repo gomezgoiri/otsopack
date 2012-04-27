@@ -123,6 +123,7 @@ public class Node implements Serializable {
 	public String toString() {
 		return "Node [uuid=" + this.uuid + ", baseURI=" + this.baseURI
 				+ ", reachable=" + this.reachable + ", mustPoll="
-				+ this.mustPoll + "]";
+				+ this.mustPoll + ", isBulletinBoard="
+				+ this.bulletinBoard + "]";
 	}
 }

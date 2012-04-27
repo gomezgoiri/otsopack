@@ -10,7 +10,6 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
  */
 package otsopack.commons.network.coordination.spacemanager;
 
@@ -156,7 +155,7 @@ public class SpaceManagerTest {
 		@Override
 		public Representation get(){
 			SpaceManagerTest.this.iterations++;
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL){
+			throw new ResourceException(Status.CONNECTOR_ERROR_COMMUNICATION){
 				private static final long serialVersionUID = 1339150641633327350L;
 
 				@Override

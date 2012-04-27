@@ -78,7 +78,7 @@ public class SubscriptionsPropagator {
 			subs.addNodeWhichAlreadyKnowTheSubscription(alreadyPropagatedToNode);
 		
 		for(Node bbNode: newProp) {
-			sendSubscription(subs, SpecificHttpBulletinBoardClient.getDefaultBulletinBoardURI(bbNode.getBaseURI()), update);
+			sendSubscription(subs, bbNode.getBaseURI(), update);
 		}
 	}
 	

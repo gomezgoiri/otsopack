@@ -26,6 +26,7 @@ import org.restlet.resource.ServerResource;
 import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
@@ -58,7 +59,7 @@ public class NotificationResource extends ServerResource implements INotificatio
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
 			
-			bulletinBoard.notify( JSONSerializableConversors.convertFromSerializable(advjson) );
+			((LocalBulletinBoard)bulletinBoard).notify( JSONSerializableConversors.convertFromSerializable(advjson) ); // not exception thrown
 			return new StringRepresentation("200 OK.");
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

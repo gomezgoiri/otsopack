@@ -41,10 +41,6 @@ public class SpecificHttpBulletinBoardClient {
 		this.chosen = uri;
 	}
 	
-	static public String getDefaultBulletinBoardURI(String baseNodeUri) {
-		return baseNodeUri + OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH;
-	}
-	
 	public String getRemoteBulletinBoardURI() {
 		return this.chosen;
 	}

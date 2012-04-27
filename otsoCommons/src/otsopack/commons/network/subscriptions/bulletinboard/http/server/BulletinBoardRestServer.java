@@ -65,7 +65,7 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	
 	@Override
 	public String getAddress() {
-		final String addr = server.getAddress();
+		final String addr = this.server.getAddress();
 		return "http://" + ((addr==null)? "localhost": addr);
 	}
 	

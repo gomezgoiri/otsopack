@@ -17,6 +17,7 @@ package otsopack.commons.network;
 import otsopack.commons.ILayer;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 
@@ -32,14 +33,14 @@ public interface ISubscriptions extends ILayer {
 	 * @param listener
 	 * @return subscription uri
 	 */
-	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException;
+	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException, SubscriptionException;
 
 	/**
 	 * unsubscribe to subscription
 	 * @param spaceURI
 	 * @param subscription
 	 */
-	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException;
+	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException, SubscriptionException;
 
 	/**
 	 * advertise one template
@@ -47,7 +48,7 @@ public interface ISubscriptions extends ILayer {
 	 * @param template
 	 * @return advertisement uri
 	 */
-	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException;
+	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException,  SubscriptionException;
 
 	/**
 	 * @param spaceURI

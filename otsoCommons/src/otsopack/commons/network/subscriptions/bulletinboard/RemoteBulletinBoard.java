@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
@@ -44,7 +45,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	
 	public RemoteBulletinBoard(IHTTPInformation infoMngr, String spaceURI, IRegistry bbd) {
 		try {
-			this.callbackURL = new URI( infoMngr.getAddress() +
+			this.callbackURL = new URI( infoMngr.getAddress() + ":" + infoMngr.getPort() +
 										NotificationCallbackResource.ROOT.replace(
 												"{space}",
 												URLEncoder.encode(spaceURI, "utf-8")
@@ -61,7 +62,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public String subscribe(Subscription s) {
+	public String subscribe(Subscription s) throws SubscriptionException {
 		final String ret = this.mySubscriptions.subscribe(s); // local callback stored
 		
 		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
@@ -72,13 +73,13 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	}
 
 	@Override
-	public void updateSubscription(String subscriptionId, long extratime) {
+	public void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
 		this.mySubscriptions.updateSubscription(subscriptionId, extratime);
 		this.client.updateSubscription(subscriptionId, extratime);
 	}
 
 	@Override
-	public void unsubscribe(String subscriptionId) {
+	public void unsubscribe(String subscriptionId) throws SubscriptionException {
 		this.client.unsubscribe(subscriptionId);
 		this.mySubscriptions.unsubscribe(subscriptionId);
 	}
@@ -87,7 +88,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 	 * The client notifies the bulletin board.
 	 */
 	@Override
-	public void notify(NotificableTemplate adv) {
+	public void notify(NotificableTemplate adv) throws SubscriptionException {
 		this.client.notify(adv);
 	}
 	

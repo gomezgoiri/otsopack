@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.ISubscriptions;
@@ -81,23 +82,25 @@ public class BulletinBoardsManager implements ISubscriptions {
 	
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener)
-		throws SpaceNotExistsException {
+		throws SpaceNotExistsException, SubscriptionException  {
 		if (!this.boards.contains(spaceURI))
-			throw new SpaceNotExistsException();
+			createBulletinBoard(spaceURI);
+			//throw new SpaceNotExistsException();
 		
 		final Subscription subs = Subscription.createSubcription(EXPIRATION, template, listener);
 		return this.boards.get(spaceURI).subscribe(subs);
 	}
 	
 	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI) {
+	public void unsubscribe(String spaceURI, String subscriptionURI) throws SubscriptionException {
 		this.boards.get(spaceURI).unsubscribe(subscriptionURI);
 	}
 	
 	@Override
-	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
+	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException, SubscriptionException  {
 		if (!this.boards.contains(spaceURI))
-			throw new SpaceNotExistsException();
+			createBulletinBoard(spaceURI);
+			//throw new SpaceNotExistsException();
 		this.boards.get(spaceURI).notify(template);
 	}
 }

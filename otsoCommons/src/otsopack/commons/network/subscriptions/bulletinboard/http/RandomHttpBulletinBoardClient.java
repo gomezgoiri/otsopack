@@ -18,6 +18,7 @@ import java.util.Set;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
@@ -34,20 +35,21 @@ public class RandomHttpBulletinBoardClient {
 		this.bbd = bbd;
 	}
 	
-	public SpecificHttpBulletinBoardClient getRemoteBulletinBoardURI() {
+	public SpecificHttpBulletinBoardClient getRemoteBulletinBoardURI() throws SubscriptionException {
 		if (this.chosen==null) {
 			Set<Node> bbs = this.bbd.getBulletinBoards();
 			for(Node bb: bbs) { // what if it is empty?
-				this.chosen = new SpecificHttpBulletinBoardClient(
-									SpecificHttpBulletinBoardClient.getDefaultBulletinBoardURI(bb.getBaseURI())
-								);
+				this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());
 				break;
+			}
+			if (this.chosen==null) { // if it remains null, no BulletinBoard is available
+				throw new SubscriptionException("No Bulletin Board available.");
 			}
 		}
 		return this.chosen;
 	}
 	
-	public void notify(NotificableTemplate adv) {
+	public void notify(NotificableTemplate adv) throws SubscriptionException {
 		try{
 			getRemoteBulletinBoardURI().notify(adv);
 		} catch (ResourceException e) {
@@ -57,7 +59,7 @@ public class RandomHttpBulletinBoardClient {
 		}
 	}
 	
-	public String subscribe(SubscribeJSON subJson) {
+	public String subscribe(SubscribeJSON subJson) throws SubscriptionException {
 		try{
 			getRemoteBulletinBoardURI().subscribe(subJson);
 		} catch (ResourceException e) {
@@ -68,7 +70,7 @@ public class RandomHttpBulletinBoardClient {
 		return null;
 	}
 	
-	public String updateSubscription(String subscriptionId, long extratime) {
+	public String updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
 		try{
 			final SubscribeJSON subJson = new SubscribeJSON(subscriptionId, null, extratime, null);
 			getRemoteBulletinBoardURI().updateSubscription(subJson);
@@ -80,7 +82,7 @@ public class RandomHttpBulletinBoardClient {
 		return null;
 	}
 	
-	public String unsubscribe(String subId) {
+	public String unsubscribe(String subId) throws SubscriptionException {
 		try{
 			getRemoteBulletinBoardURI().unsubscribe(subId);
 		} catch (ResourceException e) {

@@ -49,7 +49,7 @@ public class SpaceManagerServerHttpTest {
 
 	@Test
 	public void testJoinLeave() throws Exception {
-		final String secret = this.client.selfJoin(12345, false, true);
+		final String secret = this.client.selfJoin(12345, "", false, true, false);
 		this.client.poll(secret);
 		this.client.leave(secret);
 		

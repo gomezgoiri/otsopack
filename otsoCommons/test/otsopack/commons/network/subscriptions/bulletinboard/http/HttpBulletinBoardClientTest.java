@@ -29,11 +29,13 @@ import org.junit.Test;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalListenerTester;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.data.RemoteNotificationListener;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class HttpBulletinBoardClientTest {
 	private int PORT = 18086;
@@ -54,7 +56,7 @@ public class HttpBulletinBoardClientTest {
 	}
 
 	@Test
-	public void testSubscribe() throws URISyntaxException {
+	public void testSubscribe() throws URISyntaxException, SubscriptionException {
 		final Subscription sentSub = Subscription.createSubcription(
 										System.currentTimeMillis()+60000,
 										WildcardTemplate.createWithNull(null, null),
@@ -70,7 +72,7 @@ public class HttpBulletinBoardClientTest {
 	
 	
 	@Test
-	public void testUpdateSubscribe() throws URISyntaxException {
+	public void testUpdateSubscribe() throws URISyntaxException, SubscriptionException {
 		final long timestamp1 = System.currentTimeMillis()+60000;
 		final long timestamp2 = System.currentTimeMillis()+360000;
 		final Subscription sentSub = Subscription.createSubcription(
@@ -101,7 +103,7 @@ public class HttpBulletinBoardClientTest {
 	}
 	
 	@Test
-	public void testUnsubscribe() throws URISyntaxException {
+	public void testUnsubscribe() throws URISyntaxException, SubscriptionException {
 		final Subscription sentSub = Subscription.createSubcription(
 											System.currentTimeMillis()+60000,
 											WildcardTemplate.createWithNull(null, null),
@@ -171,11 +173,15 @@ public class HttpBulletinBoardClientTest {
 		manager2.start();
 		
 		// bulletinBoard0 knows bulletinBoard1
-		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT), "bboard0", true, true, false));
-		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1), "bboard1", true, true, false));
+		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+													"bboard0", true, true, false));
+		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+													"bboard1", true, true, false));
 		
-		manager2.otherBulletinBoards.add(new Node("http://localhost:"+this.PORT, "bboard0", true, true, false));
-		manager2.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1), "bboard1", true, true, false));
+		manager2.otherBulletinBoards.add(new Node("http://localhost:"+this.PORT+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+													"bboard0", true, true, false));
+		manager2.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+													"bboard1", true, true, false));
 		
 		final LocalListenerTester list = new LocalListenerTester();
 		final Subscription sub = Subscription.createSubcription("uuid1", currentTime+EXPIRATIONTIME, subscribed, list);

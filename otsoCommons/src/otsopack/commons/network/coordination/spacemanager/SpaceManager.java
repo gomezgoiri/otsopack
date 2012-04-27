@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.restlet.data.Status;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -220,7 +221,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			return;
 		}
 		
-		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI() + "spaces");
+		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI()); // + "spaces");
         client.setRetryAttempts(0);
 		try{
 			if(DEBUG)
@@ -229,30 +230,33 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			
 			client.get();
 			
-			if(DEBUG){
-				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-				}else if(!this.currentNodes.containsKey(secret)){
-					System.out.println("[recovered] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-				}
-			}
-			this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
-			nodeToCheck.updateTimestamp();
+			successNode(secret, nodeToCheck);
 		}catch(ResourceException re){
-			if(DEBUG){
-				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-					re.printStackTrace();
-				}else if(this.currentNodes.containsKey(secret)){
-					System.out.println("[fail] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-					re.printStackTrace();
+			if(re.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+				if(DEBUG){
+					if(DEBUG_VERBOSE) {
+						System.out.println("[fail] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+						re.printStackTrace();
+					}
 				}
-			}
-			this.currentNodes.remove(secret);
+				this.currentNodes.remove(secret);
+			} else successNode(secret, nodeToCheck); // e.g. 404 error does not mean that the node is not up!			
 		}finally{
 			client.release();
 			nodeToCheck.updateCheckTime();
 		}
+	}
+	
+	private void successNode(String secret, NodeCheckingStatus nodeToCheck) {
+		if(DEBUG){
+			if(DEBUG_VERBOSE){
+				System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+			}else if(!this.currentNodes.containsKey(secret)){
+				System.out.println("[recovered] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+			}
+		}
+		this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
+		nodeToCheck.updateTimestamp();
 	}
 
 	/**

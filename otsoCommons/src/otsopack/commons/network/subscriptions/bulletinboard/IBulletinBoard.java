@@ -14,15 +14,16 @@
 package otsopack.commons.network.subscriptions.bulletinboard;
 
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
 public interface IBulletinBoard {
-	String subscribe(Subscription subscription);
-	void updateSubscription(String subscriptionId, long extratime);
-	void unsubscribe(String subscriptionId);
-	public Subscription getSubscription(String id);
+	String subscribe(Subscription subscription) throws SubscriptionException ;
+	void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException;
+	void unsubscribe(String subscriptionId) throws SubscriptionException ;
+	public Subscription getSubscription(String id) throws SubscriptionException ;
 	
-	void notify(NotificableTemplate adv);
+	void notify(NotificableTemplate adv) throws SubscriptionException ;
 	
 	/**
 	 * Used when a bulletin board notifies this client (subscriber).

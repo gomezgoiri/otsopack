@@ -31,7 +31,7 @@ import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.dataaccess.memory.MemoryDataAccess;
-import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.discovery.SimpleDiscovery;
 import otsopack.commons.network.coordination.registry.SimpleRegistry;
@@ -50,7 +50,7 @@ public class RestMulticastCommunicationTest {
 	private OtsoRestServer [] restServers;
 	private IController [] controllers;
 	private Node [] nodes;
-	private IRegistry registry;
+	private IRegistryManager registry;
 	
 	private RestMulticastCommunication comm;
 	
@@ -108,6 +108,7 @@ public class RestMulticastCommunicationTest {
 		}
 
 		this.registry = new SimpleRegistry(this.spaceURI, new SimpleDiscovery(new SimpleSpaceManager(this.nodes)));
+		this.registry.startup();
 		
 		this.comm = new RestMulticastCommunication(this.registry);
 		this.comm.startup();

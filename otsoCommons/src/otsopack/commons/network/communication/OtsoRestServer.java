@@ -107,7 +107,8 @@ public class OtsoRestServer implements IHTTPInformation {
 	}
 	
 	public String getAddress() {
-		return this.server.getAddress();
+		final String addr = this.server.getAddress();
+		return "http://" + ((addr==null)? "localhost": addr);
 	}
 	
 	public int getPort() {

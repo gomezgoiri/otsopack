@@ -24,6 +24,7 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
@@ -116,20 +117,20 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template,
-			INotificationListener listener) throws SpaceNotExistsException {
+			INotificationListener listener) throws SpaceNotExistsException, SubscriptionException {
 		// TODO check where to set the expiration time
 		return this.bulletinBoards.subscribe(spaceURI, template, listener);
 	}
 
 	@Override
 	public void unsubscribe(String spaceURI, String subscriptionURI)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, SubscriptionException {
 		this.bulletinBoards.unsubscribe(spaceURI, subscriptionURI);
 	}
 
 	@Override
 	public void notify(String spaceURI, NotificableTemplate template)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, SubscriptionException {
 		this.bulletinBoards.notify(spaceURI, template);
 	}
 
