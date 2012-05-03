@@ -17,10 +17,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.restlet.resource.ResourceException;
+
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulletinBoardClient;
 import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
 import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard;
 
@@ -35,10 +39,37 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	// bulletin board for both local and remote subscriptions
 	final BulletinBoard bulletinBoard = new BulletinBoard();
 	
+	// for bootstrapping
+	private final RandomHttpBulletinBoardClient bbc;
+	
 	
 	public LocalBulletinBoard(IRegistry registry, IHTTPInformation infoHolder) {
-		propagator = new SubscriptionsPropagator(registry, infoHolder);
+		this.propagator = new SubscriptionsPropagator(registry, infoHolder);
+		this.bbc = new RandomHttpBulletinBoardClient(registry, infoHolder);
 	}
+	
+	public void start() {
+		bootstrapping();
+	}
+
+	public void stop() {
+	}
+	
+	private void bootstrapping() {
+		try {
+			final Subscription[] initialSubscriptions = this.bbc.getSubscriptions();
+			for(Subscription sub: initialSubscriptions) {
+				this.bulletinBoard.subscribe(sub);
+			}
+		} catch (ResourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SubscriptionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Override
 	public String subscribe(Subscription subscription) {		

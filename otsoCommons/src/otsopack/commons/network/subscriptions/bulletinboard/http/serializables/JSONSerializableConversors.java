@@ -41,6 +41,15 @@ public class JSONSerializableConversors {
 		return Subscription.createSubcription(sub.id, sub.expiration, tpl, new RemoteNotificationListener(sub.getCallbackURL()));
 	}
 	
+	public static Subscription[] convertFromSerializable(SubscribeJSON[] subs) {
+		final Subscription[] ret = new Subscription[subs.length];
+		int i=0;
+		for(SubscribeJSON sub: subs) {
+			ret[i++] = convertFromSerializable(sub);
+		}
+		return ret;
+	}
+	
 	public static SubscribeJSON convertToSerializable(Subscription subs) {
 		final WildcardTemplate wtpl = (WildcardTemplate) subs.getTemplate();
 		final TemplateJSON tpl;

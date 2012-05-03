@@ -16,17 +16,19 @@ package otsopack.commons.network.subscriptions.bulletinboard.http;
 import java.io.IOException;
 
 import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
+import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
+import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
-import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.NotificationResource;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.SubscriptionResource;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.SubscriptionsResource;
@@ -109,5 +111,22 @@ public class SpecificHttpBulletinBoardClient {
 			client.release();
 		}
 		return null;
+	}
+	
+	public Subscription[] getSubscriptions() throws ResourceException {
+		final String url = getRemoteBulletinBoardURI() + SubscriptionsResource.ROOT;
+		final ClientResource client = new ClientResource(url);
+		try {
+			try {
+				final Representation repr = client.get(MediaType.APPLICATION_JSON);
+				final SubscribeJSON[] subsjson = JSONDecoder.decode(repr.getText(), SubscribeJSON[].class);
+				
+				return JSONSerializableConversors.convertFromSerializable(subsjson);
+			} catch (IOException e) {
+				throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
+			}
+		} finally {
+			client.release();
+		}
 	}
 }

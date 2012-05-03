@@ -20,10 +20,9 @@ import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 
 public class BulletinBoardController implements IBulletinBoardController {
 	
-	// TODO rethink: maybe this class or LocalBulletinBoard are redundant
-	final IBulletinBoard local;
+	final LocalBulletinBoard local;
 	
-	public BulletinBoardController(IBulletinBoard localBulletinBoard) {
+	public BulletinBoardController(LocalBulletinBoard localBulletinBoard) {
 		this.local = localBulletinBoard;
 	}
 	
@@ -34,5 +33,13 @@ public class BulletinBoardController implements IBulletinBoardController {
 	@Override
 	public IBulletinBoard getBulletinBoard() {
 		return this.local;
+	}
+	
+	public void start() {
+		this.local.start();
+	}
+	
+	public void stop() {
+		this.local.stop();
 	}
 }

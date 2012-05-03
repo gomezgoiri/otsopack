@@ -19,8 +19,10 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
+import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
+import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 /**
@@ -29,18 +31,34 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.S
 //big TODO: when the selected BB does not respond, set to null and try again
 public class RandomHttpBulletinBoardClient {
 	private final IRegistry bbd; // TODO replace by bulletin boards discovery using SM!
+	private final IHTTPInformation meAsBulletinBoard;
 	private SpecificHttpBulletinBoardClient chosen = null;
 	
 	public RandomHttpBulletinBoardClient(IRegistry bbd){
+		this(bbd, null);
+	}
+	
+	public RandomHttpBulletinBoardClient(IRegistry bbd, IHTTPInformation infoHolder){
 		this.bbd = bbd;
+		this.meAsBulletinBoard = infoHolder;
+	}
+	
+	private boolean itsMe(String baseURI) {
+		if(this.meAsBulletinBoard!=null) {
+			final String myBulletinBoardURI = this.meAsBulletinBoard.getAddress() + ":" + this.meAsBulletinBoard.getPort();
+			return baseURI.contains(myBulletinBoardURI);
+		}
+		return false;
 	}
 	
 	public SpecificHttpBulletinBoardClient getRemoteBulletinBoardURI() throws SubscriptionException {
 		if (this.chosen==null) {
-			Set<Node> bbs = this.bbd.getBulletinBoards();
+			final Set<Node> bbs = this.bbd.getBulletinBoards();
 			for(Node bb: bbs) { // what if it is empty?
-				this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());
-				break;
+				if( !itsMe(bb.getBaseURI()) ) {
+					this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());
+					break;
+				}
 			}
 			if (this.chosen==null) { // if it remains null, no BulletinBoard is available
 				throw new SubscriptionException("No Bulletin Board available.");
@@ -85,6 +103,17 @@ public class RandomHttpBulletinBoardClient {
 	public String unsubscribe(String subId) throws SubscriptionException {
 		try{
 			getRemoteBulletinBoardURI().unsubscribe(subId);
+		} catch (ResourceException e) {
+			e.printStackTrace();
+			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
+			// this.chosen = null;
+		}
+		return null;
+	}
+	
+	public Subscription[] getSubscriptions() throws ResourceException, SubscriptionException {
+		try{
+			return getRemoteBulletinBoardURI().getSubscriptions();
 		} catch (ResourceException e) {
 			e.printStackTrace();
 			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!

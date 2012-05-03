@@ -29,9 +29,9 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	private final Server server;
 	private final Component component;
 	private final OtsopackHttpBulletinBoardProviderApplication application;
-
-
-	public BulletinBoardRestServer(int port) {
+	private final BulletinBoardController controller;
+	
+	public BulletinBoardRestServer(int port, IRegistry registry){
 		this.port = port;
 		
 	    this.component = new Component();
@@ -43,12 +43,9 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	    // TODO made this configurable!
 	    this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 	    										this.application);
-	}
-	
-	public BulletinBoardRestServer(int port, IRegistry registry){
-		this(port);
-		final BulletinBoardController controller = new BulletinBoardController(registry, this);
-		this.application.setController(controller);
+	    
+		this.controller = new BulletinBoardController(registry, this);
+		this.application.setController(this.controller);
 	}
 	
 	public OtsopackHttpBulletinBoardProviderApplication getApplication(){
@@ -57,9 +54,11 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	
 	public void startup() throws Exception {
 		this.component.start();
+		this.controller.start();
 	}
 	
 	public void shutdown() throws Exception {
+		this.controller.stop();
 		this.component.stop();
 	}
 	
