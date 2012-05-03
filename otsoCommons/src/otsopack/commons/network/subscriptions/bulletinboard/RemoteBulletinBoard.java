@@ -24,8 +24,8 @@ import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulletinBoardClient;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.resources.NotificationCallbackResource;
 import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard;
 

@@ -28,8 +28,8 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.communication.util.JSONEncoder;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 
 public class RemoteNotificator {
 	private volatile ExecutorService executor = Executors.newCachedThreadPool();

@@ -26,8 +26,8 @@ import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.resources.spaces.SpaceResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 
 /**
  * Class which represent the callback URI used by default with notifications.

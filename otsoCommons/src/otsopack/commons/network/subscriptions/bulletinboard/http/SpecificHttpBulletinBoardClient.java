@@ -23,9 +23,9 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.util.JSONEncoder;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.NotificationResource;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.SubscriptionResource;

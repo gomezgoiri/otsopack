@@ -18,15 +18,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.data.Status;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
+import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionResource extends AbstractServerResource implements ISubscriptionResource {
@@ -36,6 +40,18 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
 		roots.put(ROOT, SubscriptionResource.class);
 		return roots;
+	}
+	
+	@Override
+	public Representation viewSubscription(Representation rep) {
+		final String subID = this.getArgument("subscribe");
+		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+		try {
+			final SubscribeJSON subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscription(subID) );
+			return new JsonRepresentation(JSONEncoder.encode(subjson));
+		} catch (SubscriptionException e) {
+			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, e.getMessage());
+		}
 	}
 	
 	@Override

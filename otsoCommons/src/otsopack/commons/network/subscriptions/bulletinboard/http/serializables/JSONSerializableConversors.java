@@ -11,9 +11,10 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables;
+package otsopack.commons.network.subscriptions.bulletinboard.http.serializables;
 
 import java.net.URI;
+import java.util.Collection;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.TripleLiteralObject;
@@ -114,6 +115,15 @@ public class JSONSerializableConversors {
 		int i=0;
 		for(NotificableTemplate adv: advs) {
 			ret[i++] = convertToSerializable(adv);
+		}
+		return ret;
+	}
+	
+	public static SubscribeJSON[] convertToSerializable(Collection<Subscription> subs) {
+		final SubscribeJSON[] ret = new SubscribeJSON[subs.size()];
+		int i=0;
+		for(Subscription s: subs) {
+			ret[i++] = convertToSerializable(s);
 		}
 		return ret;
 	}

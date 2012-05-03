@@ -21,7 +21,7 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 /**
  * Class to be used by any BulletinBoard subscriber (i.e. client).

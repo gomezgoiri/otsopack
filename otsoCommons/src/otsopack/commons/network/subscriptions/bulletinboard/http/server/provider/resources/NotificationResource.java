@@ -27,8 +27,8 @@ import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.TemplateJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class NotificationResource extends ServerResource implements INotificationResource {

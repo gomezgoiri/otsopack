@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables;
+package otsopack.commons.network.subscriptions.bulletinboard.http.serializables;
 
 import java.io.Serializable;
 import java.net.URI;

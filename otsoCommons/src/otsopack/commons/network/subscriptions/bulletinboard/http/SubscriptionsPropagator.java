@@ -28,8 +28,8 @@ import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 public class SubscriptionsPropagator {
 	final IRegistry registry;

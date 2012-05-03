@@ -26,8 +26,8 @@ import org.restlet.resource.ServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.JSONSerializableConversors;
-import otsopack.commons.network.subscriptions.bulletinboard.http.JSONSerializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class SubscriptionsResource extends ServerResource implements ISubscriptionsResource {
@@ -46,6 +46,13 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 		encoder.appendRoots(getRoots().keySet());
 		return encoder.getHtmlRepresentation();
 	}*/
+	
+	@Override
+	public Representation viewSubscriptions(Representation rep) {
+		final LocalBulletinBoard bulletinBoard = (LocalBulletinBoard) ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+		final SubscribeJSON[] subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscriptions() );
+		return new JsonRepresentation(JSONEncoder.encode(subjson));
+	}
 
 	@Override
 	public Representation createSubscription(Representation rep) {
