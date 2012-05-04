@@ -42,6 +42,10 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	 * This map is used for generating keys. Whenever a node joins, it is the first map in registering it and the last one when leaving. 
 	 */
 	private final ConcurrentHashMap<String, Node> secret2node = new ConcurrentHashMap<String, Node>();
+	/**
+	 * This map is used to check if the node has already joined. 
+	 */
+	private final ConcurrentHashMap<Node, String> node2secret = new ConcurrentHashMap<Node, String>();
 	
 	/**
 	 * A map referencing all the nodes that will poll by themselves. If they fail to do this, they will be considered broken 
@@ -91,16 +95,24 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	
 	@Override
 	public String join(Node node){
-		String secret;
-		do{
-			secret = generateSecret();
-		}while(this.secret2node.putIfAbsent(secret, node) != null);
-
+		String secret = node2secret.get(node);
+		if(secret==null) {
+			do{
+				secret = generateSecret();
+			} while(this.secret2node.putIfAbsent(secret, node) != null);
+			
+			this.node2secret.putIfAbsent(node, secret);
+		}
+		
 		if(node.isReachable())
-			this.checkingNodes.put(secret, new NodeCheckingStatus(node));
+			this.checkingNodes.putIfAbsent(secret, new NodeCheckingStatus(node));
+		else
+			this.checkingNodes.remove(secret);
 		
 		if(node.isMustPoll())
 			this.pollingNodes.put(secret, new NodePollingStatus(node, secret));
+		else
+			this.pollingNodes.remove(secret);
 		
 		return secret;
 	}
@@ -119,7 +131,8 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		this.checkingNodes.remove(secret);
 		this.pollingNodes.remove(secret);
 		this.currentNodes.remove(secret);
-		this.secret2node.remove(secret);
+		final Node node = this.secret2node.remove(secret);
+		if(node!=null) this.node2secret.remove(node);
 	}
 	
 	@Override

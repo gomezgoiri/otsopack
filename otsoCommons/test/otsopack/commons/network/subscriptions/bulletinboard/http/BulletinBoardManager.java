@@ -134,7 +134,7 @@ class InfoHolder implements IHTTPInformation {
 	}
 	@Override
 	public String getAddress() {
-		return "http://localhost:" + this.port;
+		return "http://localhost";
 	}
 	@Override
 	public int getPort() {

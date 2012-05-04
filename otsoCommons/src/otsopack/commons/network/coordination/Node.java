@@ -84,12 +84,7 @@ public class Node implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((this.baseURI == null) ? 0 : this.baseURI.hashCode());
-		result = prime * result + (this.mustPoll ? 1231 : 1237);
-		result = prime * result + (this.reachable ? 1231 : 1237);
-		result = prime * result
-				+ ((this.uuid == null) ? 0 : this.uuid.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -102,19 +97,10 @@ public class Node implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
-		if (this.baseURI == null) {
-			if (other.baseURI != null)
-				return false;
-		} else if (!this.baseURI.equals(other.baseURI))
-			return false;
-		if (this.mustPoll != other.mustPoll)
-			return false;
-		if (this.reachable != other.reachable)
-			return false;
-		if (this.uuid == null) {
+		if (uuid == null) {
 			if (other.uuid != null)
 				return false;
-		} else if (!this.uuid.equals(other.uuid))
+		} else if (!uuid.equals(other.uuid))
 			return false;
 		return true;
 	}
