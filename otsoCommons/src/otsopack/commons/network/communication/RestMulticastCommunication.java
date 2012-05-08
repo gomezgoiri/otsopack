@@ -309,12 +309,8 @@ public class RestMulticastCommunication implements ICommunication {
 
 				@Override
 				public Graph[] call() throws Exception {
-					try {
-						return unicast.query(spaceURI, template, configuration);
-					} catch (ResourceException e) {
-						e.printStackTrace();
-						return null;
-					}
+					// or ResourceException
+					return unicast.query(spaceURI, template, configuration);
 				}
 			});
 			

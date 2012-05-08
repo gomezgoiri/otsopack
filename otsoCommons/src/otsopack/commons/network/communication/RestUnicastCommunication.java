@@ -369,8 +369,9 @@ public class RestUnicastCommunication implements ICommunication {
 				final String relativeURI = WildcardConverter.createURLFromTemplate( (WildcardTemplate)template );
 				final ClientResource cr = this.clientFactory.createStatefulClientResource( getBaseURI(spaceURI)+"/query/wildcards/"+relativeURI, configuration.getTimeout() );
 				try {
-					final Representation rep = cr.get(NTriplesRepresentation.class);
+					Representation rep = cr.get(NTriplesRepresentation.class);
 					ret = createGraphs(cr, rep);
+					rep.exhaust();
 				} catch (ResourceException e) {
 					if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
 						if(e.getMessage().startsWith(SpaceNotExistsException.HTTPMSG)) {
@@ -381,8 +382,12 @@ public class RestUnicastCommunication implements ICommunication {
 						throw new UnsupportedTemplateException(e.getMessage());
 					} else if(e.getStatus().equals(Status.CLIENT_ERROR_NOT_ACCEPTABLE)) {
 						throw new UnsupportedSemanticFormatException(e.getMessage());
+					} else {// and what about the timeout?
+						throw e;
 					}
 				} finally {
+					// Consume the response's entity which releases the connection
+					//cr.getResponseEntity().exhaust();
 					cr.release();
 				}
 			} catch (UnsupportedEncodingException e) {
