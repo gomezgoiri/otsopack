@@ -67,6 +67,15 @@
 		</javac>
 		<mkdir dir="dist" />
 		<jar destfile="dist/otsoSE-sources.jar" basedir="bin" />
+		<jar destfile="dist/otsoSE-sources-all.jar" filesetmanifest="skip">
+			<zipgroupfileset dir="dist" includes="otsoSE-sources.jar" excludes="" />
+			<zipgroupfileset dir="../otsoCommons/dist" includes="otsoCommons-sources.jar" excludes="" />
+			<zipgroupfileset dir="../otsoRestletCommons/dist" includes="otsoRestletCommons-sources.jar" excludes="" />
+			<zipgroupfileset dir="../otsoAuthentication/dist" includes="otsoAuthentication-sources.jar" excludes="" />
+			<manifest>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
 		<jar destfile="dist/otsoSE-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="bin" includes="*.class" />
 			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
