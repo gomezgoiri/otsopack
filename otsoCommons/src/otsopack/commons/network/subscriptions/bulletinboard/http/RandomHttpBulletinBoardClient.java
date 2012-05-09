@@ -30,15 +30,19 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.S
  */
 //big TODO: when the selected BB does not respond, set to null and try again
 public class RandomHttpBulletinBoardClient {
-	private final IRegistry bbd; // TODO replace by bulletin boards discovery using SM!
+	final private String spaceURI;
+	final private IRegistry bbd; // TODO replace by bulletin boards discovery using SM!
+	
 	private final IHTTPInformation meAsBulletinBoard;
 	private SpecificHttpBulletinBoardClient chosen = null;
 	
-	public RandomHttpBulletinBoardClient(IRegistry bbd){
-		this(bbd, null);
+	
+	public RandomHttpBulletinBoardClient(String spaceURI, IRegistry bbd){
+		this(spaceURI, bbd, null);
 	}
 	
-	public RandomHttpBulletinBoardClient(IRegistry bbd, IHTTPInformation infoHolder){
+	public RandomHttpBulletinBoardClient(String spaceURI, IRegistry bbd, IHTTPInformation infoHolder){
+		this.spaceURI = spaceURI;
 		this.bbd = bbd;
 		this.meAsBulletinBoard = infoHolder;
 	}
@@ -53,7 +57,7 @@ public class RandomHttpBulletinBoardClient {
 	
 	public SpecificHttpBulletinBoardClient getRemoteBulletinBoardURI() throws SubscriptionException {
 		if (this.chosen==null) {
-			final Set<Node> bbs = this.bbd.getBulletinBoards();
+			final Set<Node> bbs = this.bbd.getBulletinBoards(this.spaceURI);
 			for(Node bb: bbs) { // what if it is empty?
 				if( !itsMe(bb.getBaseURI()) ) {
 					this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());

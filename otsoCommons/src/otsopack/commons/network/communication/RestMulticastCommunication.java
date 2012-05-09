@@ -78,7 +78,7 @@ public class RestMulticastCommunication implements ICommunication {
 		checkStarted();
 		
 		// Return the first result found
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 		
 		for(final Node nodeBaseURL : nodeBaseURLs){
@@ -116,7 +116,7 @@ public class RestMulticastCommunication implements ICommunication {
 		checkStarted();
 		
 		// Return the first result found
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 
 		for(final Node nodeBaseURL : nodeBaseURLs){
@@ -193,7 +193,7 @@ public class RestMulticastCommunication implements ICommunication {
 		
 		final List<Future<?>> submittedTasks = new Vector<Future<?>>();
 		
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(takeArgs.spaceURI);
 		
 		// This is a holder of the returning graph. If there is an element, this method should finish
 		final List<Graph> graphs = new Vector<Graph>(1);
@@ -282,7 +282,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		checkStarted();
 		
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		
 		final List<Future<Graph []>> submittedTasks = new Vector<Future<Graph[]>>();
 		

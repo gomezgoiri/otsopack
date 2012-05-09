@@ -31,7 +31,7 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	private final OtsopackHttpBulletinBoardProviderApplication application;
 	private final BulletinBoardController controller;
 	
-	public BulletinBoardRestServer(int port, IRegistry registry){
+	public BulletinBoardRestServer(int port, String spaceURI, IRegistry registry){
 		this.port = port;
 		
 	    this.component = new Component();
@@ -44,7 +44,7 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	    this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 	    										this.application);
 	    
-		this.controller = new BulletinBoardController(registry, this);
+		this.controller = new BulletinBoardController(spaceURI, registry, this);
 		this.application.setController(this.controller);
 	}
 	

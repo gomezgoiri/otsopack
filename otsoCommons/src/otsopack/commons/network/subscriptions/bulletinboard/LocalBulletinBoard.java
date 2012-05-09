@@ -43,9 +43,9 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	private final RandomHttpBulletinBoardClient bbc;
 	
 	
-	public LocalBulletinBoard(IRegistry registry, IHTTPInformation infoHolder) {
-		this.propagator = new SubscriptionsPropagator(registry, infoHolder);
-		this.bbc = new RandomHttpBulletinBoardClient(registry, infoHolder);
+	public LocalBulletinBoard(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
+		this.propagator = new SubscriptionsPropagator(spaceURI, registry, infoHolder);
+		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, infoHolder);
 	}
 	
 	public void start() {

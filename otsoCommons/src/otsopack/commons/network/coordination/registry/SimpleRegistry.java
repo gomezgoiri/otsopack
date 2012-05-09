@@ -16,7 +16,7 @@ package otsopack.commons.network.coordination.registry;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import otsopack.commons.network.coordination.IDiscovery;
 import otsopack.commons.network.coordination.IRegistryManager;
@@ -34,26 +34,24 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	private volatile int iterations = 0;
 	private final int interval;
 	private final IDiscovery discovery;
-	private final String spaceURI;
-	private final Set<ISpaceManager> spaceManagers = new CopyOnWriteArraySet<ISpaceManager>();
-	private final Set<Node> nodes = new CopyOnWriteArraySet<Node>();
+	private final ConcurrentHashMap<String, Set<ISpaceManager>> spaceManagers = new ConcurrentHashMap<String, Set<ISpaceManager>>();
+	private final ConcurrentHashMap<String, Set<Node>> nodes = new ConcurrentHashMap<String, Set<Node>>();
 	private final String localNodeUUID;
 	
 	
-	public SimpleRegistry(String spaceURI, IDiscovery discovery){
-		this(spaceURI, discovery, DEFAULT_INTERVAL);
+	public SimpleRegistry(IDiscovery discovery){
+		this(discovery, DEFAULT_INTERVAL);
 	}
 	
-	public SimpleRegistry(String spaceURI, Node ... nodes){
-		this(spaceURI, new SimpleDiscovery(nodes), DEFAULT_INTERVAL);
+	public SimpleRegistry(Node ... nodes){
+		this(new SimpleDiscovery(nodes), DEFAULT_INTERVAL);
 	}
 	
-	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval){
-		this(spaceURI, discovery, interval, null);
+	public SimpleRegistry(IDiscovery discovery, int interval){
+		this(discovery, interval, null);
 	}
 	
-	public SimpleRegistry(String spaceURI, IDiscovery discovery, int interval, String localNodeUUID){
-		this.spaceURI  = spaceURI;
+	public SimpleRegistry(IDiscovery discovery, int interval, String localNodeUUID){
 		this.discovery = discovery;
 		this.interval  = interval;
 		this.localNodeUUID = localNodeUUID;
@@ -118,6 +116,8 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 			
 		}
 		try{
+			this.spaceManagers.clear();
+			this.nodes.clear();
 			this.discovery.shutdown();
 		}catch(DiscoveryException de){
 			throw new RegistryException("Could not stop " + SimpleRegistry.class.getName() + ": " + de.getMessage(), de);
@@ -126,23 +126,23 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	
 	public void reload(){
 		try {
-			
-			fillSet(this.spaceManagers, this.discovery.getSpaceManagers(this.spaceURI));
-			
-			final Set<Node> newNodes = new HashSet<Node>();
-			for(ISpaceManager spaceManager : this.spaceManagers){
-				try {
-					for(Node node : spaceManager.getNodes())
-						if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
-							newNodes.add(node);
-					
-				} catch (SpaceManagerException e) {
-					System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
-					e.printStackTrace();
+			for(String spaceURI: this.spaceManagers.keySet()) {
+				fillSet(this.spaceManagers.get(spaceURI), this.discovery.getSpaceManagers(spaceURI));
+				
+				final Set<Node> newNodes = new HashSet<Node>();
+				for(ISpaceManager spaceManager : this.spaceManagers.get(spaceURI)){
+					try {
+						for(Node node : spaceManager.getNodes())
+							if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
+								newNodes.add(node);
+						
+					} catch (SpaceManagerException e) {
+						System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
+						e.printStackTrace();
+					}
 				}
+				fillSet(this.nodes.get(spaceURI), newNodes.toArray(new Node[]{}));
 			}
-			fillSet(this.nodes, newNodes.toArray(new Node[]{}));
-			
 		} catch (DiscoveryException e) {
 			System.err.println("Discovery failed: " + e.getMessage() + "; keeping the already stored space managers");
 			e.printStackTrace();
@@ -150,35 +150,52 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	}
 	
 	private <T> void fillSet(Set<T> instanceSet, T [] currentElements){
-		for(T oldElement : instanceSet){
-			boolean found = false;
-			for(T currentElement : currentElements)
-				if(oldElement.equals(currentElement))
-					found = true;
+		if(instanceSet!=null) {
+			for(T oldElement : instanceSet){
+				boolean found = false;
+				for(T currentElement : currentElements)
+					if(oldElement.equals(currentElement))
+						found = true;
+				
+				if(!found)
+					instanceSet.remove(oldElement);
+			}
 			
-			if(!found)
-				instanceSet.remove(oldElement);
+			for(T currentElement : currentElements)
+				instanceSet.add(currentElement);
 		}
-		
-		for(T currentElement : currentElements)
-			instanceSet.add(currentElement);
 	}
 	
-	public Set<ISpaceManager> getSpaceManagers(){
-		return this.spaceManagers;
+	public Set<ISpaceManager> getSpaceManagers(String spaceURI) {
+		final Set<ISpaceManager> spMngrs = this.spaceManagers.get(spaceURI);
+		return (spMngrs==null)? new HashSet<ISpaceManager>(): spMngrs;
 	}
 
 	@Override
-	public Set<Node> getNodesBaseURLs() {
-		return this.nodes;
+	public Set<Node> getNodesBaseURLs(String spaceURI) {
+		final Set<Node> nodes = this.nodes.get(spaceURI);
+		return (nodes==null)? new HashSet<Node>(): nodes;
 	}
 	
 	@Override
-	public Set<Node> getBulletinBoards() {
+	public Set<Node> getBulletinBoards(String spaceURI) {
+		final Set<Node> nodes = this.nodes.get(spaceURI);
 		final Set<Node> bbs = new HashSet<Node>();
-		for(Node node: this.nodes) {
+		for(Node node: nodes) {
 			if(node.isBulletinBoard()) bbs.add(node);
 		}
 		return bbs;
+	}
+	
+	@Override
+	public void join(String spaceURI) {
+		this.spaceManagers.putIfAbsent(spaceURI, new HashSet<ISpaceManager>());
+		this.nodes.putIfAbsent(spaceURI, new HashSet<Node>());
+	}
+	
+	@Override
+	public void leave(String spaceURI) {
+		this.spaceManagers.remove(spaceURI);
+		this.nodes.remove(spaceURI);
 	}
 }

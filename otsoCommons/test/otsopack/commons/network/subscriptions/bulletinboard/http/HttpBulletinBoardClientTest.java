@@ -31,6 +31,7 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.coordination.Node;
+import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardManager;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalListenerTester;
 import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.data.RemoteNotificationListener;
@@ -173,14 +174,14 @@ public class HttpBulletinBoardClientTest {
 		manager2.start();
 		
 		// bulletinBoard0 knows bulletinBoard1
-		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+		manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard0", true, true, false));
-		manager.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+		manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard1", true, true, false));
 		
-		manager2.otherBulletinBoards.add(new Node("http://localhost:"+this.PORT+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+		manager2.addOtherBulletinBoard(new Node("http://localhost:"+this.PORT+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard0", true, true, false));
-		manager2.otherBulletinBoards.add(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+		manager2.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard1", true, true, false));
 		
 		final LocalListenerTester list = new LocalListenerTester();

@@ -17,7 +17,7 @@ package otsopack.commons.network.coordination;
 import java.util.Set;
 
 public interface IRegistry {
-	public Set<ISpaceManager> getSpaceManagers();
-	public Set<Node> getNodesBaseURLs();
-	public Set<Node> getBulletinBoards();
+	public Set<ISpaceManager> getSpaceManagers(String spaceURI);
+	public Set<Node> getNodesBaseURLs(String spaceURI);
+	public Set<Node> getBulletinBoards(String spaceURI);
 }

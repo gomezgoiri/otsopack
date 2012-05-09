@@ -39,26 +39,26 @@ public class MultipleRegistry implements IRegistryManager {
 	}
 
 	@Override
-	public Set<ISpaceManager> getSpaceManagers() {
+	public Set<ISpaceManager> getSpaceManagers(String spaceURI) {
 		final Set<ISpaceManager> spaceManagers = new HashSet<ISpaceManager>();
 		for(IRegistry registry : this.registries)
-			spaceManagers.addAll(registry.getSpaceManagers());
+			spaceManagers.addAll(registry.getSpaceManagers(spaceURI));
 		return spaceManagers;
 	}
 
 	@Override
-	public Set<Node> getNodesBaseURLs() {
+	public Set<Node> getNodesBaseURLs(String spaceURI) {
 		final Set<Node> nodesBaseURLs = new HashSet<Node>();
 		for(IRegistry registry : this.registries)
-			nodesBaseURLs.addAll(registry.getNodesBaseURLs());
+			nodesBaseURLs.addAll(registry.getNodesBaseURLs(spaceURI));
 		return nodesBaseURLs;
 	}
 	
 	@Override
-	public Set<Node> getBulletinBoards() {
+	public Set<Node> getBulletinBoards(String spaceURI) {
 		final Set<Node> bbs = new HashSet<Node>();
 		for(IRegistry registry : this.registries)
-			bbs.addAll(registry.getBulletinBoards());
+			bbs.addAll(registry.getBulletinBoards(spaceURI));
 		return bbs;
 	}
 
@@ -66,5 +66,17 @@ public class MultipleRegistry implements IRegistryManager {
 	public void shutdown() throws RegistryException {
 		for(IRegistryManager registry : this.registries)
 			registry.shutdown();
+	}
+	
+	@Override
+	public void join(String spaceURI) {
+		for(IRegistryManager registry : this.registries)
+			registry.join(spaceURI);
+	}
+	
+	@Override
+	public void leave(String spaceURI) {
+		for(IRegistryManager registry : this.registries)
+			registry.leave(spaceURI);
 	}
 }

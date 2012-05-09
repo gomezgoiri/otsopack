@@ -26,8 +26,8 @@ public class BulletinBoardController implements IBulletinBoardController {
 		this.local = localBulletinBoard;
 	}
 	
-	public BulletinBoardController(IRegistry registry, IHTTPInformation infoHolder) {
-		this(new LocalBulletinBoard(registry, infoHolder));
+	public BulletinBoardController(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
+		this(new LocalBulletinBoard(spaceURI, registry, infoHolder));
 	}
 	
 	@Override

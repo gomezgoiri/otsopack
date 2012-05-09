@@ -32,13 +32,16 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.J
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 public class SubscriptionsPropagator {
-	final IRegistry registry;
+	final private String spaceURI;
+	final private IRegistry registry;
 	
 	private volatile ExecutorService executor = Executors.newCachedThreadPool();
 	final List<Future<Boolean>> submittedSubscriptions = new CopyOnWriteArrayList<Future<Boolean>>();
 	final IHTTPInformation infoHolder;
 	
-	public SubscriptionsPropagator(IRegistry registry, IHTTPInformation infoHolder) {
+	
+	public SubscriptionsPropagator(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
+		this.spaceURI = spaceURI;
 		this.registry = registry;
 		this.infoHolder = infoHolder;
 	}
@@ -65,7 +68,7 @@ public class SubscriptionsPropagator {
 		SubscribeJSON subs = JSONSerializableConversors.convertToSerializable(subscription);
 		
 		Set<Node> newProp = new HashSet<Node>();
-		for(Node bbNode: this.registry.getBulletinBoards()) {
+		for(Node bbNode: this.registry.getBulletinBoards(this.spaceURI)) {
 			if ( !alreadyPropagatedTo.contains(bbNode.getUuid()) ) {
 				if ( !itsMe(bbNode) ) // don't sent to myself 
 					newProp.add(bbNode);

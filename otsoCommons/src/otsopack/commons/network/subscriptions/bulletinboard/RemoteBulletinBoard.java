@@ -58,7 +58,7 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 			e.printStackTrace();
 		}
 		// inconsistent during a lapse of time?
-		this.client = new RandomHttpBulletinBoardClient(bbd);
+		this.client = new RandomHttpBulletinBoardClient(spaceURI, bbd);
 	}
 
 	@Override

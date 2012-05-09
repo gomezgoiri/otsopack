@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.commons.network.subscriptions.bulletinboard.http;
+package otsopack.commons.network.subscriptions.bulletinboard;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -55,10 +55,10 @@ public class BulletinBoardManager {
 	
 	public void start() throws Exception {
 		final IRegistry registry = EasyMock.createMock(IRegistry.class);
-		EasyMock.expect(registry.getBulletinBoards()).andReturn(otherBulletinBoards).anyTimes();
+		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(otherBulletinBoards).anyTimes();
 		EasyMock.replay(registry);
 		
-		this.server = new BulletinBoardRestServer(this.bbPort, registry);
+		this.server = new BulletinBoardRestServer(this.bbPort, this.defaultSpace, registry);
 		this.server.startup();
 	}
 	
@@ -91,8 +91,12 @@ public class BulletinBoardManager {
 		this.server.shutdown();
 	}
 	
-	protected Collection<Subscription> getSubscriptions() {
+	public Collection<Subscription> getSubscriptions() {
 		return ((LocalBulletinBoard)this.server.getApplication().getController().getBulletinBoard()).getSubscriptions();
+	}
+	
+	public void addOtherBulletinBoard(Node node) {
+		this.otherBulletinBoards.add(node);
 	}
 }
 
@@ -105,15 +109,15 @@ class FakeRegistry implements IRegistryManager {
 	}
 	
 	@Override
-	public Set<ISpaceManager> getSpaceManagers() {
+	public Set<ISpaceManager> getSpaceManagers(String spaceURI) {
 		return null;
 	}
 	@Override
-	public Set<Node> getNodesBaseURLs() {
+	public Set<Node> getNodesBaseURLs(String spaceURI) {
 		return null;
 	}
 	@Override
-	public Set<Node> getBulletinBoards() {
+	public Set<Node> getBulletinBoards(String spaceURI) {
 		final Set<Node> bbs = new HashSet<Node>();
 		bbs.add(new Node("http://localhost:" + this.port + OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 						"bboard0", true, true, false));
@@ -124,6 +128,12 @@ class FakeRegistry implements IRegistryManager {
 	}
 	@Override
 	public void shutdown() throws RegistryException {
+	}
+	@Override
+	public void join(String spaceURI) {
+	}
+	@Override
+	public void leave(String spaceURI) {
 	}
 }
 

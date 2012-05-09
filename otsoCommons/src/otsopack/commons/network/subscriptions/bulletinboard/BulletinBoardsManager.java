@@ -51,7 +51,7 @@ public class BulletinBoardsManager implements ISubscriptions {
 		this.boards.putIfAbsent(space, bb);
 	}
 	
-	public void createBulletinBoard(String spaceURI) {
+	protected void createBulletinBoard(String spaceURI) {
 		this.boards.putIfAbsent(spaceURI, new RemoteBulletinBoard(this.infoHolder, spaceURI, registry));
 	}
 	

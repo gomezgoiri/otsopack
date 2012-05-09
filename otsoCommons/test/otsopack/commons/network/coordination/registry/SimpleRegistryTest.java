@@ -52,15 +52,16 @@ public class SimpleRegistryTest {
 		final String spaceURI = "http://space1/";
 		
 		final IDiscovery discovery = new SimpleDiscovery(new HttpSpaceManager(this.manager.createClientAddress()));
-		final SimpleRegistry registry = new SimpleRegistry(spaceURI, discovery){
+		final SimpleRegistry registry = new SimpleRegistry(discovery){
 			@Override
 			public int getInterval(){
 				return 10;
 			}
 		};
+		registry.join(spaceURI);
 		registry.startup();
 		
-		final Set<Node> nodes = registry.getNodesBaseURLs();
+		final Set<Node> nodes = registry.getNodesBaseURLs(spaceURI);
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE1));
 		assertThat(nodes, hasItem(SpaceManagerManager.NODE2));
 		

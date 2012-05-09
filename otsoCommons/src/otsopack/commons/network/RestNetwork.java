@@ -142,10 +142,12 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void joinSpace(String spaceURI) throws TSException {
 		this.joinedSpaces.add(spaceURI);
+		this.registry.join(spaceURI);
 	}
 
 	@Override
 	public void leaveSpace(String spaceURI) throws TSException {
+		this.registry.leave(spaceURI);
 		this.joinedSpaces.remove(spaceURI);
 	}
 
