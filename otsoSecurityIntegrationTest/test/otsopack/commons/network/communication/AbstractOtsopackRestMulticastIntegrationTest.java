@@ -25,6 +25,7 @@ import otsopack.commons.network.ICommunication;
 import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.communication.RestUnicastCommunication;
 import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.registry.SimpleRegistry;
 
@@ -120,7 +121,9 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		this.nodeC = createAndStartOtsoServer(OTSO_TESTING_PORT_NODE_C, getNodeCSigner());
 		this.nodeC.addGraph(OtsoServerManager.YODA_GRAPH);
 		
-		final IRegistry registry = new SimpleRegistry(OtsoServerManager.SPACE, getNodeA(), getNodeB(), getNodeC());
+		final IRegistryManager registry = new SimpleRegistry(getNodeA(), getNodeB(), getNodeC());
+		registry.join(OtsoServerManager.SPACE);
+		registry.startup();
 		final RestMulticastCommunication multicastProvider = new RestMulticastCommunication(registry);
 		
 		this.proxyP = createAndStartOtsoServer(OTSO_TESTING_PORT_PROXY_P, null, multicastProvider, true);
