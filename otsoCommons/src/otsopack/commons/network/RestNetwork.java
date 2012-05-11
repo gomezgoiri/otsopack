@@ -29,11 +29,9 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.OtsoRestServer;
-import otsopack.commons.network.communication.RestCommunicationException;
 import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistryManager;
-import otsopack.commons.network.coordination.registry.RegistryException;
 import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
 
@@ -70,12 +68,6 @@ public class RestNetwork implements INetwork {
 			throw new TSException("Rest server could not be started. " + e.getMessage());
 		}
 		this.joinedSpaces.clear();
-		try{
-			this.registry.shutdown();
-		}catch(RegistryException re){
-			re.printStackTrace();
-			throw new RestCommunicationException("Could not shutdown " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
-		}
 	}
 
 	@Override
@@ -142,12 +134,12 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void joinSpace(String spaceURI) throws TSException {
 		this.joinedSpaces.add(spaceURI);
-		this.registry.join(spaceURI);
+		this.registry.joinSpace(spaceURI);
 	}
 
 	@Override
 	public void leaveSpace(String spaceURI) throws TSException {
-		this.registry.leave(spaceURI);
+		this.registry.leaveSpace(spaceURI);
 		this.joinedSpaces.remove(spaceURI);
 	}
 

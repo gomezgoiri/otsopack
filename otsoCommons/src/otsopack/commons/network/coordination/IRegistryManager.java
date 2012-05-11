@@ -18,6 +18,6 @@ import otsopack.commons.network.coordination.registry.RegistryException;
 public interface IRegistryManager extends IRegistry {
 	public void startup() throws RegistryException;
 	public void shutdown() throws RegistryException;
-	public void join(String spaceURI);
-	public void leave(String spaceURI);
+	public void joinSpace(String spaceURI);
+	public void leaveSpace(String spaceURI);
 }

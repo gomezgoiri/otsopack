@@ -10,13 +10,15 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
+ * 			Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.network.coordination.registry;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import otsopack.commons.network.coordination.IDiscovery;
 import otsopack.commons.network.coordination.IRegistryManager;
@@ -37,6 +39,8 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	private final ConcurrentHashMap<String, Set<ISpaceManager>> spaceManagers = new ConcurrentHashMap<String, Set<ISpaceManager>>();
 	private final ConcurrentHashMap<String, Set<Node>> nodes = new ConcurrentHashMap<String, Set<Node>>();
 	private final String localNodeUUID;
+	private final Object lock = new Object();
+	private final Queue<String> newSpaces = new ConcurrentLinkedQueue<String>();
 	
 	
 	public SimpleRegistry(IDiscovery discovery){
@@ -69,10 +73,23 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 				this.iterations++;
 				continue;
 			}
-			try {
-				Thread.sleep(getInterval());
-			} catch (InterruptedException e) {
-				break;
+			long interval = getInterval();
+			final long until = System.currentTimeMillis() + interval;
+			while(System.currentTimeMillis()<until) {
+				interval = until - System.currentTimeMillis();
+				try {
+					//Thread.sleep(getInterval());
+					if(newSpaces.isEmpty()) {
+						synchronized (this.lock) {
+							this.lock.wait(interval);
+						}
+					}
+					while(!this.newSpaces.isEmpty()) {
+						final String newSpace = this.newSpaces.peek();
+						reloadNodes(newSpace);
+						this.newSpaces.poll(); // already checked space
+					}
+				} catch (InterruptedException e) {}
 			}
 		}
 	}
@@ -125,24 +142,28 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	}
 	
 	public void reload(){
+		for(String spaceURI: this.spaceManagers.keySet()) {
+			reloadNodes(spaceURI);
+		}
+	}
+	
+	private void reloadNodes(String spaceURI) {
 		try {
-			for(String spaceURI: this.spaceManagers.keySet()) {
-				fillSet(this.spaceManagers.get(spaceURI), this.discovery.getSpaceManagers(spaceURI));
-				
-				final Set<Node> newNodes = new HashSet<Node>();
-				for(ISpaceManager spaceManager : this.spaceManagers.get(spaceURI)){
-					try {
-						for(Node node : spaceManager.getNodes())
-							if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
-								newNodes.add(node);
-						
-					} catch (SpaceManagerException e) {
-						System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
-						e.printStackTrace();
-					}
+			fillSet(this.spaceManagers.get(spaceURI), this.discovery.getSpaceManagers(spaceURI));
+			
+			final Set<Node> newNodes = new HashSet<Node>();
+			for(ISpaceManager spaceManager : this.spaceManagers.get(spaceURI)){
+				try {
+					for(Node node : spaceManager.getNodes())
+						if(this.localNodeUUID == null || !this.localNodeUUID.equals(node.getUuid()))
+							newNodes.add(node);
+					
+				} catch (SpaceManagerException e) {
+					System.err.println("Getting nodes failed with space manager: " + spaceManager.toString() + ": " + e.getMessage());
+					e.printStackTrace();
 				}
-				fillSet(this.nodes.get(spaceURI), newNodes.toArray(new Node[]{}));
 			}
+			fillSet(this.nodes.get(spaceURI), newNodes.toArray(new Node[]{}));
 		} catch (DiscoveryException e) {
 			System.err.println("Discovery failed: " + e.getMessage() + "; keeping the already stored space managers");
 			e.printStackTrace();
@@ -173,28 +194,46 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 
 	@Override
 	public Set<Node> getNodesBaseURLs(String spaceURI) {
-		final Set<Node> nodes = this.nodes.get(spaceURI);
+		Set<Node> nodes = this.nodes.get(spaceURI);
+		if( this.newSpaces.contains(spaceURI) ) {
+			int retries = 10;
+			// Waits for an iteration during one second when the registry
+			// has recently join to an space and has not discovered nodes yet
+			while( this.newSpaces.contains(spaceURI) && retries>0 ) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {}
+				nodes = this.nodes.get(spaceURI);
+				retries--;
+			}
+		}
 		return (nodes==null)? new HashSet<Node>(): nodes;
 	}
 	
 	@Override
 	public Set<Node> getBulletinBoards(String spaceURI) {
-		final Set<Node> nodes = this.nodes.get(spaceURI);
+		final Set<Node> nodes = getNodesBaseURLs(spaceURI);
 		final Set<Node> bbs = new HashSet<Node>();
-		for(Node node: nodes) {
-			if(node.isBulletinBoard()) bbs.add(node);
+		if(nodes!=null) {
+			for(Node node: nodes) {
+				if(node.isBulletinBoard()) bbs.add(node);
+			}
 		}
 		return bbs;
 	}
 	
 	@Override
-	public void join(String spaceURI) {
+	public void joinSpace(String spaceURI) {
 		this.spaceManagers.putIfAbsent(spaceURI, new HashSet<ISpaceManager>());
 		this.nodes.putIfAbsent(spaceURI, new HashSet<Node>());
+		this.newSpaces.add(spaceURI);
+		synchronized (this.lock) {
+			this.lock.notifyAll();
+		}
 	}
 	
 	@Override
-	public void leave(String spaceURI) {
+	public void leaveSpace(String spaceURI) {
 		this.spaceManagers.remove(spaceURI);
 		this.nodes.remove(spaceURI);
 	}

@@ -130,10 +130,10 @@ class FakeRegistry implements IRegistryManager {
 	public void shutdown() throws RegistryException {
 	}
 	@Override
-	public void join(String spaceURI) {
+	public void joinSpace(String spaceURI) {
 	}
 	@Override
-	public void leave(String spaceURI) {
+	public void leaveSpace(String spaceURI) {
 	}
 }
 

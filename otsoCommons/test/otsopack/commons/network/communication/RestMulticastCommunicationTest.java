@@ -108,7 +108,7 @@ public class RestMulticastCommunicationTest {
 		}
 
 		this.registry = new SimpleRegistry(new SimpleDiscovery(new SimpleSpaceManager(this.nodes)));
-		this.registry.join(spaceURI);
+		this.registry.joinSpace(spaceURI);
 		this.registry.startup();
 		
 		this.comm = new RestMulticastCommunication(this.registry);

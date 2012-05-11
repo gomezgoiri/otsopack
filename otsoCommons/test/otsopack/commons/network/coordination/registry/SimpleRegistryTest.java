@@ -58,7 +58,7 @@ public class SimpleRegistryTest {
 				return 10;
 			}
 		};
-		registry.join(spaceURI);
+		registry.joinSpace(spaceURI);
 		registry.startup();
 		
 		final Set<Node> nodes = registry.getNodesBaseURLs(spaceURI);

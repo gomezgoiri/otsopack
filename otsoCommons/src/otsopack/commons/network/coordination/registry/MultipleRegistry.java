@@ -69,14 +69,14 @@ public class MultipleRegistry implements IRegistryManager {
 	}
 	
 	@Override
-	public void join(String spaceURI) {
+	public void joinSpace(String spaceURI) {
 		for(IRegistryManager registry : this.registries)
-			registry.join(spaceURI);
+			registry.joinSpace(spaceURI);
 	}
 	
 	@Override
-	public void leave(String spaceURI) {
+	public void leaveSpace(String spaceURI) {
 		for(IRegistryManager registry : this.registries)
-			registry.leave(spaceURI);
+			registry.leaveSpace(spaceURI);
 	}
 }
