@@ -122,7 +122,7 @@ public abstract class AbstractOtsopackRestMulticastIntegrationTest extends Abstr
 		this.nodeC.addGraph(OtsoServerManager.YODA_GRAPH);
 		
 		final IRegistryManager registry = new SimpleRegistry(getNodeA(), getNodeB(), getNodeC());
-		registry.join(OtsoServerManager.SPACE);
+		registry.joinSpace(OtsoServerManager.SPACE);
 		registry.startup();
 		final RestMulticastCommunication multicastProvider = new RestMulticastCommunication(registry);
 		
