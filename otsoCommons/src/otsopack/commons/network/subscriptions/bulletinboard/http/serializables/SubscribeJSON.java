@@ -26,19 +26,30 @@ public class SubscribeJSON implements Serializable {
 	//JsonRepresentation seems not to serialize parents' attributes :-S
 	protected String id;
 	protected TemplateJSON tpl;
-	protected long expiration;
+	protected long timeToExpire;
 	protected URI callbackURL;
 	protected Set<String> nodesWhichAlreadyKnowTheSubscription = new HashSet<String>(); // their uuid's
 	
-	public SubscribeJSON() {
-		this(null, null, -1, null);
+	public SubscribeJSON() { // For the JSON serializer
 	}
 	
-	public SubscribeJSON(String id, TemplateJSON tpl, long expirationTime, URI callbackURL) {
+	private SubscribeJSON(String id, TemplateJSON tpl, URI callbackURL) {
 		this.id = id;
 		this.tpl = tpl;
-		this.expiration = expirationTime;
 		this.callbackURL = callbackURL;
+		this.timeToExpire = 0;
+	}
+	
+	public static SubscribeJSON createSubscriptionFromExpirationTime(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
+		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
+		ret.setTimeToExpire(extratime);
+		return ret;
+	}
+	
+	public static SubscribeJSON createUpdatableSubscription(String subscriptionId, long extratime) {
+		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, null, null);
+		ret.setTimeToExpire(extratime);
+		return ret;
 	}
 	
 	public String getId() {
@@ -53,12 +64,32 @@ public class SubscribeJSON implements Serializable {
 	public void setTpl(TemplateJSON adv) {
 		this.tpl = adv;
 	}
-	public long getExpiration() {
-		return this.expiration;
+	
+	public long getTimeToExpire() {
+		return timeToExpire;
 	}
-	public void setExpiration(long expiration) {
-		this.expiration = expiration;
-	}	
+
+	/**
+	 * @param timeToExpire
+	 * 		Time left untill the expiration of this subscription.
+	 */
+	public void setTimeToExpire(long timeToExpire) {
+		this.timeToExpire = timeToExpire;
+	}
+	
+	/**
+	 * @param expirationTime
+	 * 		When should the subscription expire?
+	 */
+	public void setExpirationTime(long expirationTime) {
+		final long timeToExpire = expirationTime - System.currentTimeMillis();
+		setTimeToExpire( (timeToExpire<0)? 0: timeToExpire);
+	}
+	
+	public long ggetExpirationTime() { // "gget" to avoid JSON serialization
+		return timeToExpire + System.currentTimeMillis();
+	}
+
 	public URI getCallbackURL() {
 		return callbackURL;
 	}

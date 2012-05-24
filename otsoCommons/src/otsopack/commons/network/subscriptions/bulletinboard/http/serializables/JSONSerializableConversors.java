@@ -32,13 +32,13 @@ public class JSONSerializableConversors {
 		} else {
 			if (sub.tpl.object==null) {
 				tpl = WildcardTemplate.createWithNull(sub.tpl.subject, sub.tpl.predicate);
-			} else if (sub.tpl.object.startsWith("http://")){
+			} else if (sub.tpl.object.startsWith("http://")) {
 				tpl = WildcardTemplate.createWithURI(sub.tpl.subject, sub.tpl.predicate, sub.tpl.object);
 			} else {
 				tpl = WildcardTemplate.createWithLiteral(sub.tpl.subject, sub.tpl.predicate, sub.tpl.object);
 			}
 		}
-		return Subscription.createSubcription(sub.id, sub.expiration, tpl, new RemoteNotificationListener(sub.getCallbackURL()));
+		return Subscription.createSubcription(sub.id, sub.ggetExpirationTime(), tpl, new RemoteNotificationListener(sub.getCallbackURL()));
 	}
 	
 	public static Subscription[] convertFromSerializable(SubscribeJSON[] subs) {
@@ -72,7 +72,7 @@ public class JSONSerializableConversors {
 			callbackURL = ((RemoteNotificationListener)subs.getListener()).getCallbackURL();
 		}
 		
-		return new SubscribeJSON(subs.getID(), tpl, subs.getExpiration(), callbackURL);
+		return SubscribeJSON.createSubscriptionFromExpirationTime(subs.getID(), tpl, callbackURL, subs.getExpiration());
 	}
 	
 	public static NotificableTemplate convertFromSerializable(TemplateJSON adv) {

@@ -61,7 +61,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final String provided = rep.getText();
 			final SubscribeJSON subjson = JSONDecoder.decode(provided, SubscribeJSON.class);
-			((LocalBulletinBoard)bulletinBoard).updateSubscription(subID, subjson.getExpiration()); // not exception thrown
+			((LocalBulletinBoard)bulletinBoard).updateSubscription(subID, subjson.ggetExpirationTime()); // not exception thrown
 			return new StringRepresentation(subID);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

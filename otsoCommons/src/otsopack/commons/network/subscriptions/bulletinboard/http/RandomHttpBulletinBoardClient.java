@@ -94,7 +94,7 @@ public class RandomHttpBulletinBoardClient {
 	
 	public String updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
 		try{
-			final SubscribeJSON subJson = new SubscribeJSON(subscriptionId, null, extratime, null);
+			final SubscribeJSON subJson = SubscribeJSON.createUpdatableSubscription(subscriptionId, extratime);
 			getRemoteBulletinBoardURI().updateSubscription(subJson);
 		} catch (ResourceException e) {
 			e.printStackTrace();
