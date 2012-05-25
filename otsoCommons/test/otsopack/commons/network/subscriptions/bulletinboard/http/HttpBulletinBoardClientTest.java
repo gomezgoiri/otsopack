@@ -74,8 +74,9 @@ public class HttpBulletinBoardClientTest {
 	
 	@Test
 	public void testUpdateSubscribe() throws URISyntaxException, SubscriptionException {
-		final long timestamp1 = System.currentTimeMillis()+60000;
-		final long timestamp2 = System.currentTimeMillis()+360000;
+		final long delta1 = 60000;
+		final long delta2 = 360000;
+		final long timestamp1 = System.currentTimeMillis() + delta1;
 		final Subscription sentSub = Subscription.createSubcription(
 				timestamp1,
 				WildcardTemplate.createWithNull(null, null),
@@ -86,23 +87,28 @@ public class HttpBulletinBoardClientTest {
 		assertEquals(1, subscriptions.size());
 		for(Subscription subscription: subscriptions) {
 			if( subscription.getID().equals(uuid) ) {
-				assertEquals(timestamp1, subscription.getExpiration());
+				assertSimilarTimestamp(timestamp1, subscription.getExpiration());
 				break;
 			}
 		}
 
-		this.client.updateSubscription(uuid, timestamp2);
+		final long timestamp2 = System.currentTimeMillis() + delta2;
+		this.client.updateSubscription(uuid, delta2);
 		
 		subscriptions = this.manager.getSubscriptions();
 		assertEquals(1, subscriptions.size());
 		for(Subscription subscription: subscriptions) {
 			if( subscription.getID().equals(uuid) ) {
-				assertEquals(timestamp2, subscription.getExpiration());
+				assertSimilarTimestamp(timestamp2, subscription.getExpiration());
 				break;
 			}
 		}
 	}
 	
+	private void assertSimilarTimestamp(long timestamp1, long timestamp2) {
+		assertTrue( timestamp1 + " differs too much from " + timestamp2, Math.abs(timestamp1-timestamp2)<1000 );
+	}
+
 	@Test
 	public void testUnsubscribe() throws URISyntaxException, SubscriptionException {
 		final Subscription sentSub = Subscription.createSubcription(

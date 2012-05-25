@@ -19,9 +19,13 @@ import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
 public interface IBulletinBoard {
 	String subscribe(Subscription subscription) throws SubscriptionException ;
+	/**
+	 * @param extratime
+	 * 		Extra amount of time the subscription will be alive.
+	 */
 	void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException;
 	void unsubscribe(String subscriptionId) throws SubscriptionException ;
-	public Subscription getSubscription(String id) throws SubscriptionException ;
+	public Subscription getSubscription(String id);
 	
 	void notify(NotificableTemplate adv) throws SubscriptionException ;
 	

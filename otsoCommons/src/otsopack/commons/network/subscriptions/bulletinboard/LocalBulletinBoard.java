@@ -33,7 +33,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard
  * by remote request (through BulletinBoardController) to
  * store subscriptions and perform notifications.
  */
-public class LocalBulletinBoard implements IBulletinBoard {	
+public class LocalBulletinBoard implements IBulletinBoard, IBulletinBoardRemoteFacade {	
 	final SubscriptionsPropagator propagator;
 	
 	// bulletin board for both local and remote subscriptions
@@ -46,13 +46,6 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	public LocalBulletinBoard(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
 		this.propagator = new SubscriptionsPropagator(spaceURI, registry, infoHolder);
 		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, infoHolder);
-	}
-	
-	public void start() {
-		bootstrapping();
-	}
-
-	public void stop() {
 	}
 	
 	private void bootstrapping() {
@@ -70,22 +63,15 @@ public class LocalBulletinBoard implements IBulletinBoard {
 		}
 	}
 	
+	
+	
+	/* ****************** IBulletinBoard ****************** */
 
 	@Override
 	public String subscribe(Subscription subscription) {		
 		return subscribe(subscription, new HashSet<String>());
 	}
-	
-	// Just in LocalBulletinBoards!
-	public String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo) {
-		final String ret = this.bulletinBoard.subscribe(subscription);
 		
-		// propagate to other bulletin boards
-		this.propagator.propagate(subscription, alreadyPropagatedTo);
-		
-		return ret;
-	}
-	
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) {
 		updateSubscription(subscriptionId, extratime, new HashSet<String>());
@@ -118,15 +104,38 @@ public class LocalBulletinBoard implements IBulletinBoard {
 	}
 	
 	
+	
+	/* ****************** IBulletinBoardRemoteFacade ****************** */
+	
+	@Override
+	public void start() {
+		bootstrapping();
+	}
+	
+	@Override
+	public void stop() {
+	}
+
+	@Override
+	public Collection<Subscription> getSubscriptions() {
+		return this.bulletinBoard.getSubscriptions();
+	}
+	
+	@Override
+	public String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo) {
+		final String ret = this.bulletinBoard.subscribe(subscription);
+		
+		// propagate to other bulletin boards
+		this.propagator.propagate(subscription, alreadyPropagatedTo);
+		
+		return ret;
+	}
+	
+	
+	
+	/* ****************** IBulletinBoardRemoteFacade ****************** */
 	@Override
 	public Subscription getSubscription(String id) {
 		return this.bulletinBoard.getSubscription(id);
-	}
-
-	/*
-	 * For testing purposes in BulletinBoardManager and HttpBulletinBoardClientTest
-	 */
-	public Collection<Subscription> getSubscriptions() {
-		return this.bulletinBoard.getSubscriptions();
 	}
 }

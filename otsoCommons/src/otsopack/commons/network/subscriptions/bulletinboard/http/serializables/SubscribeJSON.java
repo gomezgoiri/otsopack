@@ -40,9 +40,15 @@ public class SubscribeJSON implements Serializable {
 		this.timeToExpire = 0;
 	}
 	
-	public static SubscribeJSON createSubscriptionFromExpirationTime(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
+	public static SubscribeJSON createSubscriptionFromTimeToExpire(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
 		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
 		ret.setTimeToExpire(extratime);
+		return ret;
+	}
+	
+	public static SubscribeJSON createSubscriptionFromExpirationTime(String subscriptionId, TemplateJSON tpl, URI callbackURL, long expirationTime) {
+		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
+		ret.setExpirationTime(expirationTime);
 		return ret;
 	}
 	

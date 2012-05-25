@@ -23,11 +23,10 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 
-import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
@@ -45,20 +44,16 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	@Override
 	public Representation viewSubscription(Representation rep) {
 		final String subID = this.getArgument("subscribe");
-		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-		try {
-			final SubscribeJSON subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscription(subID) );
-			return new JsonRepresentation(JSONEncoder.encode(subjson));
-		} catch (SubscriptionException e) {
-			throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, e.getMessage());
-		}
+		final IBulletinBoardRemoteFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+		final SubscribeJSON subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscription(subID) );
+		return new JsonRepresentation(JSONEncoder.encode(subjson));
 	}
 	
 	@Override
 	public Representation modifySubscription(Representation rep) {
 		try {
 			final String subID = this.getArgument("subscribe");
-			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final IBulletinBoardRemoteFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final String provided = rep.getText();
 			final SubscribeJSON subjson = JSONDecoder.decode(provided, SubscribeJSON.class);
 			((LocalBulletinBoard)bulletinBoard).updateSubscription(subID, subjson.ggetExpirationTime()); // not exception thrown
@@ -71,7 +66,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	@Override
 	public Representation removeSubscription() {
 		final String subID = getArgument("subscribe");
-		final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+		final IBulletinBoardRemoteFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 		((LocalBulletinBoard)bulletinBoard).unsubscribe(subID); // not exception thrown
 		return new StringRepresentation(subID);
 	}

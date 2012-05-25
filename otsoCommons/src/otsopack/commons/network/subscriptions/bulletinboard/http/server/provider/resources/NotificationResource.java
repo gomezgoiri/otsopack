@@ -25,7 +25,7 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
@@ -56,7 +56,7 @@ public class NotificationResource extends ServerResource implements INotificatio
 	public Representation addAdvertise(Representation rep) {
 		try {
 			final String argument = rep.getText();
-			final IBulletinBoard bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final IBulletinBoardRemoteFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
 			
 			((LocalBulletinBoard)bulletinBoard).notify( JSONSerializableConversors.convertFromSerializable(advjson) ); // not exception thrown

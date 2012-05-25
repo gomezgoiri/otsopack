@@ -15,14 +15,14 @@ package otsopack.commons.network.subscriptions.bulletinboard.http.server;
 
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
 
 public class BulletinBoardController implements IBulletinBoardController {
 	
-	final LocalBulletinBoard local;
+	final IBulletinBoardRemoteFacade local;
 	
-	public BulletinBoardController(LocalBulletinBoard localBulletinBoard) {
+	public BulletinBoardController(IBulletinBoardRemoteFacade localBulletinBoard) {
 		this.local = localBulletinBoard;
 	}
 	
@@ -31,14 +31,16 @@ public class BulletinBoardController implements IBulletinBoardController {
 	}
 	
 	@Override
-	public IBulletinBoard getBulletinBoard() {
+	public IBulletinBoardRemoteFacade getBulletinBoard() {
 		return this.local;
 	}
 	
+	@Override
 	public void start() {
 		this.local.start();
 	}
 	
+	@Override
 	public void stop() {
 		this.local.stop();
 	}
