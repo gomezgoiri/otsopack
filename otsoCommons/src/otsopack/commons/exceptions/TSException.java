@@ -21,4 +21,8 @@ public class TSException extends Exception {
 	public TSException(String message) {
 		super(message);
 	}
+	
+	public TSException(String message, Exception e) {
+		super(message, e);
+	}
 }

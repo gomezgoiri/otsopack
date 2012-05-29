@@ -13,7 +13,6 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,17 +26,12 @@ import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.registry.RegistryException;
-import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
-import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.RemoteBulletinBoard;
-import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
-import otsopack.commons.network.subscriptions.bulletinboard.http.server.BulletinBoardRestServer;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class BulletinBoardManager {
 	protected String defaultSpace = "http://default";
 	
-	private BulletinBoardRestServer server;
+	private BulletinBoardsManager server;
 	protected Set<Node> otherBulletinBoards = new HashSet<Node>();
 	
 	private Set<OtsoRestServer> remoteListeners = new HashSet<OtsoRestServer>();
@@ -48,9 +42,10 @@ public class BulletinBoardManager {
 		this(port, OtsoRestServer.DEFAULT_PORT);
 	}
 	
-	public BulletinBoardManager(int port, int clientPort){
+	public BulletinBoardManager(int port, int clientPort) {
 		this.bbPort = port;
 		this.clientPort = clientPort;
+		
 	}
 	
 	public void start() throws Exception {
@@ -58,16 +53,17 @@ public class BulletinBoardManager {
 		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(otherBulletinBoards).anyTimes();
 		EasyMock.replay(registry);
 		
-		this.server = new BulletinBoardRestServer(this.bbPort, this.defaultSpace, registry);
+		// this info holder is for the listener of the server itself, but we won't 
+		this.server = new BulletinBoardsManager(registry, new InfoHolder(this.bbPort));
 		this.server.startup();
+		this.server.createRemoteBulletinBoard(this.defaultSpace, this.bbPort);
 	}
 	
-	public RemoteBulletinBoard createClient() throws Exception{
+	public IBulletinBoard createClient() throws Exception {
 		this.clientPort++;
 		
-		
 		final BulletinBoardsManager bbm = new BulletinBoardsManager(new FakeRegistry(this.bbPort), new InfoHolder(this.clientPort));
-		bbm.createBulletinBoard(defaultSpace);
+		bbm.joinToRemoteBulletinBoard(this.defaultSpace);
 		
 		final IController controller = EasyMock.createMock(IController.class);
 		EasyMock.expect(controller.getSubscriber()).andReturn(bbm).anyTimes();
@@ -77,7 +73,7 @@ public class BulletinBoardManager {
 		listnr.startup();
 		remoteListeners.add(listnr);
 		
-		return (RemoteBulletinBoard)bbm.getBulletinBoard(defaultSpace);
+		return bbm.getBulletinBoard(this.defaultSpace);
 	}
 
 	public String createClientAddress() {
@@ -91,8 +87,8 @@ public class BulletinBoardManager {
 		this.server.shutdown();
 	}
 	
-	public Collection<Subscription> getSubscriptions() {
-		return ((LocalBulletinBoard)this.server.getApplication().getController().getBulletinBoard()).getSubscriptions();
+	public IBulletinBoard getServer() {
+		return this.server.getBulletinBoard(this.defaultSpace);
 	}
 	
 	public void addOtherBulletinBoard(Node node) {

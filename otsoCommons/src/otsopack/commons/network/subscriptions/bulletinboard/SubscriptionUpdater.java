@@ -34,10 +34,10 @@ public class SubscriptionUpdater implements Runnable {
 	protected final ExecutorService executor = Executors.newCachedThreadPool();
 	
 	
-	public void addSubscription(String id, Long extratime, IBulletinBoard bb) {
+	public void addSubscription(String id, Long extratime, SubscriptionUpdatesListener list) {
 		this.toUpdate.put(id, extratime);
 		synchronized (this.queueLock) {
-			this.pending.add(new SortedSubscription(id, bb));
+			this.pending.add(new SortedSubscription(id, list));
 			this.queueLock.notifyAll();
 		}
 	}
@@ -63,7 +63,7 @@ public class SubscriptionUpdater implements Runnable {
 			if(s!=null) {
 				if(toUpdate.containsKey(s.id)) { // still contains it?
 					final long extratime = toUpdate.get(s.id);
-					long left = System.currentTimeMillis() - s.nextUpdate - 100; //
+					long left = System.currentTimeMillis() - s.nextUpdate - 100;
 					if(left>0) {
 						synchronized (this.queueLock) {
 							try {
@@ -77,7 +77,7 @@ public class SubscriptionUpdater implements Runnable {
 						@Override
 						public void run() {
 							try {
-								s.bb.updateSubscription(s.id, extratime);
+								s.listener.updateSubscription(s.id, extratime);
 							} catch (SubscriptionException e) {
 								e.printStackTrace();
 							}
@@ -88,14 +88,18 @@ public class SubscriptionUpdater implements Runnable {
 		}
 	}
 	
+	public void stop() {
+		this.stop = true;
+	}
+	
 	class SortedSubscription implements Comparable<SortedSubscription> {
 		final String id;
-		final IBulletinBoard bb;
+		final SubscriptionUpdatesListener listener;
 		long nextUpdate;
 		
-		public SortedSubscription(String id, IBulletinBoard bb) {
+		public SortedSubscription(String id, SubscriptionUpdatesListener list) {
 			this.id = id;
-			this.bb = bb;
+			this.listener = list;
 			updateSubscription();
 		}
 		

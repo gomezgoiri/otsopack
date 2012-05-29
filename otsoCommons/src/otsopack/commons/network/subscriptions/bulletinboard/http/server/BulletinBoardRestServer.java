@@ -18,7 +18,7 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 import otsopack.commons.network.IHTTPInformation;
-import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 import otsopack.restlet.commons.OtsoRestletUtils;
 
@@ -31,7 +31,7 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	private final OtsopackHttpBulletinBoardProviderApplication application;
 	private final BulletinBoardController controller;
 	
-	public BulletinBoardRestServer(int port, String spaceURI, IRegistry registry){
+	public BulletinBoardRestServer(int port, IBulletinBoardOuterFacade bb){
 		this.port = port;
 		
 	    this.component = new Component();
@@ -44,7 +44,7 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	    this.component.getDefaultHost().attach(OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 	    										this.application);
 	    
-		this.controller = new BulletinBoardController(spaceURI, registry, this);
+		this.controller = new BulletinBoardController(bb);
 		this.application.setController(this.controller);
 	}
 	
@@ -54,11 +54,9 @@ public class BulletinBoardRestServer implements IHTTPInformation {
 	
 	public void startup() throws Exception {
 		this.component.start();
-		this.controller.start();
 	}
 	
 	public void shutdown() throws Exception {
-		this.controller.stop();
 		this.component.stop();
 	}
 	

@@ -13,11 +13,9 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard.http.server;
 
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 import otsopack.restlet.commons.ICommonsController;
 
 public interface IBulletinBoardController extends ICommonsController {
-	public IBulletinBoardRemoteFacade getBulletinBoard();
-	public void start();
-	public void stop();
+	public IBulletinBoardOuterFacade getBulletinBoard();
 }

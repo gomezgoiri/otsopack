@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 onwards University of Deusto
+ * Copyright (C) 2012 onwards University of Deusto
  * 
  * All rights reserved.
  *
@@ -11,7 +11,7 @@
  *
  * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
-package otsopack.commons.network.subscriptions.bulletinboard;
+package otsopack.commons.network.subscriptions.bulletinboard.connectors;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -27,23 +27,13 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulle
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.resources.NotificationCallbackResource;
-import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard;
 
-public class RemoteBulletinBoard implements IBulletinBoard {
+public class RemoteBulletinBoardConnector implements BulletinBoardConnector {
 	// client with the bulletin board server
 	final RandomHttpBulletinBoardClient client;
-	
-	// server to receive notifications
-	
-	// bulletin board for local subscriptions
-	// TODO BulletinBoard has unnecesary attributes here
-	// TODO simply substitute with a map if local subscriptions do not expirate
-	// TODO automatic mechanism to automatically send updates?
-	final BulletinBoard mySubscriptions = new BulletinBoard();
-	
 	private URI callbackURL;
 	
-	public RemoteBulletinBoard(IHTTPInformation infoMngr, String spaceURI, IRegistry bbd) {
+	public RemoteBulletinBoardConnector(IHTTPInformation infoMngr, String spaceURI, IRegistry bbd) {
 		try {
 			this.callbackURL = new URI( infoMngr.getAddress() + ":" + infoMngr.getPort() +
 										NotificationCallbackResource.ROOT.replace(
@@ -57,51 +47,30 @@ public class RemoteBulletinBoard implements IBulletinBoard {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		// inconsistent during a lapse of time?
 		this.client = new RandomHttpBulletinBoardClient(spaceURI, bbd);
 	}
-
+	
 	@Override
-	public String subscribe(Subscription s) throws SubscriptionException {
-		final String ret = this.mySubscriptions.subscribe(s); // local callback stored
-		
-		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
+	public void subscribe(Subscription subscription) throws SubscriptionException {
+		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(subscription);
 		subJson.setCallbackURL(this.callbackURL); // the callbackURL was null
-		this.client.subscribe(subJson); // remote subscription
-		
-		return ret;
-	}
-
-	@Override
-	public void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
-		this.mySubscriptions.updateSubscription(subscriptionId, extratime);
-		this.client.updateSubscription(subscriptionId, extratime);
+		this.client.subscribe(subJson);
 	}
 
 	@Override
 	public void unsubscribe(String subscriptionId) throws SubscriptionException {
 		this.client.unsubscribe(subscriptionId);
-		this.mySubscriptions.unsubscribe(subscriptionId);
 	}
-	
-	/**
-	 * The client notifies the bulletin board.
-	 */
+
 	@Override
 	public void notify(NotificableTemplate adv) throws SubscriptionException {
 		this.client.notify(adv);
 	}
 	
-	/**
-	 * A bulletin board has notified this client (subscriber).
-	 */
 	@Override
-	public void receiveCallback(NotificableTemplate adv) {
-		this.mySubscriptions.notify(adv);
-	}
-	
-	@Override
-	public Subscription getSubscription(String id) {
-		return this.mySubscriptions.getSubscription(id);
+	public void updateSubscription(Subscription subscription) throws SubscriptionException {
+		this.client.updateSubscription(subscription);
 	}
 }

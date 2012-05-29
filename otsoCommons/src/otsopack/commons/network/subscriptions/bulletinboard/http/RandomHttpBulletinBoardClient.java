@@ -23,6 +23,7 @@ import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 /**
@@ -92,9 +93,9 @@ public class RandomHttpBulletinBoardClient {
 		return null;
 	}
 	
-	public String updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
+	public String updateSubscription(Subscription subscription) throws SubscriptionException {
 		try{
-			final SubscribeJSON subJson = SubscribeJSON.createUpdatableSubscription(subscriptionId, extratime);
+			final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(subscription);
 			getRemoteBulletinBoardURI().updateSubscription(subJson);
 		} catch (ResourceException e) {
 			e.printStackTrace();

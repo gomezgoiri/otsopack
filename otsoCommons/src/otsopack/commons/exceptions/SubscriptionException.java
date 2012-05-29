@@ -20,4 +20,8 @@ public class SubscriptionException extends TSException {
 	public SubscriptionException(String message) {
 		super(message);
 	}
+	
+	public SubscriptionException(String message, Exception e) {
+		super(message, e);
+	}
 }

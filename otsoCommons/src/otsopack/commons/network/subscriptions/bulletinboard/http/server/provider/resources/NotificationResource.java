@@ -25,8 +25,8 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
-import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
+import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardServer;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
@@ -56,10 +56,10 @@ public class NotificationResource extends ServerResource implements INotificatio
 	public Representation addAdvertise(Representation rep) {
 		try {
 			final String argument = rep.getText();
-			final IBulletinBoardRemoteFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
+			final IBulletinBoardOuterFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
 			
-			((LocalBulletinBoard)bulletinBoard).notify( JSONSerializableConversors.convertFromSerializable(advjson) ); // not exception thrown
+			((BulletinBoardServer)bulletinBoard).notify( JSONSerializableConversors.convertFromSerializable(advjson) ); // not exception thrown
 			return new StringRepresentation("200 OK.");
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

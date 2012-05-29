@@ -27,12 +27,12 @@ import otsopack.commons.data.WildcardTemplate;
 import otsopack.commons.network.subscriptions.bulletinboard.LocalListenerTester;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
-public class BulletinBoardTest {
-	BulletinBoard bb;
+public class ExpirableSubscriptionsStoreTest {
+	ExpirableSubscriptionsStore bb;
 
 	@Before
 	public void setUp() throws Exception {
-		this.bb = new BulletinBoard();
+		this.bb = new ExpirableSubscriptionsStore();
 		Thread t = new Thread(this.bb);
 		t.setDaemon(true);
 		t.start();

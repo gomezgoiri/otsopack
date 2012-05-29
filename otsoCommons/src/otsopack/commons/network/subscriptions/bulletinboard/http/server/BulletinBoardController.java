@@ -13,35 +13,18 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard.http.server;
 
-import otsopack.commons.network.IHTTPInformation;
-import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardRemoteFacade;
-import otsopack.commons.network.subscriptions.bulletinboard.LocalBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 
 public class BulletinBoardController implements IBulletinBoardController {
 	
-	final IBulletinBoardRemoteFacade local;
+	final IBulletinBoardOuterFacade local;
 	
-	public BulletinBoardController(IBulletinBoardRemoteFacade localBulletinBoard) {
+	public BulletinBoardController(IBulletinBoardOuterFacade localBulletinBoard) {
 		this.local = localBulletinBoard;
 	}
 	
-	public BulletinBoardController(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
-		this(new LocalBulletinBoard(spaceURI, registry, infoHolder));
-	}
-	
 	@Override
-	public IBulletinBoardRemoteFacade getBulletinBoard() {
+	public IBulletinBoardOuterFacade getBulletinBoard() {
 		return this.local;
-	}
-	
-	@Override
-	public void start() {
-		this.local.start();
-	}
-	
-	@Override
-	public void stop() {
-		this.local.stop();
 	}
 }

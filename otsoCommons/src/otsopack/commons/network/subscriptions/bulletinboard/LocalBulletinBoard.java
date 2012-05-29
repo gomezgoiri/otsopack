@@ -14,128 +14,102 @@
 package otsopack.commons.network.subscriptions.bulletinboard;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.restlet.resource.ResourceException;
+import java.util.concurrent.atomic.AtomicLong;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
-import otsopack.commons.network.IHTTPInformation;
-import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.communication.event.listener.INotificationListener;
+import otsopack.commons.network.subscriptions.bulletinboard.connectors.BulletinBoardConnector;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
-import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulletinBoardClient;
-import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
-import otsopack.commons.network.subscriptions.bulletinboard.memory.BulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.memory.ExpirableSubscriptionsStore;
+import otsopack.commons.network.subscriptions.bulletinboard.memory.PlainSubscriptionsStore;
 
-/**
- * This class can be accessed both from local processes or
- * by remote request (through BulletinBoardController) to
- * store subscriptions and perform notifications.
- */
-public class LocalBulletinBoard implements IBulletinBoard, IBulletinBoardRemoteFacade {	
-	final SubscriptionsPropagator propagator;
+public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesListener {
+	final AtomicLong subscriptionLifetime = new AtomicLong(ExpirableSubscriptionsStore.DEFAULT_LIFETIME);
 	
-	// bulletin board for both local and remote subscriptions
-	final BulletinBoard bulletinBoard = new BulletinBoard();
-	
-	// for bootstrapping
-	private final RandomHttpBulletinBoardClient bbc;
+	// bulletin board for local subscriptions
+	final PlainSubscriptionsStore mySubscriptions = new PlainSubscriptionsStore();
+	// to periodically update the subscriptions
+	final SubscriptionUpdater updater;
+	// to let one or many local or remote bulletin boards know about the changes made in this bulletin board
+	final BulletinBoardConnector connector;
 	
 	
-	public LocalBulletinBoard(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
-		this.propagator = new SubscriptionsPropagator(spaceURI, registry, infoHolder);
-		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, infoHolder);
-	}
-	
-	private void bootstrapping() {
-		try {
-			final Subscription[] initialSubscriptions = this.bbc.getSubscriptions();
-			for(Subscription sub: initialSubscriptions) {
-				this.bulletinBoard.subscribe(sub);
-			}
-		} catch (ResourceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubscriptionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	/* ****************** IBulletinBoard ****************** */
-
-	@Override
-	public String subscribe(Subscription subscription) {		
-		return subscribe(subscription, new HashSet<String>());
-	}
-		
-	@Override
-	public void updateSubscription(String subscriptionId, long extratime) {
-		updateSubscription(subscriptionId, extratime, new HashSet<String>());
-	}
-	
-	public void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo) {
-		this.bulletinBoard.updateSubscription(subscriptionId, extratime);
-		
-		// propagate to other bulletin boards
-		this.propagator.propagate(this.bulletinBoard.getSubscription(subscriptionId), alreadyPropagatedTo);
+	public LocalBulletinBoard(SubscriptionUpdater updtr, BulletinBoardConnector connector) {		
+		this.updater = updtr;
+		this.connector = connector;
 	}
 	
 	@Override
-	public void unsubscribe(String subscriptionId) {
-		this.bulletinBoard.unsubscribe(subscriptionId);
-		
-		// TODO how to propagate subscription removal?
-	}
-	
-	@Override
-	public void notify(NotificableTemplate adv) {
-		receiveCallback(adv); // or should it be called by a BB?
-		// TODO propagate to other bulletin boards if it fails
-		// TODO what if just 1 of the 100 callbacks activated fails?
-	}
-	
-	@Override
-	public void receiveCallback(NotificableTemplate adv) {
-		this.bulletinBoard.notify(adv);
-	}
-	
-	
-	
-	/* ****************** IBulletinBoardRemoteFacade ****************** */
-	
-	@Override
-	public void start() {
-		bootstrapping();
-	}
-	
-	@Override
-	public void stop() {
+	public void setDefaultSubscriptionLifetime(long lifetime) {
+		this.subscriptionLifetime.set(lifetime);
 	}
 
 	@Override
-	public Collection<Subscription> getSubscriptions() {
-		return this.bulletinBoard.getSubscriptions();
-	}
-	
+	public void start() throws SubscriptionException {}
+
 	@Override
-	public String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo) {
-		final String ret = this.bulletinBoard.subscribe(subscription);
+	public void stop() throws SubscriptionException {}
+
+	@Override
+	public String subscribe(NotificableTemplate template, INotificationListener listener) throws SubscriptionException {
+		final long lifetime = this.subscriptionLifetime.get();
 		
-		// propagate to other bulletin boards
-		this.propagator.propagate(subscription, alreadyPropagatedTo);
+		final Subscription s = Subscription.createSubcription(lifetime, template, listener);
+		
+		this.updater.addSubscription(s.getID(), lifetime, this);
+		
+		final String ret = this.mySubscriptions.subscribe(s); // local callback stored
+		this.connector.subscribe(s); // remote subscription
 		
 		return ret;
 	}
+
+	@Override
+	public void unsubscribe(String subscriptionId) throws SubscriptionException {
+		this.updater.removeSubscription(subscriptionId);
+		this.connector.unsubscribe(subscriptionId);
+		this.mySubscriptions.unsubscribe(subscriptionId);
+	}
 	
+	/**
+	 * The client notifies the bulletin board.
+	 */
+	@Override
+	public void notify(NotificableTemplate adv) throws SubscriptionException {
+		this.connector.notify(adv);
+	}
 	
-	
-	/* ****************** IBulletinBoardRemoteFacade ****************** */
+	/**
+	 * A bulletin board has notified this client (subscriber).
+	 */
+	@Override
+	public void receiveCallback(NotificableTemplate adv) {
+		this.mySubscriptions.notify(adv);
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.network.subscriptions.bulletinboard.SubscriptionUpdatesListener#updateSubscription(java.lang.String, long)
+	 */
+	@Override
+	public void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
+		// it's in its own thread made by the SubscriptionUpdater
+        this.connector.updateSubscription( this.mySubscriptions.getSubscription(subscriptionId) );
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardChecker#getSubscriptions()
+	 */
+	@Override
+	public Collection<Subscription> getSubscriptions() {
+		return this.mySubscriptions.getSubscriptions();
+	}
+
+	/* (non-Javadoc)
+	 * @see otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardChecker#getSubscription(java.lang.String)
+	 */
 	@Override
 	public Subscription getSubscription(String id) {
-		return this.bulletinBoard.getSubscription(id);
+		return this.mySubscriptions.getSubscription(id);
 	}
 }

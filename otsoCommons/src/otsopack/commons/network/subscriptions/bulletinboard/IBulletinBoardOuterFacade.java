@@ -13,18 +13,13 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard;
 
-import java.util.Collection;
 import java.util.Set;
 
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
-public interface IBulletinBoardRemoteFacade {
-	public void start();
-	public void stop();
+public interface IBulletinBoardOuterFacade extends ISubscriptionsChecker {	
+	String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo);
+	void remoteUnsubscribe(String subscriptionId);
 	
-	// For /subscriptions
-	public Collection<Subscription> getSubscriptions();
-	public Subscription getSubscription(String id);
-	
-	String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo);	
+	void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo);
 }

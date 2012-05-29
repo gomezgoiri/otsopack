@@ -26,8 +26,8 @@ import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.subscriptions.bulletinboard.data.AbstractNotificableElement;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
-public class BulletinBoard implements Runnable {
-	final public long DEFAULT_LIFETIME = 3600000; // TODO 1h by default
+public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable {
+	final static public long DEFAULT_LIFETIME = 3600000; // TODO 1h by default
 	
 	// cancel the thread which removes the expired notifications
 	private volatile boolean cancel = false;
@@ -82,7 +82,7 @@ public class BulletinBoard implements Runnable {
 		}
 	}
 
-	public void unsubscribe(String subscriptionId) {
+	public Subscription unsubscribe(String subscriptionId) {
 		final Subscription subs = this.subscriptions.remove(subscriptionId);
 		
 		if( subs!=null ) {
@@ -93,6 +93,7 @@ public class BulletinBoard implements Runnable {
 		         this.lock.unlock();
 		     }
 		}
+		return subs;
 	}
 	
 	public void notify(NotificableTemplate adv) {		

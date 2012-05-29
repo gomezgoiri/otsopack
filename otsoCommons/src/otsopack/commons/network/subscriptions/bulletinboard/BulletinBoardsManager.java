@@ -19,12 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
 import otsopack.commons.exceptions.SubscriptionException;
-import otsopack.commons.exceptions.TSException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.ISubscriptions;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.connectors.RemoteBulletinBoardConnector;
 
 /* This class manages a set of bulletins boards
  * and intermediates between them and those interested
@@ -34,12 +33,13 @@ import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
  * boards for each space.
  */
 public class BulletinBoardsManager implements ISubscriptions {
-	//TODO change it!
-	final static private int EXPIRATION = 5000;
-	
 	final ConcurrentHashMap<String,IBulletinBoard> boards = new ConcurrentHashMap<String,IBulletinBoard>();
 	final private IRegistry registry;
 	final private IHTTPInformation infoHolder;
+	
+	// to periodically update the subscriptions
+	// We can use one per kernel as long as the subscriptions URIs cannot be equal for different spaces
+	final SubscriptionUpdater updater = new SubscriptionUpdater();
 	
 	
 	public BulletinBoardsManager(IRegistry registry, IHTTPInformation infoHolder) {
@@ -47,12 +47,23 @@ public class BulletinBoardsManager implements ISubscriptions {
 		this.infoHolder = infoHolder;
 	}
 	
-	public void addLocalBulletinBoard(String space, LocalBulletinBoard bb) {
-		this.boards.putIfAbsent(space, bb);
+	public void createRemoteBulletinBoard(String spaceURI, int port) throws SubscriptionException {
+		addBulletinBoard( spaceURI,
+						  new BulletinBoardServer(port, spaceURI, this.updater, this.registry, this.infoHolder)
+						);
 	}
 	
-	protected void createBulletinBoard(String spaceURI) {
-		this.boards.putIfAbsent(spaceURI, new RemoteBulletinBoard(this.infoHolder, spaceURI, registry));
+	protected void joinToRemoteBulletinBoard(String spaceURI) throws SubscriptionException {
+		addBulletinBoard(	spaceURI,
+							new LocalBulletinBoard(
+								this.updater,
+								new RemoteBulletinBoardConnector(this.infoHolder, spaceURI, this.registry))
+						);
+	}
+	
+	private void addBulletinBoard(String spaceURI, IBulletinBoard bb) throws SubscriptionException {
+		this.boards.putIfAbsent(spaceURI, bb);
+		bb.start();
 	}
 	
 	@Override
@@ -61,34 +72,33 @@ public class BulletinBoardsManager implements ISubscriptions {
 		return this.boards.get(spaceURI);
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see otsopack.commons.ILayer#startup()
-	 */
 	@Override
-	public void startup() throws TSException {
-		// TODO Auto-generated method stub
-		
+	public void startup() {
+		final Thread t = new Thread(this.updater);
+		t.setDaemon(true);
+		t.start();		
 	}
-
-	/* (non-Javadoc)
-	 * @see otsopack.commons.ILayer#shutdown()
-	 */
+	
 	@Override
-	public void shutdown() throws TSException {
-		// TODO Auto-generated method stub
-		
+	public void shutdown() throws SubscriptionException {
+		updater.stop();
+		for(IBulletinBoard bb: this.boards.values()) {
+			try {
+				bb.stop();
+			} catch (Exception e) {
+				throw new SubscriptionException("Ploblem on bulletin board shutdown.", e);
+			}
+		}
 	}
 	
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener)
 		throws SpaceNotExistsException, SubscriptionException  {
 		if (!this.boards.contains(spaceURI))
-			createBulletinBoard(spaceURI);
+			joinToRemoteBulletinBoard(spaceURI);
 			//throw new SpaceNotExistsException();
 		
-		final Subscription subs = Subscription.createSubcription(EXPIRATION, template, listener);
-		return this.boards.get(spaceURI).subscribe(subs);
+		return this.boards.get(spaceURI).subscribe(template, listener);
 	}
 	
 	@Override
@@ -99,7 +109,7 @@ public class BulletinBoardsManager implements ISubscriptions {
 	@Override
 	public void notify(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException, SubscriptionException  {
 		if (!this.boards.contains(spaceURI))
-			createBulletinBoard(spaceURI);
+			joinToRemoteBulletinBoard(spaceURI);
 			//throw new SpaceNotExistsException();
 		this.boards.get(spaceURI).notify(template);
 	}
