@@ -26,7 +26,7 @@ public class SubscribeJSON implements Serializable {
 	//JsonRepresentation seems not to serialize parents' attributes :-S
 	protected String id;
 	protected TemplateJSON tpl;
-	protected long timeToExpire;
+	protected long lifetime;
 	protected URI callbackURL;
 	protected Set<String> nodesWhichAlreadyKnowTheSubscription = new HashSet<String>(); // their uuid's
 	
@@ -37,24 +37,18 @@ public class SubscribeJSON implements Serializable {
 		this.id = id;
 		this.tpl = tpl;
 		this.callbackURL = callbackURL;
-		this.timeToExpire = 0;
+		this.lifetime = 0;
 	}
 	
-	public static SubscribeJSON createSubscriptionFromTimeToExpire(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
+	public static SubscribeJSON createSubscription(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
 		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
-		ret.setTimeToExpire(extratime);
-		return ret;
-	}
-	
-	public static SubscribeJSON createSubscriptionFromExpirationTime(String subscriptionId, TemplateJSON tpl, URI callbackURL, long expirationTime) {
-		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
-		ret.setExpirationTime(expirationTime);
+		ret.setLifetime(extratime);
 		return ret;
 	}
 	
 	public static SubscribeJSON createUpdatableSubscription(String subscriptionId, long extratime) {
 		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, null, null);
-		ret.setTimeToExpire(extratime);
+		ret.setLifetime(extratime);
 		return ret;
 	}
 	
@@ -71,29 +65,16 @@ public class SubscribeJSON implements Serializable {
 		this.tpl = adv;
 	}
 	
-	public long getTimeToExpire() {
-		return timeToExpire;
+	public long getLifetime() {
+		return this.lifetime;
 	}
 
 	/**
-	 * @param timeToExpire
-	 * 		Time left untill the expiration of this subscription.
+	 * @param lifetime
+	 * 		Time left until the expiration of this subscription.
 	 */
-	public void setTimeToExpire(long timeToExpire) {
-		this.timeToExpire = timeToExpire;
-	}
-	
-	/**
-	 * @param expirationTime
-	 * 		When should the subscription expire?
-	 */
-	public void setExpirationTime(long expirationTime) {
-		final long timeToExpire = expirationTime - System.currentTimeMillis();
-		setTimeToExpire( (timeToExpire<0)? 0: timeToExpire);
-	}
-	
-	public long ggetExpirationTime() { // "gget" to avoid JSON serialization
-		return timeToExpire + System.currentTimeMillis();
+	public void setLifetime(long lifetime) {
+		this.lifetime = lifetime;
 	}
 
 	public URI getCallbackURL() {

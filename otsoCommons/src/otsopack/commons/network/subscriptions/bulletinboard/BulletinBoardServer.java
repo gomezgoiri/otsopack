@@ -21,7 +21,6 @@ import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
-import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.connectors.LocalBulletinBoardConnector;
@@ -49,13 +48,13 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	private final RandomHttpBulletinBoardClient bbc;
 	
 	
-	public BulletinBoardServer(int port, String spaceURI, SubscriptionUpdater updtr, IRegistry registry, IHTTPInformation infoHolder) {
+	public BulletinBoardServer(int port, String spaceURI, SubscriptionUpdater updtr, IRegistry registry) {
 		this.svr = new BulletinBoardRestServer(port, this);
 		
-		this.propagator = new SubscriptionsPropagator(spaceURI, registry, infoHolder);
+		this.propagator = new SubscriptionsPropagator(spaceURI, registry, this.svr);
 		this.localSubscriptions = new LocalBulletinBoard(updtr, new LocalBulletinBoardConnector(propagator));
 		
-		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, infoHolder);
+		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, this.svr);
 	}
 	
 	private void bootstrapping() {
@@ -142,9 +141,11 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo) {
 		this.remoteSubscriptions.updateSubscription(subscriptionId, extratime);
+		final Subscription s = this.remoteSubscriptions.getSubscription(subscriptionId);
 		
-		// propagate to other bulletin boards
-		this.propagator.propagate(this.remoteSubscriptions.getSubscription(subscriptionId), alreadyPropagatedTo);
+		if(s!=null)
+			// propagate to other bulletin boards
+			this.propagator.propagate(s, alreadyPropagatedTo);
 	}
 	
 	

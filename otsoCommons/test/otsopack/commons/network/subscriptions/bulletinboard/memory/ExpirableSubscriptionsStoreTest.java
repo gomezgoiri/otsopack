@@ -61,10 +61,10 @@ public class ExpirableSubscriptionsStoreTest {
 			this.bb.subscribe(subs[i]);
 		}
 		
-		assertEquals(subs[0], this.bb.subscriptions.get(uuid[0]));
-		assertEquals(subs[1], this.bb.subscriptions.get(uuid[1]));
-		assertEquals(subs[2], this.bb.subscriptions.get(uuid[2]));
-		assertEquals(subs[3], this.bb.subscriptions.get(uuid[3]));
+		assertEquals(subs[0], this.bb.subscriptions.get(uuid[0]).getSubscription());
+		assertEquals(subs[1], this.bb.subscriptions.get(uuid[1]).getSubscription());
+		assertEquals(subs[2], this.bb.subscriptions.get(uuid[2]).getSubscription());
+		assertEquals(subs[3], this.bb.subscriptions.get(uuid[3]).getSubscription());
 		
 		this.bb.unsubscribe(uuid[2]);
 		this.bb.unsubscribe(uuid[3]);
@@ -73,13 +73,13 @@ public class ExpirableSubscriptionsStoreTest {
 		
 		Thread.sleep(expire[0]+EXPIRATIONTIME);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
-		assertEquals(this.bb.subscriptions.get(uuid[1]), subs[1]);
+		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), subs[1]);
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertNull(this.bb.subscriptions.get(uuid[3]));
 		
 		Thread.sleep(expire[1]-expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
-		assertEquals(this.bb.subscriptions.get(uuid[1]), subs[1]);
+		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), subs[1]);
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertNull(this.bb.subscriptions.get(uuid[3]));
 		
@@ -115,28 +115,28 @@ public class ExpirableSubscriptionsStoreTest {
 		this.bb.subscribe(sub3);
 		this.bb.subscribe(sub4);
 		
-		assertEquals(this.bb.subscriptions.get(uuid[0]), sub1);
-		assertEquals(this.bb.subscriptions.get(uuid[1]), sub2);
-		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
-		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		assertEquals(this.bb.subscriptions.get(uuid[0]).getSubscription(), sub1);
+		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), sub2);
+		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
 		Thread.sleep(expire[0]+EXPIRATIONTIME);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
-		assertEquals(this.bb.subscriptions.get(uuid[1]), sub2);
-		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
-		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), sub2);
+		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
 		Thread.sleep(expire[1]-expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
-		assertEquals(this.bb.subscriptions.get(uuid[2]), sub3);
-		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
+		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 				
 		Thread.sleep(expire[2]-expire[1]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
-		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		this.bb.updateSubscription(uuid[3],currentTime+expire[3]+extraTime);
 		
 		Thread.sleep(expire[3]-expire[2]);
@@ -144,7 +144,7 @@ public class ExpirableSubscriptionsStoreTest {
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		// it has not been deleted cause we have update the advertisement
-		assertEquals(this.bb.subscriptions.get(uuid[3]), sub4);
+		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
 		
 		Thread.sleep(extraTime);

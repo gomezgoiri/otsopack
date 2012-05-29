@@ -15,14 +15,14 @@ package otsopack.commons.network.subscriptions.bulletinboard.data;
 
 import otsopack.commons.data.NotificableTemplate;
 
-public abstract class AbstractNotificableElement implements Comparable<AbstractNotificableElement> {
+public abstract class AbstractNotificableElement {
 	final protected String id;
 	final protected NotificableTemplate tpl;
-	protected long expiration;
+	protected long lifetime;
 	
-	public AbstractNotificableElement(String id, long expiration, NotificableTemplate tpl) {
+	public AbstractNotificableElement(String id, long lifetime, NotificableTemplate tpl) {
 		this.id = id;
-		this.expiration = expiration;
+		this.lifetime = lifetime;
 		this.tpl = tpl;
 	}
 	
@@ -30,12 +30,12 @@ public abstract class AbstractNotificableElement implements Comparable<AbstractN
 		return this.id;
 	}
 
-	public long getExpiration() {
-		return this.expiration;
+	public long getLifetime() {
+		return this.lifetime;
 	}
 	
-	public void setExpiration(long expiration) {
-		this.expiration = expiration;
+	public void setLifetime(long lifetime) {
+		this.lifetime = lifetime;
 	}
 	
 	public NotificableTemplate getTemplate() {
@@ -65,12 +65,5 @@ public abstract class AbstractNotificableElement implements Comparable<AbstractN
 		} else if (!this.id.equals(other.id))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public int compareTo(AbstractNotificableElement o) {
-		if( this.expiration<o.expiration ) return -1;
-		if( this.expiration==o.expiration ) return 0;
-		return 1;
 	}
 }

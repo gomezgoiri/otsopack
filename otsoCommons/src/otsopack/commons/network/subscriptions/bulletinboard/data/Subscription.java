@@ -30,8 +30,8 @@ public class Subscription extends AbstractNotificableElement {
 		return this.listener;
 	}
 	
-	public static Subscription createSubcription(String identifier, long expiration, NotificableTemplate template, INotificationListener listener) {
-		return new Subscription(identifier, expiration, template, listener);
+	public static Subscription createSubcription(String identifier, long lifetime, NotificableTemplate template, INotificationListener listener) {
+		return new Subscription(identifier, lifetime, template, listener);
 	}
 	
 	public static Subscription createSubcription(long expiration, NotificableTemplate template, INotificationListener listener) {

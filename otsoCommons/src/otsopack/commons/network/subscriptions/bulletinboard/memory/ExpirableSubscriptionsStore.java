@@ -14,7 +14,9 @@
 package otsopack.commons.network.subscriptions.bulletinboard.memory;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -23,7 +25,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.event.listener.EventNotification;
-import otsopack.commons.network.subscriptions.bulletinboard.data.AbstractNotificableElement;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 
 public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable {
@@ -32,12 +33,12 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	// cancel the thread which removes the expired notifications
 	private volatile boolean cancel = false;
 	
-	protected Map<String, Subscription> subscriptions
-					= new ConcurrentHashMap<String,Subscription>();
+	protected Map<String, ExpirableSubscriptions> subscriptions
+					= new ConcurrentHashMap<String,ExpirableSubscriptions>();
 	
 	// auxiliar list to store subscriptions ordered by their expiration date
-	protected SortedSet<AbstractNotificableElement> expirableElements
-					= new ConcurrentSkipListSet<AbstractNotificableElement>();
+	protected SortedSet<ExpirableSubscriptions> expirableElements
+					= new ConcurrentSkipListSet<ExpirableSubscriptions>();
 	//guards expirableElement
 	private Lock lock = new ReentrantLock();
 	private final Object lockElementAdded = new Object();
@@ -47,11 +48,12 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	}
 	
 	public String subscribe(Subscription subs) {
-		this.subscriptions.put(subs.getID(), subs);
+		final ExpirableSubscriptions expirable = new ExpirableSubscriptions(subs);
+		this.subscriptions.put(subs.getID(), expirable);
 		
 		this.lock.lock();
 		try {
-			this.expirableElements.add(subs);
+			this.expirableElements.add(expirable);
 	     } finally {
 	         this.lock.unlock();
 	     }
@@ -64,10 +66,10 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	}
 
 	public void updateSubscription(String subscriptionId, long extratime) {
-		final Subscription subs = this.subscriptions.get(subscriptionId);
+		final ExpirableSubscriptions subs = this.subscriptions.get(subscriptionId);
 		
 		if( subs!=null ) {
-			subs.setExpiration( extratime );
+			subs.setExtraTime( extratime );
 			
 			this.lock.lock();
 			try {
@@ -83,7 +85,7 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	}
 
 	public Subscription unsubscribe(String subscriptionId) {
-		final Subscription subs = this.subscriptions.remove(subscriptionId);
+		final ExpirableSubscriptions subs = this.subscriptions.remove(subscriptionId);
 		
 		if( subs!=null ) {
 			this.lock.lock();
@@ -92,14 +94,15 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 		     } finally {
 		         this.lock.unlock();
 		     }
+		     return subs.getSubscription();
 		}
-		return subs;
+		return null;
 	}
 	
 	public void notify(NotificableTemplate adv) {		
-		for(Subscription s: subscriptions.values()) {
-			if(s.isNotificable(adv)) {
-				s.getListener().notifyEvent(new EventNotification(adv));
+		for(ExpirableSubscriptions s: subscriptions.values()) {
+			if(s.getSubscription().isNotificable(adv)) {
+				s.getSubscription().getListener().notifyEvent(new EventNotification(adv));
 			}
 		}
 	}
@@ -120,13 +123,13 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 			} else {
 				this.lock.lock();
 				try {
-					final AbstractNotificableElement element = this.expirableElements.first();
-					remainingTime = element.getExpiration() - System.currentTimeMillis();
+					final ExpirableSubscriptions element = this.expirableElements.first();
+					remainingTime = element.getSubscription().getLifetime() - System.currentTimeMillis();
 					if( remainingTime<=0 ) {
 						this.expirableElements.remove(element);
 						
 						// It should be in one of these collections
-						this.subscriptions.remove(element.getID());
+						this.subscriptions.remove(element.getSubscription().getID());
 					}
 			     } finally {
 			         this.lock.unlock();
@@ -149,10 +152,44 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	}
 	
 	public Subscription getSubscription(String id) {
-		return this.subscriptions.get(id);
+		final ExpirableSubscriptions es = this.subscriptions.get(id);
+		return (es==null)? null: es.getSubscription();
 	}
 	
 	public Collection<Subscription> getSubscriptions() {
-		return this.subscriptions.values();
+		Set<Subscription> ret = new HashSet<Subscription>();
+		for(ExpirableSubscriptions es: this.subscriptions.values()) {
+			ret.add(es.getSubscription());
+		}
+		return ret;
+	}
+}
+
+class ExpirableSubscriptions implements Comparable<ExpirableSubscriptions> {
+	private Subscription subscription;
+	private long expiration;
+
+	public ExpirableSubscriptions(Subscription s) {
+		this.subscription = s;
+		refreshExpiration();
+	}
+	
+	public Subscription getSubscription() {
+		this.subscription.setLifetime(expiration - System.currentTimeMillis());
+		return this.subscription;
+	}
+	
+	public void setExtraTime(long extratime) {
+		this.subscription.setLifetime(extratime);
+		refreshExpiration();
+	}
+	
+	private void refreshExpiration() {
+		this.expiration = System.currentTimeMillis() + this.subscription.getLifetime();
+	}
+	
+	@Override
+	public int compareTo(ExpirableSubscriptions o) {
+		return (int)(this.expiration - o.expiration);
 	}
 }

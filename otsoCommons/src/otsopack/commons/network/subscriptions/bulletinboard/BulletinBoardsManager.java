@@ -24,6 +24,7 @@ import otsopack.commons.network.ISubscriptions;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.connectors.RemoteBulletinBoardConnector;
+import otsopack.commons.util.Util;
 
 /* This class manages a set of bulletins boards
  * and intermediates between them and those interested
@@ -48,8 +49,10 @@ public class BulletinBoardsManager implements ISubscriptions {
 	}
 	
 	public void createRemoteBulletinBoard(String spaceURI, int port) throws SubscriptionException {
+		if (spaceURI != null) // TODO refactor to call this method from outside
+			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
 		addBulletinBoard( spaceURI,
-						  new BulletinBoardServer(port, spaceURI, this.updater, this.registry, this.infoHolder)
+						  new BulletinBoardServer(port, spaceURI, this.updater, this.registry)
 						);
 	}
 	

@@ -26,7 +26,7 @@ public class JSONDecoderTest {
 	@Test
 	public void testArray() throws Exception {
 		final TemplateJSON tpl = new TemplateJSON("http://subject", "http://predicate", "http://object");
-		final SubscribeJSON subs = SubscribeJSON.createSubscriptionFromExpirationTime("http://space/subscriptions/24534", tpl, new URI("http://callbackuri"), 1200L);
+		final SubscribeJSON subs = SubscribeJSON.createSubscription("http://space/subscriptions/24534", tpl, new URI("http://callbackuri"), 1200L);
 		
 		final String resultTpl = JSONEncoder.encode(tpl);
 		//assertEquals("{\"object\":\"http://object\",\"predicate\":\"http://predicate\",\"subject\":\"http://subject\"}", resultTpl);
