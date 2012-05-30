@@ -14,7 +14,6 @@
 package otsopack.commons.network.subscriptions.bulletinboard.http.serializables;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,20 +26,20 @@ public class SubscribeJSON implements Serializable {
 	protected String id;
 	protected TemplateJSON tpl;
 	protected long lifetime;
-	protected URI callbackURL;
+	protected String callbackURL;
 	protected Set<String> nodesWhichAlreadyKnowTheSubscription = new HashSet<String>(); // their uuid's
 	
 	public SubscribeJSON() { // For the JSON serializer
 	}
 	
-	private SubscribeJSON(String id, TemplateJSON tpl, URI callbackURL) {
+	private SubscribeJSON(String id, TemplateJSON tpl, String callbackURL) {
 		this.id = id;
 		this.tpl = tpl;
 		this.callbackURL = callbackURL;
 		this.lifetime = 0;
 	}
 	
-	public static SubscribeJSON createSubscription(String subscriptionId, TemplateJSON tpl, URI callbackURL, long extratime) {
+	public static SubscribeJSON createSubscription(String subscriptionId, TemplateJSON tpl, String callbackURL, long extratime) {
 		final SubscribeJSON ret = new SubscribeJSON(subscriptionId, tpl, callbackURL);
 		ret.setLifetime(extratime);
 		return ret;
@@ -77,10 +76,10 @@ public class SubscribeJSON implements Serializable {
 		this.lifetime = lifetime;
 	}
 
-	public URI getCallbackURL() {
+	public String getCallbackURL() {
 		return callbackURL;
 	}
-	public void setCallbackURL(URI callbackURL) {
+	public void setCallbackURL(String callbackURL) {
 		this.callbackURL = callbackURL;
 	}
 

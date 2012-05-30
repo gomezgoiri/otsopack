@@ -13,20 +13,18 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard.data;
 
-import java.net.URI;
-
 import otsopack.commons.network.communication.event.listener.EventNotification;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.subscriptions.bulletinboard.http.SingleNotificator;
 
 public class RemoteNotificationListener implements INotificationListener {
-	final URI callbackURL;
+	final String callbackURL;
 	
-	public RemoteNotificationListener(URI callbackURL) {
+	public RemoteNotificationListener(String callbackURL) {
 		this.callbackURL = callbackURL;
 	}
 	
-	public URI getCallbackURL() {
+	public String getCallbackURL() {
 		return this.callbackURL;
 	}
 

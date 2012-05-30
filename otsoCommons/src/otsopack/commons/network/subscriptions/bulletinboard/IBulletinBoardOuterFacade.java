@@ -16,10 +16,14 @@ package otsopack.commons.network.subscriptions.bulletinboard;
 import java.util.Set;
 
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 public interface IBulletinBoardOuterFacade extends ISubscriptionsChecker {	
 	String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo);
 	void remoteUnsubscribe(String subscriptionId);
 	
 	void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo);
+	
+	SubscribeJSON[] getJsonSubscriptions();
+	SubscribeJSON getJsonSubscription(String id);
 }

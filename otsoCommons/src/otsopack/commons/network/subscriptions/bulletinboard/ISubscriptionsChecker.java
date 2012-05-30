@@ -20,5 +20,4 @@ import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 public interface ISubscriptionsChecker {
 	// For /subscriptions
 	public Collection<Subscription> getSubscriptions();
-	public Subscription getSubscription(String id);
 }

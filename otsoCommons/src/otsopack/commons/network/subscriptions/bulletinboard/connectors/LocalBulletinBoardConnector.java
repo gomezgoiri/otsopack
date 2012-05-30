@@ -17,19 +17,19 @@ import java.util.HashSet;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
-import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 public class LocalBulletinBoardConnector implements BulletinBoardConnector {
 	final SubscriptionsPropagator propagator;
+	
 	
 	public LocalBulletinBoardConnector(SubscriptionsPropagator propagator) {
 		this.propagator = propagator;
 	}
 	
 	@Override
-	public void subscribe(Subscription subscription) {
-		// propagate to other bulletin boards
+	public void subscribe(SubscribeJSON subscription) {
 		this.propagator.propagate(subscription, new HashSet<String>(), false);
 	}
 	
@@ -45,7 +45,7 @@ public class LocalBulletinBoardConnector implements BulletinBoardConnector {
 	}
 	
 	@Override
-	public void updateSubscription(Subscription subscription) throws SubscriptionException {
+	public void updateSubscription(SubscribeJSON subscription) throws SubscriptionException {
 		this.propagator.propagate(subscription, new HashSet<String>(), true);
 	}
 }

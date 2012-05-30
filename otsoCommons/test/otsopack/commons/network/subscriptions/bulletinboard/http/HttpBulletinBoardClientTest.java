@@ -19,8 +19,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 import org.junit.After;
@@ -57,11 +55,11 @@ public class HttpBulletinBoardClientTest {
 	}
 
 	@Test
-	public void testSubscribe() throws URISyntaxException, SubscriptionException {
+	public void testSubscribe() throws SubscriptionException {
 		final String uuid = this.client.subscribe(
 											WildcardTemplate.createWithNull(null, null),
 											// kids, don't do this at home!
-											new RemoteNotificationListener(new URI("http://localhost:9999"))
+											new RemoteNotificationListener("http://localhost:9999")
 										);
 		final Subscription createdSubs = Subscription.createSubcription(uuid, 0, null, null);
 		
@@ -108,10 +106,10 @@ public class HttpBulletinBoardClientTest {
 //	}
 
 	@Test
-	public void testUnsubscribe() throws URISyntaxException, SubscriptionException {
+	public void testUnsubscribe() throws SubscriptionException {
 		final String uuid = this.client.subscribe(
 											WildcardTemplate.createWithNull(null, null),
-											new RemoteNotificationListener(new URI("http://localhost:9999"))
+											new RemoteNotificationListener("http://localhost:9999")
 							);
 		final Subscription createdSubscription = Subscription.createSubcription(uuid,0, null, null);
 		

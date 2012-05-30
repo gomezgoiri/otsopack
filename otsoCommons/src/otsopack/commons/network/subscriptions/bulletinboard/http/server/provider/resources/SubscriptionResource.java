@@ -27,7 +27,6 @@ import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
-import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
@@ -44,8 +43,7 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 	public Representation viewSubscription(Representation rep) {
 		final String subID = this.getArgument("subscribe");
 		final IBulletinBoardOuterFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-		final SubscribeJSON subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscription(subID) );
-		return new JsonRepresentation(JSONEncoder.encode(subjson));
+		return new JsonRepresentation( JSONEncoder.encode( bulletinBoard.getJsonSubscription(subID) ) );
 	}
 	
 	@Override

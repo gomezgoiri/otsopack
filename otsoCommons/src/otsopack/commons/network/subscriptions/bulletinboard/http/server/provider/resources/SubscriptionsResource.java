@@ -50,8 +50,7 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	@Override
 	public Representation viewSubscriptions(Representation rep) {
 		final IBulletinBoardOuterFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-		final SubscribeJSON[] subjson = JSONSerializableConversors.convertToSerializable( bulletinBoard.getSubscriptions() );
-		return new JsonRepresentation(JSONEncoder.encode(subjson));
+		return new JsonRepresentation(JSONEncoder.encode(bulletinBoard.getJsonSubscriptions()));
 	}
 
 	@Override

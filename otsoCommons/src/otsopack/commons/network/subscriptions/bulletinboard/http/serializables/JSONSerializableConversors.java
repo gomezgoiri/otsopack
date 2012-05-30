@@ -13,8 +13,9 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard.http.serializables;
 
-import java.net.URI;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.TripleLiteralObject;
@@ -67,9 +68,9 @@ public class JSONSerializableConversors {
 			tpl = new TemplateJSON(wtpl.getSubject(), wtpl.getPredicate(), obj);
 		}
 		
-		URI callbackURL = null;
+		String callbackURL = null;
 		if (subs.getListener() instanceof RemoteNotificationListener) {
-			callbackURL = ((RemoteNotificationListener)subs.getListener()).getCallbackURL();
+			callbackURL = ((RemoteNotificationListener)subs.getListener()).getCallbackURL().toString();
 		}
 		
 		return SubscribeJSON.createSubscription(subs.getID(), tpl, callbackURL, subs.getLifetime());
@@ -128,11 +129,10 @@ public class JSONSerializableConversors {
 		return ret;
 	}
 	
-	public static SubscribeJSON[] convertToSerializable(Collection<Subscription> subs) {
-		final SubscribeJSON[] ret = new SubscribeJSON[subs.size()];
-		int i=0;
+	public static Set<SubscribeJSON> convertToSerializable(Collection<Subscription> subs) {
+		final Set<SubscribeJSON> ret = new HashSet<SubscribeJSON>(subs.size());
 		for(Subscription s: subs) {
-			ret[i++] = convertToSerializable(s);
+			ret.add(convertToSerializable(s));
 		}
 		return ret;
 	}

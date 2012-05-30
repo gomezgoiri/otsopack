@@ -29,7 +29,7 @@ import otsopack.commons.network.coordination.registry.RegistryException;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class BulletinBoardManager {
-	protected String defaultSpace = "http://default";
+	protected String defaultSpace = "http://default/";
 	
 	private BulletinBoardsManager server;
 	protected Set<Node> otherBulletinBoards = new HashSet<Node>();
@@ -45,7 +45,6 @@ public class BulletinBoardManager {
 	public BulletinBoardManager(int port, int clientPort) {
 		this.bbPort = port;
 		this.clientPort = clientPort;
-		
 	}
 	
 	public void start() throws Exception {

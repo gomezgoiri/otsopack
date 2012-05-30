@@ -124,7 +124,7 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 				this.lock.lock();
 				try {
 					final ExpirableSubscriptions element = this.expirableElements.first();
-					remainingTime = element.getSubscription().getLifetime() - System.currentTimeMillis();
+					remainingTime = element.expiration - System.currentTimeMillis();
 					if( remainingTime<=0 ) {
 						this.expirableElements.remove(element);
 						
@@ -167,7 +167,7 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 
 class ExpirableSubscriptions implements Comparable<ExpirableSubscriptions> {
 	private Subscription subscription;
-	private long expiration;
+	long expiration;
 
 	public ExpirableSubscriptions(Subscription s) {
 		this.subscription = s;

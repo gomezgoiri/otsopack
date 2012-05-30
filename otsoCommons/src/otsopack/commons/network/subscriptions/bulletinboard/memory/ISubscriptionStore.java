@@ -24,4 +24,6 @@ public interface ISubscriptionStore extends ISubscriptionsChecker {
 	public abstract Subscription unsubscribe(String subscriptionId);
 
 	public abstract void notify(NotificableTemplate adv);
+	
+	public Subscription getSubscription(String id);
 }

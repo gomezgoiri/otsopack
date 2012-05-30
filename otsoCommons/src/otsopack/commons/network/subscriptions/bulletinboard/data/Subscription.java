@@ -34,8 +34,8 @@ public class Subscription extends AbstractNotificableElement {
 		return new Subscription(identifier, lifetime, template, listener);
 	}
 	
-	public static Subscription createSubcription(long expiration, NotificableTemplate template, INotificationListener listener) {
-		return createSubcription(UUID.randomUUID().toString(), expiration, template, listener);
+	public static Subscription createSubcription(long lifetime, NotificableTemplate template, INotificationListener listener) {
+		return createSubcription(UUID.randomUUID().toString(), lifetime, template, listener);
 	}
 
 	/**

@@ -27,8 +27,6 @@ import org.restlet.resource.ResourceException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
-import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 public class SubscriptionsPropagator {
@@ -52,8 +50,8 @@ public class SubscriptionsPropagator {
 	 * @param alreadyPropagatedTo
 	 * 		Nodes which already know about the subscription being propagated.
 	 */
-	public void propagate(Subscription subscription, Set<String> alreadyPropagatedTo) {
-		propagate(subscription, alreadyPropagatedTo, false);
+	public void propagate(SubscribeJSON subs, Set<String> alreadyPropagatedTo) {
+		propagate(subs, alreadyPropagatedTo, false);
 	}
 
 	/**
@@ -64,9 +62,7 @@ public class SubscriptionsPropagator {
 	 * @param update
 	 * 		Does this subscription already exist and is being updated?
 	 */
-	public void propagate(Subscription subscription, Set<String> alreadyPropagatedTo, boolean update) {
-		SubscribeJSON subs = JSONSerializableConversors.convertToSerializable(subscription);
-		
+	public void propagate(SubscribeJSON subs, Set<String> alreadyPropagatedTo, boolean update) {	
 		Set<Node> newProp = new HashSet<Node>();
 		for(Node bbNode: this.registry.getBulletinBoards(this.spaceURI)) {
 			if ( !alreadyPropagatedTo.contains(bbNode.getUuid()) ) {

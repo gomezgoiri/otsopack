@@ -91,8 +91,6 @@ public class ExpirableSubscriptionsStoreTest {
 
 	@Test
 	public void testDaemon() throws InterruptedException {
-		final int EXPIRATIONTIME = 20;
-		
 		final int ELEMNUM = 4;
 		final int[] expire = new int[ELEMNUM];
 		final int extraTime = 100;
@@ -104,12 +102,12 @@ public class ExpirableSubscriptionsStoreTest {
 			nt[i] = WildcardTemplate.createWithNull(null,"http://p"+i);
 		}
 		
-		final long currentTime = System.currentTimeMillis();
-		final Subscription sub1 = Subscription.createSubcription(uuid[0], currentTime+expire[0], nt[0], null);
-		final Subscription sub2 = Subscription.createSubcription(uuid[1], currentTime+expire[1], nt[1], null);
-		final Subscription sub3 = Subscription.createSubcription(uuid[2], currentTime+expire[2], nt[2], null);
-		final Subscription sub4 = Subscription.createSubcription(uuid[3], currentTime+expire[3], nt[3], null);
+		final Subscription sub1 = Subscription.createSubcription(uuid[0], expire[0], nt[0], null);
+		final Subscription sub2 = Subscription.createSubcription(uuid[1], expire[1], nt[1], null);
+		final Subscription sub3 = Subscription.createSubcription(uuid[2], expire[2], nt[2], null);
+		final Subscription sub4 = Subscription.createSubcription(uuid[3], expire[3], nt[3], null);
 		
+		final long timestamp = System.currentTimeMillis();
 		this.bb.subscribe(sub1);
 		this.bb.subscribe(sub2);
 		this.bb.subscribe(sub3);
@@ -120,26 +118,26 @@ public class ExpirableSubscriptionsStoreTest {
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
-		Thread.sleep(expire[0]+EXPIRATIONTIME);
+		waitUntil(timestamp+expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), sub2);
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
-		Thread.sleep(expire[1]-expire[0]);
+		waitUntil(timestamp+expire[1]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 				
-		Thread.sleep(expire[2]-expire[1]);
+		waitUntil(timestamp+expire[2]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
-		this.bb.updateSubscription(uuid[3],currentTime+expire[3]+extraTime);
+		this.bb.updateSubscription(uuid[3],expire[3]+extraTime);
 		
-		Thread.sleep(expire[3]-expire[2]);
+		waitUntil(timestamp+expire[3]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
@@ -149,8 +147,14 @@ public class ExpirableSubscriptionsStoreTest {
 		
 		Thread.sleep(extraTime);
 		for(int i=0; i<4; i++) {
-			assertNull(this.bb.subscriptions.get(uuid[i]));
+			assertNull("The subscription " + uuid[i] + " is not null.", this.bb.subscriptions.get(uuid[i]));
 		}
+	}
+	
+	private void waitUntil(long timestamp) throws InterruptedException {
+		final long current = System.currentTimeMillis();
+		if(timestamp>current)
+			Thread.sleep(timestamp-current+1); 
 	}
 	
 	@Test

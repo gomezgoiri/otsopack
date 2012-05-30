@@ -60,7 +60,9 @@ public class BulletinBoardsManager implements ISubscriptions {
 		addBulletinBoard(	spaceURI,
 							new LocalBulletinBoard(
 								this.updater,
-								new RemoteBulletinBoardConnector(this.infoHolder, spaceURI, this.registry))
+								new RemoteBulletinBoardConnector(spaceURI, this.registry),
+								spaceURI,
+								this.infoHolder)
 						);
 	}
 	

@@ -27,6 +27,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.connectors.LocalBull
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.RandomHttpBulletinBoardClient;
 import otsopack.commons.network.subscriptions.bulletinboard.http.SubscriptionsPropagator;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.BulletinBoardRestServer;
 import otsopack.commons.network.subscriptions.bulletinboard.memory.ExpirableSubscriptionsStore;
 
@@ -52,7 +54,7 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 		this.svr = new BulletinBoardRestServer(port, this);
 		
 		this.propagator = new SubscriptionsPropagator(spaceURI, registry, this.svr);
-		this.localSubscriptions = new LocalBulletinBoard(updtr, new LocalBulletinBoardConnector(propagator));
+		this.localSubscriptions = new LocalBulletinBoard(updtr, new LocalBulletinBoardConnector(propagator), spaceURI, this.svr);
 		
 		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, this.svr);
 	}
@@ -121,14 +123,15 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	}
 	
 	
-	/* ****************** IBulletinBoardRemoteFacade ****************** */
+	/* ****************** IBulletinBoardOuterFacade ****************** */
 	
 	@Override
 	public String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo) {
 		final String ret = this.remoteSubscriptions.subscribe(subscription);
+		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(subscription);
 		
 		// propagate to other bulletin boards
-		this.propagator.propagate(subscription, alreadyPropagatedTo);
+		this.propagator.propagate(subJson, alreadyPropagatedTo);
 		
 		return ret;
 	}
@@ -143,9 +146,36 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 		this.remoteSubscriptions.updateSubscription(subscriptionId, extratime);
 		final Subscription s = this.remoteSubscriptions.getSubscription(subscriptionId);
 		
-		if(s!=null)
+		if(s!=null) {
+			final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
 			// propagate to other bulletin boards
-			this.propagator.propagate(s, alreadyPropagatedTo);
+			this.propagator.propagate(subJson, alreadyPropagatedTo);
+		}
+	}
+	
+	@Override
+	public SubscribeJSON[] getJsonSubscriptions() {
+		final Set<SubscribeJSON> ret = this.localSubscriptions.getJSONSubscriptions();
+		ret.addAll(getRemoteJSONSubscriptions());
+		return ret.toArray(new SubscribeJSON[ret.size()]);
+	}
+	
+	private Set<SubscribeJSON> getRemoteJSONSubscriptions() {
+		return JSONSerializableConversors.convertToSerializable( this.remoteSubscriptions.getSubscriptions() );
+	}	
+	
+	@Override
+	public SubscribeJSON getJsonSubscription(String id) {
+		final SubscribeJSON ret = localSubscriptions.getJSONSubscription(id);
+		if(ret!=null) return ret;
+		
+		for(Subscription s: getSubscriptions()) {
+			if(s.getID().equals(id)) {
+				return JSONSerializableConversors.convertToSerializable(s);
+			}
+		}
+		
+		return null;
 	}
 	
 	
@@ -155,16 +185,7 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	public Collection<Subscription> getSubscriptions() {
 		Set<Subscription> ret = new HashSet<Subscription>();
 		ret.addAll(this.remoteSubscriptions.getSubscriptions());
-		
-		return ret;
-	}
-	
-	@Override
-	public Subscription getSubscription(String id) {
-		Subscription ret = this.localSubscriptions.getSubscription(id);
-		if(ret==null)
-			return this.remoteSubscriptions.getSubscription(id);
-		
+		ret.addAll(this.localSubscriptions.getSubscriptions());
 		return ret;
 	}
 }

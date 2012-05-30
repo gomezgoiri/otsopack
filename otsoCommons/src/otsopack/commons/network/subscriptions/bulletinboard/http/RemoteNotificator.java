@@ -46,7 +46,7 @@ public class RemoteNotificator {
 	 * @param callbackURL
 	 * @param notification
 	 */
-	public void sendNotification(final URI callbackURL, final EventNotification notification) {
+	public void sendNotification(final String callbackURL, final EventNotification notification) {
 		final Future<Boolean> submittedNotification = this.executor.submit(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {

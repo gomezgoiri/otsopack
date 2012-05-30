@@ -15,15 +15,15 @@ package otsopack.commons.network.subscriptions.bulletinboard.connectors;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
-import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 
 /**
  * BulletinBoardConnector is used to inform to one or many local or remote bulletin boards
  * about the changes made in a local bulletin board.
  */
 public interface BulletinBoardConnector {
-	void subscribe(Subscription subscription) throws SubscriptionException;
+	void subscribe(SubscribeJSON subscription) throws SubscriptionException;
 	void unsubscribe(String subscriptionId) throws SubscriptionException;
 	void notify(NotificableTemplate adv) throws SubscriptionException;
-	void updateSubscription(Subscription subscription) throws SubscriptionException;
+	void updateSubscription(SubscribeJSON subscription) throws SubscriptionException;
 }
