@@ -45,19 +45,18 @@ public class ExpirableSubscriptionsStoreTest {
 	
 	@Test
 	public void testSubscriptions() throws InterruptedException {
-		final int EXPIRATIONTIME = 50;
-		final long currentTime = System.currentTimeMillis();
-		
 		final int ELEMNUM = 4;		
 		final int[] expire = new int[ELEMNUM];
 		final String[] uuid = new String[ELEMNUM];
 		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
 		final Subscription subs[] = new Subscription[ELEMNUM];
+		
+		final long timestamp = System.currentTimeMillis();
 		for(int i=0; i<ELEMNUM; i++) {
 			expire[i] = (i+1) * 50;
 			uuid[i] = "uuid"+i;
 			nt[i] = WildcardTemplate.createWithNull(null,"http://p"+i);
-			subs[i] = Subscription.createSubcription(uuid[i], currentTime+expire[i], nt[i], null);
+			subs[i] = Subscription.createSubcription(uuid[i], expire[i], nt[i], null);
 			this.bb.subscribe(subs[i]);
 		}
 		
@@ -69,21 +68,21 @@ public class ExpirableSubscriptionsStoreTest {
 		this.bb.unsubscribe(uuid[2]);
 		this.bb.unsubscribe(uuid[3]);
 		
-		this.bb.updateSubscription(uuid[1], currentTime+expire[3]);
+		this.bb.updateSubscription(uuid[1], expire[3]);
 		
-		Thread.sleep(expire[0]+EXPIRATIONTIME);
+		waitUntil(timestamp+expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), subs[1]);
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertNull(this.bb.subscriptions.get(uuid[3]));
 		
-		Thread.sleep(expire[1]-expire[0]);
+		waitUntil(timestamp+expire[1]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), subs[1]);
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertNull(this.bb.subscriptions.get(uuid[3]));
 		
-		Thread.sleep(expire[3]-expire[1]);
+		waitUntil(timestamp+expire[3]);
 		for(int i=0; i<ELEMNUM; i++) {
 			assertNull(this.bb.subscriptions.get(uuid[i]));
 		}
@@ -91,9 +90,9 @@ public class ExpirableSubscriptionsStoreTest {
 
 	@Test
 	public void testDaemon() throws InterruptedException {
+		final int extraTime = 100;
 		final int ELEMNUM = 4;
 		final int[] expire = new int[ELEMNUM];
-		final int extraTime = 100;
 		final String[] uuid = new String[ELEMNUM];
 		final NotificableTemplate[] nt = new NotificableTemplate[ELEMNUM];
 		for(int i=0; i<4; i++) {
@@ -107,7 +106,7 @@ public class ExpirableSubscriptionsStoreTest {
 		final Subscription sub3 = Subscription.createSubcription(uuid[2], expire[2], nt[2], null);
 		final Subscription sub4 = Subscription.createSubcription(uuid[3], expire[3], nt[3], null);
 		
-		final long timestamp = System.currentTimeMillis();
+		long timestamp = System.currentTimeMillis();
 		this.bb.subscribe(sub1);
 		this.bb.subscribe(sub2);
 		this.bb.subscribe(sub3);
@@ -129,12 +128,13 @@ public class ExpirableSubscriptionsStoreTest {
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
-				
+		
 		waitUntil(timestamp+expire[2]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
+		timestamp = System.currentTimeMillis();
 		this.bb.updateSubscription(uuid[3],expire[3]+extraTime);
 		
 		waitUntil(timestamp+expire[3]);
@@ -145,7 +145,7 @@ public class ExpirableSubscriptionsStoreTest {
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
 		
-		Thread.sleep(extraTime);
+		waitUntil(timestamp+expire[3]+extraTime);
 		for(int i=0; i<4; i++) {
 			assertNull("The subscription " + uuid[i] + " is not null.", this.bb.subscriptions.get(uuid[i]));
 		}
@@ -153,8 +153,9 @@ public class ExpirableSubscriptionsStoreTest {
 	
 	private void waitUntil(long timestamp) throws InterruptedException {
 		final long current = System.currentTimeMillis();
-		if(timestamp>current)
-			Thread.sleep(timestamp-current+1); 
+		if(timestamp>current) {
+			Thread.sleep(timestamp-current+10);
+		}
 	}
 	
 	@Test
