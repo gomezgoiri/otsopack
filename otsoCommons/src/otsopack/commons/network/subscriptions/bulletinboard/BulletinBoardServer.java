@@ -87,6 +87,9 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 		bootstrapping();
 		try {
 			this.svr.startup();
+			final Thread t = new Thread(this.remoteSubscriptions);
+			t.setDaemon(true);
+			t.start();
 		} catch(Exception e) {
 			throw new SubscriptionException("The bulletin board could not be started.", e);
 		}
@@ -96,6 +99,7 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	public void stop() throws SubscriptionException {
 		try {
 			this.svr.shutdown();
+			this.remoteSubscriptions.stop();
 		} catch (Exception e) {
 			throw new SubscriptionException("The bulletin board could not be stoped.", e);
 		}
