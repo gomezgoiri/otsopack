@@ -63,7 +63,7 @@ public class SubscriptionsPropagator {
 	 * 		Does this subscription already exist and is being updated?
 	 */
 	public void propagate(SubscribeJSON subs, Set<String> alreadyPropagatedTo, boolean update) {	
-		Set<Node> newProp = new HashSet<Node>();
+		final Set<Node> newProp = new HashSet<Node>();
 		for(Node bbNode: this.registry.getBulletinBoards(this.spaceURI)) {
 			if ( !alreadyPropagatedTo.contains(bbNode.getUuid()) ) {
 				if ( !itsMe(bbNode) ) // don't sent to myself 

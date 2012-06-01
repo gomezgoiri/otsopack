@@ -126,13 +126,10 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 					final ExpirableSubscriptions element = this.expirableElements.first();
 					remainingTime = element.expiration - System.currentTimeMillis();
 					if( remainingTime<=0 ) {
-						System.out.println("Paso 1.");
-						boolean removed = this.expirableElements.remove(element);
-						if(!removed) System.out.println("Not removed!");
+						this.expirableElements.remove(element);
 						
 						// It should be in one of these collections
-						final ExpirableSubscriptions es = this.subscriptions.remove(element.getSubscription().getID());
-						if(es!=null) System.out.println("Not removed 2!");
+						this.subscriptions.remove(element.getSubscription().getID());
 					}
 			     } finally {
 			         this.lock.unlock();

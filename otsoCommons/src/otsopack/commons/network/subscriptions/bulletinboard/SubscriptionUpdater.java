@@ -63,7 +63,7 @@ public class SubscriptionUpdater implements Runnable {
 			if(s!=null) {
 				if(toUpdate.containsKey(s.id)) { // still contains it?
 					final long extratime = toUpdate.get(s.id);
-					long left = System.currentTimeMillis() - s.nextUpdate - 100;
+					final long left = System.currentTimeMillis() - s.nextUpdate - 100;
 					if(left>0) {
 						synchronized (this.queueLock) {
 							try {
@@ -83,6 +83,9 @@ public class SubscriptionUpdater implements Runnable {
 							}
 						}
 					});
+					s.updateSubscription();
+					this.pending.add(s);
+					
 				}
 			}
 		}
