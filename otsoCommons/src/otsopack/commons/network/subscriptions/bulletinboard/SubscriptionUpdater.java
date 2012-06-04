@@ -18,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import otsopack.commons.exceptions.SubscriptionException;
 
@@ -27,6 +29,7 @@ public class SubscriptionUpdater implements Runnable {
 	protected boolean stop = false;
 	
 	protected final Map<String, Long> toUpdate = new ConcurrentHashMap<String, Long>();
+	protected final ReadWriteLock upLock = new ReentrantReadWriteLock();
 	
 	protected final Object queueLock = new Object();
 	protected final PriorityBlockingQueue<SortedSubscription> pending = new PriorityBlockingQueue<SortedSubscription>();
@@ -35,20 +38,25 @@ public class SubscriptionUpdater implements Runnable {
 	
 	
 	public void addSubscription(String id, Long extratime, SubscriptionUpdatesListener list) {
+		this.upLock.writeLock().lock();
 		this.toUpdate.put(id, extratime);
+		
 		synchronized (this.queueLock) {
 			this.pending.add(new SortedSubscription(id, list));
+			this.upLock.writeLock().unlock(); // Cause in SortedSubscription upLock is also used!
 			this.queueLock.notifyAll();
 		}
 	}
 	
 	public void removeSubscription(String id) {
+		this.upLock.writeLock().lock();
 		this.toUpdate.remove(id);
+		this.upLock.writeLock().unlock();
 	}
 	
 	@Override
 	public void run() {
-		while(!stop) {
+		while(!this.stop) {
 			final SortedSubscription s;
 			synchronized (this.queueLock) {
 				s = this.pending.poll();
@@ -61,11 +69,14 @@ public class SubscriptionUpdater implements Runnable {
 				}
 			}
 			if(s!=null) {
-				if(toUpdate.containsKey(s.id)) { // still contains it?
-					final long extratime = toUpdate.get(s.id);
-					final long left = System.currentTimeMillis() - s.nextUpdate - 100;
+				this.upLock.readLock().lock();
+				if(this.toUpdate.containsKey(s.id)) { // still contains it?
+					final long extratime = this.toUpdate.get(s.id);
+					this.upLock.readLock().unlock();
+					
+					final long left = s.nextUpdate - System.currentTimeMillis();
 					if(left>0) {
-						synchronized (this.queueLock) {
+						synchronized(this.queueLock) {
 							try {
 								this.queueLock.wait(left);
 							} catch (InterruptedException e) {
@@ -73,26 +84,36 @@ public class SubscriptionUpdater implements Runnable {
 							}
 						}
 					}
-					this.executor.submit(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								s.listener.updateSubscription(s.id, extratime);
-							} catch (SubscriptionException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-					s.updateSubscription();
-					this.pending.add(s);
 					
-				}
+					this.upLock.readLock().lock();
+					if(!this.stop && this.toUpdate.containsKey(s.id)) {
+						s.updateSubscription();
+						this.upLock.readLock().unlock();
+						
+						// If the waiting process was not interrupted...
+						this.executor.submit(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									s.listener.updateSubscription(s.id, extratime);
+								} catch (SubscriptionException e) {
+									e.printStackTrace();
+								}
+							}
+						});						
+					} else this.upLock.readLock().unlock();
+					// We insert the element poll at the beginning of this iteration
+					this.pending.add(s);
+				} else this.upLock.readLock().unlock();
 			}
 		}
 	}
 	
 	public void stop() {
 		this.stop = true;
+		synchronized (this.queueLock) {
+			this.queueLock.notifyAll();
+		}
 	}
 	
 	class SortedSubscription implements Comparable<SortedSubscription> {
@@ -103,11 +124,13 @@ public class SubscriptionUpdater implements Runnable {
 		public SortedSubscription(String id, SubscriptionUpdatesListener list) {
 			this.id = id;
 			this.listener = list;
+			this.nextUpdate = System.currentTimeMillis();
 			updateSubscription();
 		}
 		
 		public void updateSubscription() {
-			this.nextUpdate = System.currentTimeMillis() + getOuterType().toUpdate.get(this.id);
+			this.nextUpdate = this.nextUpdate + getOuterType().toUpdate.get(this.id);
+			//System.currentTimeMillis() + getOuterType().toUpdate.get(this.id);
 		}
 		
 		@Override
