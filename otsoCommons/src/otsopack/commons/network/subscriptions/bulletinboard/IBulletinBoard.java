@@ -17,14 +17,11 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 
-public interface IBulletinBoard extends ISubscriptionsChecker {
-	void setDefaultSubscriptionLifetime(long lifetime);
-	
+public interface IBulletinBoard extends ISubscriptionsChecker {	
 	void start() throws SubscriptionException;
 	void stop() throws SubscriptionException;
 	
-	
-	String subscribe(NotificableTemplate template, INotificationListener listener) throws SubscriptionException;
+	String subscribe(NotificableTemplate template, INotificationListener listener, long subscriptionLifetime) throws SubscriptionException;
 	void unsubscribe(String subscriptionId) throws SubscriptionException ;
 	
 	/**

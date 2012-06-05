@@ -31,6 +31,7 @@ public interface ISubscriptions extends ILayer {
 	 * @param spaceURI
 	 * @param template
 	 * @param listener
+	 * @param updateAfter
 	 * @return subscription uri
 	 */
 	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException, SubscriptionException;
@@ -56,4 +57,11 @@ public interface ISubscriptions extends ILayer {
 	 * 		The IBulletinBoard used for the given space.
 	 */
 	public IBulletinBoard getBulletinBoard(String spaceURI);
+	
+	/**
+	 * @param lifetime
+	 * 		Default lifetime for a subscription. After this period expires, it will update the subscription
+	 * 	locally or remotely. 		
+	 */
+	public void setDefaultSubscriptionLifetime(long lifetime);
 }

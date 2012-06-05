@@ -175,4 +175,9 @@ public class RestNetwork implements INetwork {
 	public IBulletinBoard getBulletinBoard(String spaceURI) {
 		return this.bulletinBoards.getBulletinBoard(spaceURI);
 	}
+	
+	@Override
+	public void setDefaultSubscriptionLifetime(long lifetime) {
+		this.bulletinBoards.setDefaultSubscriptionLifetime(lifetime);
+	}
 }

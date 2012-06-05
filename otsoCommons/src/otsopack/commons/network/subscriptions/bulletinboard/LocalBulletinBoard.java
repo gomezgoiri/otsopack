@@ -17,7 +17,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SubscriptionException;
@@ -28,12 +27,9 @@ import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.resources.NotificationCallbackResource;
-import otsopack.commons.network.subscriptions.bulletinboard.memory.ExpirableSubscriptionsStore;
 import otsopack.commons.network.subscriptions.bulletinboard.memory.PlainSubscriptionsStore;
 
-public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesListener {
-	final AtomicLong subscriptionLifetime = new AtomicLong(ExpirableSubscriptionsStore.DEFAULT_LIFETIME);
-	
+public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesListener {	
 	// bulletin board for local subscriptions
 	final PlainSubscriptionsStore mySubscriptions = new PlainSubscriptionsStore();
 	// to periodically update the subscriptions
@@ -63,11 +59,6 @@ public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesLi
 		}
 		return ret;
 	}
-	
-	@Override
-	public void setDefaultSubscriptionLifetime(long lifetime) {
-		this.subscriptionLifetime.set(lifetime);
-	}
 
 	@Override
 	public void start() throws SubscriptionException {}
@@ -76,9 +67,8 @@ public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesLi
 	public void stop() throws SubscriptionException {}
 
 	@Override
-	public String subscribe(NotificableTemplate template, INotificationListener listener) throws SubscriptionException {
-		final long lifetime = this.subscriptionLifetime.get();
-		final Subscription s = Subscription.createSubcription(lifetime, template, listener);
+	public String subscribe(NotificableTemplate template, INotificationListener listener, long updateAfter) throws SubscriptionException {
+		final Subscription s = Subscription.createSubcription(updateAfter, template, listener);
 		
 		// local callback stored
 		final String ret = this.mySubscriptions.subscribe(s);
@@ -86,7 +76,7 @@ public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesLi
 		
 		// remote updates (before connector.subscribe() because otherwise the subscriptions
 		// will be expired during the updates
-		this.updater.addSubscription(s.getID(), lifetime, this);
+		this.updater.addSubscription(s.getID(), updateAfter, this);
 		
 		// let other bulletin boards know about this subscription
 		this.connector.subscribe(toSubscriptionJSON(s)); // remote subscription
@@ -143,9 +133,8 @@ public class LocalBulletinBoard implements IBulletinBoard, SubscriptionUpdatesLi
 	@Override
 	public void updateSubscription(String subscriptionId, long extratime) throws SubscriptionException {
 		final Subscription s = this.mySubscriptions.getSubscription(subscriptionId);
-		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
 		// it's in its own thread made by the SubscriptionUpdater
-        this.connector.updateSubscription( subJson );
+        this.connector.updateSubscription( toSubscriptionJSON(s) );
 	}
 
 	/* (non-Javadoc)

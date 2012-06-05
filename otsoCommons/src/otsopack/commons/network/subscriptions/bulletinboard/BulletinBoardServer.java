@@ -76,12 +76,7 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	
 	
 	/* ****************** IBulletinBoard ****************** */
-	
-	@Override
-	public void setDefaultSubscriptionLifetime(long lifetime) {
-		this.localSubscriptions.setDefaultSubscriptionLifetime(lifetime);
-	}
-	
+		
 	@Override
 	public void start() throws SubscriptionException {
 		bootstrapping();
@@ -106,8 +101,8 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	}
 	
 	@Override
-	public String subscribe(NotificableTemplate template, INotificationListener listener) throws SubscriptionException {
-		return this.localSubscriptions.subscribe(template, listener);
+	public String subscribe(NotificableTemplate template, INotificationListener listener, long subscriptionLifetime) throws SubscriptionException {
+		return this.localSubscriptions.subscribe(template, listener, subscriptionLifetime);
 	}
 	
 	@Override

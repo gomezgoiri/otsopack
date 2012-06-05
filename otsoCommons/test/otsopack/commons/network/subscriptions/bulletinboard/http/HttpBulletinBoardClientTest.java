@@ -35,6 +35,7 @@ import otsopack.commons.network.subscriptions.bulletinboard.LocalListenerTester;
 import otsopack.commons.network.subscriptions.bulletinboard.data.RemoteNotificationListener;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
+import otsopack.commons.network.subscriptions.bulletinboard.memory.ExpirableSubscriptionsStore;
 
 public class HttpBulletinBoardClientTest {
 	private int PORT = 18086;
@@ -59,7 +60,8 @@ public class HttpBulletinBoardClientTest {
 		final String uuid = this.client.subscribe(
 											WildcardTemplate.createWithNull(null, null),
 											// kids, don't do this at home!
-											new RemoteNotificationListener("http://localhost:9999")
+											new RemoteNotificationListener("http://localhost:9999"),
+											ExpirableSubscriptionsStore.DEFAULT_LIFETIME
 										);
 		final Subscription createdSubs = Subscription.createSubcription(uuid, 0, null, null);
 		
@@ -109,7 +111,8 @@ public class HttpBulletinBoardClientTest {
 	public void testUnsubscribe() throws SubscriptionException {
 		final String uuid = this.client.subscribe(
 											WildcardTemplate.createWithNull(null, null),
-											new RemoteNotificationListener("http://localhost:9999")
+											new RemoteNotificationListener("http://localhost:9999"),
+											ExpirableSubscriptionsStore.DEFAULT_LIFETIME
 							);
 		final Subscription createdSubscription = Subscription.createSubcription(uuid,0, null, null);
 		
@@ -139,8 +142,7 @@ public class HttpBulletinBoardClientTest {
 		final int EXPIRATIONTIME = 1000;
 		
 		final LocalListenerTester list = new LocalListenerTester();
-		this.client.setDefaultSubscriptionLifetime(EXPIRATIONTIME);
-		this.client.subscribe(subscribed, list);
+		this.client.subscribe(subscribed, list, EXPIRATIONTIME);
 		
 		final IBulletinBoard client2 = this.manager.createClient();
 		client2.notify(notified);
@@ -183,8 +185,7 @@ public class HttpBulletinBoardClientTest {
 													"bboard1", true, true, false));
 		
 		final LocalListenerTester list = new LocalListenerTester();
-		this.client.setDefaultSubscriptionLifetime(EXPIRATIONTIME);
-		this.client.subscribe(subscribed, list);
+		this.client.subscribe(subscribed, list, EXPIRATIONTIME);
 		
 		final IBulletinBoard client2 = manager2.createClient();
 		client2.notify(notified);

@@ -15,6 +15,7 @@
 package otsopack.commons.network.subscriptions.bulletinboard;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -24,6 +25,7 @@ import otsopack.commons.network.ISubscriptions;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.subscriptions.bulletinboard.connectors.RemoteBulletinBoardConnector;
+import otsopack.commons.network.subscriptions.bulletinboard.memory.ExpirableSubscriptionsStore;
 import otsopack.commons.util.Util;
 
 /* This class manages a set of bulletins boards
@@ -34,6 +36,8 @@ import otsopack.commons.util.Util;
  * boards for each space.
  */
 public class BulletinBoardsManager implements ISubscriptions {
+	final AtomicLong subscriptionLifetime = new AtomicLong(ExpirableSubscriptionsStore.DEFAULT_LIFETIME);
+	
 	final ConcurrentHashMap<String,IBulletinBoard> boards = new ConcurrentHashMap<String,IBulletinBoard>();
 	final private IRegistry registry;
 	final private IHTTPInformation infoHolder;
@@ -103,7 +107,7 @@ public class BulletinBoardsManager implements ISubscriptions {
 			joinToRemoteBulletinBoard(spaceURI);
 			//throw new SpaceNotExistsException();
 		
-		return this.boards.get(spaceURI).subscribe(template, listener);
+		return this.boards.get(spaceURI).subscribe(template, listener, this.subscriptionLifetime.get());
 	}
 	
 	@Override
@@ -117,5 +121,9 @@ public class BulletinBoardsManager implements ISubscriptions {
 			joinToRemoteBulletinBoard(spaceURI);
 			//throw new SpaceNotExistsException();
 		this.boards.get(spaceURI).notify(template);
+	}
+	
+	public void setDefaultSubscriptionLifetime(long lifetime) {
+		this.subscriptionLifetime.set(lifetime);
 	}
 }
