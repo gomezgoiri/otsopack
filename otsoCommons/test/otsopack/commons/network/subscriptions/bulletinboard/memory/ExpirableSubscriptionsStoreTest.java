@@ -68,7 +68,8 @@ public class ExpirableSubscriptionsStoreTest {
 		this.bb.unsubscribe(uuid[2]);
 		this.bb.unsubscribe(uuid[3]);
 		
-		this.bb.updateSubscription(uuid[1], expire[3]);
+		// For testing
+		this.bb.updateSubscription(Subscription.createSubcription(uuid[1], expire[3], null, null));
 		
 		waitUntil(timestamp+expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
@@ -106,7 +107,7 @@ public class ExpirableSubscriptionsStoreTest {
 		final Subscription sub3 = Subscription.createSubcription(uuid[2], expire[2], nt[2], null);
 		final Subscription sub4 = Subscription.createSubcription(uuid[3], expire[3], nt[3], null);
 		
-		long timestamp = System.currentTimeMillis();
+		final long whenSuscribed = System.currentTimeMillis();
 		this.bb.subscribe(sub1);
 		this.bb.subscribe(sub2);
 		this.bb.subscribe(sub3);
@@ -117,35 +118,36 @@ public class ExpirableSubscriptionsStoreTest {
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
-		waitUntil(timestamp+expire[0]);
+		waitUntil(whenSuscribed+expire[0]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertEquals(this.bb.subscriptions.get(uuid[1]).getSubscription(), sub2);
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
-		waitUntil(timestamp+expire[1]);
+		waitUntil(whenSuscribed+expire[1]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertEquals(this.bb.subscriptions.get(uuid[2]).getSubscription(), sub3);
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
 		
-		waitUntil(timestamp+expire[2]);
+		waitUntil(whenSuscribed+expire[2]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
-		timestamp = System.currentTimeMillis();
-		this.bb.updateSubscription(uuid[3],expire[3]+extraTime);
 		
-		waitUntil(timestamp+expire[3]);
+		final long whenUpdated = System.currentTimeMillis();
+		this.bb.updateSubscription(Subscription.createSubcription(uuid[3], extraTime, null, null));
+		
+		waitUntil(whenSuscribed+expire[3]);
 		assertNull(this.bb.subscriptions.get(uuid[0]));
 		assertNull(this.bb.subscriptions.get(uuid[1]));
 		assertNull(this.bb.subscriptions.get(uuid[2]));
 		// it has not been deleted cause we have update the advertisement
-		assertEquals(this.bb.subscriptions.get(uuid[3]).getSubscription(), sub4);
+		assertTrue(this.bb.subscriptions.containsKey(uuid[3]));
 		
 		
-		waitUntil(timestamp+expire[3]+extraTime);
+		waitUntil(whenUpdated+extraTime);
 		for(int i=0; i<4; i++) {
 			assertNull("The subscription " + uuid[i] + " is not null.", this.bb.subscriptions.get(uuid[i]));
 		}

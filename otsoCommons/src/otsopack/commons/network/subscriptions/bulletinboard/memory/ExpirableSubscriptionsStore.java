@@ -15,7 +15,6 @@ package otsopack.commons.network.subscriptions.bulletinboard.memory;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +32,7 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 	// cancel the thread which removes the expired notifications
 	private volatile boolean cancel = false;
 	
-	protected Map<String, ExpirableSubscriptions> subscriptions
+	protected ConcurrentHashMap<String, ExpirableSubscriptions> subscriptions
 					= new ConcurrentHashMap<String,ExpirableSubscriptions>();
 	
 	// auxiliar list to store subscriptions ordered by their expiration date
@@ -65,23 +64,37 @@ public class ExpirableSubscriptionsStore implements ISubscriptionStore, Runnable
 		return subs.getID();
 	}
 
-	public void updateSubscription(String subscriptionId, long extratime) {
-		final ExpirableSubscriptions subs = this.subscriptions.get(subscriptionId);
-		
-		if( subs!=null ) {
-			subs.setExtraTime( extratime );
-			
-			this.lock.lock();
-			try {
-				// TODO check whether sortedSet already takes into account the changes in the object.
-				// treated as completely new subs
-				this.expirableElements.remove(subs);
-				this.expirableElements.add(subs);
-				//TODO could it be better just calling to Collections.sort()?
-		     } finally {
-		         this.lock.unlock();
-		     }
+	/**
+	 * @param changed
+	 * @return
+	 * 		The merged subscription.
+	 */
+	public Subscription updateSubscription(Subscription changed) {
+		final ExpirableSubscriptions updated = merge( this.subscriptions.get(changed.getID()), changed);
+				
+		this.lock.lock();
+		this.subscriptions.putIfAbsent(changed.getID(), updated); // just in case during merge it has expired
+		try {
+			// TODO check whether sortedSet already takes into account the changes in the object.
+			// treated as completely new subs
+			this.expirableElements.remove(updated);
+			this.expirableElements.add(updated);
+			//TODO could it be better just calling to Collections.sort()?
+	     } finally {
+	         this.lock.unlock();
+	     }
+	     
+	     return updated.getSubscription();
+	}
+	
+	private ExpirableSubscriptions merge(ExpirableSubscriptions toBeUpdated, Subscription updated) {
+		if (toBeUpdated==null) {
+			System.out.println("From scratch.");
+			return new ExpirableSubscriptions(updated);
 		}
+		
+		toBeUpdated.setExtraTime(updated.getLifetime());
+		return toBeUpdated;
 	}
 
 	public Subscription unsubscribe(String subscriptionId) {

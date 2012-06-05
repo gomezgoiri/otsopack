@@ -26,7 +26,7 @@ public class JSONDecoderTest {
 		final TemplateJSON tpl = new TemplateJSON("http://subject", "http://predicate", "http://object");
 		final SubscribeJSON subs = SubscribeJSON.createSubscription("http://space/subscriptions/24534", tpl, "http://callbackuri", 1200L);
 		
-		final String resultTpl = JSONEncoder.encode(tpl);
+		//final String resultTpl = JSONEncoder.encode(tpl);
 		//assertEquals("{\"object\":\"http://object\",\"predicate\":\"http://predicate\",\"subject\":\"http://subject\"}", resultTpl);
 		
 		final String resultSubs = JSONEncoder.encode(subs);

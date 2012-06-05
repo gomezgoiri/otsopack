@@ -27,6 +27,7 @@ import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
@@ -53,7 +54,8 @@ public class SubscriptionResource extends AbstractServerResource implements ISub
 			final IBulletinBoardOuterFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
 			final String provided = rep.getText();
 			final SubscribeJSON subjson = JSONDecoder.decode(provided, SubscribeJSON.class);
-			bulletinBoard.updateSubscription(subID, subjson.getLifetime(), subjson.getNodesWhichAlreadyKnowTheSubscription()); // not exception thrown
+			
+			bulletinBoard.updateSubscription(JSONSerializableConversors.convertFromSerializable(subjson), subjson.getNodesWhichAlreadyKnowTheSubscription()); // not exception thrown
 			return new StringRepresentation(subID);
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());

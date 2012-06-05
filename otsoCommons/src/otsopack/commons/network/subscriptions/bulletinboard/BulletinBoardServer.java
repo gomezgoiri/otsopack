@@ -146,15 +146,12 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	}
 	
 	@Override
-	public void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo) {
-		this.remoteSubscriptions.updateSubscription(subscriptionId, extratime);
-		final Subscription s = this.remoteSubscriptions.getSubscription(subscriptionId);
+	public void updateSubscription(Subscription subscription, Set<String> alreadyPropagatedTo) {
+		final Subscription s = this.remoteSubscriptions.updateSubscription(subscription);
 		
-		if(s!=null) {
-			final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
-			// propagate to other bulletin boards
-			this.propagator.propagate(subJson, alreadyPropagatedTo);
-		}
+		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
+		// propagate to other bulletin boards
+		this.propagator.propagate(subJson, alreadyPropagatedTo);
 	}
 	
 	@Override

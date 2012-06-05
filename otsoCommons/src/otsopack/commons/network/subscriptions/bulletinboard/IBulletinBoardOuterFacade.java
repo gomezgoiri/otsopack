@@ -20,9 +20,9 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.S
 
 public interface IBulletinBoardOuterFacade extends ISubscriptionsChecker {	
 	String subscribe(Subscription subscription, Set<String> alreadyPropagatedTo);
-	void remoteUnsubscribe(String subscriptionId);
+	void updateSubscription(Subscription subscription, Set<String> alreadyPropagatedTo);
 	
-	void updateSubscription(String subscriptionId, long extratime, Set<String> alreadyPropagatedTo);
+	void remoteUnsubscribe(String subscriptionId);	
 	
 	SubscribeJSON[] getJsonSubscriptions();
 	SubscribeJSON getJsonSubscription(String id);
