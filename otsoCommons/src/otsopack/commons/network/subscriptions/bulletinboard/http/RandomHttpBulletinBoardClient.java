@@ -15,6 +15,7 @@ package otsopack.commons.network.subscriptions.bulletinboard.http;
 
 import java.util.Set;
 
+import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
@@ -30,6 +31,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.S
  */
 //big TODO: when the selected BB does not respond, set to null and try again
 public class RandomHttpBulletinBoardClient {
+	final static public int MAX_RETRIES = 3;
+	
 	final private String spaceURI;
 	final private IRegistry bbd; // TODO replace by bulletin boards discovery using SM!
 	
@@ -55,15 +58,33 @@ public class RandomHttpBulletinBoardClient {
 		return false;
 	}
 	
+	private void chooseNewBulletinBoard() {
+		chooseNewBulletinBoard((SpecificHttpBulletinBoardClient)null);
+	}
+	
+	private boolean isPreviousBulletinBoard(String bulletinBoardURI, SpecificHttpBulletinBoardClient... previousClients) {
+		if(previousClients==null) return false;
+		for(SpecificHttpBulletinBoardClient previousClient: previousClients) {
+			if (previousClient!=null && previousClient.getRemoteBulletinBoardURI().equals(bulletinBoardURI)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void chooseNewBulletinBoard(SpecificHttpBulletinBoardClient... previousClient) {
+		final Set<Node> bbs = this.bbd.getBulletinBoards(this.spaceURI);
+		for(Node bb: bbs) { // what if it is empty?
+			if( !itsMe(bb.getBaseURI()) && !isPreviousBulletinBoard(bb.getBaseURI(), previousClient) ) {
+				this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());
+				break;
+			}
+		}
+	}
+	
 	public SpecificHttpBulletinBoardClient getRemoteBulletinBoardURI() throws SubscriptionException {
 		if (this.chosen==null) {
-			final Set<Node> bbs = this.bbd.getBulletinBoards(this.spaceURI);
-			for(Node bb: bbs) { // what if it is empty?
-				if( !itsMe(bb.getBaseURI()) ) {
-					this.chosen = new SpecificHttpBulletinBoardClient(bb.getBaseURI());
-					break;
-				}
-			}
+			chooseNewBulletinBoard();
 			if (this.chosen==null) { // if it remains null, no BulletinBoard is available
 				throw new SubscriptionException("No Bulletin Board available.");
 			}
@@ -71,57 +92,100 @@ public class RandomHttpBulletinBoardClient {
 		return this.chosen;
 	}
 	
-	public void notify(NotificableTemplate adv) throws SubscriptionException {
-		try{
-			getRemoteBulletinBoardURI().notify(adv);
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
-			// this.chosen = null;
+	private void chooseAnotherBulletinBoard(SpecificHttpBulletinBoardClient... previous) throws SubscriptionException {		
+		chooseNewBulletinBoard(previous);
+		if (this.chosen==null) { // if it remains null, no BulletinBoard is available
+			throw new SubscriptionException("No Bulletin Board available.");
 		}
+	}
+	
+	public void notify(NotificableTemplate adv) throws SubscriptionException {
+		final SpecificHttpBulletinBoardClient[] previousBB = new SpecificHttpBulletinBoardClient[MAX_RETRIES];
+		int attempt = 0;
+		do {
+			try {
+				getRemoteBulletinBoardURI().notify(adv);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+					previousBB[attempt] = getRemoteBulletinBoardURI();
+					chooseAnotherBulletinBoard(previousBB);
+				} else throw new SubscriptionException("Problem on notify.", e);
+			}
+			attempt++;
+		} while (attempt<=MAX_RETRIES);
+		
+		throw new SubscriptionException("No bulletin board could be contacted after "+attempt+" attempts.");
 	}
 	
 	public String subscribe(SubscribeJSON subJson) throws SubscriptionException {
-		try{
-			getRemoteBulletinBoardURI().subscribe(subJson);
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
-			// this.chosen = null;
-		}
-		return null;
+		final SpecificHttpBulletinBoardClient[] previousBB = new SpecificHttpBulletinBoardClient[MAX_RETRIES];
+		int attempt = 0;
+		do {
+			try {
+				return getRemoteBulletinBoardURI().subscribe(subJson);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+					previousBB[attempt] = getRemoteBulletinBoardURI();
+					chooseAnotherBulletinBoard(previousBB);
+				} else throw new SubscriptionException("Problem on subscribe.", e);
+			}
+			attempt++;
+		} while (attempt<=MAX_RETRIES);
+		
+		throw new SubscriptionException("No bulletin board could be contacted after "+attempt+" attempts.");
 	}
 	
 	public String updateSubscription(SubscribeJSON subscription) throws SubscriptionException {
-		try{
-			getRemoteBulletinBoardURI().updateSubscription(subscription);
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
-			// this.chosen = null;
-		}
-		return null;
+		final SpecificHttpBulletinBoardClient[] previousBB = new SpecificHttpBulletinBoardClient[MAX_RETRIES];
+		int attempt = 0;
+		do {
+			try {
+				return getRemoteBulletinBoardURI().updateSubscription(subscription);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+					previousBB[attempt] = getRemoteBulletinBoardURI();
+					chooseAnotherBulletinBoard(previousBB);
+				} else throw new SubscriptionException("Problem on subscription update.", e);
+			}
+			attempt++;
+		} while (attempt<=MAX_RETRIES);
+		
+		throw new SubscriptionException("No bulletin board could be contacted after "+attempt+" attempts.");
 	}
 	
 	public String unsubscribe(String subId) throws SubscriptionException {
-		try{
-			getRemoteBulletinBoardURI().unsubscribe(subId);
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
-			// this.chosen = null;
-		}
-		return null;
+		final SpecificHttpBulletinBoardClient[] previousBB = new SpecificHttpBulletinBoardClient[MAX_RETRIES];
+		int attempt = 0;
+		do {
+			try {
+				return getRemoteBulletinBoardURI().unsubscribe(subId);
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+					previousBB[attempt] = getRemoteBulletinBoardURI();
+					chooseAnotherBulletinBoard(previousBB);
+				} else throw new SubscriptionException("Problem on unsubscribe.", e);
+			}
+			attempt++;
+		} while (attempt<=MAX_RETRIES);
+		
+		throw new SubscriptionException("No bulletin board could be contacted after "+attempt+" attempts.");
 	}
 	
 	public Subscription[] getSubscriptions() throws ResourceException, SubscriptionException {
-		try{
-			return getRemoteBulletinBoardURI().getSubscriptions();
-		} catch (ResourceException e) {
-			e.printStackTrace();
-			// TODO with some kind of errors, if something went wrong, chosen can be set to null and try again!
-			// this.chosen = null;
-		}
-		return null;
+		final SpecificHttpBulletinBoardClient[] previousBB = new SpecificHttpBulletinBoardClient[MAX_RETRIES];
+		int attempt = 0;
+		do {
+			try {
+				return getRemoteBulletinBoardURI().getSubscriptions();
+			} catch (ResourceException e) {
+				if(e.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+					previousBB[attempt] = getRemoteBulletinBoardURI();
+					chooseAnotherBulletinBoard(previousBB);
+				} else throw new SubscriptionException("Problem on unsubscribe.", e);
+			}
+			attempt++;
+		} while (attempt<=MAX_RETRIES);
+		
+		throw new SubscriptionException("No bulletin board could be contacted after "+attempt+" attempts.");
 	}
 }
