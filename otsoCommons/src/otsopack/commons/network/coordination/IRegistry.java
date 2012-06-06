@@ -17,7 +17,18 @@ package otsopack.commons.network.coordination;
 import java.util.Set;
 
 public interface IRegistry {
+	public String getLocalUuid();
 	public Set<ISpaceManager> getSpaceManagers(String spaceURI);
+	/**
+	 * @param spaceURI
+	 * @return
+	 * 		Nodes which belong to the spaceURI (local node excluded).
+	 */
 	public Set<Node> getNodesBaseURLs(String spaceURI);
+	/**
+	 * @param spaceURI
+	 * @return
+	 * 		Bulletin boards which belong to the spaceURI (local node excluded).
+	 */
 	public Set<Node> getBulletinBoards(String spaceURI);
 }
