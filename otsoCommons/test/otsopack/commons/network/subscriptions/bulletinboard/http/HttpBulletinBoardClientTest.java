@@ -44,7 +44,7 @@ public class HttpBulletinBoardClientTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.manager = new BulletinBoardManager(this.PORT);
+		this.manager = new BulletinBoardManager("bboard0", this.PORT);
 		this.manager.start();
 		
 		this.client = this.manager.createClient();
@@ -170,19 +170,20 @@ public class HttpBulletinBoardClientTest {
 	private boolean notifyUsingTwo(NotificableTemplate subscribed, NotificableTemplate notified) throws Exception {
 		final int EXPIRATIONTIME = 1000;
 		
-		final BulletinBoardManager manager2 = new BulletinBoardManager(this.PORT+1, this.PORT+1000);
+		final String bboardName = "bboard1";
+		final BulletinBoardManager manager2 = new BulletinBoardManager(bboardName, this.PORT+1, this.PORT+1000);
 		manager2.start();
 		
 		// bulletinBoard0 knows bulletinBoard1
 		this.manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard0", true, true, false));
 		this.manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
-													"bboard1", true, true, false));
+													bboardName, true, true, false));
 		
 		manager2.addOtherBulletinBoard(new Node("http://localhost:"+this.PORT+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard0", true, true, false));
 		manager2.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
-													"bboard1", true, true, false));
+													bboardName, true, true, false));
 		
 		final LocalListenerTester list = new LocalListenerTester();
 		this.client.subscribe(subscribed, list, EXPIRATIONTIME);

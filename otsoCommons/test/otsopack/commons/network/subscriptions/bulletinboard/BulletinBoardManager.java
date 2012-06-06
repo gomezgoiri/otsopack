@@ -19,13 +19,11 @@ import java.util.Set;
 import org.easymock.EasyMock;
 
 import otsopack.commons.IController;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.communication.OtsoRestServer;
 import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.coordination.IRegistryManager;
-import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.coordination.registry.RegistryException;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
 
 public class BulletinBoardManager {
@@ -35,33 +33,61 @@ public class BulletinBoardManager {
 	protected Set<Node> otherBulletinBoards = new HashSet<Node>();
 	
 	private Set<OtsoRestServer> remoteListeners = new HashSet<OtsoRestServer>();
+	
+	private String nodeUuid;
 	private int bbPort;
 	private int clientPort;
 	
-	public BulletinBoardManager(int port){
-		this(port, OtsoRestServer.DEFAULT_PORT);
+	public BulletinBoardManager(String nodeUuid, int port){
+		this(nodeUuid, port, OtsoRestServer.DEFAULT_PORT);
 	}
 	
-	public BulletinBoardManager(int port, int clientPort) {
+	public BulletinBoardManager(String nodeUuid, int port, int clientPort) {
+		this.nodeUuid = nodeUuid;
 		this.bbPort = port;
 		this.clientPort = clientPort;
 	}
 	
 	public void start() throws Exception {
+		createDefaultBulletinBoard();
+	}
+	
+	private void createDefaultBulletinBoard() throws SubscriptionException {
 		final IRegistry registry = EasyMock.createMock(IRegistry.class);
 		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(otherBulletinBoards).anyTimes();
+		EasyMock.expect(registry.getLocalUuid()).andReturn(this.nodeUuid).anyTimes();
 		EasyMock.replay(registry);
 		
 		// this info holder is for the listener of the server itself, but we won't 
-		this.server = new BulletinBoardsManager(registry, new InfoHolder(this.bbPort));
+		this.server = new BulletinBoardsManager(registry, getHttpInformation(this.bbPort));
 		this.server.startup();
 		this.server.createRemoteBulletinBoard(this.defaultSpace, this.bbPort);
+	}
+	
+	private IHTTPInformation getHttpInformation(int port) {
+		final IHTTPInformation registry = EasyMock.createMock(IHTTPInformation.class);
+		EasyMock.expect(registry.getAddress()).andReturn("http://localhost").anyTimes();
+		EasyMock.expect(registry.getPort()).andReturn(port).anyTimes();
+		EasyMock.replay(registry);
+		return registry;
+	}
+	
+	private IRegistry getRegistry() {
+		final IRegistry registry = EasyMock.createMock(IRegistry.class);
+		
+		final Set<Node> bbs = new HashSet<Node>();
+		bbs.add(new Node("http://localhost:" + this.bbPort + OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
+							this.nodeUuid, true, true, false));
+		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(bbs).anyTimes();
+		EasyMock.expect(registry.getLocalUuid()).andReturn("node-"+this.bbPort).anyTimes();
+		EasyMock.replay(registry);
+		return registry;
 	}
 	
 	public IBulletinBoard createClient() throws Exception {
 		this.clientPort++;
 		
-		final BulletinBoardsManager bbm = new BulletinBoardsManager(new FakeRegistry(this.bbPort), new InfoHolder(this.clientPort));
+		final BulletinBoardsManager bbm = new BulletinBoardsManager(getRegistry(), getHttpInformation(this.clientPort));
 		bbm.joinToRemoteBulletinBoard(this.defaultSpace);
 		
 		final IController controller = EasyMock.createMock(IController.class);
@@ -92,57 +118,5 @@ public class BulletinBoardManager {
 	
 	public void addOtherBulletinBoard(Node node) {
 		this.otherBulletinBoards.add(node);
-	}
-}
-
-// TODO mock
-class FakeRegistry implements IRegistryManager {
-	int port;
-	
-	public FakeRegistry(int port) {
-		this.port = port;
-	}
-	
-	@Override
-	public Set<ISpaceManager> getSpaceManagers(String spaceURI) {
-		return null;
-	}
-	@Override
-	public Set<Node> getNodesBaseURLs(String spaceURI) {
-		return null;
-	}
-	@Override
-	public Set<Node> getBulletinBoards(String spaceURI) {
-		final Set<Node> bbs = new HashSet<Node>();
-		bbs.add(new Node("http://localhost:" + this.port + OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
-						"bboard0", true, true, false));
-		return bbs;
-	}
-	@Override
-	public void startup() throws RegistryException {
-	}
-	@Override
-	public void shutdown() throws RegistryException {
-	}
-	@Override
-	public void joinSpace(String spaceURI) {
-	}
-	@Override
-	public void leaveSpace(String spaceURI) {
-	}
-}
-
-class InfoHolder implements IHTTPInformation {
-	private int port;
-	public InfoHolder(int port) {
-		this.port = port;
-	}
-	@Override
-	public String getAddress() {
-		return "http://localhost";
-	}
-	@Override
-	public int getPort() {
-		return this.port;
 	}
 }
