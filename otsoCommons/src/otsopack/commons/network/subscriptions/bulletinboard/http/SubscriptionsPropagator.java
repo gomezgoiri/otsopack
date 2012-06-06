@@ -24,7 +24,6 @@ import java.util.concurrent.Future;
 
 import org.restlet.resource.ResourceException;
 
-import otsopack.commons.network.IHTTPInformation;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
@@ -35,13 +34,11 @@ public class SubscriptionsPropagator {
 	
 	private volatile ExecutorService executor = Executors.newCachedThreadPool();
 	final List<Future<Boolean>> submittedSubscriptions = new CopyOnWriteArrayList<Future<Boolean>>();
-	final IHTTPInformation infoHolder;
 	
 	
-	public SubscriptionsPropagator(String spaceURI, IRegistry registry, IHTTPInformation infoHolder) {
+	public SubscriptionsPropagator(String spaceURI, IRegistry registry) {
 		this.spaceURI = spaceURI;
 		this.registry = registry;
-		this.infoHolder = infoHolder;
 	}
 	
 	/**
@@ -62,12 +59,13 @@ public class SubscriptionsPropagator {
 	 * @param update
 	 * 		Does this subscription already exist and is being updated?
 	 */
-	public void propagate(SubscribeJSON subs, Set<String> alreadyPropagatedTo, boolean update) {	
+	public void propagate(SubscribeJSON subs, Set<String> alreadyPropagatedTo, boolean update) {
+		alreadyPropagatedTo.add(this.registry.getLocalUuid());
+		
 		final Set<Node> newProp = new HashSet<Node>();
-		for(Node bbNode: this.registry.getBulletinBoards(this.spaceURI)) {
+		for(Node bbNode: this.registry.getBulletinBoards(this.spaceURI)) { // it does not return "me" 
 			if ( !alreadyPropagatedTo.contains(bbNode.getUuid()) ) {
-				if ( !itsMe(bbNode) ) // don't sent to myself 
-					newProp.add(bbNode);
+				newProp.add(bbNode);
 				alreadyPropagatedTo.add(bbNode.getUuid());
 			}
 		}
@@ -79,11 +77,6 @@ public class SubscriptionsPropagator {
 		for(Node bbNode: newProp) {
 			sendSubscription(subs, bbNode.getBaseURI(), update);
 		}
-	}
-	
-	private boolean itsMe(Node bbNode) {
-		final String myAddress = this.infoHolder.getAddress()+":"+this.infoHolder.getPort();
-		return bbNode.getBaseURI().startsWith(myAddress); 
 	}
 	
 	/**

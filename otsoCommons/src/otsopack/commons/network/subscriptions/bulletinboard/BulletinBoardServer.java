@@ -53,10 +53,10 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 	public BulletinBoardServer(int port, String spaceURI, SubscriptionUpdater updtr, IRegistry registry) {
 		this.svr = new BulletinBoardRestServer(port, this);
 		
-		this.propagator = new SubscriptionsPropagator(spaceURI, registry, this.svr);
+		this.propagator = new SubscriptionsPropagator(spaceURI, registry);
 		this.localSubscriptions = new LocalBulletinBoard(updtr, new LocalBulletinBoardConnector(propagator), spaceURI, this.svr);
 		
-		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry, this.svr);
+		this.bbc = new RandomHttpBulletinBoardClient(spaceURI, registry);
 	}
 	
 	private void bootstrapping() {
@@ -146,7 +146,7 @@ public class BulletinBoardServer implements IBulletinBoard, IBulletinBoardOuterF
 		
 		final SubscribeJSON subJson = JSONSerializableConversors.convertToSerializable(s);
 		// propagate to other bulletin boards
-		this.propagator.propagate(subJson, alreadyPropagatedTo);
+		this.propagator.propagate(subJson, alreadyPropagatedTo, true);
 	}
 	
 	@Override
