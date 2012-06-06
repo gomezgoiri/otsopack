@@ -19,6 +19,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import otsopack.commons.network.coordination.IDiscovery;
 import otsopack.commons.network.coordination.IRegistryManager;
@@ -224,8 +225,8 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	
 	@Override
 	public void joinSpace(String spaceURI) {
-		this.spaceManagers.putIfAbsent(spaceURI, new HashSet<ISpaceManager>());
-		this.nodes.putIfAbsent(spaceURI, new HashSet<Node>());
+		this.spaceManagers.putIfAbsent(spaceURI, new CopyOnWriteArraySet<ISpaceManager>());
+		this.nodes.putIfAbsent(spaceURI, new CopyOnWriteArraySet<Node>());
 		this.newSpaces.add(spaceURI);
 		synchronized (this.lock) {
 			this.lock.notifyAll();
@@ -236,5 +237,10 @@ public class SimpleRegistry extends Thread implements IRegistryManager {
 	public void leaveSpace(String spaceURI) {
 		this.spaceManagers.remove(spaceURI);
 		this.nodes.remove(spaceURI);
+	}
+	
+	@Override
+	public String getLocalUuid() {
+		return this.localNodeUUID;
 	}
 }

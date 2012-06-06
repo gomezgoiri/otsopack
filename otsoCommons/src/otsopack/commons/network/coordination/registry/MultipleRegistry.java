@@ -79,4 +79,11 @@ public class MultipleRegistry implements IRegistryManager {
 		for(IRegistryManager registry : this.registries)
 			registry.leaveSpace(spaceURI);
 	}
+	
+	@Override
+	public String getLocalUuid() {
+		for(IRegistryManager registry : this.registries)
+			return registry.getLocalUuid(); // asumming all the local uuids are equals...
+		return null;
+	}
 }
