@@ -13,8 +13,9 @@
  */
 package otsopack.commons.network.subscriptions.bulletinboard;
 
+import otsopack.commons.ILayer;
 import otsopack.commons.exceptions.SubscriptionException;
 
-public interface IRemoteBulletinBoardsManager {
+public interface IRemoteBulletinBoardsManager extends ILayer {
 	public void createRemoteBulletinBoard(String spaceURI, int port) throws SubscriptionException;
 }
