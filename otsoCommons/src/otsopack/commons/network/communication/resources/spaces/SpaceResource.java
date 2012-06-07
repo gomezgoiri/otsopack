@@ -28,6 +28,7 @@ import otsopack.commons.network.communication.resources.graphs.GraphsResource;
 import otsopack.commons.network.communication.resources.query.QueryResource;
 import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONEncoder;
+import otsopack.commons.network.subscriptions.bulletinboard.http.server.consumer.resources.NotificationCallbackResource;
 
 public class SpaceResource extends AbstractServerResource implements ISpaceResource {
 
@@ -38,6 +39,7 @@ public class SpaceResource extends AbstractServerResource implements ISpaceResou
 		graphsRoots.put(ROOT, SpaceResource.class);
 		graphsRoots.putAll(GraphsResource.getRoots());
 		graphsRoots.putAll(QueryResource.getRoots());
+		graphsRoots.putAll(NotificationCallbackResource.getRoots());
 		return graphsRoots;
 	}
 	

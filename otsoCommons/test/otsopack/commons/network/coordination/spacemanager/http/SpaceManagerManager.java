@@ -13,7 +13,6 @@
  */
 package otsopack.commons.network.coordination.spacemanager.http;
 
-import otsopack.commons.network.coordination.ISpaceManager;
 import otsopack.commons.network.coordination.Node;
 import otsopack.commons.network.coordination.spacemanager.HttpSpaceManager;
 import otsopack.commons.network.coordination.spacemanager.SimpleSpaceManager;
@@ -23,8 +22,8 @@ import otsopack.commons.network.coordination.spacemanager.http.server.SpaceManag
 import otsopack.commons.network.coordination.spacemanager.http.server.SpaceManagerRestServer;
 
 public class SpaceManagerManager {
-	public static final Node NODE1 = new Node("http://node1/", "node1", false, false);
-	public static final Node NODE2 = new Node("http://node2/", "node2", false, false);
+	public static final Node NODE1 = new Node("http://node1/", "node1", false, false, false);
+	public static final Node NODE2 = new Node("http://node2/", "node2", false, false, false);
 
 	private SpaceManagerRestServer server;
 	private SpaceManager spaceManager;

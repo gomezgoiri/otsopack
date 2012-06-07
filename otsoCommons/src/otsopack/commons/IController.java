@@ -16,6 +16,7 @@ package otsopack.commons;
 
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.network.INetwork;
+import otsopack.commons.network.ISubscriptions;
 
 /**
  * Controller interface to receive kernel object, 
@@ -44,4 +45,9 @@ public interface IController {
 	 * @return data access service
 	 */
 	public IDataAccess getDataAccessService();
+	
+	/**
+	 * @return subscription layer
+	 */
+	public ISubscriptions getSubscriber();
 }

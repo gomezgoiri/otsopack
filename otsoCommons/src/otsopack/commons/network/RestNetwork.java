@@ -24,32 +24,33 @@ import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
+import otsopack.commons.exceptions.SubscriptionException;
 import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.communication.OtsoRestServer;
 import otsopack.commons.network.communication.RestMulticastCommunication;
 import otsopack.commons.network.communication.event.listener.INotificationListener;
-import otsopack.commons.network.coordination.IRegistry;
-import otsopack.commons.network.coordination.bulletinboard.BulletinBoardsManager;
+import otsopack.commons.network.coordination.IRegistryManager;
+import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IRemoteBulletinBoardsManager;
 
 public class RestNetwork implements INetwork {
 	
 	OtsoRestServer rs;
-	private ICommunication comm;
+	private IRegistryManager registry;
+	private RestMulticastCommunication comm;
 	private Set<String> joinedSpaces = new CopyOnWriteArraySet<String>();
 	private BulletinBoardsManager bulletinBoards;
 	
-	public RestNetwork(IController controller) {
-		this.rs = new OtsoRestServer();
-		this.rs.getApplication().setController(controller);
-	}
 
-	public RestNetwork(IController controller, int port, IEntity signer, IRegistry registry, BulletinBoardsManager bbMngr) {
+	public RestNetwork(IController controller, int port, IEntity signer, IRegistryManager registry) {
+		this.registry = registry;
 		this.comm = new RestMulticastCommunication(registry);
-		this.bulletinBoards = bbMngr;
-		this.rs = new OtsoRestServer(port, controller, signer/*, bbMngr*/);
+		this.rs = new OtsoRestServer(port, controller, signer);
 		this.rs.getApplication().setController(controller);
+		this.bulletinBoards = BulletinBoardsManager.createNormal(registry, this.rs);
 	}
 	
 	public OtsoRestServer getRestServer() {
@@ -59,8 +60,10 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void startup() throws TSException {
 		try {
+			this.registry.startup();
 			this.comm.startup();
 			this.rs.startup();
+			this.bulletinBoards.startup();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TSException("Rest server could not be started. " + e.getMessage());
@@ -71,8 +74,10 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void shutdown() throws TSException {
 		try {
+			this.registry.shutdown();
 			this.comm.shutdown();
 			this.rs.shutdown();
+			this.bulletinBoards.shutdown();
 		} catch (Exception e) {
 			throw new TSException("Rest server could not be restarted. " + e.getMessage());
 		}
@@ -105,29 +110,21 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public String subscribe(String spaceURI, NotificableTemplate template,
-			INotificationListener listener) throws SpaceNotExistsException {
+			INotificationListener listener) throws SpaceNotExistsException, SubscriptionException {
 		// TODO check where to set the expiration time
 		return this.bulletinBoards.subscribe(spaceURI, template, listener);
 	}
 
 	@Override
 	public void unsubscribe(String spaceURI, String subscriptionURI)
-			throws SpaceNotExistsException {
+			throws SpaceNotExistsException, SubscriptionException {
 		this.bulletinBoards.unsubscribe(spaceURI, subscriptionURI);
 	}
 
 	@Override
-	public String advertise(String spaceURI, NotificableTemplate template)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unadvertise(String spaceURI, String advertisementURI)
-			throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-
+	public void notify(String spaceURI, NotificableTemplate template)
+			throws SpaceNotExistsException, SubscriptionException {
+		this.bulletinBoards.notify(spaceURI, template);
 	}
 
 	@Override
@@ -138,10 +135,12 @@ public class RestNetwork implements INetwork {
 	@Override
 	public void joinSpace(String spaceURI) throws TSException {
 		this.joinedSpaces.add(spaceURI);
+		this.registry.joinSpace(spaceURI);
 	}
 
 	@Override
 	public void leaveSpace(String spaceURI) throws TSException {
+		this.registry.leaveSpace(spaceURI);
 		this.joinedSpaces.remove(spaceURI);
 	}
 
@@ -159,13 +158,32 @@ public class RestNetwork implements INetwork {
 
 	@Override
 	public ICommunication getCommunication() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.comm;
 	}
 
 	@Override
 	public ICoordination getCoordination() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public ISubscriptions getSubscriptions() {
+		return this.bulletinBoards;
+	}
+	
+	@Override
+	public IRemoteBulletinBoardsManager getBulletinBoardsManager() {
+		return this.bulletinBoards;
+	}
+	
+	@Override
+	public IBulletinBoard getBulletinBoard(String spaceURI) {
+		return this.bulletinBoards.getBulletinBoard(spaceURI);
+	}
+	
+	@Override
+	public void setDefaultSubscriptionLifetime(long lifetime) {
+		this.bulletinBoards.setDefaultSubscriptionLifetime(lifetime);
 	}
 }

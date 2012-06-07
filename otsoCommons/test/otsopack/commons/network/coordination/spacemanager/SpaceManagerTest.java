@@ -10,7 +10,6 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
  */
 package otsopack.commons.network.coordination.spacemanager;
 
@@ -54,14 +53,14 @@ public class SpaceManagerTest {
 		Node [] nodes = this.spaceManager.getNodes();
 		assertEquals(0, nodes.length);
 		
-		this.spaceManager.setNodes(new Node[]{ new Node("http://foo", "bar", false, false)});
+		this.spaceManager.setNodes(new Node[]{ new Node("http://foo", "bar", false, false, false)});
 		
 		sleepTimeout();
 		nodes = this.spaceManager.getNodes();
 		assertEquals(1, nodes.length);
 		assertEquals("bar", nodes[0].getUuid());
 		
-		this.spaceManager.setNodes(new Node[]{ new Node("http://foo", "bar2", false, false)});
+		this.spaceManager.setNodes(new Node[]{ new Node("http://foo", "bar2", false, false, false)});
 		
 		sleepTimeout();
 		nodes = this.spaceManager.getNodes();
@@ -79,7 +78,7 @@ public class SpaceManagerTest {
 		Node [] nodes = this.spaceManager.getNodes();
 		assertEquals(0, nodes.length);
 
-		String secret = this.spaceManager.join(new Node("http://foo", "bar", false, true));
+		String secret = this.spaceManager.join(new Node("http://foo", "bar", false, false, true));
 		
 		// Once joined, it is active
 		sleepTimeout();
@@ -112,7 +111,7 @@ public class SpaceManagerTest {
 		Node [] nodes = this.spaceManager.getNodes();
 		assertEquals(0, nodes.length);
 
-		String secret = this.spaceManager.join(new Node("http://foo", "bar", false, true));
+		String secret = this.spaceManager.join(new Node("http://foo", "bar", false, false, true));
 		
 		sleepDeadTimeout();
 		try{
@@ -130,7 +129,7 @@ public class SpaceManagerTest {
 
 		this.spaceManager.setClientResource(this.badClientResource);
 
-		String secret = this.spaceManager.join(new Node("http://foo", "bar", true, false));
+		String secret = this.spaceManager.join(new Node("http://foo", "bar", true, false, false));
 		
 		sleepDeadTimeout();
 		try{
@@ -156,7 +155,7 @@ public class SpaceManagerTest {
 		@Override
 		public Representation get(){
 			SpaceManagerTest.this.iterations++;
-			throw new ResourceException(Status.SERVER_ERROR_INTERNAL){
+			throw new ResourceException(Status.CONNECTOR_ERROR_COMMUNICATION){
 				private static final long serialVersionUID = 1339150641633327350L;
 
 				@Override
@@ -173,7 +172,7 @@ public class SpaceManagerTest {
 		assertEquals(0, nodes.length);
 		
 		this.spaceManager.setClientResource(this.goodClientResource);
-		String secret = this.spaceManager.join(new Node("http://foo", "bar", true, false));
+		String secret = this.spaceManager.join(new Node("http://foo", "bar", true, false, false));
 		
 		// Once joined, and with the client being checked, it is available
 		sleepTimeout();

@@ -20,7 +20,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.restlet.data.MediaType;
@@ -73,6 +74,15 @@ public class HttpSpaceManager implements ISpaceManager {
 		return JSONDecoder.decode(serializedSpaceManagers, Node[].class);
 	}
 	
+	@Override
+	public Set<Node> getBulletinBoards() throws SpaceManagerException {
+		final Set<Node> bbs = new HashSet<Node>();
+		final Node[] nodes = getNodes();
+		for(Node node : nodes)
+			if(node.isBulletinBoard())
+				bbs.add(node);
+		return bbs;
+	}
 	
 
 	@Override
@@ -178,24 +188,16 @@ public class HttpSpaceManager implements ISpaceManager {
 		return "http://" + myIpAddress + ":" + port + basePath;
 	}
 	
-	public String selfJoin(int port) throws SpaceManagerException {
-		return selfJoin(port, true, false);
-	}
-
 	public String selfJoin(int port, String uuid) throws SpaceManagerException {
-		return selfJoin(port, uuid, true, false);
+		return selfJoin(port, "/", uuid, true, false, false);
 	}
 	
-	public String selfJoin(int port, boolean reachable, boolean mustPoll) throws SpaceManagerException {
-		return selfJoin(port, UUID.randomUUID().toString(), reachable, mustPoll);
+	public String selfJoin(int port, String uuid, boolean reachable, boolean mustPoll, boolean isBulletinBoard) throws SpaceManagerException {
+		return selfJoin(port, "/", uuid, reachable, mustPoll, isBulletinBoard);
 	}
 
-	public String selfJoin(int port, String uuid, boolean reachable, boolean mustPoll) throws SpaceManagerException {
-		return selfJoin(port, "/", uuid, reachable, mustPoll);
-	}
-
-	public String selfJoin(int port, String basePath, String uuid, boolean reachable, boolean mustPoll) throws SpaceManagerException {
-		final Node node = new Node(generateBaseUrl(port, basePath), uuid, reachable, mustPoll);
+	public String selfJoin(int port, String basePath, String uuid, boolean reachable, boolean mustPoll, boolean isBulletinBoard) throws SpaceManagerException {
+		final Node node = new Node(generateBaseUrl(port, basePath), uuid, reachable, isBulletinBoard, mustPoll);
 		return join(node);
 	}
 

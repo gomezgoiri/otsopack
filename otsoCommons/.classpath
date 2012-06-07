@@ -19,6 +19,5 @@
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.jar" sourcepath="/otsoRestletCommons/lib/org.restlet-src.jar"/>
 	<classpathentry kind="lib" path="lib/json-me-1.0.jar"/>
 	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.ext.json.jar"/>
-	<classpathentry kind="lib" path="/otsoRestletCommons/lib/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -20,15 +20,15 @@ import org.restlet.ext.net.HttpClientHelper;
 import otsopack.commons.authz.entities.IEntity;
 import otsopack.commons.kernel.AbstractKernel;
 import otsopack.commons.network.RestNetwork;
-import otsopack.commons.network.coordination.IRegistry;
+import otsopack.commons.network.coordination.IRegistryManager;
 
 public class HttpKernel extends AbstractKernel {
 
 	private final int port;
 	private final IEntity signer;
-	private final IRegistry registry;
+	private final IRegistryManager registry;
 	
-	public HttpKernel(int port, IEntity signer, IRegistry registry){
+	public HttpKernel(int port, IEntity signer, IRegistryManager registry){
 		this.port     = port;
 		this.signer   = signer;
 		this.registry = registry;
@@ -45,7 +45,7 @@ public class HttpKernel extends AbstractKernel {
 		super.buildKernel();
 		
 		if (this.networkService == null) {
-			this.setNetworkService(new RestNetwork(getController(), port, signer, registry, null));
+			this.setNetworkService(new RestNetwork(getController(), port, signer, registry));
 		}
 	}
 

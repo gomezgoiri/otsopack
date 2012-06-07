@@ -18,6 +18,8 @@ import otsopack.commons.IController;
 import otsopack.commons.ITripleSpace;
 import otsopack.commons.dataaccess.IDataAccess;
 import otsopack.commons.network.INetwork;
+import otsopack.commons.network.ISubscriptions;
+import otsopack.commons.network.RestNetwork;
 
 /**
  * IController implementation
@@ -25,14 +27,14 @@ import otsopack.commons.network.INetwork;
  */
 public class Controller implements IController {
 
-	private ITripleSpace tripleSpace;
+	private AbstractKernel tripleSpace;
 	
 	/**
 	 * constructor
 	 * binds controller to TSKernel Object
 	 * @param tripleSpace
 	 */
-	public Controller(ITripleSpace tripleSpace) {
+	public Controller(AbstractKernel tripleSpace) {
 		this.tripleSpace = tripleSpace;
 	}
 
@@ -47,13 +49,21 @@ public class Controller implements IController {
 	 * @see IController#getDataAccessService()
 	 */
 	public IDataAccess getDataAccessService() {
-		return ((AbstractKernel) tripleSpace).getDataAccessService();
+		return tripleSpace.getDataAccessService();
 	}
 
 	/**
 	 * @see IController#getNetworkService()
 	 */
 	public INetwork getNetworkService() {
-		return ((AbstractKernel) tripleSpace).getNetworkService();
+		return tripleSpace.getNetworkService();
+	}
+
+	/**
+	 * @see IController#getSubscriber()
+	 */
+	@Override
+	public ISubscriptions getSubscriber() {
+		return ((RestNetwork)tripleSpace.getNetworkService()).getSubscriptions();
 	}
 }

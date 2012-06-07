@@ -47,8 +47,9 @@ public class FileSpaceManager extends SpaceManager {
 				final String uuid = obj.getString("uuid");
 				final String url = obj.getString("url");
 				final boolean reachable = obj.optBoolean("reachable", true);
+				final boolean isBulletinBoard = obj.optBoolean("bulletinBoard", true);
 				final boolean mustPoll  = obj.optBoolean("mustPoll", false);
-				final Node node = new Node(url, uuid, reachable, mustPoll);
+				final Node node = new Node(url, uuid, reachable, isBulletinBoard, mustPoll);
 				nodes[i] = node;
 			}
 		} catch (Exception e) {
@@ -63,5 +64,4 @@ public class FileSpaceManager extends SpaceManager {
 	public String [] getExternalReferences() {
 		return references;
 	}
-
 }

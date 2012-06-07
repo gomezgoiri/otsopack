@@ -191,23 +191,13 @@ public interface ITripleSpace extends ILayer {
 	public void unsubscribe(String subscriptionURI) throws TSException;
 
 	/**
-	 * advertise a certain template to which can be subscribed
+	 * notify for changes for a certain template to the nodes subscribed
 	 * @throws TSException
 	 * @param spaceURI
 	 * @param template
-	 * @return advertisement uri
 	 */
-	public String advertise(String spaceURI, NotificableTemplate template) throws TSException;
-	public String advertise(NotificableTemplate template) throws TSException;
-
-	/**
-	 * unadvertise a certain advertisement
-	 * throws TSException
-	 * @param spaceURI
-	 * @param advertisement
-	 */
-	public void unadvertise(String spaceURI, String advertisementURI) throws TSException;
-	public void unadvertise(String advertisementURI) throws TSException;
+	public void notify(String spaceURI, NotificableTemplate template) throws TSException;
+	public void notify(NotificableTemplate template) throws TSException;
 
 	
 	public abstract void setDefaultConfigurationArguments(Arguments configuration);

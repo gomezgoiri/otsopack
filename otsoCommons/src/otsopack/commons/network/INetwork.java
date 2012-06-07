@@ -15,12 +15,13 @@
 package otsopack.commons.network;
 
 import otsopack.commons.ILayer;
+import otsopack.commons.network.subscriptions.bulletinboard.IRemoteBulletinBoardsManager;
 
 /**
  * network layer interface
  * @author Aitor Gómez Goiri
  */
-public interface INetwork extends ICommunication, ICoordination, ILayer {
+public interface INetwork extends ICommunication, ICoordination, ISubscriptions, ILayer {
 	
 	/**
 	 * get communication object
@@ -33,4 +34,16 @@ public interface INetwork extends ICommunication, ICoordination, ILayer {
 	 * @return coordination
 	 */
 	public ICoordination getCoordination();
+
+	/**
+	 * @return
+	 * 		The object which is in charge of the creation of remote bulletin boards
+	 */
+	public IRemoteBulletinBoardsManager getBulletinBoardsManager();
+
+	/**
+	 * @return
+	 * 		The object which manages the subscription primitives.
+	 */
+	ISubscriptions getSubscriptions();
 }

@@ -16,11 +16,19 @@ package otsopack.commons.network.coordination;
 
 import java.util.Set;
 
-import otsopack.commons.network.coordination.registry.RegistryException;
-
 public interface IRegistry {
-	public void startup() throws RegistryException;
-	public Set<ISpaceManager> getSpaceManagers();
-	public Set<Node> getNodesBaseURLs();
-	void shutdown() throws RegistryException;
+	public String getLocalUuid();
+	public Set<ISpaceManager> getSpaceManagers(String spaceURI);
+	/**
+	 * @param spaceURI
+	 * @return
+	 * 		Nodes which belong to the spaceURI (local node excluded).
+	 */
+	public Set<Node> getNodesBaseURLs(String spaceURI);
+	/**
+	 * @param spaceURI
+	 * @return
+	 * 		Bulletin boards which belong to the spaceURI (local node excluded).
+	 */
+	public Set<Node> getBulletinBoards(String spaceURI);
 }

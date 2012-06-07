@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.restlet.data.Status;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
@@ -41,6 +42,10 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	 * This map is used for generating keys. Whenever a node joins, it is the first map in registering it and the last one when leaving. 
 	 */
 	private final ConcurrentHashMap<String, Node> secret2node = new ConcurrentHashMap<String, Node>();
+	/**
+	 * This map is used to check if the node has already joined. 
+	 */
+	private final ConcurrentHashMap<Node, String> node2secret = new ConcurrentHashMap<Node, String>();
 	
 	/**
 	 * A map referencing all the nodes that will poll by themselves. If they fail to do this, they will be considered broken 
@@ -90,16 +95,24 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 	
 	@Override
 	public String join(Node node){
-		String secret;
-		do{
-			secret = generateSecret();
-		}while(this.secret2node.putIfAbsent(secret, node) != null);
-
+		String secret = node2secret.get(node);
+		if(secret==null) {
+			do{
+				secret = generateSecret();
+			} while(this.secret2node.putIfAbsent(secret, node) != null);
+			
+			this.node2secret.putIfAbsent(node, secret);
+		}
+		
 		if(node.isReachable())
-			this.checkingNodes.put(secret, new NodeCheckingStatus(node));
+			this.checkingNodes.putIfAbsent(secret, new NodeCheckingStatus(node));
+		else
+			this.checkingNodes.remove(secret);
 		
 		if(node.isMustPoll())
 			this.pollingNodes.put(secret, new NodePollingStatus(node, secret));
+		else
+			this.pollingNodes.remove(secret);
 		
 		return secret;
 	}
@@ -118,7 +131,8 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 		this.checkingNodes.remove(secret);
 		this.pollingNodes.remove(secret);
 		this.currentNodes.remove(secret);
-		this.secret2node.remove(secret);
+		final Node node = this.secret2node.remove(secret);
+		if(node!=null) this.node2secret.remove(node);
 	}
 	
 	@Override
@@ -220,7 +234,7 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			return;
 		}
 		
-		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI() + "spaces");
+		final ClientResource client = createClientResource(nodeToCheck.getNode().getBaseURI()); // + "spaces");
         client.setRetryAttempts(0);
 		try{
 			if(DEBUG)
@@ -229,30 +243,33 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			
 			client.get();
 			
-			if(DEBUG){
-				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-				}else if(!this.currentNodes.containsKey(secret)){
-					System.out.println("[recovered] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-				}
-			}
-			this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
-			nodeToCheck.updateTimestamp();
+			successNode(secret, nodeToCheck);
 		}catch(ResourceException re){
-			if(DEBUG){
-				if(DEBUG_VERBOSE){
-					System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-					re.printStackTrace();
-				}else if(this.currentNodes.containsKey(secret)){
-					System.out.println("[fail] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
-					re.printStackTrace();
+			if(re.getStatus().equals(Status.CONNECTOR_ERROR_COMMUNICATION)) {
+				if(DEBUG){
+					if(DEBUG_VERBOSE) {
+						System.out.println("[fail] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+						re.printStackTrace();
+					}
 				}
-			}
-			this.currentNodes.remove(secret);
+				this.currentNodes.remove(secret);
+			} else successNode(secret, nodeToCheck); // e.g. 404 error does not mean that the node is not up!			
 		}finally{
 			client.release();
 			nodeToCheck.updateCheckTime();
 		}
+	}
+	
+	private void successNode(String secret, NodeCheckingStatus nodeToCheck) {
+		if(DEBUG){
+			if(DEBUG_VERBOSE){
+				System.out.println("[success] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+			}else if(!this.currentNodes.containsKey(secret)){
+				System.out.println("[recovered] " + now() + nodeToCheck.getNode().getUuid() + ": " + nodeToCheck.getNode().getBaseURI());
+			}
+		}
+		this.currentNodes.putIfAbsent(secret, nodeToCheck.getNode());
+		nodeToCheck.updateTimestamp();
 	}
 
 	/**
@@ -311,6 +328,16 @@ public abstract class SpaceManager extends Thread implements ISpaceManager {
 			else
 				this.currentNodes.putIfAbsent(nodeStatus.getSecret(), nodeStatus.getNode());
 		}
+	}
+	
+	@Override
+	public Set<Node> getBulletinBoards() throws SpaceManagerException {
+		final Set<Node> bbs = new HashSet<Node>();
+		final Node[] nodes = getRegisteredNodes();
+		for(Node node : nodes)
+			if(node.isBulletinBoard())
+				bbs.add(node);
+		return bbs;
 	}
 	
 	@Override

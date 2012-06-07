@@ -14,6 +14,8 @@
  */
 package otsopack.commons.network.coordination;
 
+import java.util.Set;
+
 import otsopack.commons.network.coordination.spacemanager.SpaceManagerException;
 
 public interface ISpaceManager {
@@ -24,6 +26,7 @@ public interface ISpaceManager {
 	 */
 	public String [] getExternalReferences();
 	public Node [] getNodes() throws SpaceManagerException;
+	public Set<Node> getBulletinBoards() throws SpaceManagerException;
 	
 	public String join(Node node) throws SpaceManagerException;
 	public void poll(String secret) throws SpaceManagerException;

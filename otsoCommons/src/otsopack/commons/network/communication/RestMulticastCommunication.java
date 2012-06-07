@@ -31,7 +31,6 @@ import org.restlet.resource.ResourceException;
 import otsopack.authn.client.credentials.LocalCredentialsManager;
 import otsopack.commons.Arguments;
 import otsopack.commons.data.Graph;
-import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.data.Template;
 import otsopack.commons.exceptions.AuthorizationException;
 import otsopack.commons.exceptions.SpaceNotExistsException;
@@ -39,10 +38,8 @@ import otsopack.commons.exceptions.TSException;
 import otsopack.commons.exceptions.UnsupportedSemanticFormatException;
 import otsopack.commons.exceptions.UnsupportedTemplateException;
 import otsopack.commons.network.ICommunication;
-import otsopack.commons.network.communication.event.listener.INotificationListener;
 import otsopack.commons.network.coordination.IRegistry;
 import otsopack.commons.network.coordination.Node;
-import otsopack.commons.network.coordination.registry.RegistryException;
 
 public class RestMulticastCommunication implements ICommunication {
 
@@ -65,12 +62,6 @@ public class RestMulticastCommunication implements ICommunication {
 	@Override
 	public void startup() throws TSException {
 		this.started = true;
-		try{
-			this.registry.startup();
-		}catch(RegistryException re){
-			re.printStackTrace();
-			throw new RestCommunicationException("Could not start " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
-		}
 		// this.executor = Executors.newFixedThreadPool(MULTICAST_THREADS);
 		this.executor = Executors.newCachedThreadPool();
 	}
@@ -79,13 +70,6 @@ public class RestMulticastCommunication implements ICommunication {
 	public void shutdown() throws TSException {
 		this.started = false;
 		this.executor.shutdown();
-		
-		try{
-			this.registry.shutdown();
-		}catch(RegistryException re){
-			re.printStackTrace();
-			throw new RestCommunicationException("Could not shutdown " + RestMulticastCommunication.class.getName() + ": " + re.getMessage());
-		}
 	}
 	
 	@Override
@@ -94,7 +78,7 @@ public class RestMulticastCommunication implements ICommunication {
 		checkStarted();
 		
 		// Return the first result found
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 		
 		for(final Node nodeBaseURL : nodeBaseURLs){
@@ -132,7 +116,7 @@ public class RestMulticastCommunication implements ICommunication {
 		checkStarted();
 		
 		// Return the first result found
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		final List<Future<Graph>> submittedGraphs = new Vector<Future<Graph>>();
 
 		for(final Node nodeBaseURL : nodeBaseURLs){
@@ -209,7 +193,7 @@ public class RestMulticastCommunication implements ICommunication {
 		
 		final List<Future<?>> submittedTasks = new Vector<Future<?>>();
 		
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(takeArgs.spaceURI);
 		
 		// This is a holder of the returning graph. If there is an element, this method should finish
 		final List<Graph> graphs = new Vector<Graph>(1);
@@ -298,7 +282,7 @@ public class RestMulticastCommunication implements ICommunication {
 			throws SpaceNotExistsException, UnsupportedTemplateException, UnsupportedSemanticFormatException {
 		checkStarted();
 		
-		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs();
+		final Set<Node> nodeBaseURLs = this.registry.getNodesBaseURLs(spaceURI);
 		
 		final List<Future<Graph []>> submittedTasks = new Vector<Future<Graph[]>>();
 		
@@ -401,31 +385,6 @@ public class RestMulticastCommunication implements ICommunication {
 			remainingGraph.cancel(true);
 
 		return finalGraph;
-	}
-
-
-	@Override
-	public String subscribe(String spaceURI, NotificableTemplate template, INotificationListener listener) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unsubscribe(String spaceURI, String subscriptionURI) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String advertise(String spaceURI, NotificableTemplate template) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unadvertise(String spaceURI, String advertisementURI) throws SpaceNotExistsException {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	private static abstract class TakeArguments{

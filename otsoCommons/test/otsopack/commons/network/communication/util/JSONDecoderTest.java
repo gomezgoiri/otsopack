@@ -14,16 +14,22 @@
  */
 package otsopack.commons.network.communication.util;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import otsopack.commons.network.communication.util.JSONDecoder;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
+import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 
 public class JSONDecoderTest {
 	
 	@Test
 	public void testArray() throws Exception {
-		final String [] result = JSONDecoder.decode("[\"a\",\"b\",\"c\"]", String[].class);
-		assertArrayEquals(new String[]{"a","b","c"}, result);
+		final TemplateJSON tpl = new TemplateJSON("http://subject", "http://predicate", "http://object");
+		final SubscribeJSON subs = SubscribeJSON.createSubscription("http://space/subscriptions/24534", tpl, "http://callbackuri", 1200L);
+		
+		//final String resultTpl = JSONEncoder.encode(tpl);
+		//assertEquals("{\"object\":\"http://object\",\"predicate\":\"http://predicate\",\"subject\":\"http://subject\"}", resultTpl);
+		
+		final String resultSubs = JSONEncoder.encode(subs);
+		System.out.println(resultSubs);
 	}
 }
