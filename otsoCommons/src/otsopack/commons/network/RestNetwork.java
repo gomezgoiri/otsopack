@@ -34,6 +34,7 @@ import otsopack.commons.network.communication.event.listener.INotificationListen
 import otsopack.commons.network.coordination.IRegistryManager;
 import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardsManager;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoard;
+import otsopack.commons.network.subscriptions.bulletinboard.IRemoteBulletinBoardsManager;
 
 public class RestNetwork implements INetwork {
 	
@@ -49,7 +50,7 @@ public class RestNetwork implements INetwork {
 		this.comm = new RestMulticastCommunication(registry);
 		this.rs = new OtsoRestServer(port, controller, signer);
 		this.rs.getApplication().setController(controller);
-		this.bulletinBoards = new BulletinBoardsManager(registry, this.rs);
+		this.bulletinBoards = BulletinBoardsManager.createNormal(registry, this.rs);
 	}
 	
 	public OtsoRestServer getRestServer() {
@@ -168,6 +169,11 @@ public class RestNetwork implements INetwork {
 	
 	@Override
 	public ISubscriptions getSubscriptions() {
+		return this.bulletinBoards;
+	}
+	
+	@Override
+	public IRemoteBulletinBoardsManager getBulletinBoardsManager() {
 		return this.bulletinBoards;
 	}
 	

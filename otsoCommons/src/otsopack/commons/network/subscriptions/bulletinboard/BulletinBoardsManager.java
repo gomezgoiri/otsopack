@@ -9,8 +9,7 @@
  * This software consists of contributions made by many individuals, 
  * listed below:
  *
- * Author: FILLME
- *
+ * Author: Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.network.subscriptions.bulletinboard;
 
@@ -35,7 +34,7 @@ import otsopack.commons.util.Util;
  * In few words, it manages different kind of bulletin
  * boards for each space.
  */
-public class BulletinBoardsManager implements ISubscriptions {
+public class BulletinBoardsManager implements ISubscriptions, IRemoteBulletinBoardsManager {
 	final AtomicLong subscriptionLifetime = new AtomicLong(ExpirableSubscriptionsStore.DEFAULT_LIFETIME);
 	
 	final ConcurrentHashMap<String,IBulletinBoard> boards = new ConcurrentHashMap<String,IBulletinBoard>();
@@ -47,11 +46,20 @@ public class BulletinBoardsManager implements ISubscriptions {
 	final SubscriptionUpdater updater = new SubscriptionUpdater();
 	
 	
-	public BulletinBoardsManager(IRegistry registry, IHTTPInformation infoHolder) {
+	protected BulletinBoardsManager(IRegistry registry, IHTTPInformation infoHolder) {
 		this.registry = registry;
 		this.infoHolder = infoHolder;
 	}
 	
+	public static BulletinBoardsManager createNormal(IRegistry registry, IHTTPInformation infoHolder) {
+		return new BulletinBoardsManager(registry, infoHolder);
+	}
+	
+	public static IRemoteBulletinBoardsManager createPlain(IRegistry registry) {
+		return new BulletinBoardsManager(registry, null);
+	}
+	
+	@Override
 	public void createRemoteBulletinBoard(String spaceURI, int port) throws SubscriptionException {
 		if (spaceURI != null) // TODO refactor to call this method from outside
 			spaceURI = Util.normalizeSpaceURI(spaceURI, "");
