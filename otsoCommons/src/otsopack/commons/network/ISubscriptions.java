@@ -60,8 +60,8 @@ public interface ISubscriptions extends ILayer {
 	
 	/**
 	 * @param lifetime
-	 * 		Default lifetime for a subscription. After this period expires, it will update the subscription
-	 * 	locally or remotely. 		
+	 * 		Default lifetime for a subscription. When this period expires, the ISubscriptions
+	 * object updates the subscription locally or remotely. 		
 	 */
 	public void setDefaultSubscriptionLifetime(long lifetime);
 }
