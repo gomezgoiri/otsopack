@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project name="otsopack" default="dist">
     <target name="clean">
         <ant antfile="build.xml" dir="otsoSE"                  target="clean" />
@@ -15,11 +16,11 @@
     </target>
 
     <target name="test">
-        <ant antfile="build.xml" dir="otsoCommons"             target="test" />
-        <ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
-        <ant antfile="build.xml" dir="otsoME"                  target="test" />
-	    <ant antfile="build.xml" dir="otsoDroid/otsoDroid"     target="release" />
-	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="release" />
+	<ant antfile="build.xml" dir="otsoCommons"             target="test" />
+	<ant antfile="build.xml" dir="otsoRestletCommons"      target="dist" />
+	<ant antfile="build.xml" dir="otsoME"                  target="test" />
+	<ant antfile="build.xml" dir="otsoDroid/otsoDroid"     target="release" />
+	<ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="release" />
         <!-- Future
 	    <ant antfile="build.xml" dir="otsoDroid/otsoDroidTest" target="run-tests" />
         -->

@@ -57,6 +57,7 @@
 
 	<target name="javac" depends="clean">
 		<mkdir dir="bin" />
+		<mkdir dir="libs" />
 		<copy todir="libs">
 			<fileset dir="${otso.restlet.commons.libs}" />
 			<fileset dir="${otso.authn.libs}" />
@@ -66,16 +67,6 @@
 		</javac>
 	</target>
 
-	<pathconvert property="mf.classpath" pathsep=" ">
-		<path refid="project.class.path" />
-		<mapper>
-			<chainedmapper>
-				<flattenmapper />
-				<globmapper from="*.jar" to="lib/*.jar" />
-			</chainedmapper>
-		</mapper>
-	</pathconvert>
-
 	<target name="dist" depends="javac">
 		<copy todir="bin">
 			<fileset dir="src" />
@@ -84,6 +75,17 @@
 			<classpath refid="project.class.path" />
 		</javac>
 		<mkdir dir="dist" />
+		
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<path refid="project.class.path" />
+			<mapper>
+				<chainedmapper>
+					<flattenmapper />
+					<globmapper from="*.jar" to="lib/*.jar" />
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+		
 		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin" />
 		<jar destfile="dist/otsoCommons-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="bin" includes="*.class" />
@@ -99,7 +101,7 @@
 		</jar>
 	</target>
 	
-	<target name="test" depends="dist">
+	<target name="test" depends="dist" description="Generates the jars">
 		<mkdir dir="${testreportdir}" />
 		<javac srcdir="test" destdir="${testreportdir}">
 			<classpath refid="project.class.path.test" />
@@ -120,10 +122,9 @@
 		<fail if="test.failure" message="Tests failed..." />
 	</target>
 
-	<!-- Cannot delete "libs" folder until pathconvert exists -->
 	<target name="clean">
 		<delete dir="bin/otsopack" failonerror="false" />
-		<delete dir="libs/*" failonerror="false" />
 		<delete dir="dist" failonerror="false" />
+		<delete dir="libs" failonerror="false" />
 	</target>
 </project>
