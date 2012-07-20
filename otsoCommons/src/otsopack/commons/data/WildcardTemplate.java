@@ -17,12 +17,13 @@ package otsopack.commons.data;
 import it.polimi.elet.contextaddict.microjena.rdf.model.Literal;
 import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
 
-import org.json.me.JSONException;
-import org.json.me.JSONObject;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+
+import org.codehaus.jackson.JsonGenerationException;
 
 import otsopack.commons.data.impl.SemanticFactory;
 import otsopack.commons.exceptions.MalformedTemplateException;
-
 
 public class WildcardTemplate extends NotificableTemplate implements SerializableTemplate {
 	
@@ -75,55 +76,50 @@ public class WildcardTemplate extends NotificableTemplate implements Serializabl
 	
 	public String serialize() throws TemplateSerializingException {
 		try{
-			final JSONObject jsonWildcard = new JSONObject();
+			final LinkedHashMap<String,Object> jsonWildcard = new LinkedHashMap<String,Object>();
 			jsonWildcard.put("type", code);
 			jsonWildcard.put("subject",     this.subject);
 			jsonWildcard.put("predicate",   this.predicate);
-			final JSONObject jsonObject;
+			final LinkedHashMap<String,Object> jsonObject;
 			if(this.object == null){
 				jsonObject = null;
 			}else if(this.object instanceof TripleURIObject){
-				jsonObject = new JSONObject();
+				jsonObject =  new LinkedHashMap<String,Object>();
 				jsonObject.put("type", "uri");
 				jsonObject.put("uri", ((TripleURIObject)this.object).getURI());
 			}else{
-				jsonObject = new JSONObject();
+				jsonObject = new LinkedHashMap<String,Object>();
 				jsonObject.put("type", "obj");
 				jsonObject.put("value", ((TripleLiteralObject)this.object).getValue());
 			}
 			jsonWildcard.put("object",      jsonObject);
-			return jsonWildcard.toString();
-		}catch(JSONException e){
-			e.printStackTrace();
+			return SerializableTemplateFactory.mapper.writeValueAsString(jsonWildcard);
+		} catch(JsonGenerationException e) {
+			throw new TemplateSerializingException("Could not serialize object: " + e.getMessage());
+		} catch(IOException e) {
 			throw new TemplateSerializingException("Could not serialize object: " + e.getMessage());
 		}
 	}
 
-	static WildcardTemplate create(JSONObject jsonWildcard) throws TemplateDeserializingException {
-		try{
+	static WildcardTemplate create(LinkedHashMap<String,Object> jsonWildcard) throws TemplateDeserializingException {
+		try {
 			if(!jsonWildcard.get("type").equals(code))
 				throw new TemplateDeserializingException("Expected type: " + code + "; found: " + jsonWildcard.get("type"));
 			
 			final String subject          = (String)jsonWildcard.get("subject");
 			final String predicate        = (String)jsonWildcard.get("predicate");
-			final JSONObject jsonObject   = (JSONObject)jsonWildcard.opt("object");
+			final LinkedHashMap<String,Object> jsonObject   = (LinkedHashMap<String,Object>)jsonWildcard.get("object");
 			
-			if(jsonObject == null){
-				
+			if(jsonObject == null) {
 				return createWithNull(subject, predicate);
-				
-			}else if(jsonObject.get("type").equals("uri")){
-				
+			} else if(jsonObject.get("type").equals("uri")){
 				final String uri = (String)jsonObject.get("uri");
 				return createWithURI(subject, predicate, uri);
-				
-			}else{
-				
+			} else {
 				final Object value = jsonObject.get("value");
 				return createWithLiteral(subject, predicate, value);
-				
 			}
-		}catch(JSONException e){
+		} catch(ClassCastException e) {
 			throw new TemplateDeserializingException("Could not deserialize wildcard template: " + e.getMessage());
 		}
 	}

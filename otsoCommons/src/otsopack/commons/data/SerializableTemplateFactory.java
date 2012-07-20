@@ -14,24 +14,32 @@
  */
 package otsopack.commons.data;
 
-import org.json.me.JSONException;
-import org.json.me.JSONObject;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Deserializes those templates that can be deserialized
  */
 public class SerializableTemplateFactory {
+	protected static final ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+	
 	public static SerializableTemplate create(String serializedTemplate) throws TemplateDeserializingException {
-		try{
-			final JSONObject obj = new JSONObject(serializedTemplate);
+		LinkedHashMap<String, Object> obj;
+		try {
+			obj = mapper.readValue(serializedTemplate, LinkedHashMap.class);
 			if(obj.get("type").equals(WildcardTemplate.code))
 				return WildcardTemplate.create(obj);
-			
 			throw new TemplateDeserializingException("Could not find proper deserializer for code: " + obj.get("type"));
-		}catch(JSONException e){
-			e.printStackTrace();
+		} catch (JsonParseException e) {
+			throw new TemplateDeserializingException("Could not deserialize template: " + e.getMessage());
+		} catch (JsonMappingException e) {
+			throw new TemplateDeserializingException("Could not deserialize template: " + e.getMessage());
+		} catch (IOException e) {
 			throw new TemplateDeserializingException("Could not deserialize template: " + e.getMessage());
 		}
-		
 	}
 }
