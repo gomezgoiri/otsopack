@@ -1,6 +1,6 @@
-10 otsoAuthentication/lib
-30 otsoCommons/lib
+40 otsoAuthentication/lib
+40 otsoCommons/lib
 34 otsoDroid/otsoDroid/lib
-10 otsoIdentityProvider/lib
-36 otsoRestletCommons/lib
-24 otsoSE/lib
+40 otsoIdentityProvider/lib
+40 otsoRestletCommons/lib
+40 otsoSE/lib
