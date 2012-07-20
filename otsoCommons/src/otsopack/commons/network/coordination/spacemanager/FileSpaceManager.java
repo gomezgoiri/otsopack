@@ -17,7 +17,7 @@ package otsopack.commons.network.coordination.spacemanager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -49,7 +49,7 @@ public class FileSpaceManager extends SpaceManager {
 			final FileInputStream fis = new FileInputStream(this.file);
 			final String fileContent = IOUtils.toString(fis);
 			ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-			LinkedList<Object> arr = mapper.readValue(fileContent, LinkedList.class);
+			List<Object> arr = mapper.readValue(fileContent, List.class);
 			
 			nodes = new Node[arr.size()];
 			int i=0;

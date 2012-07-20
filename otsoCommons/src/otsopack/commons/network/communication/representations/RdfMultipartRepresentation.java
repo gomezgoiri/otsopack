@@ -17,6 +17,7 @@ package otsopack.commons.network.communication.representations;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -79,7 +80,7 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 	@Override
 	public Graph [] getGraphs() throws RepresentationException{
 		try {
-			final ArrayList<Object> arr = RdfMultipartRepresentation.mapper.readValue(getData(), ArrayList.class);
+			final List<Object> arr = RdfMultipartRepresentation.mapper.readValue(getData(), List.class);
 			
 			final Graph [] graphs = new Graph[arr.size()];
 			int i=0;

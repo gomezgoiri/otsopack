@@ -17,7 +17,7 @@ package otsopack.commons.network.communication.representations;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class RdfMultipartRepresentationTest {
 
 		// Valid JSON code
 		final ObjectMapper mapper = new ObjectMapper();
-		final ArrayList<Object> arr = mapper.readValue(data, ArrayList.class);
+		final List<Object> arr = mapper.readValue(data, List.class);
 		assertEquals(2, arr.size());
 		
 		final RdfMultipartRepresentation newRepresentation = new RdfMultipartRepresentation(data);

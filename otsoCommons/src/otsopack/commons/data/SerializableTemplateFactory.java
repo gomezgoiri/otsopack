@@ -16,10 +16,12 @@ package otsopack.commons.data;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 /**
  * Deserializes those templates that can be deserialized
@@ -28,9 +30,8 @@ public class SerializableTemplateFactory {
 	protected static final ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 	
 	public static SerializableTemplate create(String serializedTemplate) throws TemplateDeserializingException {
-		LinkedHashMap<String, Object> obj;
 		try {
-			obj = mapper.readValue(serializedTemplate, LinkedHashMap.class);
+			final Map<String, Object> obj = mapper.readValue(serializedTemplate, new TypeReference<Map<String,Object>>() {} );
 			if(obj.get("type").equals(WildcardTemplate.code))
 				return WildcardTemplate.create(obj);
 			throw new TemplateDeserializingException("Could not find proper deserializer for code: " + obj.get("type"));

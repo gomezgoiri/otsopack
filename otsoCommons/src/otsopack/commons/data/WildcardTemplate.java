@@ -19,6 +19,7 @@ import it.polimi.elet.contextaddict.microjena.rdf.model.ResourceFactory;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerationException;
 
@@ -101,7 +102,7 @@ public class WildcardTemplate extends NotificableTemplate implements Serializabl
 		}
 	}
 
-	static WildcardTemplate create(LinkedHashMap<String,Object> jsonWildcard) throws TemplateDeserializingException {
+	static WildcardTemplate create(Map<String,Object> jsonWildcard) throws TemplateDeserializingException {
 		try {
 			if(!jsonWildcard.get("type").equals(code))
 				throw new TemplateDeserializingException("Expected type: " + code + "; found: " + jsonWildcard.get("type"));
