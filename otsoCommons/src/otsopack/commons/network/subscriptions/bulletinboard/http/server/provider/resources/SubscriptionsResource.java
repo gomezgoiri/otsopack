@@ -14,17 +14,17 @@
 package otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.data.Status;
-import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
@@ -50,7 +50,12 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 	@Override
 	public Representation viewSubscriptions(Representation rep) {
 		final IBulletinBoardOuterFacade bulletinBoard = ((OtsopackHttpBulletinBoardProviderApplication)getApplication()).getController().getBulletinBoard();
-		return new JsonRepresentation(JSONEncoder.encode(bulletinBoard.getJsonSubscriptions()));
+		// FIXME too many conversions from array to ArrayList
+		final ArrayList<SubscribeJSON> al = new ArrayList<SubscribeJSON>();
+		for(SubscribeJSON sj: bulletinBoard.getJsonSubscriptions()) {
+			al.add(sj);
+		}
+		return new JacksonRepresentation<ArrayList<SubscribeJSON>>(al);
 	}
 
 	@Override
@@ -62,7 +67,7 @@ public class SubscriptionsResource extends ServerResource implements ISubscripti
 			
 			bulletinBoard.subscribe( JSONSerializableConversors.convertFromSerializable(subjson), subjson.getNodesWhichAlreadyKnowTheSubscription() );
 			
-			return new JsonRepresentation(JSONEncoder.encode(subjson.getId()));
+			return new JacksonRepresentation<String>(subjson.getId());
 		} catch (IOException e) {
 			throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
 		}

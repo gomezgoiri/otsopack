@@ -10,15 +10,18 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
+ * 		   Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.network.communication.representations;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 
@@ -29,6 +32,8 @@ import otsopack.commons.data.SignedGraph;
 import otsopack.commons.network.communication.OtsopackApplication;
 
 public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
+	
+	private static final ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 
 	private static final String PAYLOAD       = "payload";
 	private static final String CONTENT_TYPE  = "Content-type";
@@ -42,10 +47,10 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 	}
 	
 	private static String convertData(Graph [] graphs) throws RepresentationException {
-		final JSONArray arr = new JSONArray();
-		try{
+		final ArrayList<Object> arr = new ArrayList<Object>();
+		try {
 			for(Graph graph : graphs){
-				final JSONObject object = new JSONObject();
+				final LinkedHashMap<String,Object> object = new LinkedHashMap<String,Object>();
 				final String contentType = SemanticFormatRepresentationRegistry.getMediaType(graph.getFormat()).getName();
 				object.put(CONTENT_TYPE, contentType);
 				object.put(PAYLOAD, graph.getData());
@@ -54,48 +59,60 @@ public class RdfMultipartRepresentation extends SemanticFormatRepresentation {
 					object.put(OtsopackApplication.OTSOPACK_USER, user.getId());
 				} //TODO: else?
 				
-				arr.put(object);
+				arr.add(object);
 			}
-		}catch(JSONException e){
+			return RdfMultipartRepresentation.mapper.writeValueAsString(arr);
+		} catch (JsonGenerationException e) {
+			throw new MalformedRepresentationException("Could not generate JSON data: " + e.getMessage(), e);
+		} catch (JsonMappingException e) {
+			throw new MalformedRepresentationException("Could not generate JSON data: " + e.getMessage(), e);
+		} catch (IOException e) {
 			throw new MalformedRepresentationException("Could not generate JSON data: " + e.getMessage(), e);
 		}
-		
-		return arr.toString();
 	}
 
 	public RdfMultipartRepresentation(Representation representation) throws IOException {
 		super(OtsopackConverter.ACROSS_MULTIPART_MEDIA_TYPE, representation);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Graph [] getGraphs() throws RepresentationException{
 		try {
-			final JSONArray arr = new JSONArray(getData());
+			final ArrayList<Object> arr = RdfMultipartRepresentation.mapper.readValue(getData(), ArrayList.class);
 			
-			final Graph [] graphs = new Graph[arr.length()];
-			for(int i = 0; i < arr.length(); ++i){
-				final JSONObject obj = arr.getJSONObject(i);
+			final Graph [] graphs = new Graph[arr.size()];
+			int i=0;
+			for(Object object: arr){
+				final LinkedHashMap<String,String> obj = (LinkedHashMap<String,String>) object;
 				graphs[i] = parseGraph(obj);
+				i++;
 			}
 			
 			return graphs;
-		} catch (JSONException e) {
+		} catch (ClassCastException e) {
 			throw new MalformedRepresentationException("Could not parse JSON data: " + getData(), e);
+		} catch (JsonMappingException e) {
+			throw new MalformedRepresentationException("Could not parse JSON data: " + e.getMessage(), e);
+		} catch (JsonParseException e) {
+			throw new MalformedRepresentationException("Could not parse JSON data: " + e.getMessage(), e);
+		} catch (IOException e) {
+			throw new MalformedRepresentationException("Could not parse JSON data: " + e.getMessage(), e);
 		}
 	}
 	
-	private Graph parseGraph(JSONObject obj) throws JSONException {
-		final String contentType    = obj.getString(CONTENT_TYPE);
-		final String data           = obj.getString(PAYLOAD);
+	private Graph parseGraph(LinkedHashMap<String,String> obj) throws JsonMappingException {
+		final String contentType    = obj.get(CONTENT_TYPE);
+		final String data           = obj.get(PAYLOAD);
 		
 		// Optional fields, required for SignedGraphs
-		final String userId         = obj.optString(OtsopackApplication.OTSOPACK_USER, null);
+		final String userId         = obj.get(OtsopackApplication.OTSOPACK_USER); // if not defined: null
 		// TODO: implement a signature for user ID and check it. 
 		// When fixed say it here: http://code.google.com/p/otsopack/issues/detail?id=4
 		
 		final MediaType mediaType = MediaType.valueOf(contentType);
 		if(mediaType == null)
-			throw new JSONException("Unregistered invalid content type in Restlet's MediaType registry: " + contentType);
+			throw new JsonMappingException("Unregistered invalid content type in Restlet's MediaType registry: " + contentType);
 		
 		final SemanticFormat format = SemanticFormatRepresentationRegistry.getSemanticFormat(mediaType); 
 		if(userId == null) // Not signed

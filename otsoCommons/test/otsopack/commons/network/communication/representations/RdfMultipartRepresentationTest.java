@@ -14,17 +14,18 @@
  */
 package otsopack.commons.network.communication.representations;
 
-import org.json.JSONArray;
-import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Test;
 
 import otsopack.commons.authz.entities.User;
 import otsopack.commons.data.Graph;
 import otsopack.commons.data.SemanticFormat;
 import otsopack.commons.data.SignedGraph;
-import otsopack.commons.network.communication.representations.MalformedRepresentationException;
-import otsopack.commons.network.communication.representations.RdfMultipartRepresentation;
 
 public class RdfMultipartRepresentationTest {
 
@@ -42,8 +43,9 @@ public class RdfMultipartRepresentationTest {
 		final String data = repr.getData();
 
 		// Valid JSON code
-		final JSONArray arr = new JSONArray(data);
-		assertEquals(2, arr.length());
+		final ObjectMapper mapper = new ObjectMapper();
+		final ArrayList<Object> arr = mapper.readValue(data, ArrayList.class);
+		assertEquals(2, arr.size());
 		
 		final RdfMultipartRepresentation newRepresentation = new RdfMultipartRepresentation(data);
 		final Graph [] graphs = newRepresentation.getGraphs();

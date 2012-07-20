@@ -22,12 +22,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.restlet.data.MediaType;
-import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.network.communication.event.listener.EventNotification;
-import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 
@@ -52,8 +51,9 @@ public class RemoteNotificator {
 			public Boolean call() throws Exception {
 				ClientResource client = new ClientResource(callbackURL);
 				try{
+					
 					final TemplateJSON notifJson = JSONSerializableConversors.convertToSerializable(notification.getTemplate());
-					final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(notifJson));
+					final JacksonRepresentation<TemplateJSON> json = new JacksonRepresentation<TemplateJSON>(notifJson);
 					/*final Representation repr = */client.post(json, MediaType.APPLICATION_JSON);
 					//return repr.getText();
 					return true;

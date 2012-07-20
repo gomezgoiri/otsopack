@@ -10,7 +10,7 @@
  * listed below:
  *
  * Author: Pablo Orduña <pablo.orduna@deusto.es>
- *
+ * 		   Aitor Gómez Goiri <aitor.gomez@deusto.es>
  */
 package otsopack.commons.data;
 

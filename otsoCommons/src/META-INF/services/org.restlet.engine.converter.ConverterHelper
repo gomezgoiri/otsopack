@@ -1,2 +1,2 @@
 otsopack.commons.network.communication.representations.OtsopackConverter
-org.restlet.ext.json.JsonConverter
+org.restlet.ext.jackson.JacksonRepresentation

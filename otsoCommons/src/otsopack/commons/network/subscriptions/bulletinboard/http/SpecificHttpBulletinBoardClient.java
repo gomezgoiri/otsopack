@@ -17,14 +17,13 @@ import java.io.IOException;
 
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
-import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 import otsopack.commons.data.NotificableTemplate;
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.communication.util.JSONEncoder;
 import otsopack.commons.network.subscriptions.bulletinboard.data.Subscription;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.SubscribeJSON;
@@ -51,7 +50,7 @@ public class SpecificHttpBulletinBoardClient {
 		ClientResource client = new ClientResource(getRemoteBulletinBoardURI() + NotificationResource.ROOT);
 		try{
 			final TemplateJSON advJson = JSONSerializableConversors.convertToSerializable(adv);
-			final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(advJson));
+			final JacksonRepresentation<TemplateJSON> json = new JacksonRepresentation<TemplateJSON>(advJson);
 			/*final Representation repr = */client.post(json, MediaType.APPLICATION_JSON);
 			//return repr.getText();
 		} finally {
@@ -64,8 +63,7 @@ public class SpecificHttpBulletinBoardClient {
 		final ClientResource client = new ClientResource(getRemoteBulletinBoardURI() + SubscriptionsResource.ROOT);
 		try{
 			try {
-				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(subJson));
-				// final JsonRepresentation json = new JsonRepresentation(subJson);
+				final JacksonRepresentation<SubscribeJSON> json = new JacksonRepresentation<SubscribeJSON>(subJson);
 				final Representation repr = client.post(json, MediaType.APPLICATION_JSON);
 				return repr.getText();
 			} catch (IOException e) {
@@ -83,8 +81,7 @@ public class SpecificHttpBulletinBoardClient {
 		final ClientResource client = new ClientResource(url);
 		try{
 			try {
-				final JsonRepresentation json = new JsonRepresentation(JSONEncoder.encode(subJson));
-				// JsonRepresentation json = new JsonRepresentation(subJson);
+				final JacksonRepresentation<SubscribeJSON> json = new JacksonRepresentation<SubscribeJSON>(subJson);
 				final Representation repr = client.put(json, MediaType.APPLICATION_JSON);
 				// TODO check if json is generated!
 				return repr.getText();

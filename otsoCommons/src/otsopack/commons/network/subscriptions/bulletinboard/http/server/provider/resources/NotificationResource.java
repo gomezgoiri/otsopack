@@ -25,8 +25,8 @@ import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.util.HTMLEncoder;
 import otsopack.commons.network.communication.util.JSONDecoder;
-import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.BulletinBoardServer;
+import otsopack.commons.network.subscriptions.bulletinboard.IBulletinBoardOuterFacade;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.JSONSerializableConversors;
 import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.TemplateJSON;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.OtsopackHttpBulletinBoardProviderApplication;
