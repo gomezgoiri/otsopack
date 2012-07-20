@@ -58,12 +58,10 @@
 	</target>
 
 	<target name="dist" depends="javac" description="Generates the jars">
-		<copy todir="bin">
-			<fileset dir="src" />
-		</copy>
-		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+		<javac srcdir="src" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
 			<classpath refid="project.class.path" />
 		</javac>
+		
 		<mkdir dir="dist" />
 		
 		<pathconvert property="mf.classpath" pathsep=" ">
@@ -76,7 +74,14 @@
 			</mapper>
 		</pathconvert>
 		
+		<jar destfile="dist/otsoSE-dist.jar" basedir="bin" />
+		
+		<copy todir="bin">
+			<fileset dir="src" />
+		</copy>
+		
 		<jar destfile="dist/otsoSE-sources.jar" basedir="bin" />
+		
 		<jar destfile="dist/otsoSE-sources-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="dist" includes="otsoSE-sources.jar" excludes="" />
 			<zipgroupfileset dir="../otsoCommons/dist" includes="otsoCommons-sources.jar" excludes="" />

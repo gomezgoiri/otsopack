@@ -68,12 +68,10 @@
 	</target>
 
 	<target name="dist" depends="javac">
-		<copy todir="bin">
-			<fileset dir="src" />
-		</copy>
-		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+		<javac srcdir="src" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
 			<classpath refid="project.class.path" />
 		</javac>
+		
 		<mkdir dir="dist" />
 		
 		<pathconvert property="mf.classpath" pathsep=" ">
@@ -86,6 +84,14 @@
 			</mapper>
 		</pathconvert>
 		
+		<jar destfile="dist/otsoCommons-dist.jar" basedir="bin">
+			<zipgroupfileset dir="../otsoRestletCommons/dist" includes="otsoRestletCommons-dist.jar" excludes="" />
+			<zipgroupfileset dir="../otsoAuthentication/dist" includes="otsoAuthentication-dist.jar" excludes="" />
+		</jar>
+		
+		<copy todir="bin">
+			<fileset dir="src" />
+		</copy>
 		<jar destfile="dist/otsoCommons-sources.jar" basedir="bin" />
 		<jar destfile="dist/otsoCommons-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="bin" includes="*.class" />

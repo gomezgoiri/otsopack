@@ -43,10 +43,7 @@
 	</target>
 
 	<target name="dist" depends="javac">
-		<copy todir="bin">
-			<fileset dir="src" />
-		</copy>
-		<javac srcdir="bin" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
+		<javac srcdir="src" destdir="bin" includes="**" debug="on" debuglevel="lines,vars,source" encoding="utf-8">
 			<classpath refid="project.class.path" />
 		</javac>
 		<mkdir dir="dist" />
@@ -61,7 +58,13 @@
 			</mapper>
 		</pathconvert>
 		
+		<jar destfile="dist/otsoAuthentication-dist.jar" basedir="bin" />
+		
+		<copy todir="bin">
+			<fileset dir="src" />
+		</copy>
 		<jar destfile="dist/otsoAuthentication-sources.jar" basedir="bin" />
+		
 		<jar destfile="dist/otsoAuthentication-all.jar" filesetmanifest="skip">
 			<zipgroupfileset dir="bin" includes="*.class" />
 			<zipgroupfileset dir="libs" includes="*.jar" excludes="" />
