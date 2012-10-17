@@ -10,6 +10,7 @@ Otsopack is a Triple Space solution which has different incarnations for heterog
 
 .. image:: _static/schema/esquema.png
     :align: center
+    :width: 30%
 
 Otsopack runs on...
 ###################
