@@ -5,6 +5,9 @@
 *.war
 *.ear
 
+# Documentation builds
+
+docs/build
 
 # Ignoring specific folders and files on Otsopack projects
 
