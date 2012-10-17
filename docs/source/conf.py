@@ -288,22 +288,6 @@ epub_copyright = u'2012, Aitor Gómez-Goiri'
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
 
-import subprocess
-import shlex
-
-try:
-  msg = subprocess.check_output(shlex.split("convert --help"))
-except:
-  msg = "Error running convert"
-
-try:
-  msg += subprocess.check_output(shlex.split("rsvg-convert --help"))
-except:
-  msg += "Error running rsvg"
-
-open("index.rst", 'a').write(msg)
-
-
 
 # -- Generate pngs ---------------------------------------------------
 #import cairo
