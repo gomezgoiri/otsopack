@@ -7508,17 +7508,7 @@
                inkscape:connector-curvature="0" />
           </g>
         </g>
-        <flowRoot
-           xml:space="preserve"
-           id="flowRoot5759"
-           style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"><flowRegion
-             id="flowRegion5761"><rect
-               id="rect5763"
-               width="12.857142"
-               height="115.71429"
-               x="352.85715"
-               y="-3.0483751" /></flowRegion><flowPara
-             id="flowPara5765" /></flowRoot>        <g
+        <g
            transform="matrix(0.26360511,0,0,0.26360511,-458.13573,173.72935)"
            id="layer1-2"
            inkscape:label="Layer 1">
