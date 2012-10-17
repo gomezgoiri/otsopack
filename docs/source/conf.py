@@ -288,26 +288,38 @@ epub_copyright = u'2012, Aitor Gómez-Goiri'
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
 
+import subprocess
+import shlex
 
+try:
+  msg = subprocess.check_output(shlex.split("convert --help"))
+except:
+  msg = "Error running convert"
 
+try:
+  msg += subprocess.check_output(shlex.split("rsvg-convert --help"))
+except:
+  msg += "Error running rsvg"
+
+open("index.rst", 'a').write(msg)
 
 
 
 # -- Generate pngs ---------------------------------------------------
-import cairo
-import rsvg
+#import cairo
+#import rsvg
 
-def svg2png(infile, outfile):
+#def svg2png(infile, outfile):
   ## handler= rsvg.Handle(<svg filename>)
   # or, for in memory SVG data:
-  handler= rsvg.Handle(infile)
-  width, height = handler.get_dimension_data()[:2]
+#  handler= rsvg.Handle(infile)
+#  width, height = handler.get_dimension_data()[:2]
 
   #print width, height
 
-  img =  cairo.ImageSurface(cairo.FORMAT_ARGB32, width+10, height)
-  ctx = cairo.Context(img)
-  handler.render_cairo(ctx)
-  img.write_to_png(outfile)
+#  img =  cairo.ImageSurface(cairo.FORMAT_ARGB32, width+10, height)
+#  ctx = cairo.Context(img)
+#  handler.render_cairo(ctx)
+#  img.write_to_png(outfile)
 
-svg2png('_static/schema/esquema.svg', '_static/schema/esquema.png')
+#svg2png('_static/schema/esquema.svg', '_static/schema/esquema.png')
