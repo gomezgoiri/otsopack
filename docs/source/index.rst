@@ -29,12 +29,12 @@ In order to understand the scope of the project, the following use cases can be 
 
    * The considered scenarios were mainly domotic, as detailed `here <publications.html#ismed>`_.
 
- * As part of the [http://www.acrosspse.com/ ACROSS project], rich mobile devices interact with each other and with the infrastructure
+ * As part of the `ACROSS project <http://www.acrosspse.com/>`_, rich mobile devices interact with each other and with the infrastructure
 
-   * We have published two articles describing the supermarket scenario and the hospital scenario, referenced `here <publications.html#across>`_.
+   * We have published two articles describing the supermarket scenario and the hospital scenario (check it `here <publications.html#across>`_).
 
- * As part of the `TALIS+ENGINE project <http://www.morelab.deusto.es/talisman>`_, embedded devices in Ambient Intelligent scenarios (see `here <publications.html#talis-engine>`_).
- * As part of the `THOFU project <http://www.thofu.es>`_, mobile and embedded devices in Ambient Intelligent scenarios within a Hotel (see `here <publications.html#thofu>`_).
+ * As part of the `TALIS+ENGINE project <http://www.morelab.deusto.es/talisman>`_, embedded devices in Ambient Intelligent scenarios (check it `here <publications.html#talis-engine>`_).
+ * As part of the `THOFU project <http://www.thofu.es>`_, mobile and embedded devices in Ambient Intelligent scenarios within a Hotel (check it `here <publications.html#thofu>`_).
 
 
 Authors
@@ -42,7 +42,7 @@ Authors
 
 This solution has been developed by members of the `MORElab Research Group <http://www.morelab.deusto.es>`_ at `DeustoTech - Deusto Institute of Technology <http://www.deustotech.eu>`_ in the `University of Deusto <http://www.deusto.es>`_.
 
-In order to check related publications `here <publications.html>`_.
+Check related publications `here <publications.html>`_.
 
 
 
