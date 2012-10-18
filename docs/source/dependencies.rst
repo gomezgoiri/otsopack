@@ -1,5 +1,5 @@
 Dependencies
-============
+************
 
 In this page we describe the dependencies for the different Otsopack modules.
 
@@ -13,7 +13,7 @@ Using the available ant tasks, **3 different jars** can be generated:
 Using *distribution versions* requires you to add dependencies to the classpath. These dependencies are listed bellow. 
 
 Common dependencies
-###################
+===================
 
 ====================================================   ========================     ============
 **Name**                                               **Last tested version**      **Optional**
@@ -30,7 +30,7 @@ microjena                                              (own)                    
 
 
 Android version
-###############
+===============
 
 ==============================================================     ========================    ============
 **Name**                                                           **Last tested version**     **Optional**
@@ -41,7 +41,7 @@ Android version
 
 
 Java SE version
-###############
+===============
 
 ==============================================================     ========================    ============
 **Name**                                                           **Last tested version**     **Optional**
