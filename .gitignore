@@ -8,8 +8,7 @@
 # Documentation builds
 
 docs/build
-docs/source/_static/schema/*.png
-docs/source/_static/notifications/*.png
+
 
 # Ignoring specific folders and files on Otsopack projects
 
