@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Otsopack's documentation
-========================
+************************
 
 Otsopack is a Triple Space solution which has different incarnations for heterogeneous devices. Triple Space Computing (TS) is a paradigm based on Tuple Spaces where Semantic Web techniques are used to deﬁne the knowledge which is exchanged using a distributed shared space (for more information see `this presentation in Spanish <http://www.slideshare.net/twolf/presentacin-otsopack-a-tecnalia>`_).
 
@@ -12,7 +12,7 @@ Otsopack is a Triple Space solution which has different incarnations for heterog
     :align: center
 
 Otsopack runs on...
-###################
+===================
 Otsopack is designed to be run in a wide variety of devices with limited computational resources. More specifically, nowadays those platforms are supported:
  * `OtsoSE Java SE <https://github.com/gomezgoiri/otsopack/tree/master/otsoSE>`_
  * `OtsoDroid Android <https://github.com/gomezgoiri/otsopack/tree/master/otsoDroid>`_
@@ -21,7 +21,7 @@ Otsopack is designed to be run in a wide variety of devices with limited computa
 
 
 Use cases
-#########
+=========
 
 In order to understand the scope of the project, the following use cases can be considered:
 
@@ -38,7 +38,7 @@ In order to understand the scope of the project, the following use cases can be 
 
 
 Authors
-#######
+=======
 
 This solution has been developed by members of the `MORElab Research Group <http://www.morelab.deusto.es>`_ at `DeustoTech - Deusto Institute of Technology <http://www.deustotech.eu>`_ in the `University of Deusto <http://www.deusto.es>`_.
 

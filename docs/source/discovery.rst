@@ -1,5 +1,5 @@
 .. Otsopack multicast coordination
-   HTTP version - First draft 
+   First draft 
 
 .. contents::
 

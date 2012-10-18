@@ -1,13 +1,13 @@
 Publications related with Otsopack
-==================================
+**********************************
 
 Miscellaneous
-#############
+=============
 Aitor Gómez-Goiri, Diego López-de-Ipiña. *On the complementarity of Triple Spaces and the Web of Things.* In Proceedings of the Second International Workshop on Web of Things, `WoT'11 <http://www.webofthings.com/wot/2011/>`_, pages 12:1–12:6. ISBN: `978-1-4503-0624-9 <http://doi.acm.org/10.1145/1993966.1993983>`_. New York, NY, USA, 2011.
 
 
 ACROSS
-######
+======
 
 Aitor Gómez-Goiri, Pablo Orduña and Diego López-De-Ipiña. *RESTful Triple Spaces of Things*. Third International Workshop on the Web of Things (WoT 2012). Newcastle, UK, June 2012.
 
@@ -19,7 +19,7 @@ Aitor Gómez-Goiri, Eduardo Castillejo, Pablo Orduña, Xabier Laiseca, Diego Ló
 
 
 ISMED
-#####
+=====
 
 Aitor Gómez-Goiri, Mikel Emaldi-Manrique, Diego López-de-Ipiña. *A Semantic Resource Oriented Middleware for Pervasive Environments*. `UPGRADE journal <http://www.cepis.org/upgrade>`_, 2011, Issue No. 1: 5-16. ISSN: 1684-5285. February 2011.
 
@@ -29,6 +29,6 @@ Aitor Gómez-Goiri, Diego López-de-Ipiña. *A Triple Space-Based Semantic Distr
 
 
 TALIS+ENGINE
-############
+============
 
 Aitor Gómez-Goiri and Diego López-de-Ipiña. *Assessing data dissemination strategies within Triple Spaces on the Web of Things*. Extending Seamlessly to the Internet of Things (esIoT). Palermo, Italy, July 2012. (to be published) 

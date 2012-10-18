@@ -1,5 +1,5 @@
 Acknowledgements
-================
+****************
 
 This project is supported or has been supported by the following projects:
 
