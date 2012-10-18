@@ -8,7 +8,7 @@ Otsopack's documentation
 
 Otsopack is a Triple Space solution which has different incarnations for heterogeneous devices. Triple Space Computing (TS) is a paradigm based on Tuple Spaces where Semantic Web techniques are used to deﬁne the knowledge which is exchanged using a distributed shared space (for more information see `this presentation in Spanish <http://www.slideshare.net/twolf/presentacin-otsopack-a-tecnalia>`_).
 
-.. image:: _static/schema/esquema.svg
+.. image:: _static/schema/logo.svg
     :align: center
 
 Otsopack runs on...
@@ -18,6 +18,9 @@ Otsopack is designed to be run in a wide variety of devices with limited computa
  * `OtsoDroid Android <https://github.com/gomezgoiri/otsopack/tree/master/otsoDroid>`_
  * FoxG20 & XBee (Python)
  * Sunspots
+
+.. image:: _static/schema/esquema.svg
+    :align: center
 
 
 Use cases
