@@ -18,9 +18,9 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="logo.svg"
-   inkscape:export-filename="/home/tulvur/documentos/doctorado/svn/doc/presentaciones/tecnalia-otsopack_2011-10-20/img/otsopack/logo.png"
-   inkscape:export-xdpi="120.03619"
-   inkscape:export-ydpi="120.03619">
+   inkscape:export-filename="logo.png"
+   inkscape:export-xdpi="120.14725"
+   inkscape:export-ydpi="120.14725">
   <defs
      id="defs4">
     <radialGradient
@@ -282,7 +282,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
