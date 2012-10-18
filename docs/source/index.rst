@@ -46,11 +46,17 @@ Check related publications `here <publications.html>`_.
 
 
 
-Contents:
+Contents
+========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   dependencies
+   restservices
+   discovery
+   subscriptions
+   acknowledgements
    publications
 
 
