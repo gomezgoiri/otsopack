@@ -23,7 +23,6 @@
   </properties>
 
   <build>
-    <!-- For annotations and other Java5 stuff -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

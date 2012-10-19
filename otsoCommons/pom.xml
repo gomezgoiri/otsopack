@@ -16,6 +16,20 @@
       <name>Apache central repository</name>
       <url>http://repo.maven.apache.org/maven2</url>
     </repository>
+    
+    <repository>
+      <id>semweb4j-repo</id>
+      <name>Semweb4j.org maven repo</name>
+      <url>http://semweb4j.org/repo/</url>
+      <releases>
+          <enabled>true</enabled>
+      </releases>
+    </repository>
+    
+    <repository>
+	   <id>codehaus-jackson</id>
+	   <url>http://repository.codehaus.org/org/codehaus/jackson/</url>
+  	</repository>
   </repositories>
   
   <properties>
@@ -23,14 +37,13 @@
   </properties>
 
   <build>
-    <!-- For annotations and other Java5 stuff -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
     </plugins>
@@ -41,7 +54,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.10</version>
       <scope>test</scope>
     </dependency>
     
@@ -57,6 +70,36 @@
       <artifactId>otsoAuthentication</artifactId>  
       <version>1.1.1</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.semweb4j</groupId>
+      <artifactId>rdf2go.api</artifactId>
+      <version>4.7.4</version>
+    </dependency>
+    
+        <dependency>
+      <groupId>org.restlet.jse</groupId>  
+      <artifactId>org.restlet</artifactId>  
+      <version>2.0.13</version>
+    </dependency>
+    
+    <dependency>  
+      <groupId>org.restlet.jse</groupId>  
+      <artifactId>org.restlet.ext.httpclient</artifactId>  
+      <version>2.0.13</version>
+    </dependency>
+    
+    <dependency>  
+      <groupId>org.restlet.jse</groupId>  
+      <artifactId>org.restlet.ext.jackson</artifactId>  
+      <version>2.0.13</version>
+    </dependency>
+    
+    <dependency>
+   <groupId>org.codehaus.jackson</groupId>
+   <artifactId>jackson-core-lgpl</artifactId>
+   <version>1.7.3</version>
+  </dependency>
   </dependencies>
 
 </project>
