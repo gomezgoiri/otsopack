@@ -2,16 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>otsopack.commons</groupId>
-  <artifactId>otsoCommons</artifactId>
+  <groupId>otsopack.se</groupId>
+  <artifactId>otsoSE</artifactId>
   <version>1.1.1</version>
   <packaging>jar</packaging>
   
-  <name>otsoCommons</name>
+  <name>otsoSE</name>
   <url>http://maven.apache.org</url>
   
   <repositories>
-    <repository>
+    <repository>  
       <id>maven-apache</id>
       <name>Apache central repository</name>
       <url>http://repo.maven.apache.org/maven2</url>
@@ -32,10 +32,11 @@
       </releases>
     </repository>
     
-    <repository>
-	   <id>codehaus-jackson</id>
-	   <url>http://repository.codehaus.org/org/codehaus/jackson/</url>
-  	</repository>
+    <repository>  
+      <id>aduna-maven</id>  
+      <name>Aduna-software repository</name>  
+      <url>http://repo.aduna-software.org/maven2/releases/</url>  
+    </repository>
   </repositories>
   
   <properties>
@@ -51,6 +52,23 @@
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
+      </plugin>
+      
+      <plugin>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>copy-dependencies</id>
+	    <phase>package</phase>
+	    <goals>
+		  <goal>copy-dependencies</goal>
+	    </goals>
+	    <configuration>
+		      <outputDirectory>${project.build.directory}/lib</outputDirectory>
+		      <excludeTransitive>false</excludeTransitive>
+	    </configuration>
+	  </execution>
+	</executions>
       </plugin>
     </plugins>
   </build>
@@ -71,40 +89,52 @@
       <scope>test</scope>
     </dependency>
     
-    <dependency>
-      <groupId>otsopack.authn</groupId>  
-      <artifactId>otsoAuthentication</artifactId>  
-      <version>1.1.1</version>
+    <dependency>  
+      <groupId>org.restlet.jse</groupId>  
+      <artifactId>org.restlet.ext.simple</artifactId>  
+      <version>2.0.13</version>
     </dependency>
     
     <dependency>
       <groupId>org.semweb4j</groupId>
-      <artifactId>rdf2go.api</artifactId>
+      <artifactId>rdf2go.impl.sesame23</artifactId>
       <version>4.7.4</version>
     </dependency>
     
-        <dependency>
-      <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet</artifactId>  
-      <version>2.0.13</version>
-    </dependency>
-    
-    <dependency>  
-      <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet.ext.httpclient</artifactId>  
-      <version>2.0.13</version>
-    </dependency>
-    
-    <dependency>  
-      <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet.ext.jackson</artifactId>  
-      <version>2.0.13</version>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.1</version>
     </dependency>
     
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-lgpl</artifactId>
-      <version>1.7.3</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-nop</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+    
+     <dependency>
+      <groupId>org.openrdf.sesame</groupId>
+      <artifactId>sesame-runtime-osgi</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.simpleframework</groupId>
+      <artifactId>simple</artifactId>
+      <version>4.1.21</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.7.2</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>otsopack.commons</groupId>  
+      <artifactId>otsoCommons</artifactId>  
+      <version>1.1.1</version>
     </dependency>
   </dependencies>
 
