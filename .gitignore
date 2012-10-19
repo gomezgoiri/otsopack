@@ -10,7 +10,12 @@
 docs/build
 
 
-# Ignoring specific folders and files on Otsopack projects
+# Ignoring Maven's compiled sources
+
+*/target/*
+
+
+# Ignoring specific folders and files on Otsopack projects: OLD ANT VERSION
 
 otsoAuthentication/bin
 otsoAuthentication/libs
@@ -29,9 +34,9 @@ otsoDroid/otsoDroid/bin
 otsoDroid/otsoDroid/libs
 
 otsoDroid/otsoDroidTest/gen
-otsoDroid/otsoDroidTest/local\.properties$
-otsoDroid/otsoDroidTest/debug\.keystore$
-otsoDroid/otsoDroidTest/build\.properties$
+otsoDroid/otsoDroidTest/local\.properties
+otsoDroid/otsoDroidTest/debug\.keystore
+otsoDroid/otsoDroidTest/build\.properties
 otsoDroid/otsoDroidTest/bin
 otsoDroid/otsoDroidTest/libs
 
