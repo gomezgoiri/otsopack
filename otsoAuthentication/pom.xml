@@ -2,26 +2,25 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>otsopack.authn</groupId>
+  <groupId>otsopack</groupId>
   <artifactId>otsoAuthentication</artifactId>
   <version>1.1.1</version>
   <packaging>jar</packaging>
   
   <name>otsoAuthentication</name>
-  <url>http://maven.apache.org</url>
-  
-  <repositories>
-    <repository>  
-      <id>maven-apache</id>
-      <name>Apache central repository</name>
-      <url>http://repo.maven.apache.org/maven2</url>
-    </repository>
-  </repositories>
+  <url>http://maven.apache.org</url>  
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  
+  <parent>
+    <groupId>otsopack</groupId>
+    <artifactId>otsopack</artifactId>
+    <version>1.1.1</version>
+  </parent>
 
+  
   <build>
     <plugins>
       <plugin>
@@ -34,21 +33,21 @@
       </plugin>
       
       <plugin>
-		  <artifactId>maven-dependency-plugin</artifactId>
-		  <executions>
-		    <execution>
-		      <id>copy-dependencies</id>
-		      <phase>package</phase>
-		      <goals>
-			    <goal>copy-dependencies</goal>
-		      </goals>
-		      <configuration>
-				<outputDirectory>${project.build.directory}/lib</outputDirectory>
-				<excludeTransitive>false</excludeTransitive>
-		      </configuration>
-		    </execution>
-		  </executions>
-	   </plugin>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>copy-dependencies</id>
+	    <phase>package</phase>
+	    <goals>
+		  <goal>copy-dependencies</goal>
+	    </goals>
+	    <configuration>
+		      <outputDirectory>${project.build.directory}/lib</outputDirectory>
+		      <excludeTransitive>false</excludeTransitive>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
     </plugins>
   </build>
   
@@ -57,27 +56,21 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
     </dependency>
     
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>3.0</version>
-      <scope>test</scope>
     </dependency>
     
-    <dependency>
-      <groupId>otsopack.restlet.commons</groupId>  
-      <artifactId>otsoRestletCommons</artifactId>  
-      <version>1.1.1</version>
+    <dependency>      
+      <groupId>otsopack</groupId>  
+      <artifactId>otsoRestletCommons</artifactId>
     </dependency>
     
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>1.4</version>
     </dependency>    
   </dependencies>
 

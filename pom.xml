@@ -3,19 +3,70 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
-  <!-- This pom.xml generates the Java SE version of Otsopack -->
-  <!-- The pom.xml for Android version is an ongoing work. -->
 
   <groupId>otsopack</groupId>
-  <artifactId>otsopack_SE</artifactId>
+  <artifactId>otsopack</artifactId>
   <version>1.1.1</version>
   <packaging>pom</packaging>
+  
+  <repositories>
+    <repository>
+      <id>maven-apache</id>
+      <name>Apache central repository</name>
+      <url>http://repo.maven.apache.org/maven2</url>
+    </repository>
+    
+    <repository>  
+      <id>maven-restlet</id>  
+      <name>Public online Restlet repository</name>  
+      <url>http://maven.restlet.org</url>  
+    </repository>
+  </repositories>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>4.10</version>
+	<scope>test</scope>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.easymock</groupId>
+	<artifactId>easymock</artifactId>
+	<version>3.0</version>
+	<scope>test</scope>
+      </dependency>
+      
+      <dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>1.4</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.restlet.jse</groupId>  
+	<artifactId>org.restlet</artifactId>  
+	<version>2.0.13</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>otsopack</groupId>  
+	<artifactId>otsoRestletCommons</artifactId>  
+	<version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
+    
+  <!-- This pom.xml should generate both the Java SE and the Android version of Otsopack -->
+  <!-- Adding the pom.xml for Android version is an ongoing work. -->
   <modules>
     <module>otsoRestletCommons</module>
     <module>otsoAuthentication</module>
     <module>otsoCommons</module>
     <module>otsoSE</module>
+    <!--<module>otsoDroid</module>-->
   </modules>
 </project>
