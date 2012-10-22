@@ -2,46 +2,24 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>otsopack.commons</groupId>
+  <groupId>otsopack</groupId>
   <artifactId>otsoCommons</artifactId>
-  <version>1.1.1</version>
   <packaging>jar</packaging>
   
   <name>otsoCommons</name>
   <url>http://maven.apache.org</url>
   
-  <repositories>
-    <repository>
-      <id>maven-apache</id>
-      <name>Apache central repository</name>
-      <url>http://repo.maven.apache.org/maven2</url>
-    </repository>
-    
-    <repository>  
-      <id>maven-restlet</id>  
-      <name>Public online Restlet repository</name>  
-      <url>http://maven.restlet.org</url>  
-    </repository>
-    
-    <repository>
-      <id>semweb4j-repo</id>
-      <name>Semweb4j.org maven repo</name>
-      <url>http://semweb4j.org/repo/</url>
-      <releases>
-          <enabled>true</enabled>
-      </releases>
-    </repository>
-    
-    <repository>
-	   <id>codehaus-jackson</id>
-	   <url>http://repository.codehaus.org/org/codehaus/jackson/</url>
-  	</repository>
-  </repositories>
-  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <parent>
+    <groupId>otsopack</groupId>
+    <artifactId>otsopack</artifactId>
+    <version>1.1.1</version>
+  </parent>
+  
+  
   <build>
     <plugins>
       <plugin>
@@ -60,51 +38,41 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
     </dependency>
     
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>3.0</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>otsopack.authn</groupId>  
-      <artifactId>otsoAuthentication</artifactId>  
-      <version>1.1.1</version>
     </dependency>
     
     <dependency>
       <groupId>org.semweb4j</groupId>
       <artifactId>rdf2go.api</artifactId>
-      <version>4.7.4</version>
     </dependency>
     
-        <dependency>
+    <dependency>
       <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet</artifactId>  
-      <version>2.0.13</version>
-    </dependency>
-    
-    <dependency>  
-      <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet.ext.httpclient</artifactId>  
-      <version>2.0.13</version>
+      <artifactId>org.restlet</artifactId>
     </dependency>
     
     <dependency>  
       <groupId>org.restlet.jse</groupId>  
-      <artifactId>org.restlet.ext.jackson</artifactId>  
-      <version>2.0.13</version>
+      <artifactId>org.restlet.ext.httpclient</artifactId>
+    </dependency>
+    
+    <dependency>  
+      <groupId>org.restlet.jse</groupId>  
+      <artifactId>org.restlet.ext.jackson</artifactId>
     </dependency>
     
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-core-lgpl</artifactId>
-      <version>1.7.3</version>
+    </dependency>
+        
+    <dependency>
+      <groupId>otsopack</groupId>  
+      <artifactId>otsoAuthentication</artifactId>
     </dependency>
   </dependencies>
 

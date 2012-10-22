@@ -21,7 +21,28 @@
       <name>Public online Restlet repository</name>  
       <url>http://maven.restlet.org</url>  
     </repository>
+    
+    <repository>
+      <id>semweb4j-repo</id>
+      <name>Semweb4j.org maven repo</name>
+      <url>http://semweb4j.org/repo/</url>
+      <releases>
+          <enabled>true</enabled>
+      </releases>
+    </repository>
+    
+    <repository>
+      <id>codehaus-jackson</id>
+      <url>http://repository.codehaus.org/org/codehaus/jackson/</url>
+    </repository>
+    
+    <repository>  
+      <id>aduna-maven</id>  
+      <name>Aduna-software repository</name>  
+      <url>http://repo.aduna-software.org/maven2/releases/</url>  
+    </repository>
   </repositories>
+  
   
   <dependencyManagement>
     <dependencies>
@@ -46,14 +67,98 @@
       </dependency>
       
       <dependency>
+	<groupId>org.semweb4j</groupId>
+	<artifactId>rdf2go.api</artifactId>
+	<version>4.7.4</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-core-lgpl</artifactId>
+	<version>1.7.3</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.semweb4j</groupId>
+	<artifactId>rdf2go.impl.sesame23</artifactId>
+	<version>4.7.4</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>1.6.1</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-nop</artifactId>
+	<version>1.6.1</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.openrdf.sesame</groupId>
+	<artifactId>sesame-runtime-osgi</artifactId>
+	<version>2.3.1</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.simpleframework</groupId>
+	<artifactId>simple</artifactId>
+	<version>4.1.21</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>org.xerial</groupId>
+	<artifactId>sqlite-jdbc</artifactId>
+	<version>3.7.2</version>
+      </dependency>
+      
+      
+      <!-- Restlet's subdependencies -->
+      
+      <dependency>
 	<groupId>org.restlet.jse</groupId>  
 	<artifactId>org.restlet</artifactId>  
 	<version>2.0.13</version>
       </dependency>
       
+      <dependency>  
+	<groupId>org.restlet.jse</groupId>  
+	<artifactId>org.restlet.ext.httpclient</artifactId>  
+	<version>2.0.13</version>
+      </dependency>
+      
+      <dependency>  
+	<groupId>org.restlet.jse</groupId>  
+	<artifactId>org.restlet.ext.jackson</artifactId>  
+	<version>2.0.13</version>
+      </dependency>
+      
+      <dependency>  
+	<groupId>org.restlet.jse</groupId>  
+	<artifactId>org.restlet.ext.simple</artifactId>  
+	<version>2.0.13</version>
+      </dependency>
+      
+      
+      <!-- Otsopack's subdependencies -->
+      
       <dependency>
 	<groupId>otsopack</groupId>  
 	<artifactId>otsoRestletCommons</artifactId>  
+	<version>${project.version}</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>otsopack</groupId>  
+	<artifactId>otsoAuthentication</artifactId>  
+	<version>${project.version}</version>
+      </dependency>
+      
+      <dependency>
+	<groupId>otsopack</groupId>  
+	<artifactId>otsoCommons</artifactId>  
 	<version>${project.version}</version>
       </dependency>
     </dependencies>
