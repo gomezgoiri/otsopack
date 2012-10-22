@@ -17,7 +17,39 @@
     <groupId>otsopack</groupId>
     <artifactId>otsopack</artifactId>
     <version>1.1.1</version>
-  </parent>  
+  </parent>
+
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>copy-dependencies</id>
+	    <phase>package</phase>
+	    <goals>
+		  <goal>copy-dependencies</goal>
+	    </goals>
+	    <configuration>
+		      <outputDirectory>${project.build.directory}/lib</outputDirectory>
+		      <excludeTransitive>false</excludeTransitive>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+    </plugins>
+  </build>
+  
   
   <dependencies>
     <dependency>
