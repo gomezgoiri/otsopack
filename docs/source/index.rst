@@ -55,6 +55,7 @@ Contents
 .. toctree::
    :maxdepth: 1
 
+   build
    dependencies
    restservices
    discovery
