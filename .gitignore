@@ -18,13 +18,9 @@ docs/build
 # Ignoring specific folders and files on Otsopack projects: OLD ANT VERSION
 
 otsoAuthentication/bin
-otsoAuthentication/libs
-otsoAuthentication/dist
 
 otsoCommons/bin
 otsoCommons/build
-otsoCommons/dist
-otsoCommons/libs
 
 otsoDroid/otsoDroid/gen
 otsoDroid/otsoDroid/local.properties
@@ -34,22 +30,19 @@ otsoDroid/otsoDroid/bin
 otsoDroid/otsoDroid/libs
 
 otsoDroid/otsoDroidTest/gen
-otsoDroid/otsoDroidTest/local\.properties
-otsoDroid/otsoDroidTest/debug\.keystore
-otsoDroid/otsoDroidTest/build\.properties
+otsoDroid/otsoDroidTest/local.properties
+otsoDroid/otsoDroidTest/debug.keystore
+otsoDroid/otsoDroidTest/build.properties
 otsoDroid/otsoDroidTest/bin
 otsoDroid/otsoDroidTest/libs
 
 otsoIdentityProvider/bin
 
-otsoRestletCommons/dist
 otsoRestletCommons/bin
 otsoRestletCommons/build
 
 otsoSE/dbOtsoPack
 otsoSE/bin
 otsoSE/build
-otsoSE/dist
-otsoSE/libs
 
 otsoSecurityIntegrationTest/bin
