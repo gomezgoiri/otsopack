@@ -63,7 +63,7 @@ Space management
 ---------------
 
  * *HTTP verb*: GET
- * *Description*: retrieve the spaces a node is connected to.
+ * *Description*: retrieves a list of the REST services (TSC primitives) which can be consumed on that space. The purpose of showing a representation of this resource is to enable browsing.
  * *Status code*: -
  * *Content-type*: html, json
 
@@ -88,10 +88,22 @@ Triple Space primitives
 /spaces/{space}/graphs
 ----------------------
 
- * Pending to determine whether it makes sense offering this service or not
  * *Arguments*
+ 
    * space: the URI of the space in which the graph is stored
+   
+ * *HTTP verb*: GET
+
+   * *Description*: retrieves a list of the graphs written into that space on that node.
+   * *Status codes*:
+
+     * 406: The requested content-type cannot be retrieved
+
+   * *Content-type*: html
+
  * *HTTP verb*: POST
+ 
+   * Pending to determine whether it makes sense offering this service or not
    * *Description*: write({space},{graph}): graphURI
    * *Status codes*:
      * 404: When the node is not joined to the {space} provided
