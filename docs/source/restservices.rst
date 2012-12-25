@@ -116,8 +116,8 @@ Triple Space primitives
 
  * *Arguments*
 
-  * space: the URI of the space in which the graph is stored
-  * graph: the URI of the graph to be read
+   * space: the URI of the space in which the graph is stored
+   * graph: the URI of the graph to be read
 
  * *HTTP verb*: GET
 
