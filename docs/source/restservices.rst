@@ -16,7 +16,7 @@ Prefix management
 
   **Accepted content-types**: html, json
   
-  :statuscode 200: :http:statuscode:`200`
+  :status 200: :http:statuscode:`200`
   
   **Example response**:
 
@@ -35,14 +35,16 @@ Prefix management
 
 |
 
-.. http:get:: /prefixes/{prefixuri}
+.. http:get:: /prefixes/(uri:prefix)
   
-  Retrieve the prefix for an URI provided it is registered.
+  Retrieves the prefix for an URI provided it is registered.
 
   **Accepted content-types**: json
   
-  :statuscode 200: :http:statuscode:`200`
-  :statuscode 404: When the given uri has not a prefix associated ( :http:statuscode:`200` )
+  :param prefix: URI whose prefix one is looking for (`must be encoded <http://www.w3schools.com/tags/ref_urlencode.asp>`_ )
+  :type prefix: URI 
+  :status 200: :http:statuscode:`200`
+  :status 404: When the given uri has not a prefix associated ( :http:statuscode:`404` )
   
   **Example response**:
 
@@ -58,39 +60,46 @@ Prefix management
 Space management
 ================
 
-/spaces/
---------
+.. http:get:: /spaces/
+  
+  Retrieves the spaces a node is connected to.
+  
+  **Accepted content-types**: html, json
+  
+  :status 200: :http:statuscode:`200`
 
- * *HTTP verb*: GET
- * *Description*: retrieves the spaces a node is connected to.
- * *Status code*: -
- * *Content-type*: html, json
+|
 
-/spaces/{space}
----------------
-
- * *HTTP verb*: GET
- * *Description*: retrieves a list of the REST services (TSC primitives) which can be consumed on that space. The purpose of showing a representation of this resource is to enable browsing.
- * *Status code*: -
- * *Content-type*: html, json
+.. http:get:: /spaces/(uri:space)
+  
+  Retrieves a list of the REST services (TSC primitives) which can be consumed on that space. The purpose of showing a representation of this resource is to enable browsing.
+  
+  **Accepted content-types**: html, json
+  
+  :param space: the URI which identifies the space (`must be encoded <http://www.w3schools.com/tags/ref_urlencode.asp>`_ )
+  :type space: URI 
+  :status 200: :http:statuscode:`200`
 
 
 Authorization
 =============
 
-/login
-------
-
- * *HTTP verb*: GET
-
-   * *Description*: checks whether the user is logged or not
-   * *Status codes*:
-
-     * 402: Unauthorized client cannot read this graph.
+.. http:get:: /login
+  
+  Checks whether the user is logged or not.
+  
+  **Accepted content-types**: html, json
+  
+  :status 402: Unauthorized client cannot read this graph. ( :http:statuscode:`402` )
 
 
 Triple Space primitives
 =======================
+
+Graph level operations
+----------------------
+
+In this subsection we describe the primitives related to the RDF Graphs on a space.
 
 /spaces/{space}/graphs
 ----------------------
@@ -211,6 +220,13 @@ Triple Space primitives
      * 404: When the node is not joined to the {space} provided (starts with SpaceNotExistException.HTTPMSG) or there is no graph in the node which has a triple which matches with the given template
      * 406: The requested content-type cannot be retrieved
      * 500: A non-existing prefix was used in the template
+
+
+Space level operations
+----------------------
+
+In this subsection we describe the query primitive, which cares about the RDF triples written into a space.
+In other words, it does not care to which graph each returned RDF triple belongs to.
 
 /spaces/{space}/query/wildcards/{subject}/{predicate}/{object-uri}
 ------------------------------------------------------------------
