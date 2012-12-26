@@ -9,43 +9,50 @@ This pages details the REST services provided by each node divided into differen
 
 Prefix management
 =================
+     
+.. http:get:: /prefixes/
+  
+  Retrieves the prefixes used by this node.
 
-/prefixes/
-----------
- * *HTTP verb*: GET
- * *Description*: retrieves the prefixes used by this node.
- * *Status code*: -
- * *Content-type*: html, json
+  **Accepted content-types**: html, json
+  
+  :statuscode 200: :http:statuscode:`200`
+  
+  **Example response**:
 
-   * Example:
+  .. sourcecode:: http
 
-.. code-block:: javascript
+    HTTP/1.1 200 OK
+    Vary: Accept
+    Content-Type: text/javascript
 
-  {
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#":"rdf",
-    "http://www.w3.org/2002/07/owl#":"owl",
-    "http://www.w3.org/2001/XMLSchema#":"xsd",
-    "http://www.w3.org/2000/01/rdf-schema#":"rdfs"
-  }
+    {
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#":"rdf",
+      "http://www.w3.org/2002/07/owl#":"owl",
+      "http://www.w3.org/2001/XMLSchema#":"xsd",
+      "http://www.w3.org/2000/01/rdf-schema#":"rdfs"
+    }
 
+|
 
-/prefixes/{prefixuri}
----------------------
+.. http:get:: /prefixes/{prefixuri}
+  
+  Retrieve the prefix for an URI provided it is registered.
 
- * *HTTP verb*: GET
- * *Description*: retrieve the prefix for an URI if it is registered.
- * *Status codes*:
+  **Accepted content-types**: json
+  
+  :statuscode 200: :http:statuscode:`200`
+  :statuscode 404: When the given uri has not a prefix associated ( :http:statuscode:`200` )
+  
+  **Example response**:
 
-   * 404: When the given uri has not a prefix associated
+  .. sourcecode:: http
 
- * *Content-type*: json
+    HTTP/1.1 200 OK
+    Vary: Accept
+    Content-Type: text/javascript
 
-   * Example:
-
-.. code-block:: javascript
-
-  "prefix1"
-
+    "prefix1"
 
 
 Space management
