@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Otsopack's documentation
-************************
+Otsopack
+********
 
-Otsopack is a Triple Space solution which has different incarnations for heterogeneous devices. Triple Space Computing (TS) is a paradigm based on Tuple Spaces where Semantic Web techniques are used to deﬁne the knowledge which is exchanged using a distributed shared space (for more information see `this presentation in Spanish <http://www.slideshare.net/twolf/presentacin-otsopack-a-tecnalia>`_).
+Otsopack is a Triple Space solution which has different incarnations for heterogeneous devices. Triple Space Computing (TS) is a paradigm based on Tuple Spaces where Semantic Web techniques are used to deﬁne the knowledge which is exchanged using a distributed shared space (for more information check `this presentation in Spanish <http://www.slideshare.net/twolf/presentacin-otsopack-a-tecnalia>`_).
 
 .. image:: _static/logo/logo.svg
     :align: center
