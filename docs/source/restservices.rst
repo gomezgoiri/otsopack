@@ -96,8 +96,8 @@ Authorization
 Triple Space primitives
 =======================
 
-Graph level operations
-----------------------
+Graph level operations (read and take)
+--------------------------------------
 
 In this subsection we describe the primitives related to the RDF Graphs on a space.
 
@@ -254,8 +254,8 @@ In this subsection we describe the primitives related to the RDF Graphs on a spa
   :status 500: A non-existing prefix was used in the template ( :http:statuscode:`500` ).
 
 
-Space level operations
-----------------------
+Space level operations (query)
+------------------------------
 
 In this subsection we describe the query primitive, which cares about the RDF triples written into a space.
 In other words, it does not care to which graph each returned RDF triple belongs to.
