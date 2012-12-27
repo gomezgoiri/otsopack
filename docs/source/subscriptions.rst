@@ -109,88 +109,84 @@ Subscription HTTP API
 Each *bulletin board* exposes a RESTful API which enables the creation of subscriptions on the *bulletin boards* and to trigger notifications to end-nodes.
 
 
-/subscriptions/
----------------
+     
+.. http:get:: /subscriptions
+  
+  Returns all the subscriptions.
 
- * *Arguments*
+  **Accepted content-types**: json
+  
+  :status 200: :http:statuscode:`200`
 
-   * space: the URI of the space to which the subscription should belong
+|
 
- * *HTTP verb*: GET
+.. http:post:: /subscriptions
+  
+  subscribe( {subscriptionURI}, {template}, {callbackurl} )
 
-   * *Description*: return all the subscriptions
-   * *Status codes*:
+  **Accepted content-types**: json
+  
+  :status 200: :http:statuscode:`200`
+  
+  **Example request**:
 
-     * XXX
+  .. sourcecode:: http
 
-   * *Content-type*: json
+    POST /subscriptions HTTP/1.1
+    Host: example.com
+    Content-Type: text/javascript
 
- * *HTTP verb*: POST
+    {
+      "id":"http://space/subscriptions/24534",
+      "expiration":1200,
+      "callbackURL":"http://callbackuri",
+      "tpl":{"object":"http://object","predicate":"http://predicate","subject":"http://subject"}
+      "nodesWhichAlreadyKnowTheSubscription":[],
+    }
 
-   * *Description*: subscribe( {subscriptionURI}, {template}, {callbackurl} )
+|
 
-   * *Status codes*:
+.. http:get:: /subscriptions/(uri:subscription)
+  
+  Returns the subscription.
 
-     * XXX
+  **Accepted content-types**: json
+  
+  :param subscription: the URI of the subscription (`must be encoded <http://www.w3schools.com/tags/ref_urlencode.asp>`_ )
+  :type subscription: URI
+  :status 200: :http:statuscode:`200`
 
-   * *Content-type*: html
+|
 
-   * *Body*:
+.. http:delete:: /subscriptions/(uri:subscription)
+  
+  unsubscribe( {subscription} )
 
-     * *Content-type*: json
-     * *Example*:
+  **Accepted content-types**: json
+  
+  :param subscription: the URI of the subscription to be deleted (`must be encoded <http://www.w3schools.com/tags/ref_urlencode.asp>`_ )
+  :type subscription: URI
+  :status 200: :http:statuscode:`200`
 
+|
 
-.. code-block:: javascript
+.. http:put:: /subscriptions/(uri:subscription)
+  
+  Updates an existing subscription. This method is used to extend the expiration time for a remote subscription.
 
-  {
-    "id":"http://space/subscriptions/24534",
-    "expiration":1200,
-    "callbackURL":"http://callbackuri",
-    "tpl":{"object":"http://object","predicate":"http://predicate","subject":"http://subject"}
-    "nodesWhichAlreadyKnowTheSubscription":[],
-  }
+  **Accepted content-types**: json
+  
+  :param subscription: the URI of the subscription to be deleted (`must be encoded <http://www.w3schools.com/tags/ref_urlencode.asp>`_ )
+  :type subscription: URI
+  :status 200: :http:statuscode:`200`
 
+  **Example request**:
 
-/subscriptions/{subscriptionURI}
---------------------------------
- * *Arguments*
+  .. sourcecode:: http
 
-   * space: the URI of the space to which the subscription should belong
-
- * *HTTP verb*: DELETE
-
-   * *Description*: unsubscribe( {subscriptionURI} )
-   * *Status codes*:
-
-     * XXX
-
-   * *Content-type*: html
-
- * *HTTP verb*: GET
-
-   * *Description*: returns the subscription
-   * *Status codes*:
-
-     * XXX
-
-   * *Content-type*: json
-
- * *HTTP verb*: PUT
-
-   * *Description*: updates an existing subscription. This method is used to extend the expiration time for a remote subscription.
-   * *Status codes*:
-
-     * XXX
-
-   * *Body*:
-
-     * *Content-type*: html
-     * *Content-type*: json
-
-       * *Example*:
-
-.. code-block:: javascript
+    PUT /subscriptions/http%3A%2F%2Fmysubscription HTTP/1.1
+    Host: example.com
+    Content-Type: text/javascript
 
     {
       "id":"http://space/subscriptions/24534",
@@ -200,26 +196,22 @@ Each *bulletin board* exposes a RESTful API which enables the creation of subscr
       "tpl": {"object":"http://object","predicate":"http://predicate","subject":"http://subject"}
     }
 
+|
 
-/notifications/
----------------
+.. http:post:: /notifications
+  
+  notify( {template} )
 
- * *HTTP verb*: POST
+  **Accepted content-types**: json
+  
+  :status 200: :http:statuscode:`200`
 
-   * *Description*: notify( {template} )
+  **Example request**:
 
-   * *Status codes*:
+  .. sourcecode:: http
 
-     * XXX
+    POST /subscriptions/http%3A%2F%2Fmysubscription HTTP/1.1
+    Host: example.com
+    Content-Type: text/javascript
 
-   * *Content-type*: html
-
-   * *Body*:
-
-     * *Content-type*: json
-
-       * *Example*:
-
-.. code-block:: javascript
-
-  {"subject":"http://subject","predicate":"http://predicate","object":"http://object"}
+    {"subject":"http://subject","predicate":"http://predicate","object":"http://object"}
