@@ -49,88 +49,112 @@ public interface ITripleSpace extends ILayer {
 	// # # # //
 	
 	/**
-	 * read one graph using its identifying URI.
+	 * Reads a <b>graph</b> identified by an <b>uri</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param graphURI
+	 * 	The URI which identifies the graph to be returned.
 	 * @return set of triples or null if nothing is found
 	 */
 	public Graph read(String spaceURI, String graphURI) throws TSException;
 	public Graph read(String graphURI) throws TSException;
 	
 	/**
-	 * read one graph using its identifying URI.
+	 * Reads a <b>graph</b> identified by an <b>uri</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param graphURI
+	 * 	The URI which identifies the graph to be returned.
 	 * @param configuration
-	 * 		Used to specify the timeout, semantic output format or filters.
+	 * 	Used to specify the timeout, semantic output format or filters.
 	 * @return set of triples or null if nothing is found
 	 */
 	public Graph read(String spaceURI, String graphURI, Arguments configuration) throws TSException;
 	public Graph read(String graphURI, Arguments configuration) throws TSException;
 	
 	/**
-	 * read one graph using its identifying URI.
+	 * Reads a <b>graph</b> with a triple which matches a <b>template</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param template
+	 *	At least one triple from the returned graph must match this template.
 	 * @return set of triples or null if nothing is found
 	 */
 	public Graph read(String spaceURI, Template template) throws TSException;
 	public Graph read(Template template) throws TSException;
 	
 	/**
-	 * read one graph using its identifying URI.
+	 * Reads a <b>graph</b> with a triple which matches a <b>template</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param template
+	 *	At least one triple from the returned graph must match this template.
 	 * @param configuration
-	 * 		Used to specify the timeout, semantic output format or filters.
+	 * 	Used to specify the timeout, semantic output format or filters.
 	 * @return set of triples or null if nothing is found
 	 */
 	public Graph read(String spaceURI, Template template, Arguments configuration) throws TSException;
 	public Graph read(Template template, Arguments configuration) throws TSException;
 	
 	/**
-	 * Take a graph by using its identifying URI.
+	 * Takes a <b>graph</b> identified by an <b>uri</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param graphURI
+	 *	The URI which identifies the graph to be returned.
 	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph take(String spaceURI, String graphURI) throws TSException;
 	public Graph take(String graphURI) throws TSException;
 
 	/**
-	 * Take a graph by using its identifying URI.
+	 * Takes a <b>graph</b> identified by an <b>uri</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param graphURI
+	 *	The URI which identifies the graph to be returned.
 	 * @param configuration
-	 * 		Used to specify the timeout, semantic output format or filters.
+	 * 	Used to specify the timeout, semantic output format or filters.
 	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph take(String spaceURI, String graphURI, Arguments configuration) throws TSException;
 	public Graph take(String graphURI, Arguments configuration) throws TSException;
 	
 	/**
-	 * Take a graph using a template. Wait the specified timeout or until a response is received.
+	 * Takes a <b>graph</b> with a triple which matches a <b>template</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param template
+	 *	At least one triple from the returned graph must match this template.
 	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph take(String spaceURI, Template template) throws TSException;
 	public Graph take(Template template) throws TSException;
 
 	/**
-	 * Take a graph using a template. Wait the specified timeout or until a response is received.
+	 * Takes a <b>graph</b> with a triple which matches a <b>template</b> from the <b>space</b>.
+	 * This operation is non deterministic.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the graph will be searched.
 	 * @param template
+	 *	At least one triple from the returned graph must match this template.
 	 * @param configuration
-	 * 		Used to specify the timeout, semantic output format or filters.
+	 * 	Used to specify the timeout, semantic output format or filters.
 	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph take(String spaceURI, Template template, Arguments configuration) throws TSException;
