@@ -161,36 +161,43 @@ public interface ITripleSpace extends ILayer {
 	public Graph take(Template template, Arguments configuration) throws TSException;
 	
 	/**
-	 * query a set of triples using a template and wait a maximum timeout
+	 * Returns all the triples in the <b>space</b> which match the <b>template</b>.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 *	The URI which identifies the space where the returned triples belong to.
 	 * @param template
-	 * @return set of triples or set of triples with size 0 if nothing found
+	 *	All the triples returned must match this template.
+	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph query(String spaceURI, Template template) throws TSException;
 	public Graph query(Template template) throws TSException;
 	
 	/**
-	 * query a set of triples using a template and wait a maximum timeout
+	 * Returns all the triples in the <b>space</b> which match the <b>template</b>.
 	 * @throws SpaceNotExistsException
 	 * @param spaceURI
+	 * 	The URI which identifies the space where the returned triples belong to.
 	 * @param template
+	 *	All the triples returned must match this template.
 	 * @param configuration
-	 * 		Used to specify the timeout, semantic output format or filters.
-	 * @return set of triples or set of triples with size 0 if nothing found
+	 * 	Used to specify the timeout, semantic output format or filters.
+	 * @return set of ITriples or null if nothing found
 	 */
 	public Graph query(String spaceURI, Template template, Arguments configuration) throws TSException;
 	public Graph query(Template template, Arguments configuration) throws TSException;
 	
 	/**
-	 * write ITriples into specified space
+	 * Writes <b>triples</b> in a new graph into the specified <b>space</b>.
 	 * @throws TSException
 	 * @param spaceURI
-	 * @param ITriples
-	 * @return IGraph uri
+	 *	The URI which identifies the space where the triples will be written.
+         *	If space is 'None' or no value is provided, the default space will be used.
+	 * @param triples
+	 *	Triples which will be written together in a new <b>graph</b>.
+	 * @return The URI which identifies the new graph created.
 	 */
-	public String write(String spaceURI, Graph ITriples) throws TSException;
-	public String write(Graph ITriples) throws TSException;
+	public String write(String spaceURI, Graph triples) throws TSException;
+	public String write(Graph triples) throws TSException;
 	
 	// # # # //
 		
