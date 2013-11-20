@@ -175,20 +175,23 @@ public class HttpBulletinBoardClientTest {
 		manager2.start();
 		
 		// bulletinBoard0 knows bulletinBoard1
-		this.manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
-													"bboard0", true, true, false));
 		this.manager.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													bboardName, true, true, false));
 		
+		// bulletinBoard1 knows bulletinBoard0
 		manager2.addOtherBulletinBoard(new Node("http://localhost:"+this.PORT+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
 													"bboard0", true, true, false));
-		manager2.addOtherBulletinBoard(new Node("http://localhost:"+(this.PORT+1)+OtsopackHttpBulletinBoardProviderApplication.BULLETIN_ROOT_PATH,
-													bboardName, true, true, false));
 		
 		final LocalListenerTester list = new LocalListenerTester();
 		this.client.subscribe(subscribed, list, EXPIRATIONTIME);
 		
 		final IBulletinBoard client2 = manager2.createClient();
+		
+		// Wait so bulletinBoard1 has a chance to get the subscription from bulletinBoard0
+		// before receiving the notification which matches with it.
+		Thread.sleep(100);
+		
+		// client2 notifies to bulletinBoard1 a template which activates this.client's subscription.
 		client2.notify(notified);
 		
 		if (!list.isNotified()) { // it needs time...
