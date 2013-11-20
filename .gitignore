@@ -1,26 +1,27 @@
-# Java's default ignores
-
 *.class
+
+# Package Files #
 *.jar
 *.war
 *.ear
 
-# Documentation builds
 
+# Maven #
+target/
+
+
+# Documentation builds #
 docs/build
 
 
-# Ignoring Maven's compiled sources
+# Eclipse files #
+# If you need to create them for the first time, just run 'mvn eclipse:eclipse'. #
+.classpath
+.project
+#.settings/ # to maintain Pablo's nazi Eclipse rules
 
-*/target/*
 
-
-# Ignoring specific folders and files on Otsopack projects: OLD ANT VERSION
-
-otsoAuthentication/bin
-
-otsoCommons/bin
-otsoCommons/build
+# Ignoring specific folders for the modules using ant (the Android ones)
 
 otsoDroid/otsoDroid/gen
 otsoDroid/otsoDroid/local.properties
@@ -36,13 +37,7 @@ otsoDroid/otsoDroidTest/build.properties
 otsoDroid/otsoDroidTest/bin
 otsoDroid/otsoDroidTest/libs
 
-otsoIdentityProvider/bin
-
-otsoRestletCommons/bin
-otsoRestletCommons/build
-
+# Ignoring SQLite database in otsoSE
 otsoSE/dbOtsoPack
-otsoSE/bin
-otsoSE/build
 
 otsoSecurityIntegrationTest/bin

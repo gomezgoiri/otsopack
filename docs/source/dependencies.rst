@@ -20,7 +20,7 @@ Common dependencies
 `rdf2go.api <http://semanticweb.org/wiki/RDF2Go>`_       4.8.3                        No
 `cglib-nodep <http://cglib.sourceforge.net/>`_           2.2                          No
 `objenesis <http://code.google.com/p/objenesis/>`_       1.2                          No
-`apache commons io <http://commons.apache.org/io/>`_     N/A                          No
+`apache commons io <http://commons.apache.org/io/>`_     2.4                          No
 `restlet <http://www.restlet.org>`_                      2.0.13                       No
 `restlet.ext.jackson <http://www.restlet.org>`_          2.0.13                       No
 `jackson-all <https://github.com/FasterXML/jackson>`_    1.7.3                        No
