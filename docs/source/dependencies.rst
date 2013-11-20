@@ -14,17 +14,17 @@ Anyway, they are listed in the following sections.
 Common dependencies
 ===================
 
-====================================================   ========================     ============
-**Name**                                               **Last tested version**      **Optional**
-====================================================   ========================     ============
-`rdf2go.api <http://semanticweb.org/wiki/RDF2Go>`_     4.7.4                        No
-`cglib-nodep <http://cglib.sourceforge.net/>`_         2.2                          No
-`objenesis <http://code.google.com/p/objenesis/>`_     1.2                          No
-`apache commons io <http://commons.apache.org/io/>`_   N/A                          No
-`restlet <http://www.restlet.org>`_                    2.0.13                       No
-`restlet.ext.jackson <http://www.restlet.org>`_        2.0.13                       No
-`jackson-all <http://jackson.codehaus.org/>`_          1.7.3                        No
-====================================================   ========================     ============
+======================================================   ========================     ============
+**Name**                                                 **Last tested version**      **Optional**
+======================================================   ========================     ============
+`rdf2go.api <http://semanticweb.org/wiki/RDF2Go>`_       4.8.3                        No
+`cglib-nodep <http://cglib.sourceforge.net/>`_           2.2                          No
+`objenesis <http://code.google.com/p/objenesis/>`_       1.2                          No
+`apache commons io <http://commons.apache.org/io/>`_     N/A                          No
+`restlet <http://www.restlet.org>`_                      2.0.13                       No
+`restlet.ext.jackson <http://www.restlet.org>`_          2.0.13                       No
+`jackson-all <https://github.com/FasterXML/jackson>`_    1.7.3                        No
+======================================================   ========================     ============
 
 
 Android version
@@ -47,10 +47,10 @@ Java SE version
 otsoCommons                                                        N/A                         No
 `restlet (SE version) <http://www.restlet.org>`_                   2.0.13                      No
 `restlet.ext.simple <http://www.restlet.org>`_                     2.0.13                      No
-`rdf2go.impl.sesame23 <http://semanticweb.org/wiki/RDF2Go/>`_      4.7.4                       Yes
-`sesame-runtime-osgi <http://www.openrdf.org/>`_                   2.3.1                       Yes
+`rdf2go.impl.sesame <http://semanticweb.org/wiki/RDF2Go>`_         4.8.3                       Yes
+`sesame-runtime <http://www.openrdf.org/>`_                   2.7.1                       Yes
 `simple <http://www.simpleframework.org>`_                         4.1.21                      Recommended
-`slf4j-api <http://www.slf4j.org>`_                                1.6.1                       No
-`slf4j-nop <http://www.slf4j.org>`_                                1.6.1                       Recommended
+`slf4j-api <http://www.slf4j.org>`_                                1.7.5                       No
+`slf4j-nop <http://www.slf4j.org>`_                                1.7.5                       Recommended
 `sqlitejdbc <http://www.zentus.com/sqlitejdbc/>`_                  056                         Recommended
 ==============================================================     ========================    ============

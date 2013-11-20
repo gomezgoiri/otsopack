@@ -7,19 +7,25 @@
   <groupId>otsopack</groupId>
   <artifactId>otsopack</artifactId>
   <version>1.1.1</version>
-  <packaging>pom</packaging>
+  <packaging>pom</packaging>  
+  
+  <properties>
+    <jackson.groupId>com.fasterxml.jackson.core</jackson.groupId>
+    <jackson.version>2.2.3</jackson.version>
+    <restlet.groupid>org.restlet.jse</restlet.groupid>
+    <restlet.version>2.0.13</restlet.version>
+    <slf4j.groupid>org.slf4j</slf4j.groupid>
+    <slf4j.version>1.7.5</slf4j.version>
+    <rdf2go.groupid>org.semweb4j</rdf2go.groupid>
+    <rdf2go.version>4.8.3</rdf2go.version>
+  </properties>
+  
   
   <repositories>
     <repository>
       <id>maven-apache</id>
       <name>Apache central repository</name>
       <url>http://repo.maven.apache.org/maven2</url>
-    </repository>
-    
-    <repository>  
-      <id>maven-restlet</id>  
-      <name>Public online Restlet repository</name>  
-      <url>http://maven.restlet.org</url>  
     </repository>
     
     <repository>
@@ -31,15 +37,10 @@
       </releases>
     </repository>
     
-    <repository>
-      <id>codehaus-jackson</id>
-      <url>http://repository.codehaus.org/org/codehaus/jackson/</url>
-    </repository>
-    
     <repository>  
-      <id>aduna-maven</id>  
-      <name>Aduna-software repository</name>  
-      <url>http://repo.aduna-software.org/maven2/releases/</url>  
+      <id>maven-restlet</id>  
+      <name>Public online Restlet repository</name>  
+      <url>http://maven.restlet.org</url>  
     </repository>
   </repositories>
   
@@ -67,40 +68,42 @@
       </dependency>
       
       <dependency>
-	<groupId>org.semweb4j</groupId>
-	<artifactId>rdf2go.api</artifactId>
-	<version>4.7.4</version>
+	<groupId>${jackson.groupId}</groupId>
+	<artifactId>jackson-core</artifactId>
+	<version>${jackson.version}</version>
       </dependency>
       
       <dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-core-lgpl</artifactId>
-	<version>1.7.3</version>
-      </dependency>
-      
-      <dependency>
-	<groupId>org.semweb4j</groupId>
-	<artifactId>rdf2go.impl.sesame23</artifactId>
-	<version>4.7.4</version>
-      </dependency>
-      
-      <dependency>
-	<groupId>org.slf4j</groupId>
+	<groupId>${slf4j.groupid}</groupId>
 	<artifactId>slf4j-api</artifactId>
-	<version>1.6.1</version>
+	<version>${slf4j.version}</version>
       </dependency>
       
       <dependency>
-	<groupId>org.slf4j</groupId>
+	<groupId>${slf4j.groupid}</groupId>
 	<artifactId>slf4j-nop</artifactId>
-	<version>1.6.1</version>
+	<version>${slf4j.version}</version>
+      </dependency>
+            
+      <dependency>
+	<groupId>${rdf2go.groupid}</groupId>
+	<artifactId>rdf2go.api</artifactId>
+	<version>${rdf2go.version}</version>
+      </dependency>
+       
+      <dependency>
+	<groupId>${rdf2go.groupid}</groupId>
+	<artifactId>rdf2go.impl.sesame</artifactId>
+	<!--Delegates all calls to a Sesame 2.7.1 repository-->
+	<version>${rdf2go.version}</version>
       </dependency>
       
       <dependency>
 	<groupId>org.openrdf.sesame</groupId>
-	<artifactId>sesame-runtime-osgi</artifactId>
-	<version>2.3.1</version>
+	<artifactId>sesame-runtime</artifactId>
+	<version>2.7.1</version>
       </dependency>
+            
       
       <dependency>
 	<groupId>org.simpleframework</groupId>
@@ -118,27 +121,27 @@
       <!-- Restlet's subdependencies -->
       
       <dependency>
-	<groupId>org.restlet.jse</groupId>  
+	<groupId>${restlet.groupid}</groupId>  
 	<artifactId>org.restlet</artifactId>  
-	<version>2.0.13</version>
+	<version>${restlet.version}</version>
       </dependency>
       
       <dependency>  
-	<groupId>org.restlet.jse</groupId>  
+	<groupId>${restlet.groupid}</groupId>  
 	<artifactId>org.restlet.ext.httpclient</artifactId>  
-	<version>2.0.13</version>
+	<version>${restlet.version}</version>
       </dependency>
       
       <dependency>  
-	<groupId>org.restlet.jse</groupId>  
+	<groupId>${restlet.groupid}</groupId>  
 	<artifactId>org.restlet.ext.jackson</artifactId>  
-	<version>2.0.13</version>
+	<version>${restlet.version}</version>
       </dependency>
       
       <dependency>  
-	<groupId>org.restlet.jse</groupId>  
+	<groupId>${restlet.groupid}</groupId>  
 	<artifactId>org.restlet.ext.simple</artifactId>  
-	<version>2.0.13</version>
+	<version>${restlet.version}</version>
       </dependency>
       
       

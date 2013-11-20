@@ -69,7 +69,7 @@
     
     <dependency>
       <groupId>org.semweb4j</groupId>
-      <artifactId>rdf2go.impl.sesame23</artifactId>
+      <artifactId>rdf2go.impl.sesame</artifactId>
     </dependency>
     
     <dependency>
@@ -84,7 +84,7 @@
     
      <dependency>
       <groupId>org.openrdf.sesame</groupId>
-      <artifactId>sesame-runtime-osgi</artifactId>
+      <artifactId>sesame-runtime</artifactId>
     </dependency>
     
     <dependency>
