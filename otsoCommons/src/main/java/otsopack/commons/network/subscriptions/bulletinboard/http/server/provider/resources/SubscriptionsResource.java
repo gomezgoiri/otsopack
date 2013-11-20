@@ -33,8 +33,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider
 public class SubscriptionsResource extends ServerResource implements ISubscriptionsResource {
 	public static final String ROOT = "/subscriptions";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> graphsRoots = new HashMap<String, Class<? extends ServerResource>>();
 		graphsRoots.put(ROOT, SubscriptionsResource.class);
 		graphsRoots.putAll(SubscriptionResource.getRoots());
 		return graphsRoots;

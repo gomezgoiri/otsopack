@@ -34,8 +34,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider
 public class NotificationResource extends ServerResource implements INotificationResource {
 	public static final String ROOT = "/notifications";
 	
-	public static Map<String, Class<?>> getRoots(){
-		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots(){
+		final Map<String, Class<? extends ServerResource>> graphsRoots = new HashMap<String, Class<? extends ServerResource>>();
 		graphsRoots.put(ROOT, NotificationResource.class);
 		return graphsRoots;
 	}

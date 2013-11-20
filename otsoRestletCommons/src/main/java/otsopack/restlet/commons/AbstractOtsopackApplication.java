@@ -19,15 +19,16 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.resource.ServerResource;
 import org.restlet.routing.Router;
 
 public class AbstractOtsopackApplication <C extends ICommonsController> extends Application {
-	private final Map<String, Class<?>> resources;
+	private final Map<String, Class<? extends ServerResource>> resources;
 	private final ConcurrentMap<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 	
 	private static final String CONTROLLER_PROPERTY_NAME = "controller";
 
-	public AbstractOtsopackApplication(Map<String, Class<?>> resources){
+	public AbstractOtsopackApplication(Map<String, Class<? extends ServerResource>> resources){
 		this.resources = resources;
 	}
 	

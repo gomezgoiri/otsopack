@@ -17,18 +17,20 @@ package otsopack.commons.network.coordination.discovery.http.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.resource.ServerResource;
+
 import otsopack.commons.network.coordination.discovery.http.server.resources.DiscoveryResource;
 import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsopackHttpDiscoveryApplication extends AbstractOtsopackApplication<IDiscoveryController> {
 
-	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<? extends ServerResource>> PATHS = new HashMap<String, Class<? extends ServerResource>>();
 	
 	static{
 		addPaths(DiscoveryResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots){
+	private static void addPaths(Map<String, Class<? extends ServerResource>> roots){
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}

@@ -21,6 +21,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
+import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.resources.spaces.SpaceResource;
@@ -38,8 +39,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.serializables.T
 public class NotificationCallbackResource extends AbstractServerResource implements INotificationCallbackResource {
 	public static final String ROOT = SpaceResource.ROOT + "/notifications";
 	
-	public static Map<String, Class<?>> getRoots(){
-		final Map<String, Class<?>> graphsRoots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots(){
+		final Map<String, Class<? extends ServerResource>> graphsRoots = new HashMap<String, Class<? extends ServerResource>>();
 		graphsRoots.put(ROOT, NotificationCallbackResource.class);
 		return graphsRoots;
 	}
@@ -52,7 +53,7 @@ public class NotificationCallbackResource extends AbstractServerResource impleme
 			
 			final IBulletinBoard bulletinBoard = getController().getSubscriber().getBulletinBoard(space);
 			final TemplateJSON advjson = JSONDecoder.decode(argument, TemplateJSON.class);
-						
+			
 			bulletinBoard.receiveCallback( JSONSerializableConversors.convertFromSerializable(advjson) );
 			return new StringRepresentation("200 OK.");
 		} catch (IOException e) {

@@ -360,7 +360,7 @@ public class EnrichedClientResource extends ClientResource {
      *            The prototype request.
      * @return The new response.
      */
-    protected Request createRequest(Request prototype) {
+    public Request createRequest(Request prototype) {
         return new Request(prototype);
     }
 
@@ -730,7 +730,7 @@ public class EnrichedClientResource extends ClientResource {
      *            The request method to use.
      * @return The optional response entity.
      */
-    private Representation handle(Method method) {
+    public Representation handle(Method method) {
         return handle(method, (Representation) null, getClientInfo());
     }
 
@@ -747,7 +747,7 @@ public class EnrichedClientResource extends ClientResource {
      * @return The response entity object.
      * @throws ResourceException
      */
-    private <T> T handle(Method method, Class<T> resultClass)
+    public <T> T handle(Method method, Class<T> resultClass)
             throws ResourceException {
         return handle(method, null, resultClass);
     }
@@ -762,7 +762,7 @@ public class EnrichedClientResource extends ClientResource {
      *            The preferred result media type.
      * @return The optional response entity.
      */
-    private Representation handle(Method method, MediaType mediaType) {
+    public Representation handle(Method method, MediaType mediaType) {
         return handle(method, (Representation) null, mediaType);
     }
 
@@ -779,7 +779,7 @@ public class EnrichedClientResource extends ClientResource {
      * @return The response object entity.
      * @throws ResourceException
      */
-    private <T> T handle(Method method, Object entity, Class<T> resultClass)
+    public <T> T handle(Method method, Object entity, Class<T> resultClass)
             throws ResourceException {
         T result = null;
         org.restlet.service.ConverterService cs = getConverterService();
@@ -812,7 +812,7 @@ public class EnrichedClientResource extends ClientResource {
      *            The client preferences.
      * @return The optional response entity.
      */
-    private Representation handle(Method method, Representation entity,
+    public Representation handle(Method method, Representation entity,
             ClientInfo clientInfo) {
         Representation result = null;
 
@@ -853,7 +853,7 @@ public class EnrichedClientResource extends ClientResource {
      *            The preferred result media type.
      * @return The optional response entity.
      */
-    private Representation handle(Method method, Representation entity,
+    public Representation handle(Method method, Representation entity,
             MediaType mediaType) {
         return handle(method, entity, new ClientInfo(mediaType));
     }
@@ -869,7 +869,7 @@ public class EnrichedClientResource extends ClientResource {
      * @return The response created.
      * @see #getNext()
      */
-    private Response handle(Request request) {
+    public Response handle(Request request) {
         Response response = createResponse(request);
         Uniform next = getNext();
 
@@ -903,7 +903,7 @@ public class EnrichedClientResource extends ClientResource {
      * @param next
      *            The next handler handling the call.
      */
-    private void handle(Request request, Response response,
+    public void handle(Request request, Response response,
             List<Reference> references, int retryAttempt, Uniform next) {
         if (next != null) {
             // Actually handle the call

@@ -39,8 +39,8 @@ public class DiscoveryResource extends ServerResource implements IDiscoveryResou
 	public static final String ROOT = "/discovery/";
 	public static final String SPACEURI_ARGUMENT = "spaceuri";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, DiscoveryResource.class);
 		return roots;
 	}

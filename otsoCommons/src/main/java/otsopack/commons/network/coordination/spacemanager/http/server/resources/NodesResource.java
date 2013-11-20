@@ -32,8 +32,8 @@ public class NodesResource extends ServerResource implements ISpaceManagerResour
 	
 	public static final String ROOT = "/spacemanager/nodes";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, NodesResource.class);
 		return roots;
 	}

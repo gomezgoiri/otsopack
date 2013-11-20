@@ -22,6 +22,7 @@ import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
+import org.restlet.resource.ServerResource;
 
 import otsopack.commons.network.communication.resources.AbstractServerResource;
 import otsopack.commons.network.communication.util.JSONDecoder;
@@ -33,8 +34,8 @@ import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider
 public class SubscriptionResource extends AbstractServerResource implements ISubscriptionResource {
 	public static final String ROOT = SubscriptionsResource.ROOT + "/{subscribe}";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, SubscriptionResource.class);
 		return roots;
 	}

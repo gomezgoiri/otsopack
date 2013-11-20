@@ -21,6 +21,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.OtsoAuthnApplication;
 import otsopack.authn.sessions.AuthnSession;
@@ -29,8 +30,8 @@ public class ValidatedSessionResource extends AbstractOtsoServerResource impleme
 
 	private static final String ROOT = "/sessions/valid";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, ValidatedSessionResource.class);
 		return roots;
 	}

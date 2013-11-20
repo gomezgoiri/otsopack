@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ServerResource;
 
 import otsopack.authn.resources.SessionRequestResource;
 import otsopack.authn.resources.ValidatedSessionResource;
@@ -26,7 +27,7 @@ public class OtsoAuthnApplication extends AbstractOtsopackApplication<IControlle
 	
 	public static final String AUTHN_ROOT_PATH = "/authn";
 	
-	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<? extends ServerResource>> PATHS = new HashMap<String, Class<? extends ServerResource>>();
 	private static final ClientResourceFactory defaultClientResourceFactory = new ClientResourceFactory();
 	
 	private IClientResourceFactory clientResourceFactory;
@@ -36,7 +37,7 @@ public class OtsoAuthnApplication extends AbstractOtsopackApplication<IControlle
 		addPaths(ValidatedSessionResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots) {
+	private static void addPaths(Map<String, Class<? extends ServerResource>> roots) {
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}

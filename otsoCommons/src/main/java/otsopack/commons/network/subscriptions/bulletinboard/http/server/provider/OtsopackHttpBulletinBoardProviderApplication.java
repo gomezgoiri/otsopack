@@ -16,6 +16,8 @@ package otsopack.commons.network.subscriptions.bulletinboard.http.server.provide
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.resource.ServerResource;
+
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.IBulletinBoardController;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.NotificationResource;
 import otsopack.commons.network.subscriptions.bulletinboard.http.server.provider.resources.SubscriptionsResource;
@@ -25,14 +27,14 @@ public class OtsopackHttpBulletinBoardProviderApplication extends AbstractOtsopa
 	
 	public static final String BULLETIN_ROOT_PATH = "/bulletinboard";
 	
-	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<? extends ServerResource>> PATHS = new HashMap<String, Class<? extends ServerResource>>();
 	
 	static {
 		addPaths(SubscriptionsResource.getRoots());
 		addPaths(NotificationResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots){
+	private static void addPaths(Map<String, Class<? extends ServerResource>> roots){
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}

@@ -17,6 +17,8 @@ package otsopack.commons.network.communication.comet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.restlet.resource.ServerResource;
+
 import otsopack.commons.network.communication.comet.resources.EventResource;
 import otsopack.commons.network.communication.comet.resources.SessionResource;
 import otsopack.commons.network.communication.comet.resources.SessionsResource;
@@ -25,7 +27,7 @@ import otsopack.restlet.commons.AbstractOtsopackApplication;
 
 public class OtsoCometApplication extends AbstractOtsopackApplication<ICometController> {
 
-	private static final Map<String, Class<?>> PATHS = new HashMap<String, Class<?>>();
+	private static final Map<String, Class<? extends ServerResource>> PATHS = new HashMap<String, Class<? extends ServerResource>>();
 		
 	static {
 		addPaths(SessionResource.getRoots());
@@ -33,7 +35,7 @@ public class OtsoCometApplication extends AbstractOtsopackApplication<ICometCont
 		addPaths(EventResource.getRoots());
 	}
 	
-	private static void addPaths(Map<String, Class<?>> roots) {
+	private static void addPaths(Map<String, Class<? extends ServerResource>> roots) {
 		for(String uri : roots.keySet())
 			PATHS.put(uri, roots.get(uri));
 	}

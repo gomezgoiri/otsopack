@@ -30,7 +30,7 @@ public class BulletinBoardManager {
 	protected String defaultSpace = "http://default/";
 	
 	private BulletinBoardsManager server;
-	protected Set<Node> otherBulletinBoards = new HashSet<Node>();
+	protected Set<Node> registeredBulletinBoards = new HashSet<Node>();
 	
 	private Set<OtsoRestServer> remoteListeners = new HashSet<OtsoRestServer>();
 	
@@ -54,7 +54,7 @@ public class BulletinBoardManager {
 	
 	private void createDefaultBulletinBoard() throws SubscriptionException {
 		final IRegistry registry = EasyMock.createMock(IRegistry.class);
-		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(otherBulletinBoards).anyTimes();
+		EasyMock.expect(registry.getBulletinBoards(this.defaultSpace)).andReturn(this.registeredBulletinBoards).anyTimes();
 		EasyMock.expect(registry.getLocalUuid()).andReturn(this.nodeUuid).anyTimes();
 		EasyMock.replay(registry);
 		
@@ -96,7 +96,7 @@ public class BulletinBoardManager {
 		
 		final OtsoRestServer listnr = new OtsoRestServer(this.clientPort, controller, null);
 		listnr.startup();
-		remoteListeners.add(listnr);
+		this.remoteListeners.add(listnr);
 		
 		return bbm.getBulletinBoard(this.defaultSpace);
 	}
@@ -117,6 +117,6 @@ public class BulletinBoardManager {
 	}
 	
 	public void addOtherBulletinBoard(Node node) {
-		this.otherBulletinBoards.add(node);
+		this.registeredBulletinBoards.add(node);
 	}
 }

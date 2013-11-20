@@ -25,8 +25,8 @@ import otsopack.commons.network.communication.comet.OtsoCometApplication;
 public class SessionResource extends ServerResource {
 	public static final String ROOT = "/sessions/{session-id}";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, SessionResource.class);
 		return roots;
 	}

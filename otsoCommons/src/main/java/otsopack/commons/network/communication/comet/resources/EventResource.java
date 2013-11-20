@@ -31,8 +31,8 @@ public class EventResource extends ServerResource {
 
 	public static final String ROOT = "/sessions/{session-id}/events/";
 	
-	public static Map<String, Class<?>> getRoots() {
-		final Map<String, Class<?>> roots = new HashMap<String, Class<?>>();
+	public static Map<String, Class<? extends ServerResource>> getRoots() {
+		final Map<String, Class<? extends ServerResource>> roots = new HashMap<String, Class<? extends ServerResource>>();
 		roots.put(ROOT, EventResource.class);
 		return roots;
 	}
