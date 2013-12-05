@@ -48,7 +48,7 @@ otsoCommons                                                        N/A          
 `restlet (SE version) <http://www.restlet.org>`_                   2.0.13                      No
 `restlet.ext.simple <http://www.restlet.org>`_                     2.0.13                      No
 `rdf2go.impl.sesame <http://semanticweb.org/wiki/RDF2Go>`_         4.8.3                       Yes
-`sesame-runtime <http://www.openrdf.org/>`_                   2.7.1                       Yes
+`sesame-runtime <http://www.openrdf.org/>`_                        2.7.1                       Yes
 `simple <http://www.simpleframework.org>`_                         4.1.21                      Recommended
 `slf4j-api <http://www.slf4j.org>`_                                1.7.5                       No
 `slf4j-nop <http://www.slf4j.org>`_                                1.7.5                       Recommended
